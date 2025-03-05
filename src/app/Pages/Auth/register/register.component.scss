@@ -1,0 +1,20 @@
+.role-selection {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+   
+    padding: 10px 20px;
+    border-radius: 10px;
+  }
+  .role-option {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: white; /* Text color */
+    font-weight: 400;
+  }
+  input[type="radio"] {
+    accent-color: #B88E2F;
+margin: 10px;
+  }
+  
