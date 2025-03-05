@@ -27,7 +27,7 @@ export class ForgetpasswordComponent {
   ResetCodeform: FormGroup = new FormGroup({
     resetCode: new FormControl('', [Validators.required]),
   });
-
+//newPass 
   newPasswordform: FormGroup = new FormGroup({
     newPassword: new FormControl('', [
       Validators.required,
