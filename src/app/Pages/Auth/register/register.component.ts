@@ -7,7 +7,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
   standalone: true,
   imports: [CommonModule,RouterLink,ReactiveFormsModule,FormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrls: ['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss','./register.component.scss']
 })
 export class RegisterComponent {
   errorr:string='';

@@ -8,7 +8,7 @@ import {ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule,RouterLink,ReactiveFormsModule,FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls:['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss','./login.component.scss']
 })
 export class LoginComponent {
 

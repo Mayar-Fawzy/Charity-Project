@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './forgetpassword.component.html',
-  styleUrl: './forgetpassword.component.scss'
+  styleUrls:['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss', './forgetpassword.component.scss']
 })
 export class ForgetpasswordComponent {
 
