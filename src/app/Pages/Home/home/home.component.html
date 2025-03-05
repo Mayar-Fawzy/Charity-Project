@@ -1,0 +1,264 @@
+<div class="hero-section">
+  <div class="hero-content">
+    <h1>إعطاء الأمل للمشردين</h1>
+    <h2>مساعدة بعضنا البعض يمكن أن تجعل العالم أفضل</h2>
+    <p>
+      نحن نبحث عن صناع التغيير وصناع الفرق حول العالم وندعمهم لتحقيق هدفهم
+      الفريد.
+    </p>
+    <p>نحن نؤمن بالعمل المستدام والتأثير الإيجابي على المجتمع.</p>
+    <a href="#" class="btn">تعلم المزيد</a>
+  </div>
+</div>
+
+<!-- opportunity-section -->
+<div class="opportunity-section">
+  <div class="opportunity-container">
+    <div class="opportunity-box">
+      <div class="form-row">
+        <div class="form-group">
+          <div class="custom-field">القضية</div>
+          <div class="sub-text">اختر قضية</div>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-field">تاريخ البدء</div>
+          <div class="sub-text">إضافة تاريخ</div>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-field">تاريخ الانتهاء</div>
+          <div class="sub-text">إضافة تاريخ</div>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-field">المتطوعون</div>
+          <div class="sub-text">إضافة مشاركين</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn">ابحث عن فرصة</button>
+  </div>
+</div>
+
+<!-- why-choose-us -->
+<section class="why-choose-us">
+  <h1>لماذا تختارنا؟</h1>
+  <h2>
+    <span class="experience">الخبرة</span>
+    <span class="ampersand">&</span>
+    <span class="trustworthiness">الموثوقية</span>
+  </h2>
+  <button routerLink="/about">معلومات عنا</button>
+</section>
+
+<!-- impact-section -->
+<section class="impact-section">
+  <div class="impact-grid">
+    <div class="impact-card">
+      <i class="bi bi-check-circle impact-icon"></i>
+      <h3>تأثير مثبت</h3>
+      <p>لقد أحدثنا فرقًا ملموسًا في حياة الكثيرين</p>
+    </div>
+
+    <div class="impact-card">
+      <i class="bi bi-people impact-icon"></i>
+      <h3>موثوق من الآلاف</h3>
+      <p>انضم إلينا الآلاف لإحداث تغيير حقيقي</p>
+    </div>
+
+    <div class="impact-card">
+      <i class="bi bi-bar-chart-line impact-icon"></i>
+      <h3>شفافية كاملة</h3>
+      <p>نضمن استخدام كل مساهمة بحكمة وفعالية</p>
+    </div>
+
+    <div class="impact-card">
+      <i class="bi bi-headset impact-icon"></i>
+      <h3>دعم على مدار الساعة</h3>
+      <p>حل جميع الاستفسارات بأسرع وقت ممكن</p>
+    </div>
+  </div>
+</section>
+
+<!-- main-container -->
+<div class="content-container">
+  <div class="image-section">
+    <img
+      src="../../../../assets/Images/children.png"
+      alt="الأطفال"
+      class="overlapping-image children-image"
+    />
+    <img
+      src="../../../../assets/Images/money.png"
+      alt=" نقود "
+      class="overlapping-image hands-image"
+    />
+  </div>
+
+  <div class="text-section">
+    <h1>دعنا نجتمع لنحدث فرقًا</h1>
+    <p>
+      فهم تحقيق أي شيء يتطلب إيمانًا واعتقادًا بنفسك، رؤية، عمل شاق، تصميمًا،
+      وتفانيًا.
+    </p>
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-number">15</span>
+        <span class="stat-label">سنوات من الخبرة</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">1ك</span>
+        <span class="stat-label">تبرعات ناجحة</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">20ك</span>
+        <span class="stat-label">متبرعين سعداء</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">4.9</span>
+        <span class="stat-label">التقييم العام</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="latest-causes">
+  <h2 class="section-title">أحدث القضايا</h2>
+  <p class="section-subtitle">تعرف على القضايا التي تحتاج إلى دعمكم</p>
+
+  <div class="causes-container">
+    <button
+      class="slider-btn prev-btn"
+      (click)="scrollLeft()"
+      aria-label="السابق"
+      title="السابق"
+    >
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <div class="causes-scroll-container">
+      <div #causesScroll class="causes-scroll">
+        <div *ngFor="let cause of causes" class="cause-card">
+          <img
+            [src]="cause.imagePath"
+            [alt]="cause.title"
+            class="cause-image"
+          />
+          <div class="cause-details">
+            <h3>{{ cause.title }}</h3>
+            <p>{{ cause.description }}</p>
+            <div class="progress-container">
+              <div
+                class="progress-bar"
+                [style.width.%]="(cause.amountRaised / cause.fundingGoal) * 100"
+              ></div>
+            </div>
+            <div class="funding-info">
+              <span>المبلغ المجمع: EGP{{ cause.amountRaised }}</span>
+              <span>الهدف: EGP{{ cause.fundingGoal }}</span>
+            </div>
+            <button class="donate-button">تبرع الآن</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      class="slider-btn next-btn"
+      (click)="scrollRight()"
+      aria-label="التالي"
+      title="التالي"
+    >
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</section>
+
+<section class="donation-section">
+  <div class="container">
+    <div class="steps">
+      <h2><span class="highlight">3</span> خطوات سهلة للتبرع</h2>
+      <div class="step">
+        <div class="icon yellow"></div>
+        <div class="text">
+          <h3>اختر الوجهة</h3>
+          <p>اختر الجهة التي تريد التبرع لها بكل سهولة.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="icon red"></div>
+        <div class="text">
+          <h3>قم بالتبرع</h3>
+          <p>حدد المبلغ وقم بإرساله بسهولة وأمان.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="icon blue"></div>
+        <div class="text">
+          <h3>الوصول للمحتاجين</h3>
+          <p>يصل تبرعك للمحتاجين بأسرع وقت ممكن.</p>
+        </div>
+      </div>
+    </div>
+    <div class="donation-card">
+      <img
+        src="/assets/Images/Donate To Sinai.png"
+        alt="التبرع"
+        class="donation-img"
+      />
+      <div class="donation-info">
+        <h3>التبرع لسيناء</h3>
+        <p>هناك ما يقارب 195 شخصًا يعانون من نقص التغذية في سيناء.</p>
+        <div class="progress-bar">
+          <div class="filled" style="width: 40%"></div>
+        </div>
+        <div class="donation-stats">
+          <span>المبلغ المُجمع: 400 EGP</span>
+          <span>الهدف: 1000 EGP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="testimonial-section">
+  <h5 class="section-title">الشهادات</h5>
+  <h2 class="main-title">ماذا يقول الناس عنا؟</h2>
+  <p class="subtitle">يقول المتبرعون الراضون حول العالم</p>
+  <button
+    class="slider-btn prev-btn"
+    (click)="scrollLeft()"
+    aria-label="السابق"
+    title="السابق"
+  >
+    <i class="bi bi-chevron-left"></i>
+  </button>
+  <div class="testimonials">
+    <div class="testimonial-card" *ngFor="let person of testimonialsList">
+      <div class="quote-icon">
+        <i class="bi bi-chat-quote-fill"></i>
+      </div>
+      <img [src]="person.imagePath" alt="الشخص" class="profile-img" />
+      <h4 class="name">{{ person.name }}</h4>
+      <p class="job-title">{{ person.occupation }}</p>
+      <div class="rating">
+        <i class="bi bi-star-fill" *ngFor="let star of person.rating"></i>
+      </div>
+      <p class="testimonial-text">
+        {{ person.feedback }}
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <button
+      class="slider-btn next-btn"
+      (click)="scrollRight()"
+      aria-label="التالي"
+      title="التالي"
+    >
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</div>
