@@ -1,1 +1,41 @@
-<p>navbar works!</p>
+<nav class="navbar" [ngClass]="{ hidden: isNavbarHidden }">
+  <div class="navbar__container">
+    <div class="navbar__brand">
+      <span>العطاء</span>
+      <img
+        src="../../../assets/Images/image33.png"
+        alt="شعار"
+        class="navbar__logo"
+      />
+      <span>يـــــــد</span>
+    </div>
+
+    <ul class="navbar__menu">
+      <li><a href="#" class="active">الرئيسية</a></li>
+      <li><a href="#">من نحن</a></li>
+      <li><a href="#">المشاريع</a></li>
+      <li><a href="#">التبرعات</a></li>
+      <li><a href="#">تواصل معنا</a></li>
+    </ul>
+
+    <div class="navbar__actions">
+      <button class="login-btn" *ngIf="!isLoggedIn" (click)="login()">
+        تسجيل الدخول / إنشاء حساب
+      </button>
+
+      <div class="navbar__user" *ngIf="isLoggedIn">
+        <img [src]="userImage" alt="User" class="user-image" />
+        <span>مرحبًا، {{ userName }}</span>
+
+        <div class="notification-container">
+          <i class="bi bi-bell notification"></i>
+          <span class="notification-count" *ngIf="unreadNotifications > 0">
+            {{ unreadNotifications }}
+          </span>
+        </div>
+
+        <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+</nav>

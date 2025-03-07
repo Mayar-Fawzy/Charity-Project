@@ -1,0 +1,121 @@
+.wave-container {
+  position: relative;
+  bottom: 0px;
+  line-height: 0;
+
+  .wave {
+    height: 120px;
+    background: url("../../../assets/wave.svg") no-repeat;
+    background-size: cover;
+  }
+}
+
+.footer {
+  background: #8c7551;
+  color: white;
+  text-align: right;
+  direction: rtl;
+  padding: 40px 20px 20px;
+  position: relative;
+
+  &__container {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__brand {
+    .footer__logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 24px;
+
+      img {
+        height: 50px;
+        width: auto;
+      }
+    }
+  }
+
+  &__section {
+    h3 {
+      color: #ffdd99;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      padding-right: 15px;
+
+      li {
+        margin: 10px 0;
+        position: relative;
+
+        &::before {
+          content: "•";
+          color: #ffdd99;
+          margin-left: 8px;
+        }
+      }
+    }
+
+    .footer__address {
+      white-space: nowrap;
+      font-size: 16px;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .footer__social {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 15px;
+
+      i {
+        font-size: 30px;
+        color: #ffdd99;
+        transition: transform 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.2);
+          color: white;
+        }
+      }
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 40px;
+    padding-top: 20px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 992px) {
+    &__container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 30px 15px;
+
+    &__container {
+      grid-template-columns: 1fr;
+    }
+
+    .wave-container .wave {
+      height: 80px;
+    }
+  }
+}
