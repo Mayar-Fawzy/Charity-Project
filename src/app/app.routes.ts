@@ -7,6 +7,7 @@ import { RegisterComponent } from './Pages/Auth/register/register.component';
 import { CustomerComponent } from './Pages/Customer/customer/customer.component';
 import { DonorComponent } from './Pages/Donor/donor/donor.component';
 import { VolnteerComponent } from './Pages/volunteer/volnteer/volnteer.component';
+import { HomeComponent } from './Pages/Home/home/home.component';
 
 export const routes: Routes = [
     {path:'', redirectTo:'login', pathMatch:'full'},
@@ -29,6 +30,8 @@ export const routes: Routes = [
         component:VolnteerComponent,
         children:[]
     },
+    {path:'home',title:'home',component:HomeComponent}
+    ,
     {
         path: '**',
         title: 'Not Found',

@@ -1,10 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
+import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [RoutingModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
@@ -14,7 +15,7 @@ export class NavbarComponent implements OnInit {
   userImage: string = '';
   unreadNotifications: number = 0;
   isNavbarHidden: boolean = false;
-
+  private readonly _Router = inject(Router);
   ngOnInit(): void {
     this.checkUserStatus();
   }
@@ -33,6 +34,8 @@ export class NavbarComponent implements OnInit {
   }
 
   login() {
+    this._Router.navigate(['/login']);
+
     console.log('توجه إلى صفحة تسجيل الدخول...');
   }
 
