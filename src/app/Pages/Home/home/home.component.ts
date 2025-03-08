@@ -25,8 +25,6 @@ interface Testimonial {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements AfterViewInit {
-  @ViewChild('causesSlider', { static: false }) causesSlider?: ElementRef;
-
   causes: CharityCause[] = [];
   public testimonialsList: Testimonial[] = [];
   currentIndex = 0;
@@ -80,6 +78,74 @@ export class HomeComponent implements AfterViewInit {
     ];
   }
 
+  // scroll button
+  @ViewChild('causesScroll') causesSlider!: ElementRef;
+  private startX = 0;
+  private scrollLeftStart = 0;
+
+  ngAfterViewInit() {
+    this.updateScroll();
+    this.addTouchScroll();
+  }
+
+  scrollLeft() {
+    if (this.causesSlider?.nativeElement) {
+      this.causesSlider.nativeElement.scrollBy({
+        left: -300,
+        behavior: 'smooth',
+      });
+      setTimeout(() => this.updateScroll(), 300);
+    }
+  }
+
+  scrollRight() {
+    if (this.causesSlider?.nativeElement) {
+      this.causesSlider.nativeElement.scrollBy({
+        left: 300,
+        behavior: 'smooth',
+      });
+      setTimeout(() => this.updateScroll(), 300);
+    }
+  }
+
+  updateScroll() {
+    if (this.causesSlider?.nativeElement) {
+      const container = this.causesSlider.nativeElement;
+      const prevBtn = document.querySelector('.prev-btn') as HTMLElement;
+      const nextBtn = document.querySelector('.next-btn') as HTMLElement;
+
+      if (prevBtn && nextBtn) {
+        prevBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
+        nextBtn.style.display =
+          container.scrollLeft + container.clientWidth < container.scrollWidth
+            ? 'flex'
+            : 'none';
+      }
+    }
+  }
+
+  addTouchScroll() {
+    if (this.causesSlider?.nativeElement) {
+      const slider = this.causesSlider.nativeElement;
+
+      slider.addEventListener('touchstart', (e: TouchEvent) => {
+        this.startX = e.touches[0].pageX;
+        this.scrollLeftStart = slider.scrollLeft;
+      });
+
+      slider.addEventListener('touchmove', (e: TouchEvent) => {
+        const moveX = e.touches[0].pageX - this.startX;
+        slider.scrollLeft = this.scrollLeftStart - moveX;
+      });
+
+      slider.addEventListener('touchend', () => {
+        this.updateScroll();
+      });
+    }
+  }
+
+  // feed back
+
   private initializeTestimonials() {
     this.testimonialsList = [
       {
@@ -111,43 +177,5 @@ export class HomeComponent implements AfterViewInit {
 
   getProgress(cause: CharityCause): number {
     return (cause.amountRaised / cause.fundingGoal) * 100;
-  }
-
-  ngAfterViewInit() {
-    this.updateScroll();
-  }
-
-  scrollLeft() {
-    if (this.causesSlider && this.causesSlider.nativeElement) {
-      this.causesSlider.nativeElement.scrollBy({
-        left: -300, // التحريك للخلف بمقدار 300 بكسل
-        behavior: 'smooth', // تمرير سلس
-      });
-    }
-  }
-
-  scrollRight() {
-    if (this.causesSlider && this.causesSlider.nativeElement) {
-      this.causesSlider.nativeElement.scrollBy({
-        left: 300, // التحريك للأمام بمقدار 300 بكسل
-        behavior: 'smooth', // تمرير سلس
-      });
-    }
-  }
-
-  updateScroll() {
-    if (this.causesSlider && this.causesSlider.nativeElement) {
-      const container = this.causesSlider.nativeElement;
-      const prevBtn = document.querySelector('.prev-btn') as HTMLElement;
-      const nextBtn = document.querySelector('.next-btn') as HTMLElement;
-
-      if (prevBtn && nextBtn) {
-        prevBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
-        nextBtn.style.display =
-          container.scrollLeft + container.clientWidth < container.scrollWidth
-            ? 'flex'
-            : 'none';
-      }
-    }
   }
 }

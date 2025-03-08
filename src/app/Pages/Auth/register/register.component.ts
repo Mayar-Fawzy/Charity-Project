@@ -17,12 +17,12 @@ export class RegisterComponent {
   // constructor(private _AuthService:AuthService  ,private _router:Router){}
   registerForm:FormGroup=new FormGroup({
      
-    birthdate:new FormControl(null ,[Validators.required]),
+    birthdate:new FormControl(null ,[Validators.required,    Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/)]),
       email:new FormControl(null ,[Validators.required,Validators.email]),
       password:new FormControl(null ,[Validators.required, Validators.pattern(/^[A-Z0-9a-z]{6,}/)]),
       name: new FormControl(null, [Validators.required, Validators.minLength(3)]),
       rePassword:new FormControl(null ,[Validators.required, Validators.pattern(/^[A-Z0-9a-z]{6,}/)]),
-
+      gender:new FormControl(null ,[Validators.required]),
      
      })
      SubmitRegister(forminfo:FormGroup)

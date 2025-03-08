@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
@@ -30,13 +30,18 @@ export class NavbarComponent implements OnInit {
 
   checkUserStatus() {
     if (isPlatformBrowser(this.platformId)) {
-      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      let userData = {};
+      try {
+        userData = JSON.parse(localStorage.getItem('user') || '{}');
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
 
-      if (userData && userData.isLoggedIn) {
+      if (userData && (userData as any).isLoggedIn) {
         this.isLoggedIn = true;
-        this.userName = userData.name || 'مستخدم';
-        this.userImage = userData.image || 'assets/default-user.png';
-        this.unreadNotifications = userData.notifications || 0;
+        this.userName = (userData as any).name || 'مستخدم';
+        this.userImage = (userData as any).image || 'assets/default-user.png';
+        this.unreadNotifications = (userData as any).notifications || 0;
       } else {
         this.isLoggedIn = false;
       }
@@ -60,7 +65,7 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    if (typeof window !== 'undefined' && window.scrollY > 50) {
+    if (isPlatformBrowser(this.platformId) && window.scrollY > 50) {
       this.isNavbarHidden = true;
     } else {
       this.isNavbarHidden = false;
