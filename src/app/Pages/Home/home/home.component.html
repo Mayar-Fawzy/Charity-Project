@@ -109,11 +109,11 @@
         <span class="stat-label">سنوات من الخبرة</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number">1ك</span>
+        <span class="stat-number">1 ألف</span>
         <span class="stat-label">تبرعات ناجحة</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number">20ك</span>
+        <span class="stat-number">20 ألف</span>
         <span class="stat-label">متبرعين سعداء</span>
       </div>
       <div class="stat-item">
@@ -124,6 +124,7 @@
   </div>
 </div>
 
+<!-- card donat -->
 <section class="latest-causes">
   <h2 class="section-title">أحدث القضايا</h2>
   <p class="section-subtitle">تعرف على القضايا التي تحتاج إلى دعمكم</p>
@@ -140,7 +141,7 @@
     <div class="causes-scroll-container">
       <div #causesScroll class="causes-scroll">
         <div *ngFor="let cause of causes" class="cause-card">
-          <img
+          <img title="donat"
             [src]="cause.imagePath"
             [alt]="cause.title"
             class="cause-image"
@@ -155,8 +156,8 @@
               ></div>
             </div>
             <div class="funding-info">
-              <span>المبلغ المجمع: EGP{{ cause.amountRaised }}</span>
-              <span>الهدف: EGP{{ cause.fundingGoal }}</span>
+              <span>المبلغ المجمع: ج.م {{ cause.amountRaised }}</span>
+              <span>الهدف: ج.م {{ cause.fundingGoal }}</span>
             </div>
             <button class="donate-button">تبرع الآن</button>
           </div>
@@ -175,53 +176,74 @@
   </div>
 </section>
 
+<!-- donation Sinai -->
 <section class="donation-section">
   <div class="container">
     <div class="steps">
-      <h2><span class="highlight">3</span> خطوات سهلة للتبرع</h2>
+      <h2>تبرع للفقراء في <span class="highlight">3</span> خطوات سهلة</h2>
       <div class="step">
-        <div class="icon yellow"></div>
+        <div class="icon yellow"><i class="bi bi-bounding-box"></i></div>
         <div class="text">
           <h3>اختر الوجهة</h3>
-          <p>اختر الجهة التي تريد التبرع لها بكل سهولة.</p>
+          <p>قم بتحديد الجهة التي ترغب بالتبرع لها بسهولة.</p>
         </div>
       </div>
+
       <div class="step">
-        <div class="icon red"></div>
+        <div class="icon red"><i class="bi bi-cash-coin"></i></div>
         <div class="text">
           <h3>قم بالتبرع</h3>
-          <p>حدد المبلغ وقم بإرساله بسهولة وأمان.</p>
+          <p>حدد المبلغ المناسب وقم بالتبرع بكل سهولة وأمان.</p>
         </div>
       </div>
+
       <div class="step">
-        <div class="icon blue"></div>
+        <div class="icon blue"><i class="bi bi-car-front-fill"></i></div>
         <div class="text">
-          <h3>الوصول للمحتاجين</h3>
-          <p>يصل تبرعك للمحتاجين بأسرع وقت ممكن.</p>
+          <h3>وصول التبرع</h3>
+          <p>يصل تبرعك للمحتاجين في أسرع وقت ممكن.</p>
         </div>
       </div>
     </div>
+
     <div class="donation-card">
       <img
-        src="/assets/Images/Donate To Sinai.png"
+        src="assets/Images/Donate To Sinai.png"
         alt="التبرع"
         class="donation-img"
       />
       <div class="donation-info">
         <h3>التبرع لسيناء</h3>
-        <p>هناك ما يقارب 195 شخصًا يعانون من نقص التغذية في سيناء.</p>
+        <p>
+          هناك ما يقارب 195 شخصًا يعانون من نقص التغذية في سيناء، وهو ربع عدد
+          السكان.
+        </p>
         <div class="progress-bar">
           <div class="filled" style="width: 40%"></div>
         </div>
         <div class="donation-stats">
-          <span>المبلغ المُجمع: 400 EGP</span>
-          <span>الهدف: 1000 EGP</span>
+          <span> المبلغ المُجمع: 400 ج.م</span>
+          <span>الهدف: 1000 ج.م</span>
         </div>
       </div>
     </div>
   </div>
+  <div class="card">
+    <img
+      src="assets/Images/unsplash_AEaTUnvneik.png"
+      alt="المستخدم"
+      class="image"
+    />
+    <div class="content">
+      <div class="status">جاري التنفيذ</div>
+      <div class="title">تبرع لصالح سيناء</div>
+      <div class="progress-text"><span class="percentage">40%</span> مكتمل</div>
+      <div class="progress-bar"></div>
+    </div>
+  </div>
 </section>
 
+<!-- feedback -->
 <div class="testimonial-section">
   <h5 class="section-title">الشهادات</h5>
   <h2 class="main-title">ماذا يقول الناس عنا؟</h2>

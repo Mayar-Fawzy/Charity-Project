@@ -85,7 +85,7 @@ $border-radius: 8px;
       -moz-transition: background-color 0.3s ease;
       -ms-transition: background-color 0.3s ease;
       -o-transition: background-color 0.3s ease;
-      &:hover{
+      &:hover {
         background-color: darken($primary-color, 10%);
       }
     }
@@ -100,7 +100,7 @@ $border-radius: 8px;
   box-shadow: $box-shadow;
   border-radius: $border-radius;
   position: absolute;
-  bottom: 463px;
+  top: 559px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
@@ -169,7 +169,7 @@ $border-radius: 8px;
 // why-choose-us
 .why-choose-us {
   text-align: center;
-  padding: 64px 32px;
+  padding: 95px 32px 32px 32px;
   background-color: #f8f9fa;
 
   h1 {
@@ -264,12 +264,12 @@ $border-radius: 8px;
 .content-container {
   display: flex;
   justify-content: space-between;
-  gap: 435px;
+  gap: 235px;
   align-items: center;
-  padding: 50px 100px;
   background-color: #ffffff;
-  min-height: 65vh;
+  min-height: 90vh;
   position: relative;
+  box-shadow: $box-shadow;
 
   .image-section {
     flex: 1;
@@ -277,11 +277,11 @@ $border-radius: 8px;
     display: flex;
     justify-content: center;
     position: relative;
-    width: 620px;
 
     .overlapping-image {
-      width: 300px;
+      width: 365px;
       height: auto;
+      align-items: center;
       border-radius: 20px;
       object-fit: cover;
       position: absolute;
@@ -290,20 +290,21 @@ $border-radius: 8px;
     .children-image {
       z-index: 5;
       left: 0;
-      top: -230px;
+      top: -319px;
     }
 
     .hands-image {
       z-index: 10;
-      left: 212px;
-      width: 225px;
-      top: 15px;
+      left: 261px;
+      width: 280px;
+      top: 0;
     }
   }
 
   .text-section {
-    flex: 2;
-    padding-left: 50px;
+    flex: 1;
+    white-space: nowrap;
+    padding-left: 120px;
     text-align: right;
     h1 {
       font-size: 50px;
@@ -401,7 +402,7 @@ $border-radius: 8px;
     justify-content: center;
     position: relative;
     max-width: 100%;
-    height: 550px;
+    height: auto;
     overflow: hidden;
   }
 
@@ -426,11 +427,11 @@ $border-radius: 8px;
     }
 
     &.prev-btn {
-      left: 90px;
+      left: 35px;
     }
 
     &.next-btn {
-      right: 90px;
+      right: 35px;
     }
   }
 
@@ -438,7 +439,7 @@ $border-radius: 8px;
     width: 85%;
     overflow-x: auto;
     scroll-behavior: smooth;
-    scrollbar-width: none; // إخفاء شريط التمرير
+    scrollbar-width: none;
     -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
@@ -448,20 +449,28 @@ $border-radius: 8px;
 
   .causes-scroll {
     display: flex;
+    flex-wrap: nowrap;
     gap: 20px;
+    overflow: hidden;
     transition: transform 0.3s ease-in-out;
     white-space: nowrap;
   }
 
   .cause-card {
-    flex: 0 0 calc(100% / 3 - 20px);
+    flex: 0 0 400px;
+    height: 520px;
+    width: 100%;
+    max-width: 400px;
     background: white;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow: hidden;
-    height: 550px;
+    direction: rtl;
     transition: transform 0.3s;
-    scroll-snap-align: start;
 
     &:hover {
       transform: translateY(-5px);
@@ -469,38 +478,48 @@ $border-radius: 8px;
 
     .cause-image {
       width: 100%;
-      height: 335px;
+      // height: 335px;
+      min-height: 242px;
       object-fit: cover;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
     }
 
     .cause-details {
-      padding: 15px;
-      text-align: right;
-      word-wrap: break-word;
-      white-space: normal;
+      padding: 20px;
+      text-align: left;
+      min-height: auto;
 
       h3 {
-        font-size: 22px;
-        color: #333;
-        margin-bottom: 5px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 10px;
       }
 
       p {
         font-size: 16px;
         color: #666;
-        margin-bottom: 20px;
+        line-height: 1.6;
+        max-height: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-wrap: break-word;
+        flex-grow: 1;
       }
 
       .progress-container {
         height: 8px;
         background: #eee;
-        border-radius: 3px;
+        border-radius: 5px;
         overflow: hidden;
-        margin-bottom: 10px;
+        margin: 15px 0;
 
         .progress-bar {
           height: 100%;
-          background: #ff8c00;
+          background: #ffa500;
+          border-radius: 5px;
         }
       }
 
@@ -508,23 +527,27 @@ $border-radius: 8px;
         display: flex;
         justify-content: space-between;
         font-size: 14px;
-        margin-bottom: 20px;
+        color: #444;
+        font-weight: 600;
+        margin-bottom: 15px;
       }
+    }
 
-      .donate-button {
-        background-color: #ff8c00;
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        font-size: 16px;
-        transition: background 0.3s;
+    .donate-button {
+      background-color: #ffa500;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s;
+      align-self: flex-end;
+      margin-top: 10px;
 
-        &:hover {
-          background-color: #e67e00;
-        }
+      &:hover {
+        background-color: #e69500;
       }
     }
   }
@@ -557,285 +580,262 @@ $border-radius: 8px;
 }
 
 //Donation to Sinai
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-.latest-causes {
-  text-align: center;
-  padding: 50px 20px;
-  background: #f8f9fa;
-  position: relative;
-
-  .section-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  .section-subtitle {
-    font-size: 1rem;
-    color: darken($secondary-color, 20%);
-    margin-bottom: 30px;
-  }
-
-  .causes-slider {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    min-width: 100%;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    .cause-card {
-      width: 300px;
-      border-radius: $border-radius;
-      box-shadow: $box-shadow;
-      overflow: hidden;
-      background: white;
-      transition: all 0.3s ease-in-out;
-      padding-bottom: 18px;
-
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-      }
-
-      .cause-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-      }
-
-      .cause-details {
-        padding: 15px;
-        text-align: left;
-        line-height: 1.4;
-        margin-bottom: 0;
-
-        h3 {
-          font-size: 1.3rem;
-          font-weight: bold;
-          color: $secondary-color;
-          margin-bottom: 5px;
-        }
-
-        p {
-          font-size: 0.9rem;
-          color: darken($secondary-color, 20%);
-          margin-bottom: 15px;
-          line-height: 1.6;
-        }
-
-        .progress-container {
-          background: #f5f5f5;
-          border-radius: 20px;
-          height: 15px;
-          width: 100%;
-          position: relative;
-          border: 1px solid rgb(50, 49, 49);
-          overflow: hidden;
-        }
-
-        .progress-bar {
-          background: #f59e0b;
-          height: 100%;
-          width: 50%;
-          border-radius: 20px;
-        }
-
-        .funding-info {
-          font-size: 0.9rem;
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .donate-button {
-          width: 100%;
-          background: $primary-color;
-          color: white;
-          border: none;
-          padding: 10px;
-          font-size: 1rem;
-          border-radius: 5px;
-          cursor: pointer;
-          margin-top: 15px;
-          transition: background 0.3s ease, transform 0.2s ease;
-
-          &:hover {
-            background: darken($primary-color, 10%);
-            transform: scale(1.05);
-          }
-        }
-      }
-    }
-  }
-  .slider-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 15px;
-    transform: translateY(-50%);
-
-    .slider-btn {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      border-radius: 50%;
-      padding: 15px;
-      font-size: 1.8rem;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-
-      &:hover {
-        background: rgba(240, 240, 240, 1);
-        transform: scale(1.1);
-      }
-
-      i {
-        color: #f6a026;
-      }
-    }
-  }
-
-  .prev-btn {
-    margin-left: -10px;
-  }
-
-  .next-btn {
-    margin-right: -10px;
-  }
-
-  @media (max-width: 1024px) {
-    .latest-causes {
-      .causes-slider {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .cause-card {
-        width: calc(50% - 20px);
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    .latest-causes {
-      padding: 30px 10px;
-
-      .causes-slider {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .cause-card {
-        width: 100%;
-      }
-
-      .slider-controls {
-        display: none;
-      }
-    }
-  }
-}
-
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 30px;
 }
+
 .steps {
   width: 40%;
 }
-h2 {
-  font-size: 24px;
+.steps h2 {
+  font-size: 40px;
   font-weight: bold;
   color: #222;
 }
+
 .highlight {
-  color: #f39c12;
+  color: #f36112;
+  font-weight: bold;
+  font-size: 40px;
 }
+
 .step {
   display: flex;
   align-items: center;
   margin: 20px 0;
+  h3 {
+    font-size: 25px;
+    color: #545353;
+  }
 }
+
 .icon {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 10px;
-  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: #fff;
+    font-size: 24px;
+  }
 }
+
 .yellow {
   background: #f1c40f;
+  margin: 0px 0px 0px 15px;
 }
+
 .red {
   background: #e74c3c;
+  margin: 0px 0px 0px 15px;
 }
+
 .blue {
   background: #3498db;
+  margin: 0px 0px 0px 15px;
+}
+
+.donation-section {
+  position: relative;
 }
 .donation-card {
   width: 55%;
-  height: 60vh;
+  max-width: 85%;
   background: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: -8px -8px 20px rgba(0, 123, 255, 0.2),
-    0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 24px;
   position: relative;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+
   .donation-img {
     width: 100%;
-    height: 300px;
-    border-radius: 10px;
+    height: 280px;
+    border-radius: 16px;
+    object-fit: cover;
   }
+
+  .donation-info {
+    text-align: right;
+    margin-top: 16px;
+
+    h3 {
+      font-size: 22px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.6;
+    }
+  }
+
   .progress-bar {
-    width: 100%;
+    width: 65%;
     height: 8px;
     background: #eee;
     border-radius: 5px;
     margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, #f5a623, #f39c12);
+      border-radius: 5px;
+      position: absolute;
+      transition: width 0.5s ease-in-out;
+    }
   }
-  .progress-bar .filled {
-    height: 100%;
-    background: #f39c12;
-    border-radius: 5px;
-  }
+
   .donation-stats {
     display: flex;
-    justify-content: space-between;
+    justify-content: stretch;
+    align-items: center;
     margin-top: 10px;
     font-size: 14px;
-  }
-  .donation-info {
-    margin-top: 20px;
+    color: #666;
+    font-weight: 600;
   }
 }
 
+// صندوق الحالة الجانبي
+.donation-status {
+  position: absolute;
+  bottom: -40px;
+  right: 50%;
+  transform: translateX(50%);
+  background: #fff;
+  padding: 16px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  width: 260px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+
+  .user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+  }
+
+  .status-text {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+    position: relative;
+
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, #f5a623, #f39c12);
+      width: 40%;
+      border-radius: 3px;
+      transition: width 0.5s ease-in-out;
+    }
+  }
+}
+.card {
+  background: #fff;
+  position: absolute;
+  border-radius: 16px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+  padding-left: 75px;
+  padding: 16px 5px 13px 103px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  left: 155px;
+  top: 372px;
+  max-width: 400px;
+  height: 125px;
+  transform: translateY(-20px);
+  transition: all 0.3s ease-in-out;
+  direction: rtl;
+  text-align: right;
+  z-index: 1;
+
+  .image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+
+    .status {
+      font-size: 14px;
+      color: #8b83a3;
+      font-weight: 600;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+      margin: 4px 0;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+
+      .percentage {
+        color: #f5a623;
+      }
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #eee;
+      border-radius: 4px;
+      margin-top: 6px;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 40%;
+        height: 100%;
+        background: #f5a623;
+        border-radius: 4px;
+        position: absolute;
+      }
+    }
+  }
+}
+
+// feedback
 .testimonial-section {
   text-align: center;
   position: relative;

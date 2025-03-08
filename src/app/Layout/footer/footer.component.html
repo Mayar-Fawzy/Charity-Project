@@ -7,10 +7,7 @@
     <div class="footer__brand">
       <div class="footer__logo">
         <span>يـــــــد</span>
-        <img
-          src="../../../../assets/Images/image33.png"
-          alt="شعار الجمعية"
-        />
+        <img src="../../../../assets/Images/image33.png" alt="شعار الجمعية" />
         <span>العطاء</span>
       </div>
       <p class="footer__charity">جمعية خيرية</p>
@@ -51,7 +48,14 @@
       </p>
       <p><i class="bi bi-telephone"></i> (048) 2344567</p>
       <p><i class="bi bi-phone"></i> +20 123 4567 72</p>
+      <p>
+        <i class="bi bi-envelope-at-fill"></i>
+        <a [href]="'mailto:' + email">{{ email }}</a>
+      </p>
       <div class="footer__social">
+        <a href="mailto:givinghands.contact@gmail.com">
+          <i class="bi bi-envelope-at-fill"></i>
+        </a>
         <i class="bi bi-facebook"></i>
         <i class="bi bi-instagram"></i>
         <i class="bi bi-twitter"></i>
@@ -60,7 +64,7 @@
 
     <!--  الحقوق -->
     <div class="footer__bottom">
-      <p>جميع الحقوق محفوظة &copy; 2023 GivingHands123</p>
+      <p>جميع الحقوق محفوظة &copy; {{ currentYear }} GivingHands123</p>
       <a href="#" class="footer__terms">الشروط والأحكام</a>
     </div>
   </div>
