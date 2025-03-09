@@ -5,8 +5,10 @@ import {
   HostListener,
   Inject,
   PLATFORM_ID,
+  inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +18,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+  private readonly _Router=inject(Router);
   isLoggedIn: boolean = false;
   userName: string = '';
   userImage: string = '';
@@ -49,7 +52,9 @@ export class NavbarComponent implements OnInit {
   }
 
   login() {
+    this._Router.navigate(['/login']);
     console.log('توجه إلى صفحة تسجيل الدخول...');
+  
   }
 
   logout() {
