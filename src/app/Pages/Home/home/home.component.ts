@@ -1,5 +1,13 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 
 interface CharityCause {
   title: string;
@@ -26,14 +34,26 @@ interface Testimonial {
 })
 export class HomeComponent implements AfterViewInit {
   causes: CharityCause[] = [];
-  public testimonialsList: Testimonial[] = [];
+  testimonialsList: Testimonial[] = [];
+  @ViewChild('causesScroll') causesSlider!: ElementRef;
   currentIndex = 0;
-  cardWidth = 0;
-  cardsPerView = 3;
+  cardWidth = 300;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
     this.initializeCauses();
     this.initializeTestimonials();
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.cardWidth =
+        this.causesSlider.nativeElement.querySelector('.cause-card')
+          ?.offsetWidth || 300;
+      this.updateScrollButtons();
+      this.addTouchScroll();
+    }
   }
 
   private initializeCauses() {
@@ -78,73 +98,66 @@ export class HomeComponent implements AfterViewInit {
     ];
   }
 
-  // scroll button
-  @ViewChild('causesScroll') causesSlider!: ElementRef;
-  private startX = 0;
-  private scrollLeftStart = 0;
+  // scroll
+scrollLeft() {
+  if (!this.causesSlider || !this.causesSlider.nativeElement) return;
 
-  ngAfterViewInit() {
-    this.updateScroll();
-    this.addTouchScroll();
-  }
+  this.causesSlider.nativeElement.scrollBy({
+    left: -this.cardWidth,
+    behavior: 'smooth',
+  });
 
-  scrollLeft() {
-    if (this.causesSlider?.nativeElement) {
-      this.causesSlider.nativeElement.scrollBy({
-        left: -300,
-        behavior: 'smooth',
-      });
-      setTimeout(() => this.updateScroll(), 300);
-    }
-  }
+  setTimeout(() => this.updateScrollButtons(), 300);
+}
 
-  scrollRight() {
-    if (this.causesSlider?.nativeElement) {
-      this.causesSlider.nativeElement.scrollBy({
-        left: 300,
-        behavior: 'smooth',
-      });
-      setTimeout(() => this.updateScroll(), 300);
-    }
-  }
+scrollRight() {
+  if (!this.causesSlider || !this.causesSlider.nativeElement) return;
 
-  updateScroll() {
+  this.causesSlider.nativeElement.scrollBy({
+    left: this.cardWidth,
+    behavior: 'smooth',
+  });
+
+  setTimeout(() => this.updateScrollButtons(), 300);
+}
+
+
+  updateScrollButtons() {
     if (this.causesSlider?.nativeElement) {
       const container = this.causesSlider.nativeElement;
       const prevBtn = document.querySelector('.prev-btn') as HTMLElement;
       const nextBtn = document.querySelector('.next-btn') as HTMLElement;
 
       if (prevBtn && nextBtn) {
-        prevBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
-        nextBtn.style.display =
-          container.scrollLeft + container.clientWidth < container.scrollWidth
-            ? 'flex'
-            : 'none';
+        prevBtn.classList.toggle('hidden', container.scrollLeft <= 0);
+        nextBtn.classList.toggle(
+          'hidden',
+          container.scrollLeft + container.clientWidth >= container.scrollWidth
+        );
       }
     }
   }
-
   addTouchScroll() {
     if (this.causesSlider?.nativeElement) {
       const slider = this.causesSlider.nativeElement;
+      let startX = 0;
+      let scrollLeftStart = 0;
 
       slider.addEventListener('touchstart', (e: TouchEvent) => {
-        this.startX = e.touches[0].pageX;
-        this.scrollLeftStart = slider.scrollLeft;
+        startX = e.touches[0].pageX;
+        scrollLeftStart = slider.scrollLeft;
       });
 
       slider.addEventListener('touchmove', (e: TouchEvent) => {
-        const moveX = e.touches[0].pageX - this.startX;
-        slider.scrollLeft = this.scrollLeftStart - moveX;
+        const moveX = e.touches[0].pageX - startX;
+        slider.scrollLeft = scrollLeftStart - moveX;
       });
 
       slider.addEventListener('touchend', () => {
-        this.updateScroll();
+        setTimeout(() => this.updateScrollButtons(), 300); // تحديث الأزرار بعد التمرير
       });
     }
   }
-
-  // feed back
 
   private initializeTestimonials() {
     this.testimonialsList = [
@@ -153,24 +166,21 @@ export class HomeComponent implements AfterViewInit {
         occupation: 'مصمم UI/UX',
         imagePath: 'assets/Images/person1.png',
         rating: Array(5).fill(1),
-        feedback:
-          'في مجال الترويج والإعلان، الشهادة أو العرض التوضيحي هو بيان مكتوب يشيد بفضائل منتج معين.',
+        feedback: 'رائع جدًا ومفيد للغاية.',
       },
       {
         name: 'أميرة محمد',
         occupation: 'طبيبة',
         imagePath: 'assets/Images/person2.png',
         rating: Array(5).fill(1),
-        feedback:
-          'في مجال الترويج والإعلان، الشهادة أو العرض التوضيحي هو بيان مكتوب يشيد بفضائل منتج معين.',
+        feedback: 'تجربة ممتازة وسهلة الاستخدام.',
       },
       {
         name: 'تقى محمد',
         occupation: 'مهندسة',
         imagePath: 'assets/Images/person3.png',
         rating: Array(5).fill(1),
-        feedback:
-          'في مجال الترويج والإعلان، الشهادة أو العرض التوضيحي هو بيان مكتوب يشيد بفضائل منتج معين.',
+        feedback: 'أحببت التصميم وسهولة التنقل.',
       },
     ];
   }

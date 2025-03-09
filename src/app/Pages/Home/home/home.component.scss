@@ -263,9 +263,9 @@ $border-radius: 8px;
 // main-container
 .content-container {
   display: flex;
-  justify-content: space-between;
-  gap: 235px;
-  align-items: center;
+  justify-content: center; // توسيط العناصر أفقياً
+  align-items: center; // توسيط العناصر عمودياً
+  gap: 105px;
   background-color: #ffffff;
   min-height: 90vh;
   position: relative;
@@ -273,15 +273,14 @@ $border-radius: 8px;
 
   .image-section {
     flex: 1;
-    text-align: left;
     display: flex;
     justify-content: center;
+    align-items: center;
     position: relative;
 
     .overlapping-image {
       width: 365px;
       height: auto;
-      align-items: center;
       border-radius: 20px;
       object-fit: cover;
       position: absolute;
@@ -303,9 +302,10 @@ $border-radius: 8px;
 
   .text-section {
     flex: 1;
-    white-space: nowrap;
+    margin: auto;
     padding-left: 120px;
     text-align: right;
+
     h1 {
       font-size: 50px;
       color: #1a3b6f;
@@ -403,7 +403,7 @@ $border-radius: 8px;
     position: relative;
     max-width: 100%;
     height: auto;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .slider-btn {
@@ -415,6 +415,7 @@ $border-radius: 8px;
     font-size: 18px;
     cursor: pointer;
     display: flex;
+    opacity: 1;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s, transform 0.3s;
@@ -436,11 +437,13 @@ $border-radius: 8px;
   }
 
   .causes-scroll-container {
+    height: auto;
     width: 85%;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    touch-action: pan-x;
 
     &::-webkit-scrollbar {
       display: none;
@@ -452,6 +455,8 @@ $border-radius: 8px;
     flex-wrap: nowrap;
     gap: 20px;
     overflow: hidden;
+    width: max-content;
+    white-space: nowrap;
     transition: transform 0.3s ease-in-out;
     white-space: nowrap;
   }
@@ -464,11 +469,11 @@ $border-radius: 8px;
     background: white;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 0;
+    overflow: visible;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    overflow: hidden;
     direction: rtl;
     transition: transform 0.3s;
 
@@ -478,16 +483,16 @@ $border-radius: 8px;
 
     .cause-image {
       width: 100%;
-      // height: 335px;
-      min-height: 242px;
+      height: 270px;
       object-fit: cover;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
+      display: block;
     }
 
     .cause-details {
       padding: 20px;
-      text-align: left;
+      text-align: right;
       min-height: auto;
 
       h3 {
@@ -502,11 +507,11 @@ $border-radius: 8px;
         color: #666;
         line-height: 1.6;
         max-height: 90px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: visible;
+        text-overflow: unset;
         white-space: normal;
         word-wrap: break-word;
-        flex-grow: 1;
+        flex-grow: unset;
       }
 
       .progress-container {
@@ -649,7 +654,8 @@ $border-radius: 8px;
   max-width: 85%;
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: -20px -20px 40px 10px rgba(89, 177, 230, 0.4),
+    -10px -10px 20px 5px rgba(89, 177, 230, 0.3);
   padding: 24px;
   position: relative;
   transition: all 0.3s ease-in-out;
