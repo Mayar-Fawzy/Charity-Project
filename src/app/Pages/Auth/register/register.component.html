@@ -18,7 +18,8 @@
                 placeholder=" الاسم "
               />
               <div
-                *ngIf="registerForm.get('name')?.errors && registerForm.get('name')?.touched"
+                *ngIf="registerForm.get('name')?.errors && (registerForm.get('name')?.touched
+          || registerForm.get('name')?.dirty)"
                 class="text-danger mt-1"
               >
                 <span *ngIf="registerForm.get('name')?.errors?.['required']" class="m-0">الاسم مطلوب</span>
@@ -39,7 +40,8 @@
                 placeholder=" اختر "
               />
               <div
-                *ngIf="registerForm.get('gender')?.errors && registerForm.get('gender')?.touched"
+              *ngIf="registerForm.get('gender')?.errors && (registerForm.get('gender')?.touched
+          || registerForm.get('gender')?.dirty)"
                 class="text-danger mt-1"
               >
                 <span *ngIf="registerForm.get('gender')?.errors?.['required']" class="m-0">الجنسية مطلوبة</span>
@@ -58,7 +60,8 @@
                 placeholder="يوم/شهر/سنه"
               />
               <div
-                *ngIf="registerForm.get('birthdate')?.errors && registerForm.get('birthdate')?.touched"
+              *ngIf="registerForm.get('birthdate')?.errors && (registerForm.get('birthdate')?.touched
+          || registerForm.get('birthdate')?.dirty)"
                 class="text-danger mt-1"
               >
                 <span *ngIf="registerForm.get('birthdate')?.errors?.['required']" class="m-0">
@@ -80,9 +83,8 @@
               placeholder=" ادخل البريد الالكتروني "
             />
             <div
-              *ngIf="
-                registerForm.get('email')?.errors && registerForm.get('email')?.touched
-              "
+            *ngIf="registerForm.get('email')?.errors && (registerForm.get('email')?.touched
+          || registerForm.get('email')?.dirty)"
               class="text-danger mt-1"
             >
               <span
@@ -108,10 +110,8 @@
               />
             </div>
             <div
-              *ngIf="
-                registerForm.get('password')?.errors &&
-                registerForm.get('password')?.touched
-              "
+            *ngIf="registerForm.get('password')?.errors && (registerForm.get('password')?.touched
+          || registerForm.get('password')?.dirty)"
               class="text-danger"
             >
               <span
@@ -140,10 +140,8 @@
               />
               </div>
               <div
-              *ngIf="
-                registerForm.get('rePassword')?.errors &&
-                registerForm.get('rePassword')?.touched
-              "
+              *ngIf="registerForm.get('rePassword')?.errors && (registerForm.get('rePassword')?.touched
+          || registerForm.get('rePassword')?.dirty)"
               class="text-danger"
               >
               <span
