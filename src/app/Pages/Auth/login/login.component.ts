@@ -15,10 +15,6 @@ export class LoginComponent {
   private readonly _Router = inject(Router);
   private readonly _ToastService = inject(ToastrService);
 
-// constructor(private authService: AuthService, private _Router: Router , private _ToastService
-// :ToastService
-// ) { }
-
 
 isloading = false;
 passwordFieldType: boolean = true;
@@ -35,7 +31,15 @@ siginForm: FormGroup = new FormGroup({
   ]),
 
 });
+CheckFieldInvalid(InputName: string): boolean {
+  const Check = this.siginForm.get(InputName);
+  return Check ? Check.invalid && (Check.touched || Check.dirty) : false;
+}
 
+CheckFieldValid(InputName: string): boolean {
+  const Check = this.siginForm.get(InputName);
+  return Check ? Check.valid && (Check.touched || Check.dirty) : false;
+}
 Sigin(formInfo: FormGroup) {
 
   // this.isloading=true;

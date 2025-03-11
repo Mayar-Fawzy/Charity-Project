@@ -63,11 +63,11 @@
 form .inps{
 
     padding: 10px 15px;
-    outline: none !important;
-    border: none;
-    background: #9F9F9F26;
-    border-radius: 10px;
-    color: #fff;
+    // outline: none !important;
+    // border: none;
+    // background: #9F9F9F26;
+    // border-radius: 10px;
+    // color: #fff;
     font-weight: 400;
     font-size: 18px;
     
@@ -107,6 +107,14 @@ form .btns{
     background: #B88E2F;
     font-weight: 600;
     color: #fff;
+}
+.form-control.is-valid{
+    background-position: left calc(0.375em + .1875rem) center !important;
+
+}
+.form-control.is-invalid{
+    background-position: left calc(0.375em + .1875rem) center !important;
+
 }
 form .btnSign{
     background-color: transparent;
