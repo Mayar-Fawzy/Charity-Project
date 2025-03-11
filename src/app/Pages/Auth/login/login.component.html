@@ -55,9 +55,9 @@
         @if(siginForm.get('password')?.errors&&siginForm.get('password')?.touched){
         <div class="text-danger mt-1">
           @if(siginForm.get('password')?.errors?.['required']){
-          <p>password is required</p>
+          <p>الباسورد مطلوب</p>
           } @else if (siginForm.get('password')?.errors?.['pattern']) {
-          <p>password 6 chars Start with Capital Letter Then num</p>
+          <p>يجب ان تحتوي كلمه المرور علي  رقم و حرف و رمز </p>
           } @else {}
         </div>
         }
