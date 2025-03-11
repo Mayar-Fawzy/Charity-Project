@@ -114,17 +114,18 @@
           || registerForm.get('password')?.dirty)"
               class="text-danger"
             >
-              <span
-                *ngIf="registerForm.get('password')?.errors?.['required']"
-                class="mb-0"
-                >كلمة المرور مطلوبة</span
-              >
-              <span
-                *ngIf="registerForm.get('password')?.errors?.['pattern']"
-                class="mb-0"
-              >
-                يجيب ان تبدا بحرف و ع الاقل 6 احرف او ارقام</span
-              >
+            @if(registerForm.get('password')?.errors?.['required']) {
+              <span class="m-0">كلمة المرور مطلوبة</span>
+            } 
+            @else if (registerForm.get('password')?.errors?.['minlength']) {
+              <span class="m-0">يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل</span>
+            } 
+            @else if (registerForm.get('password')?.errors?.['pattern']) {
+              <span class="m-0">
+                تشمل أرقامًا، وحروفًا كبيرة وصغيرة، ورمزًا خاصًا مثل (<strong>&commat;, #, !</strong>).
+                مثال: <strong>Hello&commat;123</strong>
+              </span>
+            }@else{}
             </div>
           </div>
       <!-- RepaSSword -->
@@ -132,7 +133,7 @@
               <label for="rePassword" class="mb-3">  تاكيد كلمة المرور </label>
               <div class="position-relative">
               <input
-                type="rePassword"
+                type="password"
                 class="form-control inps"
                 formControlName="rePassword"
                 id="rePassword"
@@ -144,19 +145,12 @@
           || registerForm.get('rePassword')?.dirty)"
               class="text-danger"
               >
-              <span
-                *ngIf="registerForm.get('rePassword')?.errors?.['required']"
-                class="mb-0"
-                >كلمة المرور مطلوبة</span
-              >
-              <span
-                *ngIf="registerForm.get('rePassword')?.errors?.['pattern']"
-                class="mb-0"
-              >
-                يجيب ان تبدا بحرف و ع الاقل 6 احرف او ارقام</span
-              >
-              </div>
-              <p *ngIf="errorpassword" class="mb-0" >{{errorpassword}}</p>
+              @if(registerForm.getError('mismatch')){
+                <div class="text-danger mt-1">
+                  <span>كلمة المرور غير متطابقه</span>
+                </div>
+                }
+            </div>
             </div>
             <!-- Check -->
             <div class="formValied my-3">
@@ -171,7 +165,7 @@
         
             <button
             class="btnRegster btns"
-            [disabled]="!registerForm.valid || isloading"
+            [disabled]="registerForm.invalid || isloading"
             type="submit"
             >
             <span *ngIf="!isloading">انشاء حساب </span>
