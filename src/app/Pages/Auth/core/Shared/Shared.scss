@@ -140,6 +140,10 @@ form .btns:disabled {
     left: 15px  !important;
   }
 
+  .text-danger {
+    --bs-text-opacity: 1;
+    color: rgb(101, 19, 27) !important;
+  }
   
 @media screen and (max-width: 900px) {
     .Regiter{

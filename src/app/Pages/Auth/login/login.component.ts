@@ -26,8 +26,8 @@ siginForm: FormGroup = new FormGroup({
   ]),
   password: new FormControl(null, [
     Validators.required,
-    Validators.min(8),
-    Validators.pattern(/^[A-Z0-9a-z]{6,}$/)
+    Validators.minLength(8),
+    Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
   ]),
 
 });

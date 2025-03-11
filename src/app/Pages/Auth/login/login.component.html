@@ -11,19 +11,17 @@
           type="email"
           class="form-control inps"
           id="email"
-          [ngClass]="{
-            'is-invalid': CheckFieldInvalid('email'),
-            'is-valid': CheckFieldValid('email')
-          }"
+          autocomplete="off"
           formControlName="email"
           placeholder=" ادخل البريد الالكتروني "
         />
-        <div class="text-danger mt-1">
-          @if(siginForm.get('email')?.errors && siginForm.get('email')?.touched)
-          { @if(siginForm.get('email')?.getError('required')) {
-          <p>الايميل مطلوب</p>
+        <div class="text-danger fw-bold mt-1">
+          @if(siginForm.get('email')?.errors && (siginForm.get('email')?.touched
+          || siginForm.get('email')?.dirty)) {
+          @if(siginForm.get('email')?.getError('required')) {
+          <span class="m-0">البريد الاكتروني مطلوب</span>
           } @else if (siginForm.get('email')?.errors?.['email']) {
-          <p>الايميل غير صحيح</p>
+          <span class="m-0">البريد الاكتروني غير صحيح</span>
           } @else {} }
         </div>
       </div>
@@ -32,34 +30,30 @@
         <label for="password" class="mb-3"> كلمة المرور </label>
         <div class="position-relative">
           <input
-            [type]="passwordFieldType ? 'password' : 'text'"
-            [ngClass]="{
-              'is-invalid': CheckFieldInvalid('password'),
-              'is-valid': CheckFieldValid('password')
-            }"
+            autocomplete="off"
             class="form-control inps"
             formControlName="password"
             id="password"
             placeholder=" ادخل كلمة المرور"
           />
-
-          <!-- <i
-            (click)="togglePasswordVisibility()"
-            role="button"
-            class="fa-solid position-absolute top-4 passicon"
-            [class.fa-eye]="passwordFieldType"
-            [class.fa-eye-slash]="!passwordFieldType"
-          >
-          </i> -->
         </div>
-        @if(siginForm.get('password')?.errors&&siginForm.get('password')?.touched){
-        <div class="text-danger mt-1">
-          @if(siginForm.get('password')?.errors?.['required']){
-          <p>الباسورد مطلوب</p>
-          } @else if (siginForm.get('password')?.errors?.['pattern']) {
-          <p>يجب ان تحتوي كلمه المرور علي  رقم و حرف و رمز </p>
-          } @else {}
-        </div>
+        @if(siginForm.get('password')?.errors&&(siginForm.get('password')?.touched
+        || siginForm.get('password')?.dirty)){
+       <div class="text-danger mt-1">
+        @if(siginForm.get('password')?.errors?.['required']) {
+          <span class="m-0">كلمة المرور مطلوبة</span>
+        } 
+        @else if (siginForm.get('password')?.errors?.['minlength']) {
+          <span class="m-0">يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل</span>
+        } 
+        @else if (siginForm.get('password')?.errors?.['pattern']) {
+          <span class="m-0">
+            تشمل أرقامًا، وحروفًا كبيرة وصغيرة، ورمزًا خاصًا مثل (<strong>&commat;, #, !</strong>).
+            مثال: <strong>1Q2w3e4&commat;</strong>
+          </span>
+        }@else{}
+      </div>
+      
         }
       </div>
 
