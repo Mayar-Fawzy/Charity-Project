@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', title: 'login', component: LoginComponent },
     { path: 'register', title: 'register', component: RegisterComponent },
-    { path: 'forgetpassword', title: 'forgetpassword', component: ForgetpasswordComponent },
+    { path: 'forgetPassword', title: 'forgetpassword', component: ForgetpasswordComponent },
 
     // ✅ باقي الصفحات داخل Layout يحتوي على Navbar & Footer
     {
