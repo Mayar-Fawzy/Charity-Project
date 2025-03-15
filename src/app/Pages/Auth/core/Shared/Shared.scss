@@ -96,6 +96,10 @@ form .inps{
 .formValied  a{
     color: #B88E2F;
 }
+.form-floating > label {
+    margin-top: -5px;
+ }
+ 
 form .btns{
     width: 100%;
     margin: 15px 0 ;
