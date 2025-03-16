@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router,RouterLink} from '@angular/router';
 import {ToastrService } from 'ngx-toastr';
+import { LoginService } from '../core/Services/login.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -11,7 +12,7 @@ import {ToastrService } from 'ngx-toastr';
   styleUrls:['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss','./login.component.scss']
 })
 export class LoginComponent {
-
+  private readonly _LoginService=inject(LoginService)
   private readonly _Router = inject(Router);
   private readonly _ToastService = inject(ToastrService);
 
@@ -42,28 +43,31 @@ CheckFieldValid(InputName: string): boolean {
 }
 Sigin(formInfo: FormGroup) {
 
-  // this.isloading=true;
-  
-  // this.authService.Signin(formInfo.value).subscribe((res) => {
-  //   if (res.message === "success") {
-  //     this.isloading=false;
+  this.isloading=false
+   this._LoginService.login(formInfo.value).subscribe((res) => {
+    this.isloading=false
+
+    console.log("resLogin",res);
+     if (res.isSucceeded === true) {
+      this.isloading=true
+      
+
       this._ToastService.success("تم التسجيل الدخول بنجاح", "اهلا بيك", {
         timeOut: 
         3000,
       });
-  //     localStorage.setItem("userToken", res.token);
-  //     localStorage.setItem("userData", JSON.stringify(res.user));
+    // localStorage.setItem("userToken", res.token);
+    // localStorage.setItem("userData", JSON.stringify(res.user));
 
-      
-  //     this.authService.DecodeUser();
      this._Router.navigate(['/home']);
-  //   } 
-  // },
-  //   (error) => {
-  //     this.isloading=false;
-  //     this._ToastService.showToast ("error" ,error.error.message);        
+   } 
+  },
+    (error) => {
+      this.isloading=false;
+      console.log("error", error);
+      this._ToastService.error (error.error.message ,"error");        
      
-  // })
+  })
  
 }
 
