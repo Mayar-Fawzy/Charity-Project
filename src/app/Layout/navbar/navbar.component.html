@@ -19,23 +19,26 @@
     </ul>
 
     <div class="navbar__actions">
-      <button class="login-btn" *ngIf="!isLoggedIn" (click)="login()">
-        تسجيل الدخول / إنشاء حساب
+      <button class="login-btn" *ngIf="!isLogin" (click)="login()">
+       تسجيل الدخول
       </button>
+      
+      <div class="navbar__user" *ngIf="isLogin">
+        <img src="/imges/unsplaaash_AEaTUnvneik.png" alt="User" class="user-image" />
+        <span>مرحبًا، {{ userName }}</span> 
 
-      <div class="navbar__user" *ngIf="isLoggedIn">
-        <img [src]="userImage" alt="User" class="user-image" />
-        <span>مرحبًا، {{ userName }}</span>
-
-        <div class="notification-container">
+        <div class="notification-container mx-2">
           <i class="bi bi-bell notification"></i>
-          <span class="notification-count" *ngIf="unreadNotifications > 0">
+          <!-- <span class="notification-count" *ngIf="unreadNotifications > 0">
             {{ unreadNotifications }}
-          </span>
+          </span> -->
         </div>
 
-        <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>
+       
       </div>
+      <button class="login-btn" *ngIf="isLogin" (click)="logout()">
+        تسجيل الخروج
+       </button>
     </div>
   </div>
 </nav>

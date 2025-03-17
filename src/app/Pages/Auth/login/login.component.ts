@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { Router,RouterLink} from '@angular/router';
 import {ToastrService } from 'ngx-toastr';
 import { LoginService } from '../core/Services/login.service';
+import { json } from 'stream/consumers';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -42,30 +43,30 @@ CheckFieldValid(InputName: string): boolean {
   return Check ? Check.valid && (Check.touched || Check.dirty) : false;
 }
 Sigin(formInfo: FormGroup) {
-
+  
   this.isloading=false
    this._LoginService.login(formInfo.value).subscribe((res) => {
     this.isloading=false
 
     console.log("resLogin",res);
-     if (res.isSucceeded === true) {
+     if (res.isSucceeded) {
       this.isloading=true
       
+      this._ToastService.success(res.message ,"" , {timeOut:3000});
+    localStorage.setItem("userToken", res.data.jwtModel.jwt);
 
-      this._ToastService.success("تم التسجيل الدخول بنجاح", "اهلا بيك", {
-        timeOut: 
-        3000,
-      });
-    // localStorage.setItem("userToken", res.token);
-    // localStorage.setItem("userData", JSON.stringify(res.user));
+    localStorage.setItem("expdate", JSON.stringify(res.data.jwtModel.jwtExpireDate));
 
+     localStorage.setItem("userRefreshToken", res.data.refreshJWTModel.refreshJWT);
+     
+      this._LoginService.saveUserAuth();
      this._Router.navigate(['/home']);
    } 
   },
     (error) => {
       this.isloading=false;
       console.log("error", error);
-      this._ToastService.error (error.error.message ,"error");        
+      this._ToastService.error (error.error.errors ,"error");        
      
   })
  
