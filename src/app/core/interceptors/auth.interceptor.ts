@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         // إذا كان الخطأ بسبب انتهاء صلاحية التوكين
-        if (error.error.statusCode === 404) {
+        if (error.error.statusCode === 401) {
           return this._RefTokenService.refreshToken().pipe(
             switchMap((newToken) => {
               // إعادة إرسال الطلب الأصلي بعد تحديث التوكين
