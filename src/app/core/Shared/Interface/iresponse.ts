@@ -7,6 +7,7 @@ export interface IResponse {
     meta: any
    
 }
+
   
 export interface IResponseResult<TResult> extends IResponse {
     data: TResult

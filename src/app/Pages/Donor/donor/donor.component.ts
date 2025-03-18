@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { HomeComponent } from "../../Home/home/home.component";
 
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [],
+  imports: [HomeComponent],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss'
 })

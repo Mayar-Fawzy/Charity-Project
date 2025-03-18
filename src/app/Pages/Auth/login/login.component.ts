@@ -1,82 +1,106 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router,RouterLink} from '@angular/router';
-import {ToastrService } from 'ngx-toastr';
+import { Router, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../core/Services/login.service';
-import { json } from 'stream/consumers';
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,RouterLink,ReactiveFormsModule,FormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls:['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss','./login.component.scss']
+  styleUrls: [
+    '../../../core/Shared/Css/ToastDesign.scss',
+    '../core/Shared/Shared.scss',
+    './login.component.scss',
+  ],
 })
 export class LoginComponent {
-  private readonly _LoginService=inject(LoginService)
+  private readonly _LoginService = inject(LoginService);
   private readonly _Router = inject(Router);
   private readonly _ToastService = inject(ToastrService);
 
+  role!: any;
+  isloading = false;
+  passwordFieldType: boolean = true;
 
-isloading = false;
-passwordFieldType: boolean = true;
+  siginForm: FormGroup = new FormGroup({
+    email: new FormControl(null, [Validators.required, Validators.email]),
+    password: new FormControl(null, [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+    ]),
+  });
 
-siginForm: FormGroup = new FormGroup({
-  email: new FormControl(null, [
-    Validators.required,
-    Validators.email 
-  ]),
-  password: new FormControl(null, [
-    Validators.required,
-    Validators.minLength(8),
-    Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-  ]),
+  CheckFieldInvalid(InputName: string): boolean {
+    const Check = this.siginForm.get(InputName);
+    return Check ? Check.invalid && (Check.touched || Check.dirty) : false;
+  }
 
-});
-CheckFieldInvalid(InputName: string): boolean {
-  const Check = this.siginForm.get(InputName);
-  return Check ? Check.invalid && (Check.touched || Check.dirty) : false;
+  CheckFieldValid(InputName: string): boolean {
+    const Check = this.siginForm.get(InputName);
+    return Check ? Check.valid && (Check.touched || Check.dirty) : false;
+  }
+
+  Sigin(formInfo: FormGroup) {
+    this.isloading = false;
+    this._LoginService.login(formInfo.value).subscribe(
+      (res) => {
+        this.isloading = false;
+        console.log('resLogin', res);
+
+        if (res.isSucceeded) {
+          this.isloading = true;
+          this._ToastService.success(res.message, '', { timeOut: 3000 });
+
+          localStorage.setItem('userToken', res.data.jwtModel.jwt);
+          localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
+
+         // #region role
+const role = this._LoginService.saveUserAuth()?.[
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+];
+
+if (!role) {
+  console.error('Error: Role is undefined');
+  return;
 }
 
-CheckFieldValid(InputName: string): boolean {
-  const Check = this.siginForm.get(InputName);
-  return Check ? Check.valid && (Check.touched || Check.dirty) : false;
+localStorage.setItem('role', role);
+
+const roleMap: { [key: string]: string } = {
+  'SuperAdmin': '/super-admin',
+  'Admin': '/admin',
+  'Beneficiary': '/beneficiary',
+  'Volunteer': '/volunteer',
+  'Donor': '/donor'
+};
+
+const route = roleMap[role];
+if (route) {
+  console.log(`Navigating to: ${route}`);
+  this._Router.navigate([route]);
+} else {
+  console.error(`Error: Invalid role (${role})`);
 }
-Sigin(formInfo: FormGroup) {
-  
-  this.isloading=false
-   this._LoginService.login(formInfo.value).subscribe((res) => {
-    this.isloading=false
+// #endregion
 
-    console.log("resLogin",res);
-     if (res.isSucceeded) {
-      this.isloading=true
-      
-      this._ToastService.success(res.message ,"" , {timeOut:3000});
-    localStorage.setItem("userToken", res.data.jwtModel.jwt);
+          this._LoginService.saveUserAuth();
+          console.log('message' + res.data.jwtModel.jwt);
+       
+        }
+      },
+      (error) => {
+        this.isloading = false;
+        console.log('error', error);
+        this._ToastService.error(error.error.errors, 'error');
+      }
+    );
+  }
 
-    localStorage.setItem("expdate", JSON.stringify(res.data.jwtModel.jwtExpireDate));
-
-     localStorage.setItem("userRefreshToken", res.data.refreshJWTModel.refreshJWT);
-     
-      this._LoginService.saveUserAuth();
-     this._Router.navigate(['/home']);
-   } 
-  },
-    (error) => {
-      this.isloading=false;
-      console.log("error", error);
-      this._ToastService.error (error.error.errors ,"error");        
-     
-  })
- 
-}
-
-
-
-togglePasswordVisibility() {
-  this.passwordFieldType = !this.passwordFieldType;
-}
-
-
+  togglePasswordVisibility() {
+    this.passwordFieldType = !this.passwordFieldType;
+  }
 }

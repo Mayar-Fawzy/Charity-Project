@@ -2,7 +2,7 @@ import { ILoginReq } from './../Interfaces/ilogin-req';
 import { ILoginRes } from './../Interfaces/ilogin-res';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import {  Observable } from 'rxjs';
 import { Environment } from '../Environment/Environment';
 import { IResponseResult } from '../../../../core/Shared/Interface/iresponse';
 import { jwtDecode } from 'jwt-decode';
