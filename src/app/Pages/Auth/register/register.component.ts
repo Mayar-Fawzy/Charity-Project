@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink,Router } from '@angular/router';
 import { FormGroup, FormControl,AbstractControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RegisterService } from '../core/Services/register.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -13,24 +15,69 @@ export class RegisterComponent {
   errorr:string='';
   isloading = false;
   errorpassword:string='';
+ 
    private readonly _router = inject(Router);
-  // constructor(private _AuthService:AuthService  ,private _router:Router){}
-  registerForm:FormGroup=new FormGroup({
-     
-    birthdate:new FormControl(null ,[Validators.required,    Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])\/([1-9]|1[0-2])\/(19|20)\d{2}$/)]),
-      email:new FormControl(null ,[Validators.required,Validators.email]),
-      password:new FormControl(null ,[Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]),
-      name: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-      rePassword:new FormControl(null ,[Validators.required,Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]),
-      gender:new FormControl(null ,[Validators.required]),
-     
-     }, this.confirmPassword
-    
-    )
-     SubmitRegister(forminfo:FormGroup)
-     {
+   
+     private readonly _ToastService = inject(ToastrService);
+   private readonly _RegisterService = inject(RegisterService);
+   registerForm: FormGroup = new FormGroup({
+    firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    lastName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    email: new FormControl(null, [Validators.required, Validators.email]),
+    address: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11,}$/)]),
+    dateOfBirth: new FormControl(null, [
+      Validators.required]),
+    gender: new FormControl(0, [Validators.required]),
+
+    password: new FormControl(null, [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+    ]),
+
+    confirmPassword: new FormControl(null, [Validators.required]), // تم إضافته هنا
+
+    userType: new FormControl(0, [Validators.required])
+  }, { validators: this.confirmPassword }); // تم تمرير التحقق هنا
+
   
-          this._router.navigate(['/login']);
+
+     SubmitRegister(forminfo:FormGroup)
+     { 
+      
+      
+
+
+       console.log(forminfo.value);
+       let formData = { ...forminfo.value };
+
+       formData.gender = Number(formData.gender);
+       formData.userType = Number(formData.userType);
+         
+if (formData.dateOfBirth) {
+  const date = new Date(formData.dateOfBirth);
+  formData.dateOfBirth = date.toISOString().split('T')[0]; // يحافظ على YYYY-MM-DD
+}
+     this. _RegisterService.Register(formData).subscribe((res)=>{
+      this.isloading=false;
+      console.log('resRegister',res);
+
+
+
+     if (res.isSucceeded) {
+      this.isloading = true;
+      this._ToastService.success(res.message, '', { timeOut: 3000 });
+      this._router.navigate(['/login'])
+    }
+    
+        },
+        (error) => {
+          this.isloading = false;
+          console.log('error', error);
+          this._ToastService.error(error.error.errors, 'error');
+        }
+      )  
    
      }
      confirmPassword(g :AbstractControl){
@@ -41,4 +88,4 @@ export class RegisterComponent {
         return {mismatch:true}
       }
      }
-}
+    }

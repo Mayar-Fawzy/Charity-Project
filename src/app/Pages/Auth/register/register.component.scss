@@ -17,3 +17,34 @@
     accent-color: #B88E2F;
     margin: 10px;
   }/* جعل الـ input شفافًا */
+  .custom-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    appearance: none; /* يخفي السهم الافتراضي */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  /* إضافة سهم مخصص */
+  .custom-select-wrapper {
+    position: relative;
+  }
+  
+  .custom-select-wrapper::after {
+    content: "\25BC"; /* سهم ▼ */
+    font-size: 20px;
+    color: #555;
+    position: absolute;
+    left: 15px;
+    top: 77%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  
