@@ -1,13 +1,9 @@
 <nav class="navbar" [ngClass]="{ hidden: isNavbarHidden }">
   <div class="navbar__container">
     <div class="navbar__brand">
-      <span>العطاء</span>
-      <img
-        src="/Images/image33.png"
-        alt="شعار"
-        class="navbar__logo"
-      />
       <span>يـــــــد</span>
+      <img src="/Images/image 33.svg" alt="شعار" class="navbar__logo" />
+      <span>العطاء</span>
     </div>
 
     <ul class="navbar__menu">
@@ -20,12 +16,16 @@
 
     <div class="navbar__actions">
       <button class="login-btn" *ngIf="!isLogin" (click)="login()">
-       تسجيل الدخول
+        تسجيل الدخول
       </button>
-      
+
       <div class="navbar__user" *ngIf="isLogin">
-        <img src="/Images/unsplaaash_AEaTUnvneik.png" alt="User" class="user-image" />
-        <span>مرحبًا، {{ userName }}</span> 
+        <img
+          src="/Images/unsplaaash_AEaTUnvneik.png"
+          alt="User"
+          class="user-image"
+        />
+        <span>مرحبًا، {{ userName }}</span>
 
         <div class="notification-container mx-2">
           <i class="bi bi-bell notification"></i>
@@ -33,12 +33,10 @@
             {{ unreadNotifications }}
           </span> -->
         </div>
-
-       
       </div>
       <button class="login-btn" *ngIf="isLogin" (click)="logout()">
         تسجيل الخروج
-       </button>
+      </button>
     </div>
   </div>
 </nav>
