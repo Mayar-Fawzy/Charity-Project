@@ -19,4 +19,17 @@ export class RegisterService {
   Register(userData:IRegisterReq):Observable<IResponseResult<IRegisterRes>>{
     return this._HttpClient.post<IResponseResult<IRegisterRes>>(  `${Environment.baseUrl}${Environment.VersionUrl}Auth/Register`, userData);
   }
+  confirmEmail(emailData: { to: string; subject: string; body: string; attachments?: File }): Observable<any> {
+    const formData = new FormData();
+    formData.append('to', emailData.to);
+    formData.append('subject', emailData.subject);
+    formData.append('body', emailData.body);
+
+    // إضافة المرفقات إن وجدت
+    if (emailData.attachments) {
+      formData.append('attachments', emailData.attachments);
+    }
+
+    return this._HttpClient.post(`${Environment.baseUrl}${Environment.VersionUrl}Email/SendEmail`, formData);
+  }
 }
