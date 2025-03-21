@@ -67,7 +67,7 @@ if (formData.dateOfBirth) {
 
      if (res.isSucceeded) {
       this.isloading = true;
-      this._ToastService.success(res.message, '', { timeOut: 3000 });
+      this._ToastService.success('please verify your email', '', { timeOut: 3000 });
       this._router.navigate(['/login'])
     }
     

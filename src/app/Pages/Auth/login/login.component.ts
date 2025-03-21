@@ -88,7 +88,7 @@ if (route) {
 // #endregion
 
           this._LoginService.saveUserAuth();
-          console.log('message' + res.data.jwtModel.jwt);
+        
        
         }
       },

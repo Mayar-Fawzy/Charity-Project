@@ -17,6 +17,6 @@ export class RegisterService {
   private readonly _Router = inject(Router);
 
   Register(userData:IRegisterReq):Observable<IResponseResult<IRegisterRes>>{
-    return this._HttpClient.post<IResponseResult<IRegisterRes>>(  `${Environment.baseUrl}${Environment.VersionUrl}Auth/Register`, userData);
+    return this._HttpClient.post<IResponseResult<IRegisterRes>>(`${Environment.baseUrl}${Environment.VersionUrl}Auth/Register`, userData);
   }
 }

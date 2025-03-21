@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
 
      }
       this.userData= this._LoginService.saveUserAuth()
-      console.log(this.userData);
+    
       this.userName=this.userData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname']
   }
  
