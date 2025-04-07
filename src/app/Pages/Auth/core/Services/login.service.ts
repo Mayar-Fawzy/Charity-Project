@@ -18,7 +18,7 @@ export class LoginService {
 
   login(userdata: ILoginReq): Observable<IResponseResult<ILoginRes>> {
     return this._HttpClient.post<IResponseResult<ILoginRes>>(
-      `${Environment.baseUrl}${Environment.VersionUrl}Auth/Login`,
+      `${Environment.baseUrl}${Environment.VersionUrl}Account/Login`,
       userdata
     );
   }

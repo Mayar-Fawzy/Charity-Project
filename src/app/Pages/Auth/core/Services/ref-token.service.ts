@@ -21,7 +21,7 @@ export class RefTokenService {
    
     return this._HttpClient
       .post<IResponseResult<ILoginRes>>(
-        `${Environment.baseUrl}${Environment.VersionUrl}Auth/RefreshToken`,
+        `${Environment.baseUrl}${Environment.VersionUrl}Account/RefreshToken`,
         { jwt: userToken, refreshJwt: refreshToken }
       )
       .pipe(
