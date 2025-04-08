@@ -1,17 +1,5 @@
 .login-modal {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
-  margin: 50px auto;
-  max-width: 700px;
-  max-height: 79vh;
-  overflow-y: auto;
-  display: flex;
-  margin-top: 100px;
-  flex-direction: column;
+  max-width: 724px;
 }
 
 .modal-header {
