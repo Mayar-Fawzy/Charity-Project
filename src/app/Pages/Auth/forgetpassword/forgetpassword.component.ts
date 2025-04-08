@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ForgetpasswordService } from '../core/Services/forgetpassword.service';
@@ -31,12 +31,16 @@ export class ForgetpasswordComponent {
   });
 //newPass 
   newPasswordform: FormGroup = new FormGroup({
-    newPassword: new FormControl('', [
+   
+    password: new FormControl(null, [
       Validators.required,
-      Validators.pattern(/^[1-9]{5,}$/)
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
+    
+    confirmPassword: new FormControl(null, [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-  });
+  }, { validators: this.confirmPassword });
 
   // constructor(private _AuthService: AuthService, private router: Router ,private _ToastService :ToastService) {}
 
@@ -86,26 +90,32 @@ export class ForgetpasswordComponent {
 
   handelnewPassword() {
     this.isloading = true;
-    let newPassword = this.newPasswordform.value;
-   console.log(newPassword)
-    // this._AuthService.resetPassword(newPassword).subscribe({
-    //   next: (response) => {
-    //     console.log(response);
+    let email = this.forgetpasswordform.value.email;
+    let password = this.newPasswordform.value.password;
+    let confirmPassword = this.newPasswordform.value.confirmPassword;
+    this._ForgetpasswordService.resetPassword(email,password,confirmPassword).subscribe({
+      next: (response) => {
+        console.log(response);
         this.isloading = false;
         // if (response.token) {
         //   localStorage.setItem("userToken", response.token);
-          this.message = 'password reset successfully';
+        //   this.message = 'password reset successfully';
           this._ToastrService.success('success', 'تم تغيير كلمة المرور');
           this.step3 = false;
           this._Router.navigate(['/login']);
-        }
-      // },
-    //   error: (err) => {
-    //     console.log(err);
-    //     this.isloading = false;
-    //     this._ToastService.showToast('error', err.error.message);
-    //     this.message = err.error.message;
-    //   },
-    // });
-  // }
+        // }
+      },
+      error: (err) => {
+        console.log(err);
+        this.isloading = false;
+        this._ToastrService.error('error', err.error.message);
+        this.message = err.error.message;
+      },
+    });
+  }
+   confirmPassword(group: AbstractControl) {
+        const password = group.get('password')?.value;
+        const confirmPassword = group.get('confirmPassword')?.value;
+        return password === confirmPassword ? null : { mismatch: true };
+      }
 }

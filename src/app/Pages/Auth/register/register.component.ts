@@ -45,10 +45,6 @@ export class RegisterComponent {
 
      SubmitRegister(forminfo:FormGroup)
      { 
-      
-      
-
-
        console.log(forminfo.value);
        let formData = { ...forminfo.value };
 

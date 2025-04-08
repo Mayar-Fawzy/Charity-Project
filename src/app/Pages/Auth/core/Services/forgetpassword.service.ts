@@ -16,5 +16,8 @@ export class ForgetpasswordService {
     verifyRestCode(email:string,code:string):Observable<any>{
       return this._HttpClient.post(`${Environment.baseUrl}${Environment.VersionUrl}Account/VerifyCode`, { email,code});
     }
+    resetPassword(email:string,password:string,confirmPassword:string):Observable<any>{
+      return this._HttpClient.post(`${Environment.baseUrl}${Environment.VersionUrl}Account/ResetPassword`, { email,password,confirmPassword});
+    }
 
 }
