@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ForgetpasswordService } from '../core/Services/forgetpassword.service';
 
 @Component({
   selector: 'app-forgetpassword',
@@ -13,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ForgetpasswordComponent {
   private readonly _ToastrService=inject(ToastrService);
+  private readonly _ForgetpasswordService=inject(ForgetpasswordService);
   private readonly _Router=inject(Router);
   step1: boolean = true;
   step2: boolean = false;
@@ -41,23 +43,23 @@ export class ForgetpasswordComponent {
 
   handelforgetpassword(): void {
     this.isloading = true;
-    let emailinfo = this.forgetpasswordform.value;
+    let emailinfo = this.forgetpasswordform.value.email;
 
-    // this._AuthService.forgetPassword(emailinfo).subscribe({
-    //   next: (response) => {
-    //     console.log(response);
+    this._ForgetpasswordService.forgetPassword(emailinfo).subscribe({
+      next: (response) => {
+        console.log(response);
         this.isloading = false;
         this._ToastrService.success('success', 'تفقد بريدك الالكتروني');
         this.step1 = false;
         this.step2 = true;
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //     this.isloading = false;
-    //     this.message = err.error.message;
-    //     this._ToastService.showToast('error', err.error.message);
-    //   },
-    // });
+      },
+      error: (err) => {
+        console.log(err);
+        this.isloading = false;
+        this.message = err.error.message;
+        this._ToastrService.error('error', err.error.message);
+      },
+    });
   }
 
   hanelResetCode() {
