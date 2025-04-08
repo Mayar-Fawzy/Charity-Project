@@ -1,125 +1,272 @@
-<section class="Regiter d-flex align-items-center justify-content-center h-100">
-  <div class="layOut"></div>
+<div class="login-container">
+    <div class="login-modal">
+        <div class="modal-header">
+            <h2 class="fw-bold">إنشاء حساب الآن</h2>
+            <button class="close-btn" routerLink="/donor"><i class="fa-solid fa-xmark fs-5"></i></button>
+        </div>
 
-  <div class="regiterForm">
-      <h3>إنشاء حساب الآن</h3>
+        <form (ngSubmit)="SubmitRegister(registerForm)" [formGroup]="registerForm">
+            <!-- First Name and Last Name side by side -->
+            <div class="d-flex gap-3">
+                <!-- First Name -->
+                <div class="form-group w-50">
+                    <div class="input-group">
+                        <input autocomplete="off"
+                            type="text"
+                            class="form-control"
+                            id="firstName"
+                            formControlName="firstName"
+                            placeholder="الاسم الأول" />
+                        <div class="input-icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="error-message"
+                        *ngIf="registerForm.get('firstName')?.errors && 
+                               (registerForm.get('firstName')?.touched || registerForm.get('firstName')?.dirty)">
+                        <span *ngIf="registerForm.get('firstName')?.getError('required')">الاسم مطلوب</span>
+                        <span *ngIf="registerForm.get('firstName')?.errors?.['minlength']">يجب أن يكون أكثر من 3 حروف</span>
+                    </div>
+                </div>
 
-      <form (ngSubmit)="SubmitRegister(registerForm)" [formGroup]="registerForm">
+                <!-- Last Name -->
+                <div class="form-group w-50">
+                    <div class="input-group">
+                        <input autocomplete="off"
+                            type="text"
+                            class="form-control"
+                            id="lastName"
+                            formControlName="lastName"
+                            placeholder="الاسم الأخير" />
+                        <div class="input-icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="error-message"
+                    *ngIf="registerForm.get('lastName')?.errors && 
+                           (registerForm.get('lastName')?.touched || registerForm.get('lastName')?.dirty)">
+                    <span *ngIf="registerForm.get('lastName')?.getError('required')">الاسم مطلوب</span>
+                    <span *ngIf="registerForm.get('lastName')?.errors?.['minlength']">يجب أن يكون أكثر من 3 حروف</span>
+                </div>
+                </div>
+            </div>
+<div class="d-flex gap-3">
+            <!-- Address -->
+            <div class="form-group w-50">
+                <div class="input-group">
+                    <input autocomplete="off"
+                        type="text"
+                        class="form-control"
+                        id="address"
+                        formControlName="address"
+                        placeholder="العنوان" />
+                    <div class="input-icon">
+                        <i class="fa fa-map-marker"></i>
+                    </div>
+                </div>
+                <div class="error-message"
+                *ngIf="registerForm.get('address')?.errors && 
+                       (registerForm.get('address')?.touched || registerForm.get('address')?.dirty)">
+                <span *ngIf="registerForm.get('address')?.getError('required')">العنوان مطلوب</span>
+                <span *ngIf="registerForm.get('address')?.getError('minLength')"> يجب ان يكون اكتر من 5 حروف</span>
+            </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group w-50">
+                <div class="input-group">
+                    <input autocomplete="off"
+                        type="text"
+                        class="form-control"
+                        id="phoneNumber"
+                        formControlName="phoneNumber"
+                        placeholder="رقم الهاتف" />
+                    <div class="input-icon">
+                        <i class="fa fa-phone"></i>
+                    </div>
+                </div>
+                <div class="error-message"
+                *ngIf="registerForm.get('phoneNumber')?.errors && 
+                       (registerForm.get('phoneNumber')?.touched || registerForm.get('phoneNumber')?.dirty)">
+                <span *ngIf="registerForm.get('phoneNumber')?.getError('required')">الرقم مطلوب</span>
+                <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">يجب أن يكون 11 رقم</span>
+            </div>
+            </div>
+</div>
+<div class="d-flex gap-3">
+            <!-- Date of Birth -->
+            <div class="form-group w-50">
+                <div class="input-group">
+                    <input autocomplete="off"
+                        type="text"
+                        class="form-control"
+                        id="dateOfBirth"
+                        formControlName="dateOfBirth"
+                        placeholder="تاريخ الميلاد" />
+                    <div class="input-icon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                </div>
+                <div class="error-message"
+                *ngIf="registerForm.get('dateOfBirth')?.errors && 
+                       (registerForm.get('dateOfBirth')?.touched || registerForm.get('dateOfBirth')?.dirty)">
+                <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['required']">مثال(2003-07-28)</span>
+            </div>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group w-50">
+                <div class="input-group">
+                  <select class="form-control"
+                          id="gender"
+                          formControlName="gender">
+                    <option value="" disabled selected hidden>اختر النوع</option>
+                    <option [value]="1">ذكر</option>
+                    <option [value]="2">أنثى</option>
+                  </select>
+                  <div class="input-icon">
+                    <i class="fa fa-venus-mars"></i>
+                  </div>
+                </div>
+              </div>
+              
+        </div>
+        
+<div class="d-flex gap-3">
+ 
+            <!-- Email -->
+            <div class="form-group w-50">
+                <div class="input-group">
+                    <input autocomplete="off"
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        formControlName="email"
+                        placeholder="البريد الإلكتروني" />
+                    <div class="input-icon">
+                        <i class="fa fa-envelope"></i>
+                    </div>
+                </div>
+                <div
+                class="error-message"
+                *ngIf="
+                  registerForm.get('email')?.errors &&
+                  (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)
+                "
+              >
+                <span *ngIf="registerForm.get('email')?.getError('required')"
+                  >البريد الاكتروني مطلوب</span
+                >
+                <span *ngIf="registerForm.get('email')?.errors?.['email']"
+                  >البريد الاكتروني غير صحيح</span
+                >
+              </div>
+            </div>
+            <!-- Password -->
+            <div class="form-group w-50">
+                <div class="input-group">
+                    <input autocomplete="off"
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        formControlName="password"
+                        placeholder="كلمة المرور" />
+                    <div class="input-icon">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                </div>
+                <div
+                class="error-message"
+                *ngIf="
+                  registerForm.get('password')?.errors &&
+                  (registerForm.get('password')?.touched ||
+                    registerForm.get('password')?.dirty)
+                "
+              >
+                <span *ngIf="registerForm.get('password')?.errors?.['required']"
+                  >كلمة المرور مطلوبة</span
+                >
+                <span *ngIf="registerForm.get('password')?.errors?.['minlength']"
+                  >يجب أن تحتوي على 8 أحرف على الأقل</span
+                >
+                <span *ngIf="registerForm.get('password')?.errors?.['pattern']">
+                  يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)
+                </span>
+              </div>
+            </div>
+   </div>
+            <!-- Confirm Password -->
+<div class="form-group">
+    <div class="input-group">
+      <input autocomplete="off"
+             type="password"
+             class="form-control"
+             id="confirmPassword"
+             formControlName="confirmPassword"
+             placeholder="تأكيد كلمة المرور" />
+      <div class="input-icon">
+        <i class="fa fa-lock"></i>
+      </div>
+    </div>
     
-          <div class="d-flex gap-3 mt-3">
-              <!-- الاسم الأول -->
-              <div class="form-group w-50">
-                  <label for="firstName" class="mb-3">الاسم الأول</label>
-                  <input type="text" class="form-control inps" id="firstName" formControlName="firstName"
-                      placeholder="الاسم الأول" />
-              </div>
+    <div class="error-message"
+    *ngIf="registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty">
 
-              <!-- الاسم الأخير -->
-              <div class="form-group w-50">
-                  <label for="lastName" class="mb-3">الاسم الأخير</label>
-                  <input type="text" class="form-control inps" id="lastName" formControlName="lastName"
-                      placeholder="الاسم الأخير" />
-              </div>
-          </div>
+ <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
+   كلمة المرور مطلوبة
+ </span>
 
-          <!-- العنوان -->
-          <div class="form-group mt-3">
-              <label for="address" class="mb-3">العنوان</label>
-              <input type="text" class="form-control inps" id="address" formControlName="address"
-                  placeholder="أدخل العنوان" />
-          </div>
+ <span *ngIf="
+       registerForm.hasError('mismatch') &&
+       registerForm.get('confirmPassword')?.value &&
+       !registerForm.get('confirmPassword')?.errors?.['required']
+     ">
+   كلمة المرور غير متطابقة
+ </span>
 
-          <!-- رقم الهاتف -->
-          <div class="form-group mt-3">
-              <label for="phoneNumber" class="mb-3">رقم الهاتف</label>
-              <input type="text" class="form-control inps" id="phoneNumber" formControlName="phoneNumber"
-                  placeholder="أدخل رقم الهاتف" />
-          </div>
+</div>
 
-          <!-- تاريخ الميلاد -->
-          <div class="form-group mt-3">
-              <label for="dateOfBirth" class="mb-3">تاريخ الميلاد</label>
-              <input type="text" class="form-control inps" id="dateOfBirth" formControlName="dateOfBirth"
-                  placeholder="يوم/شهر/سنة" />
-          </div>
-
-          <!-- الجنس -->
-          <div class="form-group mt-3">
-              <label for="gender" class="mb-3">الجنس</label>
-              <select class="custom-select gendeer" id="gender" formControlName="gender">
-                  <option  disabled selected class="genderSelected">اختر</option>
-                  <option [value]="1">ذكر</option>
-                  <option [value]="2">أنثى</option>
-              </select>
-          </div>
-
-          <!-- البريد الإلكتروني -->
-          <div class="form-group mt-3">
-              <label for="email" class="mb-3">البريد الإلكتروني</label>
-              <input type="email" class="form-control inps" id="email" formControlName="email"
-                  placeholder="أدخل البريد الإلكتروني" />
-          </div>
-
-          <!-- كلمة المرور -->
-          <div class="form-group mt-3">
-              <label for="password" class="mb-3">كلمة المرور</label>
-              <input type="password" class="form-control inps" formControlName="password" id="password"
-         placeholder="أدخل كلمة المرور" autocomplete="new-password" />
-
-          </div>
-
-          <!-- تأكيد كلمة المرور -->
-          <div class="form-group mt-3">
-              <label for="confirmPassword" class="mb-3">تأكيد كلمة المرور</label>
-              <input type="password" class="form-control inps" formControlName="confirmPassword" id="confirmPassword"
-              placeholder="تأكيد كلمة المرور" autocomplete="new-password" />
-          </div>
-
-          <!-- اختيار نوع المستخدم -->
-          <div class="role-selection mt-3">
-              <label class="role-option">
-                  <input type="radio" formControlName="userType"   [value]="2"> متطوع
-              </label>
-
-              <label class="role-option">
-                  <input type="radio" formControlName="userType" [value]="3" checked> <strong>متبرع</strong>
-              </label>
-
-              <label class="role-option">
-                  <input type="radio" formControlName="userType" [value]="1"> مستفيد
-              </label>
-          </div>
-
-          <!-- زر التسجيل -->
-          <button class="btnRegster btns" type="submit">
-              <span >إنشاء حساب</span>
-          </button>
-
-          <!-- رابط تسجيل الدخول -->
-          <a [routerLink]="'/login'" class="btns btnSign w-100 d-block text-center fw-bolder">تسجيل الدخول</a>
-
-          <p class="text-center">أو</p>
-
-          <!-- تسجيل الدخول عبر فيسبوك -->
-          <a href="https://www.facebook.com/" class="btnRegster btns form-control text-center"
-              style="background-color: transparent; text-decoration: none; margin-bottom: 30px ">
-              <span><i class="fa-brands fa-facebook fs-4 mx-3" style="color: #1877F2;"></i>إنشاء حساب باستخدام
-                  الفيسبوك</span>
-          </a>
-
-          <!-- تسجيل الدخول عبر جوجل -->
-          <a href="https://www.google.com/" class="btnRegster btns form-control text-center"
-              style="background-color: transparent; text-decoration: none; margin-bottom: 30px ">
-              <span><svg style=" margin-left: 10px;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30"
-                      height="30" viewBox="0 0 48 48">
-                      <path fill="#FFC107"
-                          d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z">
-                      </path>
-                      <path fill="#FF3D00"
-                          d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z">
-                      </path>
-                  </svg> إنشاء حساب باستخدام جوجل</span>
-          </a>
-      </form>
   </div>
-</section>
+  
+            <!-- User Type -->
+            <div class="role-selection mt-3">
+                <label class="role-option">
+                    <input type="radio" formControlName="userType" [value]="2"> متطوع
+                </label>
+                <label class="role-option">
+                    <input type="radio" formControlName="userType" [value]="3" checked> <strong>متبرع</strong>
+                </label>
+                <label class="role-option">
+                    <input type="radio" formControlName="userType" [value]="1"> مستفيد
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="login-btn" [disabled]="!registerForm.valid || isloading">
+                <span *ngIf="!isloading">إنشاء حساب</span>
+                <span *ngIf="isloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span *ngIf="isloading">جاري التحميل...</span>
+            </button>
+
+            <div class="divider">
+                <span>أو تواصل معنا عبر</span>
+            </div>
+
+            <div class="social-login">
+                <button type="button" class="facebook-btn">
+                    <span>فيسبوك</span>
+                    <i class="fa-brands fa-facebook-f"></i>
+                </button>
+                <button type="button" class="google-btn">
+                    <span>جوجل</span>
+                    <i class="fa-brands fa-google"></i>
+                </button>
+            </div>
+
+            <div class="register-link" routerLink="/login">
+                <span>لديك حساب؟ </span>
+                <a >تسجيل الدخول</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,3 +1,23 @@
+.login-modal {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);        
+  -webkit-backdrop-filter: blur(20px);  
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+  padding: 10px ;
+  margin: 10px 90px 50px 50px;
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+ max-height:900px ;
+}
+.close-btn {
+  top: -5px;
+  left: -4px;
+}
+.modal-header h2 {
+   padding: 10px 292px 20px 0px;
+}
 .role-selection {
     display: flex;
     justify-content: space-around;
