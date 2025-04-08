@@ -27,7 +27,7 @@ export class ForgetpasswordComponent {
   });
 
   ResetCodeform: FormGroup = new FormGroup({
-    resetCode: new FormControl('', [Validators.required]),
+    code: new FormControl('', [Validators.required]),
   });
 //newPass 
   newPasswordform: FormGroup = new FormGroup({
@@ -64,23 +64,24 @@ export class ForgetpasswordComponent {
 
   hanelResetCode() {
     this.isloading = true;
-    let resetCode = this.ResetCodeform.value;
+    let code = this.ResetCodeform.value.code;
+    let email = this.forgetpasswordform.value.email;
 
-    // this._AuthService.verifyRestCode(resetCode).subscribe({
-    //   next: (response) => {
-    //     console.log(response);
+    this._ForgetpasswordService.verifyRestCode(email,code).subscribe({
+      next: (response) => {
+        console.log(response);
         this.isloading = false;
         this._ToastrService.success('success', 'تم التحقق من الكود');
         this.step2 = false;
         this.step3 = true;
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //     this.isloading = false;
-    //     this._ToastService.showToast('error', err.error.message);
-    //     this.message = err.error.message;
-    //   },
-    // });
+      },
+      error: (err) => {
+        console.log(err);
+        this.isloading = false;
+        this._ToastrService.error('error', err.error.message);
+        this.message = err.error.message;
+      },
+    });
   }
 
   handelnewPassword() {
