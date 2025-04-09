@@ -1,3 +1,29 @@
+.login-modal {
+  max-width: 724px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  margin: 0; 
+  padding: 0px;
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+
 .role-selection {
     display: flex;
     justify-content: space-around;

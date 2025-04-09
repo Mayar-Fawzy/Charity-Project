@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink,Router } from '@angular/router';
-import { FormGroup, FormControl,AbstractControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl,AbstractControl, Validators, FormsModule, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { RegisterService } from '../core/Services/register.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
@@ -24,7 +24,7 @@ export class RegisterComponent {
     firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     lastName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     email: new FormControl(null, [Validators.required, Validators.email]),
-    address: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    address: new FormControl(null, [Validators.required, Validators.minLength(5)]),
     phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11,}$/)]),
     dateOfBirth: new FormControl(null, [
       Validators.required]),
@@ -45,10 +45,6 @@ export class RegisterComponent {
 
      SubmitRegister(forminfo:FormGroup)
      { 
-      
-      
-
-
        console.log(forminfo.value);
        let formData = { ...forminfo.value };
 
@@ -80,12 +76,10 @@ if (formData.dateOfBirth) {
       )  
    
      }
-     confirmPassword(g :AbstractControl){
-      if(g.get('password')?.value=== g.get('rePassword')?.value){
-        return null
-      }
-      else{
-        return {mismatch:true}
-      }
-     }
+     confirmPassword(group: AbstractControl) {
+      const password = group.get('password')?.value;
+      const confirmPassword = group.get('confirmPassword')?.value;
+      return password === confirmPassword ? null : { mismatch: true };
+    }
+    
     }

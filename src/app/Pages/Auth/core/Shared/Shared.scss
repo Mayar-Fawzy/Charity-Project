@@ -1,184 +1,237 @@
-*{
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: "Tajawal", system-ui;
+  }
   
-}
-.Regiter{
-
-    background-image: url("/Images/yannis-h-uaPaEM7MiQQ-unsplash.jpg");
-    width: 100%;
-    background-position: center;
-    background-size:cover;
-    background-repeat: no-repeat;
-    object-fit:cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 50px 30px;
-    position: relative;
-    height:100vh;
-  
-}
-.regiterForm{
-
-    background-color: #B88E2F59;
-    padding: 50px;
-    width: 80%;
-    border-radius: 10px ;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 15px;
-     color: #FFFFFF;
+  .login-container {
     
-    z-index: 55;
-    height: fit-content;
-
-    
-
-}
-.layOut {
-    position: absolute;
-    width: 100%;
-    background-color: #000000c4;
-    height: 100%;
-    z-index: 5;
+    position: fixed;
     top: 0;
-
-
-}
-.regiterForm h3{
-    color: aliceblue;
-    font-weight: 400;
-}
-.regiterForm p {
-    color: #9F9F9F;
-    font-size: 20px;
-
-}
-.regiterForm form{
-    width: 600px;
-}
-form .inps{
-    padding: 10px 15px;
-    outline: none !important;
-    border: none;
-    background: #9F9F9F26;
-    border-radius: 10px;
-    color: #fff;
-    font-weight: 400;
-    font-size: 18px;
-    
-
-}
-.form-control:focus {
-    border:none;
-    outline: 0;
-    box-shadow:none;
-}
-.formValied{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.formValied .check{
-    display: flex;
-    align-items: center;
-    color: #9F9F9F;
-    gap: 7px;
-
-}
-.formValied .check .checkbox{
-    width: 15px;
-    height: 15px;
-}
-.formValied  a{
-    color: #B88E2F;
-}
-
- 
-form .btns{
+    left: 0;
     width: 100%;
-    margin: 15px 0 ;
-    padding: 15px ;
-    border: 1px gray solid;
-    outline: none;
-    border-radius: 10px;
-    background: #B88E2F;
-    font-weight: 600;
-    color: #fff;
-}
-.form-control.is-valid{
-    background-position: left calc(0.375em + .1875rem) center !important;
-
-}
-.form-control.is-invalid{
-    background-position: left calc(0.375em + .1875rem) center !important;
-
-}
-form .btnSign{
-    background-color: transparent;
-    border: 2px solid #B88E2F;
-
-    transition: 2s ease-in-out background-color;
-}
-form .btnSign:hover{
-    background-color: #B88E2F;
-    color: #fff;
-
-}
-form .btns:disabled {
-    background-color: #B88E2F;
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-
-  .passicon{
-    padding: 10px;
-    font-size: 18px;
-    position: absolute;
-    top:0px !important;
-    left: 15px  !important;
-  }
-
-  .text-danger {
-    --bs-text-opacity: 1;
-    color: rgb(101, 19, 27) !important;
+    height: 100%;
+    background-image: url("/Images/Loginn.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
-@media screen and (max-width: 900px) {
-    .Regiter{
-        height: 100vh;
+  .login-modal {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);        
+    -webkit-backdrop-filter: blur(20px);  
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+   
+  }
+  
+  .modal-header {
+    position: relative;
+    padding: 15px 0;
+    text-align: center;
+  }
+  
+  .modal-header h2 {
+    color: white;
+    font-size: 23px;
+     padding: 10px 95px 20px 0px;
+    text-align: center;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 40px;
+    height: 40px;
+    background-color: #000000;
+    border: none;
+    border-radius:15px 0 15px 0 ;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  
+  
+  form {
+    padding: 0 20px 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group {
+    position: relative;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px !important;
+    color: white;
+    font-size: 14px;
+  }
+  
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .error-message {
+    color: #ffb902;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+  
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .remember {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .remember input {
+    margin: 0;
+  }
+  
+  .remember label {
+    color: white;
+    font-size: 14px;
+  }
+  
+  .forgot-link {
+    color: white;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #f9c335;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 15px;
+  }
+  
+  .login-btn:hover {
+    background-color:#f9c335;
+  }
+  
+  .login-btn:disabled {
+    background-color:#f9c335;
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .divider span {
+    padding: 0 10px;
+  }
+  
+  .social-login {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .google-btn,
+  .facebook-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .google-btn {
+    background-color: white;
+    color: #333;
+  }
+  
+  .facebook-btn {
+    background-color: #1877f2;
+    color: white;
+  }
+  
+  .register-link {
+    text-align: center;
+    color: white;
+    font-size: 14px;
+  }
+  
+  .register-link a {
+    color: white;
+    text-decoration: none !important;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .register-link a:hover {
+    color: #b38000;
+  }
+  
+  @media (max-width: 400px) {
+    .login-modal {
+      width: 90%;
     }
-    .regiterForm{
-        width: 100%;
-        padding: 25px;
-    }
-    .regiterForm form{
-        width: 90%;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .Regiter{
-        height: 100vh;
-    }
-    .Regiter{
-
-        background-position: center;
-        padding: 20px;
-    }
-    
-    .regiterForm{
-        width: 100%;
-        padding: 15px;
-    }
-    .formValied{
-    
-        flex-wrap: wrap;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-    }
-}
+  }
+  
