@@ -1,11 +1,25 @@
-.login-modal {
-  max-width: 724px;
-}
 
 .modal-header {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+  
+ 
+.containerRegister {
+  width: 100%;
+   height: 100%;;
+  background-image: url("/Images/Loginn.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-modal{
+  margin-top: 100px;
+  margin-bottom: 100px;
+  max-width: 500px;
 }
 
 .modal-header h2 {
@@ -16,7 +30,8 @@
 }
 
 .close-btn {
-  background: none;
+  top: -14px;
+  left: -14px;
   border: none;
   color: #fff;
   font-size: 1.2rem;

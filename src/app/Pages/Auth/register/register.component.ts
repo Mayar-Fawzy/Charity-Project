@@ -28,7 +28,7 @@ export class RegisterComponent {
     phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11,}$/)]),
     dateOfBirth: new FormControl(null, [
       Validators.required]),
-    gender: new FormControl(0, [Validators.required]),
+    gender: new FormControl('', [Validators.required]),
 
     password: new FormControl(null, [
       Validators.required,
