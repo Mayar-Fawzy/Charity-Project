@@ -1,129 +1,191 @@
-.wave-container {
-  position: relative;
-  bottom: 0px;
-  line-height: 0;
+// footer.component.scss
+/* المتغيرات */
+$dark-blue: #111827;
+$light-text: #ffffff;
+$primary: #F6A026;
+$border-dark: rgba(255, 255, 255, 0.1);
+$spacing-xl: 2rem;
+$spacing-lg: 1.5rem;
+$spacing-md: 1rem;
+$spacing-sm: 0.5rem;
+$spacing-xs: 0.25rem;
 
-  .wave {
-    height: 120px;
-    background: url("/Images/wave.svg") no-repeat;
-    background-size: cover;
+/* الأنماط الرئيسية */
+.main-footer {
+  background-color: $dark-blue;
+  color: $light-text;
+  padding: 3rem 0;
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: $primary;
+    }
+  }
+
+  .footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-xl;
+  }
+
+  .brand-section {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    align-items: flex-start;
+
+    .logo-link {
+      .bi-hand-heart {
+        font-size: 2.8rem;
+        color: $primary;
+      }
+    }
+
+    .header-content {
+      text-align: right;
+
+      .org-name {
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .slogan {
+        font-style: italic;
+        color: rgba($light-text, 0.9);
+        margin-top: $spacing-xs;
+      }
+    }
+  }
+
+  .footer-section {
+    .section-title {
+      color: $primary;
+      margin-bottom: $spacing-md;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid $border-dark;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 0;
+
+      .nav-item {
+        margin-bottom: $spacing-sm;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        padding: 0.3rem 0;
+
+        .bi {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: $spacing-sm;
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+
+        .bi {
+          color: $primary;
+        }
+      }
+    }
+
+    .newsletter-form {
+      .input-group {
+        display: flex;
+        gap: $spacing-xs;
+        align-items: stretch;
+
+        .form-control {
+          flex: 1;
+          padding: 0.8rem;
+          border: 1px solid $border-dark;
+          border-radius: 4px;
+          background: transparent;
+          color: $light-text;
+
+          &::placeholder {
+            color: rgba($light-text, 0.7);
+          }
+        }
+
+        .btn-primary {
+          background: $primary;
+          color: $light-text;
+          border: none;
+          padding: 0.8rem 1.5rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background 0.3s;
+
+          &:hover {
+            background: darken($primary, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  .copyright {
+    margin-top: $spacing-xl;
+    text-align: center;
+    border-top: 1px solid $border-dark;
+    padding-top: $spacing-lg;
+
+    .copyright-text {
+      font-size: 0.875rem;
+      opacity: 0.8;
+
+      .bi {
+        margin-left: $spacing-xs;
+      }
+    }
   }
 }
 
-.footer {
-  background: #8c7551;
-  color: white;
-  text-align: right;
-  direction: rtl;
-  padding: 40px 20px 20px;
-  position: relative;
+/* التصميم المتجاوب */
+@media (max-width: 768px) {
+  .main-footer {
+    padding: $spacing-lg 0;
 
-  &__container {
-    display: grid;
-    grid-template-columns: 1.5fr repeat(3, 1fr);
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  &__brand {
-    .footer__logo {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 24px;
-
-      img {
-        height: 50px;
-        width: auto;
-      }
-    }
-  }
-
-  &__section {
-    h3 {
-      color: #ffdd99;
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-
-    ul {
-      padding-right: 15px;
-
-      li {
-        margin: 10px 0;
-        position: relative;
-
-        &::before {
-          content: "•";
-          color: #ffdd99;
-          margin-left: 8px;
-        }
-      }
-    }
-
-    .footer__address {
-      white-space: nowrap;
-      font-size: 16px;
-    }
-
-    a {
-      color: white;
-      text-decoration: underline;
-    }
-
-    a:hover {
-      color: lightgray;
-    }
-    p {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .footer__social {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      margin-top: 15px;
-
-      i {
-        font-size: 30px;
-        color: #ffdd99;
-        transition: transform 0.3s ease-in-out;
-
-        &:hover {
-          transform: scale(1.2);
-          color: white;
-        }
-      }
-    }
-  }
-
-  &__bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    margin-top: 40px;
-    padding-top: 20px;
-    font-size: 14px;
-  }
-
-  @media (max-width: 992px) {
-    &__container {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 30px 15px;
-
-    &__container {
+    .footer-grid {
       grid-template-columns: 1fr;
+      gap: $spacing-lg;
     }
 
-    .wave-container .wave {
-      height: 80px;
+    .footer-section {
+      text-align: center;
+
+      .nav-list,
+      .contact-list {
+        li {
+          justify-content: center;
+        }
+      }
+
+      .social-links {
+        justify-content: center;
+      }
     }
   }
 }

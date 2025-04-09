@@ -1,71 +1,81 @@
-<div class="wave-container">
-  <div class="wave"></div>
-</div>
-
-<footer class="footer">
-  <div class="footer__container">
-    <div class="footer__brand">
-      <div class="footer__logo">
-        <span>يـــــــد</span>
-        <img src="/Images/image 33.svg" alt="شعار الجمعية" />
-        <span>العطاء</span>
-      </div>
-      <p class="footer__charity">جمعية خيرية</p>
-      <p class="footer__description">
-        تعزيز العمل الخيري من خلال التكنولوجيا، لتحقيق تأثير أكبر على حياة
-        المحتاجين.
-      </p>
-    </div>
-
-    <!--  خدماتنا -->
-    <div class="footer__section">
-      <h3>خدماتنا</h3>
-      <ul>
-        <li>مشاريع التعليم</li>
-        <li>المشاريع الصحية</li>
-        <li>المشاريع الاجتماعية</li>
-        <li>مشاريع التنمية</li>
-      </ul>
-    </div>
-
-    <!-- استكشاف المزيد -->
-    <div class="footer__section">
-      <h3>استكشاف المزيد</h3>
-      <ul>
-        <li>من نحن</li>
-        <li>المميزات</li>
-        <li>أعمالنا</li>
-        <li>المصادر</li>
-        <li>سياسة الخصوصية</li>
-      </ul>
-    </div>
-
-    <!-- تواصل معنا -->
-    <div class="footer__section">
-      <h3>تواصل معنا</h3>
-      <p class="footer__address">
-        <i class="bi bi-geo-alt"></i> 123 شارع المستقبل، القاهرة الجديدة، مصر
-      </p>
-      <p><i class="bi bi-telephone"></i> (048) 2344567</p>
-      <p><i class="bi bi-phone"></i> +20 123 4567 72</p>
-      <p>
-        <i class="bi bi-envelope-at-fill"></i>
-        <a [href]="'mailto:' + email">{{ email }}</a>
-      </p>
-      <div class="footer__social">
-        <a href="mailto:givinghands.contact@gmail.com">
-          <i class="bi bi-envelope-at-fill"></i>
-        </a>
-        <i class="bi bi-facebook"></i>
-        <i class="bi bi-instagram"></i>
-        <i class="bi bi-twitter"></i>
+<footer class="main-footer">
+  <div class="footer-grid">
+    
+    <!-- قسم الشعار والعنوان الرئيسي -->
+    <div class="brand-section">
+      <a href="/" class="logo-link">
+        <i class="bi bi-hand-heart"></i>
+      </a>
+      <div class="header-content">
+        <h1 class="org-name">يدالعطاء</h1>
+        <p class="slogan">نساهم في إحداث فرق في مجتمعنا من خلال التعاطف والتفاني ودعمكم الكريم</p>
       </div>
     </div>
 
-    <!--  الحقوق -->
-    <div class="footer__bottom">
-      <p>جميع الحقوق محفوظة &copy; {{ currentYear }} GivingHands123</p>
-      <a href="#" class="footer__terms">الشروط والأحكام</a>
+    <!-- روابط سريعة -->
+    <div class="footer-section">
+      <h4 class="section-title">الروابط السريعة</h4>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+            <i class="bi bi-person-circle"></i>
+            من نحن
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/programs" class="nav-link">
+            <i class="bi bi-stack"></i>
+            البرامج
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/contact" class="nav-link">
+            <i class="bi bi-telephone"></i>
+            اتصل بنا
+          </a>
+        </li>
+      </ul>
     </div>
+
+    <!-- معلومات الاتصال -->
+    <div class="footer-section">
+      <h4 class="section-title">تواصل معنا</h4>
+      <ul class="contact-list">
+        <li><i class="bi bi-geo-alt"></i> شبين الكوم</li>
+        <li><i class="bi bi-phone"></i> +20 10 253 632 85</li>
+        <li>
+          <a href="mailto:givinghands.contact@gmail.com" class="email-link">
+            <i class="bi bi-envelope"></i>
+            Giving Hand
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!--تابعنا-->
+    <div class="footer-section">
+      <h4 class="section-title">تابعنا</h4>
+      <form class="newsletter-form">
+        <div class="input-group">
+          <input type="email" 
+                class="form-control"
+                placeholder="البريد الإلكتروني"
+                required>
+          <button type="submit" 
+                  class="btn btn-primary">
+            <i class="bi bi-envelope-arrow-up"></i>
+            اشتراك
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- حقوق النشر -->
+  <div class="copyright">
+    <p class="copyright-text">
+      <i class="bi bi-c-circle"></i>
+      2025 جميع الحقوق محفوظة لـيد العطاء
+    </p>
   </div>
 </footer>
