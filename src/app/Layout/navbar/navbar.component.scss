@@ -9,7 +9,9 @@
   align-items: center;
   padding: 15px 50px;
   z-index: 1000;
-  transition: transform 0.3s ease-in-out, background 0.3s;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(15px);
+  // transition: transform 0.3s ease-in-out, background 0.3s;
 
   &.hidden {
     transform: translateY(-100%);
@@ -44,7 +46,7 @@
       margin: 0 15px;
 
       a {
-        cursor: pointer; 
+        cursor: pointer;
         text-decoration: none;
         color: white;
         font-size: 17px;
@@ -134,4 +136,3 @@
     }
   }
 }
-

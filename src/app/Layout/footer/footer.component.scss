@@ -45,31 +45,37 @@ $spacing-xs: 0.25rem;
     flex-direction: column;
     gap: $spacing-sm;
     align-items: flex-start;
-
-    /* أيقونة الشعار */
-    .logo-link {
-      .bi-hand-heart {
-        font-size: 2.8rem;
-        color: $primary;
-      }
-    }
-
-    /* العنوان والشعار */
+  
+    /* تنسيق العنوان والصورة */
     .header-content {
-      text-align: right;
-
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+  
       .org-name {
         font-weight: 700;
         margin: 0;
+        font-size: 2rem;
+  
+        .logo-img {
+          width: 40px; // عرض الصورة
+          height: auto; // الحفاظ على نسبة العرض إلى الارتفاع
+          margin: 0 $spacing-xs; // تباعد بين النص والصورة
+        }
       }
-
+  
       .slogan {
         font-style: italic;
         color: rgba($light-text, 0.9);
         margin-top: $spacing-xs;
+        font-size: 1.1rem;
       }
     }
   }
+  
+  
+  
 
   /* ===== الأقسام الفرعية ===== */
   .footer-section {
