@@ -8,7 +8,7 @@
     </div>
 
     <form (ngSubmit)="SubmitRegister(registerForm)" [formGroup]="registerForm">
-      <!-- First Name and Last Name side by side -->
+      <!-- First Name and Last Name -->
       <div class="form-group">
         <!-- First Name -->
         <div class="input-group">
@@ -24,11 +24,7 @@
             <i class="fa fa-user"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('firstName')?.errors &&
-            (registerForm.get('firstName')?.touched || registerForm.get('firstName')?.dirty)"
-        >
+        <div class="error-message" *ngIf="registerForm.get('firstName')?.errors && (registerForm.get('firstName')?.touched || registerForm.get('firstName')?.dirty)">
           <span *ngIf="registerForm.get('firstName')?.getError('required')">الاسم مطلوب</span>
           <span *ngIf="registerForm.get('firstName')?.errors?.['minlength']">يجب أن يكون أكثر من 3 حروف</span>
         </div>
@@ -48,11 +44,7 @@
               <i class="fa fa-user"></i>
             </div>
           </div>
-          <div
-            class="error-message"
-            *ngIf="registerForm.get('lastName')?.errors &&
-              (registerForm.get('lastName')?.touched || registerForm.get('lastName')?.dirty)"
-          >
+          <div class="error-message" *ngIf="registerForm.get('lastName')?.errors && (registerForm.get('lastName')?.touched || registerForm.get('lastName')?.dirty)">
             <span *ngIf="registerForm.get('lastName')?.getError('required')">الاسم مطلوب</span>
             <span *ngIf="registerForm.get('lastName')?.errors?.['minlength']">يجب أن يكون أكثر من 3 حروف</span>
           </div>
@@ -74,11 +66,7 @@
             <i class="fa fa-map-marker"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('address')?.errors &&
-            (registerForm.get('address')?.touched || registerForm.get('address')?.dirty)"
-        >
+        <div class="error-message" *ngIf="registerForm.get('address')?.errors && (registerForm.get('address')?.touched || registerForm.get('address')?.dirty)">
           <span *ngIf="registerForm.get('address')?.getError('required')">العنوان مطلوب</span>
           <span *ngIf="registerForm.get('address')?.getError('minlength')">يجب ان يكون اكتر من 5 حروف</span>
         </div>
@@ -99,11 +87,7 @@
             <i class="fa fa-phone"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('phoneNumber')?.errors &&
-            (registerForm.get('phoneNumber')?.touched || registerForm.get('phoneNumber')?.dirty)"
-        >
+        <div class="error-message" *ngIf="registerForm.get('phoneNumber')?.errors && (registerForm.get('phoneNumber')?.touched || registerForm.get('phoneNumber')?.dirty)">
           <span *ngIf="registerForm.get('phoneNumber')?.getError('required')">الرقم مطلوب</span>
           <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">يجب أن يكون 11 رقم</span>
         </div>
@@ -123,11 +107,7 @@
             <i class="fa fa-calendar"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('dateOfBirth')?.errors &&
-            (registerForm.get('dateOfBirth')?.touched || registerForm.get('dateOfBirth')?.dirty)"
-        >
+        <div class="error-message" *ngIf="registerForm.get('dateOfBirth')?.errors && (registerForm.get('dateOfBirth')?.touched || registerForm.get('dateOfBirth')?.dirty)">
           <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')">تاريخ الميلاد مطلوب</span>
           <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']">مثال (28-07-2003)</span>
         </div>
@@ -140,12 +120,10 @@
           <option [value]="1">ذكر</option>
           <option [value]="2">أنثى</option>
         </select>
-        
         <div class="input-icon">
           <i class="fa fa-venus-mars"></i>
         </div>
       </div>
-      
 
       <!-- Email -->
       <div class="form-group">
@@ -162,11 +140,7 @@
             <i class="fa fa-envelope"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('email')?.errors &&
-            (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)"
-        >
+        <div class="error-message" *ngIf="registerForm.get('email')?.errors && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)">
           <span *ngIf="registerForm.get('email')?.getError('required')">البريد الاكتروني مطلوب</span>
           <span *ngIf="registerForm.get('email')?.errors?.['email']">البريد الاكتروني غير صحيح</span>
         </div>
@@ -187,11 +161,7 @@
             <i class="fa fa-lock"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('password')?.errors &&
-            (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)"
-        >
+        <div class="error-message" *ngIf="registerForm.get('password')?.errors && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)">
           <span *ngIf="registerForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة</span>
           <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تحتوي على 8 أحرف على الأقل</span>
           <span *ngIf="registerForm.get('password')?.errors?.['pattern']">يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)</span>
@@ -213,18 +183,9 @@
             <i class="fa fa-lock"></i>
           </div>
         </div>
-        <div
-          class="error-message"
-          *ngIf="registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty"
-        >
+        <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty">
           <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">كلمة المرور مطلوبة</span>
-          <span
-            *ngIf="registerForm.hasError('mismatch') &&
-              registerForm.get('confirmPassword')?.value &&
-              !registerForm.get('confirmPassword')?.errors?.['required']"
-          >
-            كلمة المرور غير متطابقة
-          </span>
+          <span *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.value && !registerForm.get('confirmPassword')?.errors?.['required']">كلمة المرور غير متطابقة</span>
         </div>
       </div>
 
@@ -242,13 +203,11 @@
         </label>
       </div>
 
-    
       <!-- Submit Button -->
       <button type="submit" class="login-btn" [disabled]="!registerForm.valid || isloading">
         <span *ngIf="!isloading">إنشاء حساب</span>
         <span *ngIf="isloading">جاري التحميل...</span>
         <span *ngIf="isloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-       
       </button>
 
       <div class="divider">
