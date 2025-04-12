@@ -14,7 +14,7 @@ import { BeneficiaryComponent } from './Pages/beneficiary/beneficiary/beneficiar
 
 export const routes: Routes = [
     // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: '', redirectTo: 'donor', pathMatch: 'full' },
 
     // ✅ صفحات Login & Register بدون Navbar & Footer
     { path: 'login', title: 'Login', component: LoginComponent },
