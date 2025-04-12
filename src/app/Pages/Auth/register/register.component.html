@@ -9,9 +9,8 @@
 
     <form (ngSubmit)="SubmitRegister(registerForm)" [formGroup]="registerForm">
       <!-- First Name and Last Name side by side -->
-
-      <!-- First Name -->
       <div class="form-group">
+        <!-- First Name -->
         <div class="input-group">
           <input
             autocomplete="off"
@@ -73,6 +72,7 @@
           </div>
         </div>
       </div>
+
       <!-- Address -->
       <div class="form-group">
         <div class="input-group">
@@ -99,8 +99,8 @@
           <span *ngIf="registerForm.get('address')?.getError('required')"
             >العنوان مطلوب</span
           >
-          <span *ngIf="registerForm.get('address')?.getError('minlength')">
-            يجب ان يكون اكتر من 5 حروف</span
+          <span *ngIf="registerForm.get('address')?.getError('minlength')"
+            >يجب ان يكون اكتر من 5 حروف</span
           >
         </div>
       </div>
@@ -146,12 +146,11 @@
             id="dateOfBirth"
             formControlName="dateOfBirth"
             placeholder="تاريخ الميلاد"
-          >
+          />
           <div class="input-icon">
-            <i class="fa fa-calendar"></i>  
+            <i class="fa fa-calendar"></i>
           </div>
         </div>
-      
         <div
           class="error-message"
           *ngIf="
@@ -160,33 +159,33 @@
               registerForm.get('dateOfBirth')?.dirty)
           "
         >
-        <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')"
+          <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')"
             >تاريخ الميلاد مطلوب</span
           >
-          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']">
-            مثال (28-07-2003)
-          </span>
+          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']"
+            >مثال (28-07-2003)</span
+          >
         </div>
       </div>
-      
 
       <!-- Gender -->
       <div class="input-group mb-3">
         <select
-  class="form-control"
-  id="gender"
-  formControlName="gender"
-  required
->
-  <option value="" disabled selected hidden>اختر النوع</option>
-  <option [value]="1">ذكر</option>
-  <option [value]="2">أنثى</option>
-</select>
+          class="form-control gender-select"
+          id="gender"
+          formControlName="gender"
+          required
+        >
+          <option [value]="" disabled selected hidden>اختر النوع</option>
+          <option [value]="1">ذكر</option>
+          <option [value]="2">أنثى</option>
+        </select>
 
         <div class="input-icon">
           <i class="fa fa-venus-mars"></i>
         </div>
       </div>
+
       <!-- Email -->
       <div class="form-group">
         <div class="input-group">
@@ -218,6 +217,7 @@
           >
         </div>
       </div>
+
       <!-- Password -->
       <div class="form-group">
         <div class="input-group">
@@ -247,9 +247,9 @@
           <span *ngIf="registerForm.get('password')?.errors?.['minlength']"
             >يجب أن تحتوي على 8 أحرف على الأقل</span
           >
-          <span *ngIf="registerForm.get('password')?.errors?.['pattern']">
-            يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)
-          </span>
+          <span *ngIf="registerForm.get('password')?.errors?.['pattern']"
+            >يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)</span
+          >
         </div>
       </div>
 
@@ -268,7 +268,6 @@
             <i class="fa fa-lock"></i>
           </div>
         </div>
-
         <div
           class="error-message"
           *ngIf="
@@ -278,16 +277,12 @@
         >
           <span
             *ngIf="registerForm.get('confirmPassword')?.errors?.['required']"
+            >كلمة المرور مطلوبة</span
           >
-            كلمة المرور مطلوبة
-          </span>
-
           <span
-            *ngIf="
-       registerForm.hasError('mismatch') &&
-       registerForm.get('confirmPassword')?.value &&
-       !registerForm.get('confirmPassword')?.errors?.['required']
-     "
+            *ngIf="registerForm.hasError('mismatch') &&
+              registerForm.get('confirmPassword')?.value &&
+              !registerForm.get('confirmPassword')?.errors?.['required']"
           >
             كلمة المرور غير متطابقة
           </span>
@@ -315,11 +310,10 @@
         [disabled]="!registerForm.valid || isloading"
       >
         <span *ngIf="!isloading">إنشاء حساب</span>
-        
         <span *ngIf="isloading">جاري التحميل...</span>
         <span
           *ngIf="isloading"
-          class="spinner-border spinner-border-sm ms-2"
+          class="spinner-border spinner-border-sm"
           role="status"
           aria-hidden="true"
         ></span>
@@ -346,54 +340,5 @@
       </div>
     </form>
   </div>
-<<<<<<< HEAD
 </div>
-=======
-  
-            <!-- User Type -->
-            <div class="role-selection mt-3">
-                <label class="role-option">
-                    <input type="radio" formControlName="userType" [value]="2"> متطوع
-                </label>
-                <label class="role-option">
-                    <input type="radio" formControlName="userType" [value]="3" checked> <strong>متبرع</strong>
-                </label>
-                <label class="role-option">
-                    <input type="radio" formControlName="userType" [value]="1"> مستفيد
-                </label>
-            </div>
-            <!-- >>>>>>>> spinner -->
-            <div *ngIf="isloading" class="spinner-container">
-                <div class="spinner"></div>
-              </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="login-btn" [disabled]="!registerForm.valid || isloading">
-                <span *ngIf="!isloading">إنشاء حساب</span>
-                <span *ngIf="isloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span *ngIf="isloading">جاري التحميل...</span>
-            </button>
-
-            <div class="divider">
-                <span>أو تواصل معنا عبر</span>
-            </div>
-
-            <div class="social-login">
-                <button type="button" class="facebook-btn">
-                    <span>فيسبوك</span>
-                    <i class="fa-brands fa-facebook-f"></i>
-                </button>
-                <button type="button" class="google-btn">
-                    <span>جوجل</span>
-                    <i class="fa-brands fa-google"></i>
-                </button>
-            </div>
-
-            <div class="register-link" routerLink="/login">
-                <span>لديك حساب؟ </span>
-                <a >تسجيل الدخول</a>
-            </div>
-        </form>
-    </div>
-</div>
->>>>>>> 225738d (update home And register)
