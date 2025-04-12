@@ -94,13 +94,17 @@
     color: white;
 
     .user-image {
-      width: 40px;
       height: 40px;
+      width: 40px;
+      border: 2px solid #f6a026; 
       border-radius: 50%;
+      padding: 3px;
       margin-left: 10px;
       object-fit: cover;
+      margin: 8px 8px 8px 10px;
+      box-shadow: 0 0 8px rgba(255, 255, 0, 0.5); 
     }
-
+    
     .notification-container {
       position: relative;
       margin-left: 15px;
