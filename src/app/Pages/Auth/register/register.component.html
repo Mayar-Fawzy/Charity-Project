@@ -346,4 +346,54 @@
       </div>
     </form>
   </div>
+<<<<<<< HEAD
 </div>
+=======
+  
+            <!-- User Type -->
+            <div class="role-selection mt-3">
+                <label class="role-option">
+                    <input type="radio" formControlName="userType" [value]="2"> متطوع
+                </label>
+                <label class="role-option">
+                    <input type="radio" formControlName="userType" [value]="3" checked> <strong>متبرع</strong>
+                </label>
+                <label class="role-option">
+                    <input type="radio" formControlName="userType" [value]="1"> مستفيد
+                </label>
+            </div>
+            <!-- >>>>>>>> spinner -->
+            <div *ngIf="isloading" class="spinner-container">
+                <div class="spinner"></div>
+              </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="login-btn" [disabled]="!registerForm.valid || isloading">
+                <span *ngIf="!isloading">إنشاء حساب</span>
+                <span *ngIf="isloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span *ngIf="isloading">جاري التحميل...</span>
+            </button>
+
+            <div class="divider">
+                <span>أو تواصل معنا عبر</span>
+            </div>
+
+            <div class="social-login">
+                <button type="button" class="facebook-btn">
+                    <span>فيسبوك</span>
+                    <i class="fa-brands fa-facebook-f"></i>
+                </button>
+                <button type="button" class="google-btn">
+                    <span>جوجل</span>
+                    <i class="fa-brands fa-google"></i>
+                </button>
+            </div>
+
+            <div class="register-link" routerLink="/login">
+                <span>لديك حساب؟ </span>
+                <a >تسجيل الدخول</a>
+            </div>
+        </form>
+    </div>
+</div>
+>>>>>>> 225738d (update home And register)

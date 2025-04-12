@@ -1,23 +1,24 @@
 // footer.component.scss
-/* المتغيرات */
+/* ========== المتغيرات ========== */
 $dark-blue: #111827;
 $light-text: #ffffff;
 $primary: #F6A026;
 $border-dark: rgba(255, 255, 255, 0.1);
-$spacing-xl: 2rem;
-$spacing-lg: 1.5rem;
+$spacing-xl: 3rem;
+$spacing-lg: 2rem;
 $spacing-md: 1rem;
 $spacing-sm: 0.5rem;
 $spacing-xs: 0.25rem;
 
-/* الأنماط الرئيسية */
+/* ========== الأنماط الرئيسية ========== */
 .main-footer {
   background-color: $dark-blue;
   color: $light-text;
-  padding: 3rem 0;
+  padding: 2rem 0;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
 
+  /* ===== روابط عامة ===== */
   a {
     text-decoration: none;
     color: inherit;
@@ -28,21 +29,24 @@ $spacing-xs: 0.25rem;
     }
   }
 
+  /* ===== تخطيط الجريد ===== */
   .footer-grid {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: $spacing-xl;
+    gap: $spacing-lg;
   }
 
+  /* ===== قسم الشعار ===== */
   .brand-section {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     align-items: flex-start;
 
+    /* أيقونة الشعار */
     .logo-link {
       .bi-hand-heart {
         font-size: 2.8rem;
@@ -50,6 +54,7 @@ $spacing-xs: 0.25rem;
       }
     }
 
+    /* العنوان والشعار */
     .header-content {
       text-align: right;
 
@@ -66,6 +71,7 @@ $spacing-xs: 0.25rem;
     }
   }
 
+  /* ===== الأقسام الفرعية ===== */
   .footer-section {
     .section-title {
       color: $primary;
@@ -74,6 +80,7 @@ $spacing-xs: 0.25rem;
       border-bottom: 2px solid $border-dark;
     }
 
+    /* ===== قائمة الروابط السريعة ===== */
     .nav-list {
       list-style: none;
       padding: 0;
@@ -94,6 +101,7 @@ $spacing-xs: 0.25rem;
       }
     }
 
+    /* ===== قائمة التواصل ===== */
     .contact-list {
       list-style: none;
       padding: 0;
@@ -110,6 +118,24 @@ $spacing-xs: 0.25rem;
       }
     }
 
+    /* ===== روابط التواصل الاجتماعي ===== */
+    .social-links {
+      display: flex;
+      gap: $spacing-md;
+      margin-bottom: $spacing-md;
+
+      .social-link {
+        font-size: 1.5rem;
+        color: $light-text;
+        transition: color 0.3s;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    /* ===== نموذج النشرة البريدية ===== */
     .newsletter-form {
       .input-group {
         display: flex;
@@ -146,6 +172,7 @@ $spacing-xs: 0.25rem;
     }
   }
 
+  /* ===== حقوق النشر ===== */
   .copyright {
     margin-top: $spacing-xl;
     text-align: center;
@@ -163,7 +190,7 @@ $spacing-xs: 0.25rem;
   }
 }
 
-/* التصميم المتجاوب */
+/* ========== التصميم المتجاوب ========== */
 @media (max-width: 768px) {
   .main-footer {
     padding: $spacing-lg 0;
