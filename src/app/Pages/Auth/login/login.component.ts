@@ -45,10 +45,10 @@ export class LoginComponent {
   }
 
   Sigin(formInfo: FormGroup) {
-    this.isloading = false;
+    this.isloading = true;
     this._LoginService.login(formInfo.value).subscribe(
       (res) => {
-        this.isloading = false;
+        this.isloading = true;
         console.log('resLogin', res);
 
         if (res.isSucceeded) {

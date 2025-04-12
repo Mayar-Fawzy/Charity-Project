@@ -51,15 +51,13 @@ export class RegisterComponent {
        formData.gender = Number(formData.gender);
        formData.userType = Number(formData.userType);
          
-if (formData.dateOfBirth) {
+   if (formData.dateOfBirth) {
   const date = new Date(formData.dateOfBirth);
   formData.dateOfBirth = date.toISOString().split('T')[0]; // يحافظ على YYYY-MM-DD
-}
+    }
      this. _RegisterService.Register(formData).subscribe((res)=>{
       this.isloading=false;
       console.log('resRegister',res);
-
-
 
      if (res.isSucceeded) {
       this.isloading = true;

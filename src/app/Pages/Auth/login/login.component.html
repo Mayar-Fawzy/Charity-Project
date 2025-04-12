@@ -83,13 +83,14 @@
         [disabled]="!siginForm.valid || isloading"
       >
         <span *ngIf="!isloading">تسجيل</span>
+        
+        <span *ngIf="isloading">جاري التحميل...</span>
         <span
           *ngIf="isloading"
-          class="spinner-border spinner-border-sm"
+          class="spinner-border spinner-border-sm ms-2"
           role="status"
           aria-hidden="true"
         ></span>
-        <span *ngIf="isloading">جاري التحميل...</span>
       </button>
 
       <div class="divider">
