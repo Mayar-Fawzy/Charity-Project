@@ -25,9 +25,9 @@ export class RegisterComponent {
     lastName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     email: new FormControl(null, [Validators.required, Validators.email]),
     address: new FormControl(null, [Validators.required, Validators.minLength(5)]),
-    phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11,}$/)]),
+    phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11}$/)]),
     dateOfBirth: new FormControl(null, [
-      Validators.required]),
+      Validators.required,  Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]),
     gender: new FormControl('', [Validators.required]),
 
     password: new FormControl(null, [
@@ -43,37 +43,54 @@ export class RegisterComponent {
 
   
 
-     SubmitRegister(forminfo:FormGroup)
-     { 
-       console.log(forminfo.value);
-       let formData = { ...forminfo.value };
-
-       formData.gender = Number(formData.gender);
-       formData.userType = Number(formData.userType);
-         
-   if (formData.dateOfBirth) {
-  const date = new Date(formData.dateOfBirth);
-  formData.dateOfBirth = date.toISOString().split('T')[0]; // يحافظ على YYYY-MM-DD
-    }
-     this. _RegisterService.Register(formData).subscribe((res)=>{
-      this.isloading=false;
-      console.log('resRegister',res);
-
-     if (res.isSucceeded) {
-      this.isloading = true;
-      this._ToastService.success('please verify your email', '', { timeOut: 3000 });
-      this._router.navigate(['/login'])
+  SubmitRegister(forminfo: FormGroup) {
+    this.isloading = true;
+  
+    // 👆 Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+    let formData = { ...forminfo.value };
+    formData.gender = Number(formData.gender);
+    formData.userType = Number(formData.userType);
+  
+    // ✅ Format تاريخ الميلاد
+    if (formData.dateOfBirth) {
+      formData.dateOfBirth = formData.dateOfBirth; // بتيجي كـ string جاهز
     }
     
-        },
-        (error) => {
-          this.isloading = false;
-          console.log('error', error);
-          this._ToastService.error(error.error.errors, 'error');
+  
+    // ✅ إضافة createUser (مثال: ايميل نفسه أو ثابت مؤقتًا)
+    // formData.createUser = formData.email;
+  
+    this._RegisterService.Register(formData).subscribe(
+      (res) => {
+        this.isloading = false;
+  
+        console.log('resRegister', res);
+  
+        if (res.isSucceeded) {
+          this._ToastService.success('Please verify your email', '', { timeOut: 3000 });
+          this._router.navigate(['/login']);
+        } else {
+          // ✅ error بدون crash
+          this._ToastService.error('حدث خطأ أثناء التسجيل', 'خطأ', { timeOut: 3000 });
         }
-      )  
-   
-     }
+      },
+      (error) => {
+        this.isloading = false; // ❗️كان عندك true غلط
+        console.log('error', error.error.errors);
+  
+        const errorMessage = error?.error?.errors
+          ? Object.values(error.error.errors).join('')
+          : 'حدث خطأ غير متوقع';
+  
+        this._ToastService.error(errorMessage, 'خطأ', { timeOut: 3000 });
+        this.isloading = true; // ❗️كان عندك true غلط
+      }
+    );
+  }
+  
+  
      confirmPassword(group: AbstractControl) {
       const password = group.get('password')?.value;
       const confirmPassword = group.get('confirmPassword')?.value;

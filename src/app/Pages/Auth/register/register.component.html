@@ -99,7 +99,7 @@
           <span *ngIf="registerForm.get('address')?.getError('required')"
             >العنوان مطلوب</span
           >
-          <span *ngIf="registerForm.get('address')?.getError('minLength')">
+          <span *ngIf="registerForm.get('address')?.getError('minlength')">
             يجب ان يكون اكتر من 5 حروف</span
           >
         </div>
@@ -141,17 +141,17 @@
       <div class="form-group">
         <div class="input-group">
           <input
-            autocomplete="off"
             type="text"
             class="form-control"
             id="dateOfBirth"
             formControlName="dateOfBirth"
             placeholder="تاريخ الميلاد"
-          />
+          >
           <div class="input-icon">
-            <i class="fa fa-calendar"></i>
+            <i class="fa fa-calendar"></i>  
           </div>
         </div>
+      
         <div
           class="error-message"
           *ngIf="
@@ -160,11 +160,15 @@
               registerForm.get('dateOfBirth')?.dirty)
           "
         >
-          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['required']"
-            >مثال(2003-07-28)</span
+        <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')"
+            >تاريخ الميلاد مطلوب</span
           >
+          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']">
+            مثال (28-07-2003)
+          </span>
         </div>
       </div>
+      
 
       <!-- Gender -->
       <div class="input-group mb-3">
@@ -311,13 +315,14 @@
         [disabled]="!registerForm.valid || isloading"
       >
         <span *ngIf="!isloading">إنشاء حساب</span>
+        
+        <span *ngIf="isloading">جاري التحميل...</span>
         <span
           *ngIf="isloading"
-          class="spinner-border spinner-border-sm"
+          class="spinner-border spinner-border-sm ms-2"
           role="status"
           aria-hidden="true"
         ></span>
-        <span *ngIf="isloading">جاري التحميل...</span>
       </button>
 
       <div class="divider">
