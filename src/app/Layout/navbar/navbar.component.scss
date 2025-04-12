@@ -7,11 +7,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 50px;
+  padding: 15px 20px;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(15px);
-  // transition: transform 0.3s ease-in-out, background 0.3s;
+  direction: rtl;
 
   &.hidden {
     transform: translateY(-100%);
@@ -20,7 +20,9 @@
   &__container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
   }
 
   &__brand {
@@ -39,11 +41,13 @@
   &__menu {
     display: flex;
     list-style: none;
-    margin: 0 auto;
     padding: 0;
+    margin: 0 30px;
+    flex: 1;
+    justify-content: center;
 
     li {
-      margin: 0 15px;
+      margin: 0 10px;
 
       a {
         cursor: pointer;
@@ -64,6 +68,8 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    justify-content: flex-start; // لأقصى اليمين في RTL
+    flex-shrink: 0;
   }
 
   .login-btn {
@@ -133,6 +139,54 @@
       &:hover {
         color: orange;
       }
+    }
+  }
+
+  .navbar__toggle {
+    display: none;
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
+  @media screen and (max-width: 768px) {
+    flex-wrap: wrap;
+
+    &__menu {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px 0;
+      margin-top: 15px;
+
+      li {
+        margin: 10px 0;
+        text-align: center;
+
+        a {
+          font-size: 18px;
+        }
+      }
+    }
+
+    &.open {
+      .navbar__menu {
+        display: flex;
+      }
+    }
+
+    .navbar__toggle {
+      display: block;
+    }
+
+    &__actions {
+      width: 100%;
+      justify-content: flex-start;
+      padding: 10px;
     }
   }
 }

@@ -20,37 +20,35 @@ import { Decode } from '../../core/interfaces/decode';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  private readonly _Router=inject(Router);
- 
-  private readonly _LoginService=inject(LoginService); 
+  private readonly _Router = inject(Router);
+  private readonly _LoginService = inject(LoginService);
+
+  isNavbarHidden: boolean = false;
+  isLogin: boolean = false;
+  userData: any;
+  userName!: string;
+  isMenuOpen: boolean = false; // إضافة هذه الخاصية للتحكم في إظهار وإخفاء القائمة
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
- isNavbarHidden:boolean=false
- isLogin:Boolean=false
- userData:any 
- userName!:string
+
   ngOnInit(): void {
-     if(localStorage.getItem("userToken")){
-      this.isLogin=true;
+    if (localStorage.getItem('userToken')) {
+      this.isLogin = true;
+    }
 
-     }
-      this.userData= this._LoginService.saveUserAuth()
-    
-      this.userName=this.userData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname']
+    this.userData = this._LoginService.saveUserAuth();
+    this.userName = this.userData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
   }
- 
-  
 
-  login() {
+  navigateToLogin() {
     this._Router.navigate(['/login']);
     console.log('توجه إلى صفحة تسجيل الدخول...');
-    
   }
 
-  logout(){
-   this._LoginService.signOut()
-   
+  handleLogout() {
+    this._LoginService.signOut();
+    this.isLogin = false; // تأكد من إلغاء حالة تسجيل الدخول
   }
-
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -59,5 +57,9 @@ export class NavbarComponent implements OnInit {
     } else {
       this.isNavbarHidden = false;
     }
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen; // تغيير حالة الـ menu عند النقر
   }
 }
