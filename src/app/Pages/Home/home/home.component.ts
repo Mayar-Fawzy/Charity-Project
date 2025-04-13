@@ -1,3 +1,5 @@
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import {
   Component,
   ElementRef,
@@ -5,9 +7,14 @@ import {
   Inject,
   PLATFORM_ID,
   AfterViewInit,
+  inject,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
+import { Data, IprojectDonate } from '../../Donor/core/interfaces/iproject-donate';
+import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
+import { NgModel } from '@angular/forms';
 
 interface CharityCause {
   title: string;
@@ -28,11 +35,48 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit {
+ projects:Data[]=[]
+private readonly _HomedonateServiesService=inject(HomedonateServiesService)
+GetDonation(){
+  this._HomedonateServiesService.GetDonation().subscribe((res)=>{
+    this.projects=res.data;
+    console.log(this.projects);
+  }
+  )
+
+}
+// customOptions: OwlOptions = {
+//   loop: false,
+//   margin: 10,
+//   nav: true,
+//   dots: true,
+//   autoplay: true,
+//   autoplayTimeout: 3000,
+//   autoplayHoverPause: true,
+//   navText: [
+//     "<i class='fa-solid fa-chevron-left'></i>",
+//     "<i class='fa-solid fa-chevron-right'></i>",
+//   ],
+//   responsive: {
+//     0: { items: 1 },
+//     600: { items: 3 },
+//     992: { items: 3 },
+//     1200: { items: 3}
+//   }
+// };
+
+
+getProgressPercentage(project: Data): number {
+  // نسبة وهمية كمثال
+  if (project.name.includes('well')) return 60; // ضيف نسبة حقيقية لو عندك مبلغ متبرع به
+  return 0;
+}
+
   causes: CharityCause[] = [];
   testimonialsList: Testimonial[] = [];
   @ViewChild('causesScroll') causesSlider!: ElementRef;
@@ -42,6 +86,7 @@ export class HomeComponent implements AfterViewInit {
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
+    this.GetDonation();
     this.initializeCauses();
     this.initializeTestimonials();
   }

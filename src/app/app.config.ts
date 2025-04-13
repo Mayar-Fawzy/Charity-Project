@@ -17,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideToastr(),
+    
     provideClientHydration(),
     provideHttpClient(withFetch(),
     withInterceptors([headersInterceptor]))
