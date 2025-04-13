@@ -38,7 +38,16 @@ export class HomeComponent implements AfterViewInit {
   @ViewChild('causesScroll') causesSlider!: ElementRef;
   currentIndex = 0;
   cardWidth = 300;
-
+  projects:Data[]=[]
+  private readonly _HomedonateServiesService=inject(HomedonateServiesService)
+  GetDonation(){
+    this._HomedonateServiesService.GetDonation().subscribe((res)=>{
+      this.projects=res.data;
+      console.log(this.projects);
+    }
+    )
+  
+  }
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
