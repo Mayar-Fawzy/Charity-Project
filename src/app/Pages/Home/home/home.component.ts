@@ -1,3 +1,5 @@
+import { Data } from './../../Donor/core/interface/iproject-donate';
+
 import {
   Component,
   ElementRef,
@@ -5,9 +7,11 @@ import {
   Inject,
   PLATFORM_ID,
   AfterViewInit,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
+import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
 
 interface CharityCause {
   title: string;
