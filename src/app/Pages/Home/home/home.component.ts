@@ -9,6 +9,7 @@ import {
   AfterViewInit,
   inject,
 } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
@@ -32,7 +33,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,ButtonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -52,9 +53,17 @@ export class HomeComponent implements AfterViewInit {
     )
   
   }
+  
+getProgressPercentage(project: Data): number {
+  // نسبة وهمية كمثال
+  if (project.name.includes('well')) return 60; // ضيف نسبة حقيقية لو عندك مبلغ متبرع به
+  return 0;
+}
+
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
+    this.GetDonation()
     this.initializeCauses();
     this.initializeTestimonials();
   }
