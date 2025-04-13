@@ -205,37 +205,55 @@
   <div class="container">
     <h2 class="section-title h2-title">الحملات النشطة<span></span></h2>
 
-    <div class="campaigns-grid">
-      <div class="campaign-card" *ngFor="let project of projects">
-        <img [src]="project.imageUrl" [alt]="project.name" />
-        <div class="card-body">
-          <h3>{{ project.name }}</h3>
-          <p>{{ project.description }}</p>
-    
-          <div class="progress-container">
-            <div class="progress-label">
-              <span class="title">نسبة التقدم</span>
-              <span class="percentage">
-                {{ getProgressPercentage(project) }}%
-              </span>
+    <!-- Replace campaigns-grid with p-carousel -->
+    <p-carousel
+      class="container"
+      [value]="projects"
+      [numVisible]="4"
+      [numScroll]="1"
+      [circular]="true"
+      [responsiveOptions]="responsiveOptions"
+    >
+      <!-- Template for each campaign card -->
+      <ng-template let-project pTemplate="item">
+        <div
+          class="campaign-card border border-surface rounded-border m-2 p-4"
+          [ngClass]="{ 'active-campaign': project.isActive }"
+        >
+          <img [src]="project.imageUrl" [alt]="project.name" class="w-100 rounded-border" />
+
+          <!-- Card body -->
+          <div class="card-body">
+            <h3>{{ project.name | slice:0:5 }}..</h3>
+            <p>{{ project.description | slice:0:20 }}..</p>
+
+            <!-- Progress container -->
+            <div class="progress-container">
+              <div class="progress-label">
+                <span class="title">نسبة التقدم</span>
+                <span class="percentage">
+                  {{ getProgressPercentage(project) }}%
+                </span>
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress"
+                  [style.width.%]="getProgressPercentage(project)"
+                ></div>
+              </div>
             </div>
-            <div class="progress-bar">
-              <div
-                class="progress"
-                [style.width.%]="getProgressPercentage(project)"
-              ></div>
-            </div>
+
+            <!-- Goal -->
+            <div class="goal">الهدف: {{ project.targetAmount | number }} جنيه</div>
+
+            <!-- Donate button -->
+            <button class="btn-donate">
+              <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
+            </button>
           </div>
-    
-          <div class="goal">الهدف: {{ project.targetAmount | number }} جنيه</div>
-    
-          <button class="btn-donate">
-            <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
-          </button>
         </div>
-      </div>
-    </div>
-    
+      </ng-template>
+    </p-carousel>
   </div>
 </section>
 

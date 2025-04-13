@@ -1,5 +1,5 @@
 import { Data } from './../../Donor/core/interface/iproject-donate';
-
+import { CarouselResponsiveOptions } from 'primeng/carousel';
 import {
   Component,
   ElementRef,
@@ -9,11 +9,12 @@ import {
   AfterViewInit,
   inject,
 } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
 
+import { CarouselModule } from 'primeng/carousel';
+import { TagModule } from 'primeng/tag';
 interface CharityCause {
   title: string;
   description: string;
@@ -33,11 +34,12 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,ButtonModule],
+  imports: [CommonModule,TagModule,CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements AfterViewInit {
+  responsiveOptions: CarouselResponsiveOptions[] = [];
   causes: CharityCause[] = [];
   testimonialsList: Testimonial[] = [];
   @ViewChild('causesScroll') causesSlider!: ElementRef;
@@ -63,6 +65,23 @@ getProgressPercentage(project: Data): number {
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
+    this.responsiveOptions = [
+      {
+        breakpoint: '1024px',
+        numVisible: 3,
+        numScroll: 1
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 1,
+        numScroll: 1
+      }
+    ];
     this.GetDonation()
     this.initializeCauses();
     this.initializeTestimonials();

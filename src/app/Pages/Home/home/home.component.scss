@@ -2,7 +2,26 @@ $primary-color: #2c3e50;
 $secondary-color: #f6a026;
 $text-color: #333;
 $light-bg: #f9f9f9;
-
+:host ::ng-deep {
+  .p-carousel-indicator-active .p-carousel-indicator-button {
+      background: #f6a026 !important;
+  }
+  .p-carousel-indicator.p-highlight {
+    background: #f6a026 !important;
+    width: 14px;
+    height: 14px;
+}
+.p-button-text {
+  background: transparent;
+  border-color: transparent;
+  color: #f6a026 !important;
+}
+.p-carousel-indicator.p-highlight {
+  background: #f6a026 !important;
+  width: 14px;
+  height: 14px;
+}
+}
 // >>>>>lines
 .h2-title {
   font-size: 40px;
@@ -11,6 +30,7 @@ $light-bg: #f9f9f9;
   text-align: center;
   position: relative;
 }
+
 
 .h2-title::before,
 .h2-title::after,
