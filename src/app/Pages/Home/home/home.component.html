@@ -216,10 +216,10 @@
     <!-- Template for each campaign card -->
     <ng-template let-project pTemplate="item">
       <div
-        class="campaign-card border border-surface rounded-border m-2 p-4"
+        class="campaign-card border border-surface rounded-border m-1 p-1"
         [ngClass]="{ 'active-campaign': project.isActive }"
       >
-        <div class="campaign-card">
+        <div class="card-image">
           <img
             [src]="project.imageUrl"
             [alt]="project.name"
@@ -230,8 +230,7 @@
         <!-- Card body -->
         <div class="card-body">
           <h3>{{ project.name }}</h3>
-          <p>{{ project.description | slice : 2 }}</p>
-
+          <p>{{ project.description | slice : 8 }}</p>
           <!-- Progress container -->
           <div class="progress-container">
             <div class="progress-label">

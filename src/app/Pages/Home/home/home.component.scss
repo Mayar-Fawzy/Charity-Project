@@ -3,6 +3,15 @@ $secondary-color: #f6a026;
 $text-color: #333;
 $light-bg: #f9f9f9;
 :host ::ng-deep {
+  .p-carousel-items-container {
+    display: flex;
+    align-items: stretch;
+  }
+  
+  .p-carousel-item {
+    height: 100%;
+    display: flex;
+  }
   .p-carousel-indicator-active .p-carousel-indicator-button {
       background: #f6a026 !important;
   }
@@ -664,10 +673,13 @@ $light-bg: #f9f9f9;
   }
 
   .campaign-card {
+    height: 100%;
+  width: 100%;
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+   max-height: fit-content;
     position: relative;
     transform: translateY(30px);
     opacity: 0;
@@ -682,7 +694,6 @@ $light-bg: #f9f9f9;
 
     &:hover {
       transform: translateY(-6px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 
       .overlay {
         opacity: 1;
