@@ -201,62 +201,67 @@
 </section>
 
 <!-- >>>>>>>>>> Active Campaigns -->
-<section class="active-campaigns">
-  <div class="container">
-    <h2 class="section-title h2-title">الحملات النشطة<span></span></h2>
+<section class="active-campaigns" style="cursor: pointer">
+  <h2 class="section-title h2-title">الحملات النشطة<span></span></h2>
 
-    <!-- Replace campaigns-grid with p-carousel -->
-    <p-carousel
-      class="container"
-      [value]="projects"
-      [numVisible]="4"
-      [numScroll]="1"
-      [circular]="true"
-      [responsiveOptions]="responsiveOptions"
-    >
-      <!-- Template for each campaign card -->
-      <ng-template let-project pTemplate="item">
-        <div
-          class="campaign-card border border-surface rounded-border m-2 p-4"
-          [ngClass]="{ 'active-campaign': project.isActive }"
-        >
-          <img [src]="project.imageUrl" [alt]="project.name" class="w-100 rounded-border" />
-
-          <!-- Card body -->
-          <div class="card-body">
-            <h3>{{ project.name | slice:0:5 }}..</h3>
-            <p>{{ project.description | slice:0:20 }}..</p>
-
-            <!-- Progress container -->
-            <div class="progress-container">
-              <div class="progress-label">
-                <span class="title">نسبة التقدم</span>
-                <span class="percentage">
-                  {{ getProgressPercentage(project) }}%
-                </span>
-              </div>
-              <div class="progress-bar">
-                <div
-                  class="progress"
-                  [style.width.%]="getProgressPercentage(project)"
-                ></div>
-              </div>
-            </div>
-
-            <!-- Goal -->
-            <div class="goal">الهدف: {{ project.targetAmount | number }} جنيه</div>
-
-            <!-- Donate button -->
-            <button class="btn-donate">
-              <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
-            </button>
-          </div>
+  <!-- Replace campaigns-grid with p-carousel -->
+  <p-carousel
+    class="p-0"
+    [value]="projects"
+    [numVisible]="3"
+    [numScroll]="2"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+  >
+    <!-- Template for each campaign card -->
+    <ng-template let-project pTemplate="item">
+      <div
+        class="campaign-card border border-surface rounded-border m-2 p-4"
+        [ngClass]="{ 'active-campaign': project.isActive }"
+      >
+        <div class="campaign-card">
+          <img
+            [src]="project.imageUrl"
+            [alt]="project.name"
+            class="campaign-card w-100 rounded-border"
+          />
         </div>
-      </ng-template>
-    </p-carousel>
-  </div>
-</section>
 
+        <!-- Card body -->
+        <div class="card-body">
+          <h3>{{ project.name }}</h3>
+          <p>{{ project.description | slice : 2 }}</p>
+
+          <!-- Progress container -->
+          <div class="progress-container">
+            <div class="progress-label">
+              <span class="title">نسبة التقدم</span>
+              <span class="percentage">
+                {{ getProgressPercentage(project) }}%
+              </span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress"
+                [style.width.%]="getProgressPercentage(project)"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Goal -->
+          <div class="goal">
+            الهدف: {{ project.targetAmount | number }} جنيه
+          </div>
+
+          <!-- Donate button -->
+          <button class="btn-donate">
+            <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+</section>
 
 <!-- >>>>>>>>>>>>>> Our Volunteers -->
 <section class="our-volunteers">
@@ -434,30 +439,31 @@
 
       <div class="contact-item">
         <i class="bi bi-envelope-fill icon"></i>
-        <a href="mailto:givinghands.contact@gmail.com">givinghands.contactgmail.com</a>
+        <a href="mailto:givinghands.contact@gmail.com"
+          >givinghands.contactgmail.com</a
+        >
       </div>
 
       <div class="contact-item">
         <i class="bi bi-whatsapp icon"></i>
         <a href="https://wa.me/201153008952" target="_blank">01153008952</a>
       </div>
-      
+
       <div class="contact-item copy-number">
         <i class="bi bi-phone-fill icon"></i>
         <span id="copyNumber">01025363285</span>
       </div>
     </div>
 
-    
-
     <!-- الخريطة -->
     <div class="map-wrapper wow fadeInLeft">
-      <iframe 
+      <iframe
         id="liveMap"
         src="https://www.google.com/maps?q=شبرا خلفون شبين الكوم المنوفية مصر&output=embed"
         allowfullscreen
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
+        referrerpolicy="no-referrer-when-downgrade"
+      >
       </iframe>
     </div>
   </div>
