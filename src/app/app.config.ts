@@ -1,11 +1,17 @@
-
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { headersInterceptor } from './Pages/Auth/core/interceptors/headers.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
@@ -19,20 +25,21 @@ export const appConfig: ApplicationConfig = {
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top' })
     ),
+    BrowserAnimationsModule,
     provideAnimations(),
     provideToastr(),
     provideClientHydration(),
     provideHttpClient(withFetch(), withInterceptors([headersInterceptor])),
     provideAnimationsAsync(),
-    providePrimeNG({ 
+    providePrimeNG({
       theme: {
         preset: Aura,
         options: {
           inputStyle: 'filled',
           darkTheme: false,
-          darkModeSelector: false || 'none'       
-        }
-      }
-    })
+          darkModeSelector: false || 'none',
+        },
+      },
+    }),
   ],
 };

@@ -15,6 +15,7 @@ import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-s
 
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
+import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 
 interface CharityCause {
   title: string;
@@ -35,7 +36,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,TagModule,CarouselModule],
+  imports: [CommonModule,TagModule,RoutingModule,CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })

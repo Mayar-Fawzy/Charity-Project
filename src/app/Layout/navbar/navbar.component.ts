@@ -11,11 +11,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginService } from '../../Pages/Auth/core/Services/login.service';
 import { Decode } from '../../core/interfaces/decode';
+import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RoutingModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
