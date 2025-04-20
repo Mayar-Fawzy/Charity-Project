@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
   isLogin: boolean = false;
   userData: any;
   userName!: string;
-  isMenuOpen: boolean = false; // إضافة هذه الخاصية للتحكم في إظهار وإخفاء القائمة
+  isMenuOpen: boolean = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -60,6 +60,6 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen; // تغيير حالة الـ menu عند النقر
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }

@@ -1,0 +1,623 @@
+$primary-color: #2c3e50;
+$secondary-color: #f6a026;
+$text-color: #333;
+$light-bg: #f9f9f9;
+
+// h2 style 
+.fancy-title {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95) rotateX(40deg);
+    animation: fancyReveal 1.2s ease-out forwards;
+    transform-origin: top;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: $secondary-color !important;
+        text-shadow: 0 2px 5px rgba(255, 170, 0, 0.3);
+    }
+
+    @keyframes fancyReveal {
+        0% {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95) rotateX(40deg);
+        }
+
+        60% {
+            opacity: 0.7;
+            transform: translateY(-10px) scale(1.02) rotateX(0deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotateX(0deg);
+        }
+    }
+}
+
+
+
+
+// >>>>>>>>>>>> Header
+.donation-hero {
+    direction: rtl;
+
+    .hero-image {
+        position: relative;
+        width: 100%;
+        height: auto;
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .content {
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .btn {
+                background-color: $secondary-color;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                border-radius: 1rem;
+                color: white;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .donation-hero .content {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.25rem;
+        }
+    }
+}
+
+
+// Projects Section
+.projects-section {
+    padding: 3rem 1rem;
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: $primary-color;
+    }
+
+    // projects-controls
+    .projects-controls {
+        width: 90%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+
+        @media (min-width: 768px) {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+
+            .input-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                direction: rtl;
+
+                i {
+                    position: absolute;
+                    left: 10px;
+                    font-size: 1rem;
+                    color: #999;
+                    transition: color 0.3s ease;
+                }
+
+                .search-input {
+                    padding: 0.5rem 1rem 0.5rem 2rem;
+                    padding-right: 2rem;
+                }
+            }
+
+            .search-input,
+            .filter-select {
+                min-width: 200px;
+                padding: 0.5rem 1rem 0.5rem 2rem;
+                padding-right: 2rem;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                font-size: 0.95rem;
+                outline: none;
+                transition: all 0.3s ease;
+                text-align: right;
+
+                &:focus {
+                    border-color: $primary-color;
+                    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+                }
+
+                &:hover {
+                    border-color: $secondary-color;
+                    box-shadow: 0 0 0 2px rgba($secondary-color, 0.15);
+                }
+            }
+
+            .input-wrapper:hover i {
+                color: $secondary-color;
+            }
+        }
+    
+
+
+    .view-more-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $text-color;
+        font-weight: bold;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        i {
+            font-size: 1.4rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        &:hover {
+            color: $secondary-color;
+
+            i {
+                transform: translateX(-5px);
+                color: $secondary-color;
+            }
+        }
+    }
+
+
+}
+
+
+.projects-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 90%;
+    margin: 0 auto;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 992px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.project-card {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-10px);
+    }
+
+    .image-wrapper {
+        position: relative;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+
+        .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: $secondary-color;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        &:hover img {
+            transform: scale(1.05);
+        }
+    }
+
+    .project-content {
+        padding: 1rem;
+
+        h3 {
+            font-size: 1.3rem;
+            color: $primary-color;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: $text-color;
+            margin-bottom: 1rem;
+        }
+
+        .progress-container {
+            margin-bottom: 1rem;
+
+            .progress-label {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .progress-bar {
+                background: #eee;
+                border-radius: 1rem;
+                overflow: hidden;
+                height: 8px;
+
+                .progress {
+                    height: 100%;
+                    background-color: $secondary-color;
+                }
+            }
+        }
+
+        .goal {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: $primary-color;
+        }
+
+        .btn-donate {
+            display: block;
+            width: 70%;
+            margin: 0 auto;
+            background-color: $secondary-color;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: pulse 2s infinite ease-in-out;
+
+            &:hover {
+                background-color: darken($secondary-color, 10%);
+                transform: scale(1.05);
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+        }
+    }
+}
+}
+
+
+
+
+// Monthly Donor Section
+.monthly-donor {
+    background-color: $light-bg;
+    padding: 3rem 1rem;
+    text-align: center;
+    direction: rtl;
+
+    .section-title {
+        font-size: 1.5rem;
+        color: $primary-color;
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        color: $text-color;
+        margin-bottom: 2rem;
+    }
+
+    .donation-options {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+
+        .donation-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+
+            h3 {
+                color: $secondary-color;
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            p {
+                color: $text-color;
+                margin: 0;
+            }
+        }
+    }
+
+    .large-btn {
+        font-size: 1.1rem;
+        padding: 0.75rem 2rem;
+        border-radius: 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .donation-options {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .monthly-donor .section-title {
+        font-size: 2rem;
+    }
+}
+
+// In-Kind Donation Form
+.in-kind-donation {
+    background-color: #fff;
+    padding: 3rem 1rem;
+
+    .section-title {
+        font-size: 2rem;
+        color: $primary-color;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+
+        &:hover::after {
+            width: 60%;
+        }
+
+        &::after {
+            content: "";
+            display: block;
+            height: 3px;
+            width: 0%;
+            background-color: $secondary-color;
+            margin: 0.5rem auto 0;
+            transition: width 0.3s ease;
+        }
+    }
+
+    .donation-wrapper {
+        background-color: $light-bg;
+        width: 80%;
+        margin: auto;
+        padding: 2rem;
+        border: 2px solid lighten($secondary-color, 25%);
+        border-radius: 1rem;
+        box-shadow: 0 0 15px rgba($secondary-color, 0.3);
+    }
+
+    .donation-form {
+        padding: 0 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: $primary-color;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: 0.3s ease;
+
+            &:hover,
+            &:focus {
+                border-color: $secondary-color;
+                box-shadow: 0 0 5px rgba($secondary-color, 0.4);
+                outline: none;
+            }
+        }
+
+        .radio-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+
+            label {
+                background-color: #f1f1f1;
+                border: 2px solid transparent;
+                padding: 0.5rem 1rem;
+                border-radius: 2rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+
+                input[type="radio"] {
+                    display: none;
+                }
+
+                &:hover {
+                    border-color: $secondary-color;
+                    background-color: lighten($secondary-color, 35%);
+                }
+            }
+
+            input[type="radio"]:checked+span {
+                font-weight: bold;
+                color: $secondary-color;
+            }
+        }
+
+        small {
+            display: block;
+            margin-top: 0.5rem;
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: $primary-color;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .upload-box {
+            border: 2px dashed #ccc;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            background-color: #fff;
+            transition: 0.3s ease;
+            cursor: pointer;
+
+            &:hover {
+                border-color: $secondary-color;
+                background-color: lighten($secondary-color, 40%);
+            }
+
+            .upload-icon {
+                font-size: 3rem;
+                color: $secondary-color;
+                margin-bottom: 1rem;
+            }
+
+            .upload-text {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+
+                .upload-main-text {
+                    color: $secondary-color;
+                    font-weight: bold;
+                    font-size: 1.1rem;
+                }
+
+                .upload-sub-text {
+                    color: #555;
+                    font-size: 1rem;
+                }
+            }
+
+            .upload-note {
+                font-size: 0.9rem;
+                color: #777;
+            }
+        }
+    }
+
+    .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border-radius: 2rem;
+        background-color: $secondary-color;
+        color: white;
+        border: none;
+        margin-top: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: darken($secondary-color, 10%);
+        }
+    }
+
+    .note {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: $text-color;
+        text-align: center;
+    }
+}
+
+// Responsive
+@media (min-width: 768px) {
+    .donation-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+
+        .form-group {
+            grid-column: span 2;
+        }
+
+        .form-group:nth-child(1),
+        .form-group:nth-child(2) {
+            grid-column: span 1;
+        }
+
+        .submit-btn,
+        .note {
+            grid-column: span 2;
+        }
+    }
+}

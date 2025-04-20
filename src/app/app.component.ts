@@ -1,12 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoginService } from './Pages/Auth/core/Services/login.service';
+import { VisaPaymentComponent } from "./PaymentMethod/visa-payment/visa-payment.component";
+import { EwalletPaymentComponent } from "./PaymentMethod/ewallet-payment/ewallet-payment.component";
+import { FooterComponent } from "./Layout/footer/footer.component";
+import { DonorComponent } from "./Pages/Donor/donor/donor.component";
+import { VolnteerComponent } from "./Pages/volunteer/volnteer/volnteer.component";
+import { NavbarComponent } from "./Layout/navbar/navbar.component";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, VisaPaymentComponent, EwalletPaymentComponent, FooterComponent, DonorComponent, VolnteerComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
