@@ -1,3 +1,5 @@
+import { Data } from './../../Donor/core/interface/iproject-donate';
+import { CarouselResponsiveOptions } from 'primeng/carousel';
 import {
   Component,
   ElementRef,
@@ -5,9 +7,14 @@ import {
   Inject,
   PLATFORM_ID,
   AfterViewInit,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
+import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
+
+import { CarouselModule } from 'primeng/carousel';
+import { TagModule } from 'primeng/tag';
 
 interface CharityCause {
   title: string;
@@ -28,20 +35,55 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,TagModule,CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements AfterViewInit {
+  responsiveOptions: CarouselResponsiveOptions[] = [];
   causes: CharityCause[] = [];
   testimonialsList: Testimonial[] = [];
   @ViewChild('causesScroll') causesSlider!: ElementRef;
   currentIndex = 0;
   cardWidth = 300;
+  projects:Data[]=[]
+  private readonly _HomedonateServiesService=inject(HomedonateServiesService)
+  GetDonation(){
+    this._HomedonateServiesService.GetDonation().subscribe((res)=>{
+      this.projects=res.data;
+      console.log(this.projects);
+    }
+    )
+  
+  }
+  
+getProgressPercentage(project: Data): number {
+  // نسبة وهمية كمثال
+  if (project.name.includes('well')) return 60; // ضيف نسبة حقيقية لو عندك مبلغ متبرع به
+  return 0;
+}
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
+    this.responsiveOptions = [
+      {
+        breakpoint: '1024px',
+        numVisible: 3,
+        numScroll: 1
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 1,
+        numScroll: 1
+      }
+    ];
+    this.GetDonation()
     this.initializeCauses();
     this.initializeTestimonials();
   }

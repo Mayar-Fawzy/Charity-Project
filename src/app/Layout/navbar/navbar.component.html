@@ -20,7 +20,11 @@
       <button class="login-btn" *ngIf="!isLogin" (click)="navigateToLogin()">تسجيل الدخول</button>
 
       <div class="navbar__user" *ngIf="isLogin">
-        <img src="/Images/unsplash_AEaTUnvneik.png" alt="User" class="user-image" />
+        <img
+          src="/Images/Logo.svg"
+          alt="User"
+          class="user-image"
+        />
         <span>مرحبًا، {{ userName }}</span>
 
         <div class="notification-container mx-2">

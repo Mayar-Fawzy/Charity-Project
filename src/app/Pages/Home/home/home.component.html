@@ -201,81 +201,71 @@
 </section>
 
 <!-- >>>>>>>>>> Active Campaigns -->
-<section class="active-campaigns">
-  <div class="container">
-    <h2 class="section-title h2-title">الحملات النشطة<span></span></h2>
+<section class="active-campaigns" style="cursor: pointer">
+  <h2 class="section-title h2-title">الحملات النشطة<span></span></h2>
 
-    <div class="campaigns-grid">
-      <div class="campaign-card">
-        <img src="/Images/project-1.png" alt="حملة التعليم للجميع" />
+  <!-- Replace campaigns-grid with p-carousel -->
+  <p-carousel
+    class="p-0"
+    [value]="projects"
+    [numVisible]="3"
+    [numScroll]="2"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+  >
+    <!-- Template for each campaign card -->
+    <ng-template let-project pTemplate="item">
+      <div
+        class="campaign-card border border-surface rounded-border m-1 p-1"
+        [ngClass]="{ 'active-campaign': project.isActive }"
+      >
+        <div class="card-image">
+          <img
+            [src]="project.imageUrl"
+            [alt]="project.name"
+            class="campaign-card w-100 rounded-border"
+          />
+        </div>
+
+        <!-- Card body -->
         <div class="card-body">
-          <h3>التعليم للجميع</h3>
-          <p>نُوفر مستلزمات التعليم والدعم للأطفال المحرومين.</p>
+          <h3>{{ project.name }}</h3>
+          <p>{{ project.description | slice : 8 }}</p>
+          <!-- Progress container -->
           <div class="progress-container">
             <div class="progress-label">
               <span class="title">نسبة التقدم</span>
-              <span class="percentage">70%</span>
+              <span class="percentage">
+                {{ getProgressPercentage(project) }}%
+              </span>
             </div>
             <div class="progress-bar">
-              <div class="progress" style="width: 70%"></div>
+              <div
+                class="progress"
+                [style.width.%]="getProgressPercentage(project)"
+              ></div>
             </div>
           </div>
-          <div class="goal">الهدف: 10,000 جنيه</div>
+
+          <!-- Goal -->
+          <div class="goal">
+            الهدف: {{ project.targetAmount | number }} جنيه
+          </div>
+
+          <!-- Donate button -->
           <button class="btn-donate">
             <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
           </button>
         </div>
       </div>
-
-      <div class="campaign-card">
-        <img src="/Images/project-2.png" alt="بنك الطعام المجتمعي" />
-        <div class="card-body">
-          <h3>بنك الطعام المجتمعي</h3>
-          <p>ندعم الأسر المحتاجة بطعام طازج وصحي.</p>
-          <div class="progress-container">
-            <div class="progress-label">
-              <span class="title">نسبة التقدم</span>
-              <span class="percentage">85%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 85%"></div>
-            </div>
-          </div>
-          <div class="goal">الهدف: 15,000 جنيه</div>
-          <button class="btn-donate">
-            <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
-          </button>
-        </div>
-      </div>
-
-      <div class="campaign-card">
-        <img src="/Images/project-3.png" alt="دعم الرعاية الصحية" />
-        <div class="card-body">
-          <h3>دعم الرعاية الصحية</h3>
-          <p>نقدم مساعدات طبية لمن لا يستطيعون تحمل التكاليف.</p>
-          <div class="progress-container">
-            <div class="progress-label">
-              <span class="title">نسبة التقدم</span>
-              <span class="percentage">45%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 45%"></div>
-            </div>
-          </div>
-          <div class="goal">الهدف: 20,000 جنيه</div>
-          <button class="btn-donate">
-            <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+    </ng-template>
+  </p-carousel>
 </section>
 
 <!-- >>>>>>>>>>>>>> Our Volunteers -->
 <section class="our-volunteers">
   <div class="container">
-    <h2 class="section-title">Our Volunteers</h2>
+    <h2 class="section-title">أبرز المتطوعين</h2>
     <div class="volunteers-grid">
       <div class="volunteer-card">
         <img src="/Images/Volunteer-1.png" alt="Sarah" />
@@ -448,30 +438,31 @@
 
       <div class="contact-item">
         <i class="bi bi-envelope-fill icon"></i>
-        <a href="mailto:givinghands.contact@gmail.com">givinghands.contactgmail.com</a>
+        <a href="mailto:givinghands.contact@gmail.com"
+          >givinghands.contactgmail.com</a
+        >
       </div>
 
       <div class="contact-item">
         <i class="bi bi-whatsapp icon"></i>
         <a href="https://wa.me/201153008952" target="_blank">01153008952</a>
       </div>
-      
+
       <div class="contact-item copy-number">
         <i class="bi bi-phone-fill icon"></i>
         <span id="copyNumber">01025363285</span>
       </div>
     </div>
 
-    
-
     <!-- الخريطة -->
     <div class="map-wrapper wow fadeInLeft">
-      <iframe 
+      <iframe
         id="liveMap"
         src="https://www.google.com/maps?q=شبرا خلفون شبين الكوم المنوفية مصر&output=embed"
         allowfullscreen
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
+        referrerpolicy="no-referrer-when-downgrade"
+      >
       </iframe>
     </div>
   </div>
