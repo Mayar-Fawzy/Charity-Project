@@ -304,7 +304,6 @@ $light-bg: #f9f9f9;
 }
 
 /*>>>>>>>>>>>> قسم الرؤية */
-/* قسم البعثة والرؤية مع تقسيم الصورة والنصوص */
 .mission-section {
   padding: 6rem 0;
   direction: rtl;
@@ -472,7 +471,7 @@ $light-bg: #f9f9f9;
 // dashborad
 .stats-section {
   position: relative;
-  height: 400px; // أو حسب المحتوى
+  height: 400px;
   overflow: hidden;
 
   &::before {
@@ -482,7 +481,7 @@ $light-bg: #f9f9f9;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/Images/Loginn.png'); // ← حط مسار الصورة هنا
+    background-image: url('/Images/Loginn.png');
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
@@ -492,7 +491,7 @@ $light-bg: #f9f9f9;
   .overlay {
     position: relative;
     z-index: 2;
-    background: rgba(0, 0, 0, 0.5); // ممكن تزود أو تقلل الشفافية
+    background: rgba(0, 0, 0, 0.5);
     height: 100%;
     display: flex;
     justify-content: space-around;
@@ -500,7 +499,6 @@ $light-bg: #f9f9f9;
     padding: 30px 20px;
     flex-wrap: wrap;
     gap: 20px;
-    direction: rtl; // إضافة خاصية اتجاه الكتابة من اليمين لليسار
 
     .stat-box {
       text-align: center;
