@@ -173,6 +173,7 @@ $light-bg: #f9f9f9;
                 display: flex;
                 align-items: center;
                 direction: rtl;
+               
 
                 i {
                     position: absolute;
@@ -185,6 +186,7 @@ $light-bg: #f9f9f9;
                 .search-input {
                     padding: 0.5rem 1rem 0.5rem 2rem;
                     padding-right: 2rem;
+                    
                 }
             }
 
@@ -279,8 +281,15 @@ $light-bg: #f9f9f9;
     .image-wrapper {
         position: relative;
         overflow: hidden;
+     
+        height: 235.51px !important;
 
         img {
+            object-fit: cover;
+            filter: brightness(0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            display: block;
             width: 100%;
             height: auto;
             transition: transform 0.5s ease;
@@ -298,6 +307,13 @@ $light-bg: #f9f9f9;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background-color: $secondary-color; /* #f6a026 */
+  color: white;
+  padding: 0.4rem 1rem; /* زيادة الـ padding عشان يبقى شكله أحسن */
+  border-radius: 2rem; /* بيخلي الـ badge دائري أكتر */
+  font-size: 0.9rem; /* حجم الخط أكبر شوية */
+  font-weight: 500; /* النص يكون bold شوية */
+  text-transform: capitalize;
         }
 
         &:hover img {

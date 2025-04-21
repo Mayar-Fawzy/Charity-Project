@@ -10,15 +10,19 @@ import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-s
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
+import { ProjectFilterPipe } from '../core/pipes/project-filter.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule,TagModule,RoutingModule,CarouselModule],
+  imports: [CommonModule,TagModule,RoutingModule,CarouselModule,ProjectFilterPipe,FormsModule],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss'
 })
 export class DonorComponent {
+
+  searchText: string = '';
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
     private readonly _HomedonateServiesService=inject(HomedonateServiesService)
@@ -56,6 +60,7 @@ export class DonorComponent {
         numScroll: 1
       }
     ];
+    
     this.GetDonation()
     
   }

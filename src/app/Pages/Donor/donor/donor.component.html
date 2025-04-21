@@ -23,8 +23,8 @@
         <label class="input-wrapper">
           <i class="bi bi-search"></i>
           <input
-            type="text"
-            placeholder="ابحث عن مشروع..."
+            type="text" [(ngModel)]="searchText"
+            placeholder="ابحث ب اسم المشروع..."
             class="search-input"
           />
         </label>
@@ -47,13 +47,15 @@
     </div>
     <section class="projects-list" id="projects">
       <h2 class="fancy-title section-title">المشاريع المتاحة للتبرع</h2>
-
+   
       <p-carousel
         class="p-0"
-        [value]="projects"
+        *ngIf="(projects | projectFilter: searchText).length > 0"
+       [value]="projects | projectFilter: searchText"
         [numVisible]="3"
         [numScroll]="2"
         [circular]="true"
+        
         [responsiveOptions]="responsiveOptions"
       >
         <ng-template let-project pTemplate="item">
@@ -66,21 +68,17 @@
             <div class="image-wrapper">
               <img [src]="project.imageUrl" [alt]="project.name" />
 
-              <!-- <div class="badge" *ngIf="project.projectStatus ">
-                <iprojectStatusprojectStatus
-                  class="bi"
-                  [ngClass]="{
-                    'bi-exclamation-triangle-fill': project.projectStatus,
-                  }"
-                ></iprojectStatusprojectStatus>
-                {{ project.projectStatus ? "Ongoing" : "Ongoing" }}
-              </div> -->
+              <div class="badge">
+              
+                {{ project.projectStatus }}
+              </div>
             </div>
-
+       
             <!-- محتوى المشروع -->
             <div class="project-content">
               <!-- عنوان ووصف -->
               <div class="progress-label">
+                <h4>{{ project.name }}</h4>
                 <span class="title">{{ project.name }}</span>
                 <span class="percentage" style="height: 43.2px">
                   {{ project.description | slice : 0 : 80 }}...
@@ -120,7 +118,9 @@
           </div>
         </ng-template>
       </p-carousel>
-
+      <div *ngIf="(projects | projectFilter: searchText).length === 0" class="text-center mt-4">
+        <p>لا يوجد مشروع مطابق لبحثك.</p>
+      </div>
       <!-- زر عرض المزيد -->
       <div class="projects-controls mt-3 text-center">
         <a class="view-more-link" href="#">
