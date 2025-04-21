@@ -15,6 +15,7 @@ import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-s
 
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
+import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 
 interface CharityCause {
   title: string;
@@ -35,7 +36,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,TagModule,CarouselModule],
+  imports: [CommonModule,TagModule,RoutingModule,CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -57,11 +58,11 @@ export class HomeComponent implements AfterViewInit {
   
   }
   
-getProgressPercentage(project: Data): number {
-  // نسبة وهمية كمثال
-  if (project.name.includes('well')) return 60; // ضيف نسبة حقيقية لو عندك مبلغ متبرع به
-  return 0;
-}
+  getProgressPercentage(project: any): number {
+    // نسبة وهمية مؤقتة لعرض شكل الـ UI
+    const fakeCurrentAmount = project.targetAmount * 0.4; 
+    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+  }
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 

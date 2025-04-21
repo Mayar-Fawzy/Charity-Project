@@ -10,11 +10,13 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginService } from '../../Pages/Auth/core/Services/login.service';
+import { Decode } from '../../core/interfaces/decode';
+import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RoutingModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
@@ -29,7 +31,7 @@ export class NavbarComponent implements OnInit {
   userImage: string = 'assets/img/user-default.png'; // صورة افتراضية
   isMenuOpen: boolean = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit(): void {
     if (localStorage.getItem('userToken')) {
@@ -39,7 +41,7 @@ export class NavbarComponent implements OnInit {
     this.userData = this._LoginService.saveUserAuth();
     this.userName =
       this.userData?.[
-        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'
       ] ?? 'مستخدم';
 
   }

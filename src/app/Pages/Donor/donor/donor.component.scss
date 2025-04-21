@@ -2,7 +2,36 @@ $primary-color: #2c3e50;
 $secondary-color: #f6a026;
 $text-color: #333;
 $light-bg: #f9f9f9;
-
+:host ::ng-deep {
+    .p-carousel-items-container {
+      display: flex;
+      align-items: stretch;
+    }
+    
+    .p-carousel-item {
+      height: 100%;
+      display: flex;
+    }
+    .p-carousel-indicator-active .p-carousel-indicator-button {
+        background: #f6a026 !important;
+    }
+    .p-carousel-indicator.p-highlight {
+      background: #f6a026 !important;
+      width: 14px;
+      height: 14px;
+  }
+  
+  .p-button-text {
+    background: transparent;
+    border-color: transparent;
+    color: #f6a026 !important;
+  }
+  .p-carousel-indicator.p-highlight {
+    background: #f6a026 !important;
+    width: 14px;
+    height: 14px;
+  }
+  }
 // h2 style 
 .fancy-title {
     opacity: 0;
@@ -144,6 +173,7 @@ $light-bg: #f9f9f9;
                 display: flex;
                 align-items: center;
                 direction: rtl;
+               
 
                 i {
                     position: absolute;
@@ -156,6 +186,7 @@ $light-bg: #f9f9f9;
                 .search-input {
                     padding: 0.5rem 1rem 0.5rem 2rem;
                     padding-right: 2rem;
+                    
                 }
             }
 
@@ -235,9 +266,11 @@ $light-bg: #f9f9f9;
 }
 
 .project-card {
+    cursor: pointer;
     background: #fff;
     border-radius: 1rem;
-    overflow: hidden;
+    
+    overflow: visible !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 
@@ -248,8 +281,14 @@ $light-bg: #f9f9f9;
     .image-wrapper {
         position: relative;
         overflow: hidden;
+        height: 235.51px !important;
 
         img {
+            object-fit: cover;
+            filter: brightness(0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            display: block;
             width: 100%;
             height: auto;
             transition: transform 0.5s ease;
@@ -267,6 +306,13 @@ $light-bg: #f9f9f9;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background-color: $secondary-color; /* #f6a026 */
+  color: white;
+  padding: 0.4rem 1rem; /* زيادة الـ padding عشان يبقى شكله أحسن */
+  border-radius: 2rem; /* بيخلي الـ badge دائري أكتر */
+  font-size: 0.9rem; /* حجم الخط أكبر شوية */
+  font-weight: 500; /* النص يكون bold شوية */
+  text-transform: capitalize;
         }
 
         &:hover img {
@@ -274,6 +320,7 @@ $light-bg: #f9f9f9;
         }
     }
 
+    
     .project-content {
         padding: 1rem;
 
@@ -323,6 +370,7 @@ $light-bg: #f9f9f9;
             margin: 0 auto;
             background-color: $secondary-color;
             color: white;
+            border: transparent !important;
             padding: 0.75rem 1.5rem;
             border-radius: 2rem;
             font-size: 1rem;

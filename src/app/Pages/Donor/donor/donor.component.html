@@ -13,13 +13,10 @@
     </div>
   </div>
 </section>
->
 
 <!-- Projects Section -->
-<section class="projects-section" id="projects">
+<section class="projects-section">
   <div class="projects-container">
-    <h2 class="fancy-title section-title">المشاريع المتاحة للتبرع</h2>
-
     <!-- >>>>>>>>>>>>>>>>>>> projects-controls -->
     <div class="projects-controls">
       <div class="filters">
@@ -27,18 +24,19 @@
           <i class="bi bi-search"></i>
           <input
             type="text"
-            placeholder="ابحث عن مشروع..."
+            [(ngModel)]="searchText"
+            placeholder="ابحث ب اسم المشروع..."
             class="search-input"
           />
         </label>
-    
+
         <!-- <select class="filter-select">
           <option>كل الفئات</option>
           <option>عاجل</option>
           <option>موثق</option>
           <option>مميز</option>
         </select> -->
-    
+
         <!-- <select class="filter-select">
           <option>كل المواقع</option>
           <option>القاهرة</option>
@@ -48,93 +46,89 @@
         </select> -->
       </div>
     </div>
-    
+    <section class="projects-list" id="projects">
+      <h2 class="fancy-title section-title">المشاريع المتاحة للتبرع</h2>
 
-    <div class="projects-wrapper">
-      <!-- Project Card-1 -->
-      <div class="project-card urgent">
-        <div class="image-wrapper">
-          <img src="/Images/donor-proj-1.png" alt="التعليم لـ100 طفل" />
-          <div class="badge">
-            <i class="bi bi-exclamation-triangle-fill"></i> عاجل
-          </div>
-        </div>
+      <p-carousel
+        class="p-0"
+        *ngIf="(projects | projectFilter : searchText).length > 0"
+        [value]="projects | projectFilter : searchText"
+        [numVisible]="3"
+        [numScroll]="2"
+        [circular]="true"
+        [responsiveOptions]="responsiveOptions"
+      >
+        <ng-template let-project pTemplate="item">
+          <div
+            class="project-card border border-surface rounded-border m-1 p-1"
+          >
+            <!-- صورة المشروع -->
+            <div class="image-wrapper">
+              <img [src]="project.imageUrl" [alt]="project.name" />
 
-        <div class="project-content">
-          <h3>التعليم لـ100 طفل</h3>
-          <p>نوفر التعليم الجيد والمواد التعليمية للأطفال المحتاجين.</p>
-          <div class="progress-container">
-            <div class="progress-label">
-              <span class="title">نسبة التقدم</span>
-              <span class="percentage">85%</span>
+              <div class="badge">
+                {{ project.projectStatus }}
+              </div>
             </div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 85%"></div>
-            </div>
-          </div>
-          <p class="goal">الهدف: 810,000 جنيه</p>
-          <a href="#" class="btn btn-donate">تبرع الآن</a>
-        </div>
-      </div>
 
-      <!-- Project Card-2 -->
-      <div class="project-card urgent">
-        <div class="image-wrapper">
-          <img src="/Images/donor-proj-2.png" alt="مساعدات طبية" />
-          <div class="badge"><i class="bi bi-patch-check-fill"></i> موثق</div>
-        </div>
+            <!-- محتوى المشروع -->
+            <div class="project-content">
+              <!-- عنوان ووصف -->
+              <div class="progress-label">
+                <h4>{{ project.name }}</h4>
+                <span class="title">{{ project.name }}</span>
+                <span class="percentage" style="height: 43.2px">
+                  {{ project.description | slice : 0 : 80 }}...
+                </span>
+              </div>
 
-        <div class="project-content">
-          <h3>مساعدات طبية للمجتمعات</h3>
-          <p>ندعم الخدمات الصحية الأساسية للمجتمعات المحرومة.</p>
-          <div class="progress-container">
-            <div class="progress-label">
-              <span class="title">نسبة التقدم</span>
-              <span class="percentage">85%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 85%"></div>
-            </div>
-          </div>
-          <p class="goal">الهدف: 810,000 جنيه</p>
-          <a href="#" class="btn btn-donate">تبرع الآن</a>
-        </div>
-      </div>
+              <!-- نسبة التقدم -->
+              <div class="progress-container">
+                <div class="progress-label">
+                  <span class="title">نسبة التقدم</span>
+                  <span class="percentage">
+                    {{ getProgressPercentage(project) }}%
+                  </span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress"
+                    [style.width.%]="getProgressPercentage(project)"
+                  ></div>
+                </div>
+              </div>
 
-      <!-- Project Card-3 -->
-      <div class="project-card urgent">
-        <div class="image-wrapper">
-          <img src="/Images/donor-proj-3.png" alt="إطعام 1000 أسرة" />
-          <div class="badge">
-            <i class="bi bi-exclamation-triangle-fill"></i> مميز
-          </div>
-        </div>
+              <!-- الهدف -->
+              <div class="goal">
+                الهدف: {{ project.targetAmount | number }} جنيه
+              </div>
 
-        <div class="project-content">
-          <h3>إطعام 1000 أسرة</h3>
-          <p>نقدم سلال غذائية متكاملة لأكثر من 1000 أسرة محتاجة.</p>
-          <div class="progress-container">
-            <div class="progress-label">
-              <span class="title">نسبة التقدم</span>
-              <span class="percentage">85%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 85%"></div>
+              <!-- زر التبرع -->
+              <button
+                routerLink="/ewallet-payment"
+                routerLinkActive="router-link-active"
+                class="btn-donate"
+              >
+                <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
+              </button>
             </div>
           </div>
-          <p class="goal">الهدف: 810,000 جنيه</p>
-          <a href="#" class="btn btn-donate">تبرع الآن</a>
-        </div>
-      </div>
-
-      <!-- >>>>>>>>>>>>>>projects-controls -->
-      <div class="projects-controls">
+        </ng-template>
+      </p-carousel>
+      <!-- <div
+        *ngIf="(projects | projectFilter : searchText).length === 0"
+        class="text-center mt-4"
+      >
+        <p>لا يوجد مشروع مطابق لبحثك.</p>
+      </div> -->
+      <!-- زر عرض المزيد -->
+      <div class="projects-controls mt-3 text-center">
         <a class="view-more-link" href="#">
           عرض كل المشاريع
           <i class="bi bi-arrow-left arrow-icon"></i>
         </a>
       </div>
-    </div>
+    </section>
   </div>
 </section>
 
@@ -175,17 +169,37 @@
 
       <form class="donation-form">
         <!-- نوع التبرع -->
-        <div class="form-group">
-          <label for="category">اختر نوع التبرع</label>
-          <select id="category" class="form-control">
-            <option>ملابس</option>
-            <option>أجهزة</option>
-            <option>أغذية</option>
-            <option>كتب</option>
-            <option>أخرى</option>
-          </select>
-        </div>
-
+        <form [formGroup]="donationForm">
+          <!-- نوع التبرع -->
+          <div class="form-group">
+            <label for="category">اختر نوع التبرع</label>
+            <select
+              id="category"
+              class="form-control"
+              formControlName="itemType"
+              (change)="onItemTypeChange($event)"
+            >
+              <option value="1">ملابس</option>
+              <option value="2">أجهزة</option>
+              <option value="3">أغذية</option>
+              <option value="4">كتب</option>
+              <option value="5">أخرى</option>
+            </select>
+          </div>
+        
+          <!-- الاسم -->
+          <div class="form-group">
+            <label for="name">الاسم</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="الاسم"
+              formControlName="name"
+            />
+          </div>
+        </form>
+        
         <!-- الكمية  -->
         <div class="form-group">
           <label for="quantity">الكمية</label>
