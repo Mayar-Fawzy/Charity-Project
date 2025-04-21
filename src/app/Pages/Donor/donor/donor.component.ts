@@ -12,6 +12,7 @@ import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 import { ProjectFilterPipe } from '../core/pipes/project-filter.pipe';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-donor',
@@ -21,7 +22,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrl: './donor.component.scss'
 })
 export class DonorComponent {
-  
+   private readonly _Router=inject(Router)
   searchText: string = '';
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
@@ -86,6 +87,9 @@ onItemTypeChange(event: Event) {
   const selectedValue = (event.target as HTMLSelectElement).value;
   const name = this.itemTypeNames[+selectedValue];
   this.donationForm.get('name')?.setValue(name);
+}
+goToPayment(projectId: string) {
+  this._Router.navigate(['/ewallet-payment', projectId]);
 }
 DonateNow(){
   
