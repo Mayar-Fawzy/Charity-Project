@@ -14,4 +14,7 @@ export class HomedonateServiesService {
   GetDonation():Observable<IprojectDonate>{
     return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}Project/GetAllProjects`)
   }
+  getProjectById(id: string): Observable<IprojectDonate>{
+    return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}/GetProjectById?id=${id}`);
+  }
 }

@@ -16,6 +16,7 @@ import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-s
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface CharityCause {
   title: string;
@@ -49,6 +50,7 @@ export class HomeComponent implements AfterViewInit {
   cardWidth = 300;
   projects:Data[]=[]
   private readonly _HomedonateServiesService=inject(HomedonateServiesService)
+  private readonly _Router=inject(Router)
   GetDonation(){
     this._HomedonateServiesService.GetDonation().subscribe((res)=>{
       this.projects=res.data;
@@ -67,6 +69,9 @@ export class HomeComponent implements AfterViewInit {
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
+    //Id
+   
+  
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -230,5 +235,8 @@ scrollRight() {
 
   getProgress(cause: CharityCause): number {
     return (cause.amountRaised / cause.fundingGoal) * 100;
+  }
+  goToPayment(projectId: string) {
+    this._Router.navigate(['/ewallet-payment', projectId]);
   }
 }

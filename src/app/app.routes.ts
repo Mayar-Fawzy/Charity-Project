@@ -36,7 +36,7 @@ export const routes: Routes = [
             { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
             { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
             {
-                path: 'ewallet-payment',
+                path: 'ewallet-payment/:id',
                 title: 'E-Wallet Payment',
                 component: EwalletPaymentComponent
               },

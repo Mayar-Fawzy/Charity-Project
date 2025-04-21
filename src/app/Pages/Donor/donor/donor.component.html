@@ -105,8 +105,7 @@
 
               <!-- زر التبرع -->
               <button
-                routerLink="/ewallet-payment"
-                routerLinkActive="router-link-active"
+                (click)="goToPayment(project.id)"
                 class="btn-donate"
               >
                 <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
