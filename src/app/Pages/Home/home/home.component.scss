@@ -729,7 +729,7 @@ $light-bg: #f9f9f9;
       padding: 15px;
       position: relative;
       z-index: 2;
-      
+      min-height: 200px; 
 
       h3 {
         font-size: 1.1rem;

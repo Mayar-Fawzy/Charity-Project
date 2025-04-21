@@ -58,11 +58,11 @@ export class HomeComponent implements AfterViewInit {
   
   }
   
-getProgressPercentage(project: Data): number {
-  // نسبة وهمية كمثال
-  if (project.name.includes('well')) return 60; // ضيف نسبة حقيقية لو عندك مبلغ متبرع به
-  return 0;
-}
+  getProgressPercentage(project: any): number {
+    // نسبة وهمية مؤقتة لعرض شكل الـ UI
+    const fakeCurrentAmount = project.targetAmount * 0.4; 
+    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+  }
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
