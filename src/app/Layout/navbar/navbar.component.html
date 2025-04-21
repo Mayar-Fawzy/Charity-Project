@@ -1,30 +1,44 @@
-<nav class="navbar" [ngClass]="{ 'hidden': isNavbarHidden, 'open': isMenuOpen }">
+<nav class="navbar" [ngClass]="{ hidden: isNavbarHidden, open: isMenuOpen }">
   <div class="navbar__container">
+    <!-- Mobile Toggle -->
+    <button class="navbar__toggle" (click)="toggleMenu()">☰</button>
+
+    <!-- الشعار -->
     <div class="navbar__brand">
       <span>يـــــــد</span>
-      <img src="/Images/Logo.svg" alt="logo of giving hand charity" class="navbar__logo" />
+      <img src="/Images/Logo.svg" alt="logo" class="navbar__logo" />
       <span>العطاء</span>
     </div>
 
-    <button class="navbar__toggle" (click)="toggleMenu()">☰</button>
-
+    <!-- القائمة الرئيسية -->
     <ul class="navbar__menu">
       <li><a routerLink="/home" routerLinkActive="active">الرئيسية</a></li>
       <li><a routerLink="/about">من نحن</a></li>
       <li><a routerLink="/projects">المشاريع</a></li>
       <li><a routerLink="/donations">التبرعات</a></li>
       <li><a routerLink="/contact">تواصل معنا</a></li>
+
+      <li class="mobile-auth-section" *ngIf="isLogin"      >
+        <button class="auth-button" (click)="navigateToLogin()">تسجيل الدخول</button>
+        <button class="auth-button" (click)="navigateToSignup()">إنشاء حساب</button>
+      </li>
+
+      <li class="mobile-auth-section" *ngIf="isLogin">
+        <div class="profile-box">
+          <img [src]="userImage" alt="User" class="user-image" />
+          <span class="user-name">{{ userName }}</span>
+          <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>
+        </div>
+      </li>
     </ul>
 
     <div class="navbar__actions">
-      <button class="login-btn" *ngIf="!isLogin" (click)="navigateToLogin()">تسجيل الدخول</button>
+      <button class="login-btn" *ngIf="!isLogin" (click)="navigateToLogin()">
+        تسجيل الدخول
+      </button>
 
       <div class="navbar__user" *ngIf="isLogin">
-        <img
-          src="/Images/Logo.svg"
-          alt="User"
-          class="user-image"
-        />
+        <img src="/Images/Logo.svg" alt="User" class="user-image" />
         <span>مرحبًا، {{ userName }}</span>
 
         <div class="notification-container mx-2">
@@ -32,7 +46,9 @@
         </div>
       </div>
 
-      <button class="login-btn" *ngIf="isLogin" (click)="handleLogout()">تسجيل الخروج</button>
+      <button class="login-btn" *ngIf="isLogin" (click)="handleLogout()">
+        تسجيل الخروج
+      </button>
     </div>
   </div>
 </nav>

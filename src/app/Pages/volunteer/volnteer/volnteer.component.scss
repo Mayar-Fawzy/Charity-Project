@@ -1,0 +1,441 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+$primary-color: #2c3e50;
+$secondary-color: #f6a026;
+$text-color: #333;
+$light-bg: #f9f9f9;
+
+// >>>>>>>>>>>>> header 
+.cta-section {
+    position: relative;
+    height: 70vh;
+    direction: rtl;
+
+    //  الصورةالرئيسية
+    .image-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover !important;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 39, 17, 0.6);
+            z-index: 2;
+        }
+    }
+
+    // محتوى النص والأزرار
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        color: white;
+        text-align: center;
+        max-width: 1200px;
+        width: 90%;
+        padding: 1rem;
+        margin: 0 auto;
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-text {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+    }
+
+    //  الأزرار
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .btn {
+            padding: 0.5rem 2rem;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .bi {
+                font-size: 1.3rem;
+                margin-left: 0.3rem;
+            }
+
+            // زر التبرع
+            &.donate-btn {
+                background: $secondary-color;
+                color: $light-bg;
+
+                &:hover {
+                    background: darken($secondary-color, 12%);
+                }
+            }
+
+            //  زراكتشف المشاريع
+            &.volunteer-btn {
+                background: #059669;
+                color: #000;
+
+                &:hover {
+                    background: lighten($primary-color, 12%);
+                }
+            }
+
+            // زر كن متطوعًا
+            &.help-btn {
+                background: transparent;
+                color: $light-bg;
+                border: 2px solid $light-bg;
+
+                &:hover {
+                    background: $primary-color;
+                    color: $light-bg;
+                }
+            }
+        }
+    }
+
+    // responsive
+    @media (max-width: 768px) {
+        .cta-section {
+            height: auto;
+            min-height: 100vh;
+
+            .container {
+                padding-top: 4rem;
+
+                .cta-title {
+                    font-size: 2rem;
+                }
+
+                .action-buttons .btn {
+                    width: 100%;
+                    max-width: 300px;
+                }
+            }
+        }
+    }
+}
+
+
+// >>>>>>>>>>>>> dashboard
+.dashboard {
+    background: url('/Images/volut-dashbord.png'), linear-gradient(rgba(0, 111, 128, 0.95), rgba(1, 21, 20, 0.95));
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    padding: 3rem 1rem;
+    direction: rtl;
+    color: white;
+
+    .container {
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .stat-item {
+        perspective: 1000px;
+        cursor: pointer;
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card-front {
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+
+            .icon {
+                font-size: 2.5rem;
+                color: #f6a026;
+                margin-bottom: 0.5rem;
+                animation: bounce 2s infinite;
+            }
+
+            .number {
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+
+            .label {
+                font-size: 1rem;
+                color: #333;
+            }
+        }
+
+        .card-back {
+            background: #f6a026;
+            color: white;
+            transform: rotateY(180deg);
+
+            .back-content {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+        }
+
+        &.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover .card-inner {
+                transform: rotateY(180deg);
+            }
+        }
+    }
+
+    @keyframes bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+}
+
+// >>>>>>>>>>>>>>>success-intro
+.success-intro {
+    background-color: #f4f7f9;
+    text-align: center;
+    padding: 60px 0;
+    width: 100%;
+
+    h2 {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 22px;
+    }
+
+    p {
+        color: #555;
+        margin-bottom: 30px;
+        font-size: 16px;
+    }
+
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+
+        img {
+            width: 100%;
+            display: block;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            color: white;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    }
+}
+
+// >>>>>>>>>>> success-cards
+.success-cards {
+    background-color: #fff;
+    padding: 60px 20px;
+    position: relative;
+    text-align: right;
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        position: relative;
+        padding-right: 20px; // إضافة Padding بسيط لزيادة المسافة
+    }
+
+    .write-story {
+        background-color: #f6a026;
+        color: white;
+        border: none;
+        padding: 20px 10px;
+        writing-mode: vertical-rl;
+        border-radius: 12px 0 0 12px;
+        position: absolute;
+        right: 20px; // تحريك الزر لليمين مع إضافة مسافة صغيرة من الحافة
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: background 0.3s;
+
+        &:hover {
+            background-color: darken(#f6a026, 10%);
+        }
+    }
+
+    h3 {
+        font-size: 22px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 40px;
+        color: #222;
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        justify-items: center; // توزيع الكروت بشكل متساوي
+    }
+
+    .story-card {
+        background: #f9f9f9;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInUp 1s ease both; // تحسين الأنيميشن ليصبح أكثر سلاسة
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+
+            h4 {
+                font-size: 16px;
+                color: #333;
+                margin-bottom: 8px;
+            }
+
+            .meta {
+                font-size: 13px;
+                color: #888;
+                margin-bottom: 10px;
+            }
+
+            .quote {
+                font-style: italic;
+                font-size: 14px;
+                color: #444;
+                border-right: 3px solid #f6a026;
+                padding-right: 10px;
+            }
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .write-story {
+            position: static;
+            writing-mode: horizontal-tb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .cards-grid {
+            gap: 20px;
+        }
+
+        .story-card img {
+            height: 160px;
+        }
+    }
+}

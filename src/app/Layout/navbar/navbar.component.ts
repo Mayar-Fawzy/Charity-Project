@@ -10,7 +10,6 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginService } from '../../Pages/Auth/core/Services/login.service';
-import { Decode } from '../../core/interfaces/decode';
 
 @Component({
   selector: 'app-navbar',
@@ -27,6 +26,7 @@ export class NavbarComponent implements OnInit {
   isLogin: boolean = false;
   userData: any;
   userName!: string;
+  userImage: string = 'assets/img/user-default.png'; // صورة افتراضية
   isMenuOpen: boolean = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
@@ -37,17 +37,29 @@ export class NavbarComponent implements OnInit {
     }
 
     this.userData = this._LoginService.saveUserAuth();
-    this.userName = this.userData['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+    this.userName =
+      this.userData?.[
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'
+      ] ?? 'مستخدم';
+
   }
 
   navigateToLogin() {
     this._Router.navigate(['/login']);
-    console.log('توجه إلى صفحة تسجيل الدخول...');
+  }
+
+  navigateToSignup() {
+    this._Router.navigate(['/register']);
+  }
+
+  logout() {
+    this.handleLogout();
   }
 
   handleLogout() {
     this._LoginService.signOut();
-    this.isLogin = false; // تأكد من إلغاء حالة تسجيل الدخول
+    this.isLogin = false;
+    this._Router.navigate(['/']);
   }
 
   @HostListener('window:scroll', [])

@@ -12,6 +12,7 @@
   background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(15px);
   direction: rtl;
+  transition: transform 0.3s ease;
 
   &.hidden {
     transform: translateY(-100%);
@@ -22,13 +23,12 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    flex-wrap: wrap;
   }
 
   &__brand {
     display: flex;
     align-items: center;
-    font-size: 22px;
+    font-size: 1.4rem;
     font-weight: bold;
     color: white;
 
@@ -53,12 +53,39 @@
         cursor: pointer;
         text-decoration: none;
         color: white;
-        font-size: 17px;
+        font-size: 1.2rem;
         transition: color 0.3s ease-in-out;
 
         &.active,
         &:hover {
           color: orange;
+        }
+      }
+
+      &.mobile-user-section {
+        display: block;
+        width: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 15px;
+        padding-top: 15px;
+
+        a {
+          color: white;
+          font-size: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.3s;
+
+          i {
+            font-size: 1.2rem;
+          }
+
+          &:hover {
+            color: orange;
+            background: rgba(255, 165, 0, 0.1);
+          }
         }
       }
     }
@@ -68,23 +95,23 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    justify-content: flex-start; // لأقصى اليمين في RTL
+    justify-content: flex-start;
     flex-shrink: 0;
-  }
 
-  .login-btn {
-    background: none;
-    border: 2px solid orange;
-    color: orange;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s;
+    .login-btn {
+      background: none;
+      border: 2px solid orange;
+      color: orange;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s;
 
-    &:hover {
-      background: orange;
-      color: white;
+      &:hover {
+        background: orange;
+        color: white;
+      }
     }
   }
 
@@ -92,26 +119,25 @@
     display: flex;
     align-items: center;
     color: white;
+    gap: 10px;
 
     .user-image {
       height: 40px;
       width: 40px;
-      border: 2px solid #f6a026; 
+      border: 2px solid #f6a026;
       border-radius: 50%;
-      padding: 3px;
-      margin-left: 10px;
       object-fit: cover;
       margin: 8px 8px 8px 10px;
-      box-shadow: 0 0 8px rgba(255, 255, 0, 0.5); 
+      box-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
     }
-    
+
     .notification-container {
       position: relative;
       margin-left: 15px;
       cursor: pointer;
 
       .notification {
-        font-size: 24px;
+        font-size: 1.2rem;
         color: white;
       }
 
@@ -121,7 +147,7 @@
         right: -10px;
         background: red;
         color: white;
-        font-size: 12px;
+        font-size: 0.9rem;
         width: 18px;
         height: 18px;
         display: flex;
@@ -137,60 +163,133 @@
       color: white;
       margin-left: 15px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 1.1rem;
       transition: color 0.3s;
 
       &:hover {
         color: orange;
       }
     }
+
+    .user-name {
+      display: flex;
+      align-items: center;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
   }
 
   .navbar__toggle {
     display: none;
-    font-size: 30px;
+    font-size: 1.4rem;
     background: none;
     border: none;
     color: white;
     cursor: pointer;
-    margin-right: 10px;
   }
 
-  @media screen and (max-width: 768px) {
-    flex-wrap: wrap;
-
+  // Responsive
+  @media screen and (min-width: 769px) {
     &__menu {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      padding: 20px 0;
-      margin-top: 15px;
+      flex-direction: row;
 
       li {
-        margin: 10px 0;
-        text-align: center;
+        margin: 0 10px;
 
         a {
-          font-size: 18px;
+          font-size: 1rem;
         }
       }
     }
 
-    &.open {
-      .navbar__menu {
-        display: flex;
+    .login-btn {
+      font-size: 1rem;
+    }
+
+    .notification-container .notification {
+      font-size: 1.4rem;
+    }
+
+    .notification-count {
+      font-size: 0.9rem;
+    }
+
+    .logout-btn {
+      font-size: 1rem;
+    }
+
+    .user-name {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 15px;
+    flex-wrap: nowrap;
+
+    &__container {
+      flex-wrap: nowrap;
+      gap: 15px;
+    }
+
+    &__brand {
+      font-size: 1rem;
+      order: 1;
+
+      .navbar__logo {
+        height: 35px;
       }
+    }
+
+    &__menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 10px 0;
+      margin: 0;
+      border-radius: 0 0 15px 15px;
+      z-index: 999;
+      flex-direction: column;
+
+      li {
+        margin: 12px 0;
+        text-align: center;
+
+        a {
+          font-size: 1rem;
+          padding: 8px 20px;
+          display: block;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+    }
+
+    &.open .navbar__menu {
+      display: flex;
     }
 
     .navbar__toggle {
       display: block;
+      order: 3;
     }
 
-    &__actions {
-      width: 100%;
-      justify-content: flex-start;
-      padding: 10px;
+    &__actions,
+    &__user {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__brand span {
+      display: none;
     }
   }
 }
