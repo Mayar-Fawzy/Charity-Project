@@ -11,17 +11,17 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 import { ProjectFilterPipe } from '../core/pipes/project-filter.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule,TagModule,RoutingModule,CarouselModule,ProjectFilterPipe,FormsModule],
+  imports: [CommonModule,TagModule,RoutingModule,CarouselModule,ProjectFilterPipe,FormsModule,ReactiveFormsModule],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss'
 })
 export class DonorComponent {
-
+  
   searchText: string = '';
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
@@ -40,7 +40,7 @@ export class DonorComponent {
       const fakeCurrentAmount = project.targetAmount * 0.4; 
       return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
     }
-    
+  
    
   ngOnInit(): void {
     this.responsiveOptions = [
@@ -64,5 +64,30 @@ export class DonorComponent {
     this.GetDonation()
     
   }
+  donationForm = new FormGroup({
+    name: new FormControl('', Validators.required),
+    itemType: new FormControl('', Validators.required),
+    description: new FormControl(''),
+    quantity: new FormControl('', Validators.required),
+    condition: new FormControl('', Validators.required),
+    images: new FormControl<File[]>([]),
+  });
   
+  
+itemTypeNames: { [key: number]: string } = {
+  1: 'ملابس',
+  2: 'أجهزة',
+  3: 'أغذية',
+  4: 'كتب',
+  5: 'أخرى',
+};
+
+onItemTypeChange(event: Event) {
+  const selectedValue = (event.target as HTMLSelectElement).value;
+  const name = this.itemTypeNames[+selectedValue];
+  this.donationForm.get('name')?.setValue(name);
+}
+DonateNow(){
+  
+}
 }

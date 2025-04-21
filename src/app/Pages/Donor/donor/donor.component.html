@@ -115,12 +115,12 @@
           </div>
         </ng-template>
       </p-carousel>
-      <div
+      <!-- <div
         *ngIf="(projects | projectFilter : searchText).length === 0"
         class="text-center mt-4"
       >
         <p>لا يوجد مشروع مطابق لبحثك.</p>
-      </div>
+      </div> -->
       <!-- زر عرض المزيد -->
       <div class="projects-controls mt-3 text-center">
         <a class="view-more-link" href="#">
@@ -169,17 +169,37 @@
 
       <form class="donation-form">
         <!-- نوع التبرع -->
-        <div class="form-group">
-          <label for="category">اختر نوع التبرع</label>
-          <select id="category" class="form-control">
-            <option>ملابس</option>
-            <option>أجهزة</option>
-            <option>أغذية</option>
-            <option>كتب</option>
-            <option>أخرى</option>
-          </select>
-        </div>
-
+        <form [formGroup]="donationForm">
+          <!-- نوع التبرع -->
+          <div class="form-group">
+            <label for="category">اختر نوع التبرع</label>
+            <select
+              id="category"
+              class="form-control"
+              formControlName="itemType"
+              (change)="onItemTypeChange($event)"
+            >
+              <option value="1">ملابس</option>
+              <option value="2">أجهزة</option>
+              <option value="3">أغذية</option>
+              <option value="4">كتب</option>
+              <option value="5">أخرى</option>
+            </select>
+          </div>
+        
+          <!-- الاسم -->
+          <div class="form-group">
+            <label for="name">الاسم</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="الاسم"
+              formControlName="name"
+            />
+          </div>
+        </form>
+        
         <!-- الكمية  -->
         <div class="form-group">
           <label for="quantity">الكمية</label>
