@@ -27,6 +27,7 @@ export class DonorComponent {
    private readonly _Router=inject(Router)
    private readonly _LoginService=inject(LoginService)
   searchText: string = '';
+  userData: any = null;
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
     private readonly _HomedonateServiesService=inject(HomedonateServiesService)
@@ -117,9 +118,9 @@ export class DonorComponent {
     formValue.images?.forEach((file: File) => {
       formData.append('images', file);
     });
-  
+    this.userData= this._LoginService.saveUserAuth()
     // معرفات ثابتة (يمكن استبدالها لاحقًا)
-    formData.append('donorId', this._LoginService.donorId ?? '');
+    formData.append('donorId', this.userData.jti);
     // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
   
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
