@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
   isLogin: boolean = false;
   userData: any;
   userName!: string;
-  userImage: string = 'assets/img/user-default.png'; // صورة افتراضية
+  userImage: string = '/Images/Logo.svg'; // صورة افتراضية
   isMenuOpen: boolean = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }

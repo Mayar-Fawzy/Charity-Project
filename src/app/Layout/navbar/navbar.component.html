@@ -13,39 +13,36 @@
     <!-- القائمة الرئيسية -->
     <ul class="navbar__menu">
       <li><a routerLink="/home" routerLinkActive="active">الرئيسية</a></li>
-      
       <li><a routerLink="/volunteer">المتطوعين</a></li>
       <li><a routerLink="/donor">التبرعات</a></li>
       <li><a routerLink="/about">من نحن</a></li>
       <li><a routerLink="/projects">المشاريع</a></li>
       <li><a routerLink="/contact">تواصل معنا</a></li>
 
-      <li class="mobile-auth-section" *ngIf="isLogin">
-        <button class="auth-button" (click)="navigateToLogin()">
-          تسجيل الدخول
-        </button>
-        <button class="auth-button" (click)="navigateToSignup()">
-          إنشاء حساب
-        </button>
-      </li>
+      <!-- لما المستخدم غير مسجل دخول -->
+      <!-- <li class="mobile-auth-section" *ngIf="!isLogin">
+        <button class="auth-button" (click)="navigateToLogin()">تسجيل الدخول</button>
+        <button class="auth-button" (click)="navigateToSignup()">إنشاء حساب</button>
+      </li> -->
 
-      <li class="mobile-auth-section" *ngIf="isLogin">
+      <!-- لما المستخدم مسجل دخول -->
+      <!-- <li class="mobile-auth-section" *ngIf="isLogin">
         <div class="profile-box">
           <img [src]="userImage" alt="User" class="user-image" />
           <span class="user-name">{{ userName }}</span>
           <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>
         </div>
-      </li>
-     
+      </li> -->
     </ul>
 
+    <!-- الجهة اليمنى من النافبار -->
     <div class="navbar__actions">
-      <button class="login-btn" *ngIf="!isLogin" (click)="navigateToLogin()">
-        تسجيل الدخول
-      </button>
+      <!-- لما المستخدم غير مسجل دخول -->
+      <button class="login-btn" *ngIf="!isLogin" (click)="navigateToLogin()">تسجيل الدخول</button>
 
+      <!-- لما المستخدم مسجل دخول -->
       <div class="navbar__user" *ngIf="isLogin">
-        <img src="/Images/Logo.svg" alt="User" class="user-image" />
+        <img [src]="userImage" alt="User" class="user-image" />
         <span>مرحبًا، {{ userName }}</span>
 
         <div class="notification-container mx-2">
@@ -53,9 +50,7 @@
         </div>
       </div>
 
-      <button class="login-btn" *ngIf="isLogin" (click)="handleLogout()">
-        تسجيل الخروج
-      </button>
+      <button class="login-btn" *ngIf="isLogin" (click)="handleLogout()">تسجيل الخروج</button>
     </div>
   </div>
 </nav>
