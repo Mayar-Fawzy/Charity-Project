@@ -13,6 +13,7 @@ import { RoutingModule } from '../../../core/Shared/Models/routing/routing.modul
 import { ProjectFilterPipe } from '../core/pipes/project-filter.pipe';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DonateNowService } from '../core/Services/donate-now.service';
 
 @Component({
   selector: 'app-donor',
@@ -27,6 +28,7 @@ export class DonorComponent {
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
     private readonly _HomedonateServiesService=inject(HomedonateServiesService)
+    private readonly _DonateNowService=inject(DonateNowService)
     GetDonation(){
       this._HomedonateServiesService.GetDonation().subscribe((res)=>{
         this.projects=res.data;
@@ -65,32 +67,73 @@ export class DonorComponent {
     this.GetDonation()
     
   }
+  // نموذج التبرع النقدي
+  goToPayment(projectId: string) {
+    this._Router.navigate(['/ewallet-payment', projectId]);
+  }
+  // نموذج التبرع العيني
+  
   donationForm = new FormGroup({
     name: new FormControl('', Validators.required),
     itemType: new FormControl('', Validators.required),
     description: new FormControl(''),
     quantity: new FormControl('', Validators.required),
-    condition: new FormControl('', Validators.required),
-    images: new FormControl<File[]>([]),
+    images: new FormControl<File[]>([])
   });
-  
-  
-itemTypeNames: { [key: number]: string } = {
-  1: 'ملابس',
-  2: 'أجهزة',
-  3: 'أغذية',
-  4: 'كتب',
-  5: 'أخرى',
-};
 
-onItemTypeChange(event: Event) {
-  const selectedValue = (event.target as HTMLSelectElement).value;
-  const name = this.itemTypeNames[+selectedValue];
-  this.donationForm.get('name')?.setValue(name);
-}
-goToPayment(projectId: string) {
-  this._Router.navigate(['/ewallet-payment', projectId]);
-}
+ 
+  onItemTypeChange(event: Event) {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    this.donationForm.patchValue({ itemType: selectedValue });
+  }
+
+  onFileSelected(event: any) {
+    const files = Array.from(event.target.files) as File[];
+    this.donationForm.patchValue({ images: files });
+  }
+
+  triggerFileUpload() {
+    const input = document.getElementById('photos');
+    if (input) {
+      input.click();
+    }
+  }
+  submitDonation() {
+    if (this.donationForm.invalid) return;
+  
+    const formValue = this.donationForm.value;
+    const formData = new FormData();
+  
+    // البيانات الأساسية
+    formData.append('name', formValue.name ?? '');
+    formData.append('itemType', String(formValue.itemType));
+
+    formData.append('description', formValue.description ?? '');
+    formData.append('quantity', formValue.quantity ?? '');
+  
+    // الصور (إن وجدت)
+    formValue.images?.forEach((file: File) => {
+      formData.append('images', file);
+    });
+  
+    // معرفات ثابتة (يمكن استبدالها لاحقًا)
+    formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
+    // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
+  
+    this._DonateNowService.CreateInKindDonation(formData).subscribe({
+      next: (res) => {
+        console.log('تم التبرع بنجاح:', res);
+        // بدل alert ممكن تستخدم رسالة على الصفحة أو Toast مثلاً
+        alert('تم إرسال التبرع بنجاح!');
+        this.donationForm.reset(); // إعادة ضبط النموذج بعد الإرسال
+      },
+      error: (err) => {
+        console.error('خطأ في إرسال التبرع:', err);
+        alert('حدث خطأ أثناء الإرسال.');
+      }
+    });
+  }
+  
 DonateNow(){
   
 }

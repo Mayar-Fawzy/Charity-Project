@@ -161,45 +161,42 @@
 </section>
 
 <!-- In-Kind Donation Section -->
+<!-- In-Kind Donation Section -->
 <section class="in-kind-donation" id="donate-form">
   <div class="donation-wrapper">
     <div class="container">
       <h2 class="fancy-title section-title">تبرع عيني</h2>
 
-      <form class="donation-form">
+      <form class="donation-form" [formGroup]="donationForm" (ngSubmit)="submitDonation()">
         <!-- نوع التبرع -->
-        <form [formGroup]="donationForm">
-          <!-- نوع التبرع -->
-          <div class="form-group">
-            <label for="category">اختر نوع التبرع</label>
-            <select
-              id="category"
-              class="form-control"
-              formControlName="itemType"
-              (change)="onItemTypeChange($event)"
-            >
-              <option value="1">ملابس</option>
-              <option value="2">أجهزة</option>
-              <option value="3">أغذية</option>
-              <option value="4">كتب</option>
-              <option value="5">أخرى</option>
-            </select>
-          </div>
-        
-          <!-- الاسم -->
-          <div class="form-group">
-            <label for="name">الاسم</label>
-            <input
-              type="text"
-              id="name"
-              class="form-control"
-              placeholder="الاسم"
-              formControlName="name"
-            />
-          </div>
-        </form>
-        
-        <!-- الكمية  -->
+        <div class="form-group">
+          <label for="category">اختر نوع التبرع</label>
+          <select
+            id="category"
+            class="form-control"
+            formControlName="itemType"
+            (change)="onItemTypeChange($event)"
+          >
+            <option [value]="1">ملابس</option>
+            <option [value]="2">طعام</option>
+            <option [value]="3">مستلزمات طبية</option>
+            <option [value]="4">أخرى</option>
+          </select>
+        </div>
+
+        <!-- الاسم -->
+        <div class="form-group">
+          <label for="name">الاسم</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            placeholder="الاسم"
+            formControlName="name"
+          />
+        </div>
+
+        <!-- الكمية -->
         <div class="form-group">
           <label for="quantity">الكمية</label>
           <input
@@ -207,27 +204,8 @@
             id="quantity"
             class="form-control"
             placeholder="مثلاً: ٣ صناديق"
+            formControlName="quantity"
           />
-        </div>
-
-        <!-- حالة العنصر -->
-        <div class="form-group">
-          <label>حالة العنصر</label>
-          <div class="radio-options">
-            <label>
-              <input type="radio" name="condition" value="new" />
-              <span>جديد</span>
-            </label>
-            <label>
-              <input type="radio" name="condition" value="excellent" />
-              <span>مستعمل - حالة ممتازة</span>
-            </label>
-            <label>
-              <input type="radio" name="condition" value="good" />
-              <span>مستعمل - حالة جيدة</span>
-            </label>
-          </div>
-          <small>ملاحظة: لا نقبل العناصر التالفة أو غير الصالحة.</small>
         </div>
 
         <!-- الوصف -->
@@ -237,16 +215,15 @@
             id="description"
             class="form-control"
             rows="3"
+            formControlName="description"
             placeholder="أدخل تفاصيل إضافية عن تبرعك"
           ></textarea>
         </div>
+
         <!-- رفع الصور -->
         <div class="form-group">
           <label for="photos" class="form-label">الصور</label>
-          <div
-            class="upload-box"
-            onclick="document.getElementById('photos').click()"
-          >
+          <div class="upload-box" (click)="triggerFileUpload()">
             <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
             <div class="upload-text">
               <strong class="upload-main-text">ارفع الملفات</strong>
@@ -259,6 +236,7 @@
             id="photos"
             accept="image/png, image/jpeg"
             multiple
+            (change)="onFileSelected($event)"
             hidden
           />
         </div>
@@ -269,8 +247,7 @@
         </button>
 
         <p class="note">
-          سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني
-          والرسائل القصيرة.
+          سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني والرسائل القصيرة.
         </p>
       </form>
     </div>
