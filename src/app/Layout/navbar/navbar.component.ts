@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
   handleLogout() {
     this._LoginService.signOut();
     this.isLogin = false;
-    this._Router.navigate(['/']);
+    this._Router.navigate(['/login']);
   }
 
   @HostListener('window:scroll', [])

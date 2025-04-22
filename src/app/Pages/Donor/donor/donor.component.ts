@@ -14,6 +14,7 @@ import { ProjectFilterPipe } from '../core/pipes/project-filter.pipe';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DonateNowService } from '../core/Services/donate-now.service';
+import { LoginService } from '../../Auth/core/Services/login.service';
 
 @Component({
   selector: 'app-donor',
@@ -24,6 +25,7 @@ import { DonateNowService } from '../core/Services/donate-now.service';
 })
 export class DonorComponent {
    private readonly _Router=inject(Router)
+   private readonly _LoginService=inject(LoginService)
   searchText: string = '';
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
@@ -117,7 +119,7 @@ export class DonorComponent {
     });
   
     // معرفات ثابتة (يمكن استبدالها لاحقًا)
-    formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
+    formData.append('donorId', this._LoginService.donorId ?? '');
     // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
   
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
@@ -127,8 +129,10 @@ export class DonorComponent {
         alert('تم إرسال التبرع بنجاح!');
         this.donationForm.reset(); // إعادة ضبط النموذج بعد الإرسال
       },
-      error: (err) => {
-        console.error('خطأ في إرسال التبرع:', err);
+      error: error => {
+        console.error('خطأ في إرسال التبرع:', error);
+        if (error.error) {
+          console.error('تفاصيل الخطأ من السيرفر:', error.error);}
         alert('حدث خطأ أثناء الإرسال.');
       }
     });

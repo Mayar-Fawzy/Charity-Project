@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
  userData: any;
+ 
+donorId: string | null = null;
   private readonly _HttpClient = inject(HttpClient);
   private readonly _Router = inject(Router);
 
@@ -28,6 +30,7 @@ export class LoginService {
     const token = localStorage.getItem('userToken');
     if (token) {
       this.userData = jwtDecode(token);
+      this.donorId = this.userData.jti; 
       return this.userData;
     }
     return null;
