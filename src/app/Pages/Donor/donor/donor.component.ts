@@ -118,9 +118,11 @@ export class DonorComponent {
     formValue.images?.forEach((file: File) => {
       formData.append('images', file);
     });
-    this.userData= this._LoginService.saveUserAuth()
-    // معرفات ثابتة (يمكن استبدالها لاحقًا)
-    formData.append('donorId', this.userData.jti);
+   this.userData= this._LoginService.saveUserAuth()
+    // // معرفات ثابتة (يمكن استبدالها لاحقًا)
+     formData.append('donorId', this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] ?? '');
+     console.log(this.userData.id);
+  // formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
     // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
   
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
