@@ -166,8 +166,8 @@
   <div class="donation-wrapper">
     <div class="container">
       <h2 class="fancy-title section-title">تبرع عيني</h2>
-
-      <form class="donation-form" [formGroup]="donationForm" (ngSubmit)="submitDonation()">
+      <div #formWrapper class="form-wrapper" style="position: relative;">
+      <form class="donation-form form-wrapper" [formGroup]="donationForm" (ngSubmit)="submitDonation()" #formWrapper>
         <!-- نوع التبرع -->
         <div class="form-group">
           <label for="category">اختر نوع التبرع</label>
@@ -249,7 +249,9 @@
         <p class="note">
           سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني والرسائل القصيرة.
         </p>
+        
       </form>
+    </div>
     </div>
   </div>
 </section>

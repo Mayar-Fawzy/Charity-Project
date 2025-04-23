@@ -32,5 +32,6 @@ export class AppComponent {
 //   }, 60000); // يتم التحديث كل ثانية
 // }
  }
+ 
 }
  

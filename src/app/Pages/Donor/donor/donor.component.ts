@@ -2,7 +2,10 @@ import { Data } from './../../Donor/core/interface/iproject-donate';
 import { CarouselResponsiveOptions } from 'primeng/carousel';
 import {
   Component,
+  ElementRef,
   inject,
+  Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
@@ -15,6 +18,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { DonateNowService } from '../core/Services/donate-now.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-donor',
@@ -24,14 +28,19 @@ import { LoginService } from '../../Auth/core/Services/login.service';
   styleUrl: './donor.component.scss'
 })
 export class DonorComponent {
+  
    private readonly _Router=inject(Router)
    private readonly _LoginService=inject(LoginService)
+  private readonly toastr = inject(ToastrService)
+   private readonly _HomedonateServiesService=inject(HomedonateServiesService)
+   private readonly _DonateNowService=inject(DonateNowService)
+  private readonly renderer = inject(Renderer2);
+   toastMessage = '';
+showToast = false;
   searchText: string = '';
   userData: any = null;
     responsiveOptions: CarouselResponsiveOptions[] = [];
     projects:Data[]=[]
-    private readonly _HomedonateServiesService=inject(HomedonateServiesService)
-    private readonly _DonateNowService=inject(DonateNowService)
     GetDonation(){
       this._HomedonateServiesService.GetDonation().subscribe((res)=>{
         this.projects=res.data;
@@ -101,7 +110,22 @@ export class DonorComponent {
       input.click();
     }
   }
+  @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
+  showCenteredToast(type: 'success' | 'error', message: string, title: string) {
+    this.toastr[type](message, title);
+  
+    setTimeout(() => {
+      const toastContainer = document.querySelector('.toast-container');
+      if (toastContainer && this.formWrapper?.nativeElement) {
+        this.formWrapper.nativeElement.appendChild(toastContainer);
+        toastContainer.classList.add('toast-inside-form');
+      }
+    }, 0);
+  }
+
+  
   submitDonation() {
+   
     if (this.donationForm.invalid) return;
   
     const formValue = this.donationForm.value;
@@ -124,21 +148,29 @@ export class DonorComponent {
      console.log(this.userData.id);
   // formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
     // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
-  
+ 
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
       next: (res) => {
         console.log('تم التبرع بنجاح:', res);
-        // بدل alert ممكن تستخدم رسالة على الصفحة أو Toast مثلاً
-        alert('تم إرسال التبرع بنجاح!');
-        this.donationForm.reset(); // إعادة ضبط النموذج بعد الإرسال
+    
+        // ❌ لا تستخدم this.toastr.success(...)
+        // ✅ استخدم showCenteredToast
+        this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
+    
+        this.donationForm.reset();
       },
       error: error => {
         console.error('خطأ في إرسال التبرع:', error);
         if (error.error) {
-          console.error('تفاصيل الخطأ من السيرفر:', error.error);}
-        alert('حدث خطأ أثناء الإرسال.');
+          console.error('تفاصيل الخطأ من السيرفر:', error.error);
+        }
+    
+        // ❌ لا تستخدم this.toastr.error(...)
+        // ✅ استخدم showCenteredToast
+        this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
       }
     });
+    
   }
   
 DonateNow(){
