@@ -16,7 +16,7 @@ import { VisaPaymentComponent } from './PaymentMethod/visa-payment/visa-payment.
 
 export const routes: Routes = [
     // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
-    { path: '', redirectTo: 'donor', pathMatch: 'full' },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
 
     // ✅ صفحات Login & Register بدون Navbar & Footer
     { path: 'login', title: 'Login', component: LoginComponent },
