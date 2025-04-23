@@ -37,6 +37,7 @@ export class DonorComponent {
   private readonly renderer = inject(Renderer2);
    toastMessage = '';
 showToast = false;
+isSubmitting = false;
   searchText: string = '';
   userData: any = null;
     responsiveOptions: CarouselResponsiveOptions[] = [];
@@ -127,7 +128,7 @@ showToast = false;
   submitDonation() {
    
     if (this.donationForm.invalid) return;
-  
+    this.isSubmitting = true;
     const formValue = this.donationForm.value;
     const formData = new FormData();
   
@@ -151,22 +152,21 @@ showToast = false;
  
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
       next: (res) => {
+        this.isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
     
-        // ❌ لا تستخدم this.toastr.success(...)
-        // ✅ استخدم showCenteredToast
         this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
     
         this.donationForm.reset();
       },
       error: error => {
+        this.isSubmitting = false;
         console.error('خطأ في إرسال التبرع:', error);
         if (error.error) {
           console.error('تفاصيل الخطأ من السيرفر:', error.error);
         }
     
-        // ❌ لا تستخدم this.toastr.error(...)
-        // ✅ استخدم showCenteredToast
+       
         this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
       }
     });

@@ -63,7 +63,9 @@ $light-bg: #f9f9f9;
     }
 }
 
-:host ::ng-deep {.toast-top-right {
+:host ::ng-deep {
+   
+    .toast-top-right {
     top: 210px !important;
     right: -28px !important;
 }

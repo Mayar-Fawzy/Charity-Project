@@ -242,9 +242,17 @@
         </div>
 
         <!-- زر الإرسال -->
-        <button type="submit" class="btn btn-primary submit-btn">
-          إرسال التبرع
-        </button>
+        <button 
+        type="submit" 
+        class="btn btn-primary submit-btn" 
+        [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">إرسال التبرع</span>
+        <span *ngIf="isSubmitting">
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          جاري التحميل...
+        </span>
+      </button>
+      
 
         <p class="note">
           سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني والرسائل القصيرة.
