@@ -85,4 +85,15 @@ export class RegisterComponent {
       }
     );
   }
+  showPassword = false;
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+  
+  showPassword2 = false;
+
+  togglePasswordVisibility2() {
+    this.showPassword2 = !this.showPassword2;
+  }
 }

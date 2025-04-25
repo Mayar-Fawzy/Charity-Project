@@ -24,9 +24,20 @@
             <i class="fa fa-user"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('firstName')?.errors && (registerForm.get('firstName')?.touched || registerForm.get('firstName')?.dirty)">
-          <span *ngIf="registerForm.get('firstName')?.getError('required')">الاسم مطلوب</span>
-          <span *ngIf="registerForm.get('firstName')?.errors?.['minlength']">يجب أن يكون أكثر من 3 حروف</span>
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('firstName')?.errors &&
+            (registerForm.get('firstName')?.touched ||
+              registerForm.get('firstName')?.dirty)
+          "
+        >
+          <span *ngIf="registerForm.get('firstName')?.getError('required')"
+            >الاسم مطلوب</span
+          >
+          <span *ngIf="registerForm.get('firstName')?.errors?.['minlength']"
+            >يجب أن يكون أكثر من 3 حروف</span
+          >
         </div>
 
         <!-- Last Name -->
@@ -44,9 +55,20 @@
               <i class="fa fa-user"></i>
             </div>
           </div>
-          <div class="error-message" *ngIf="registerForm.get('lastName')?.errors && (registerForm.get('lastName')?.touched || registerForm.get('lastName')?.dirty)">
-            <span *ngIf="registerForm.get('lastName')?.getError('required')">الاسم مطلوب</span>
-            <span *ngIf="registerForm.get('lastName')?.errors?.['minlength']">يجب أن يكون أكثر من 3 حروف</span>
+          <div
+            class="error-message"
+            *ngIf="
+              registerForm.get('lastName')?.errors &&
+              (registerForm.get('lastName')?.touched ||
+                registerForm.get('lastName')?.dirty)
+            "
+          >
+            <span *ngIf="registerForm.get('lastName')?.getError('required')"
+              >الاسم مطلوب</span
+            >
+            <span *ngIf="registerForm.get('lastName')?.errors?.['minlength']"
+              >يجب أن يكون أكثر من 3 حروف</span
+            >
           </div>
         </div>
       </div>
@@ -66,9 +88,20 @@
             <i class="fa fa-map-marker"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('address')?.errors && (registerForm.get('address')?.touched || registerForm.get('address')?.dirty)">
-          <span *ngIf="registerForm.get('address')?.getError('required')">العنوان مطلوب</span>
-          <span *ngIf="registerForm.get('address')?.getError('minlength')">يجب ان يكون اكتر من 5 حروف</span>
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('address')?.errors &&
+            (registerForm.get('address')?.touched ||
+              registerForm.get('address')?.dirty)
+          "
+        >
+          <span *ngIf="registerForm.get('address')?.getError('required')"
+            >العنوان مطلوب</span
+          >
+          <span *ngIf="registerForm.get('address')?.getError('minlength')"
+            >يجب ان يكون اكتر من 5 حروف</span
+          >
         </div>
       </div>
 
@@ -87,9 +120,20 @@
             <i class="fa fa-phone"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('phoneNumber')?.errors && (registerForm.get('phoneNumber')?.touched || registerForm.get('phoneNumber')?.dirty)">
-          <span *ngIf="registerForm.get('phoneNumber')?.getError('required')">الرقم مطلوب</span>
-          <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">يجب أن يكون 11 رقم</span>
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('phoneNumber')?.errors &&
+            (registerForm.get('phoneNumber')?.touched ||
+              registerForm.get('phoneNumber')?.dirty)
+          "
+        >
+          <span *ngIf="registerForm.get('phoneNumber')?.getError('required')"
+            >الرقم مطلوب</span
+          >
+          <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']"
+            >يجب أن يكون 11 رقم</span
+          >
         </div>
       </div>
 
@@ -107,15 +151,31 @@
             <i class="fa fa-calendar"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('dateOfBirth')?.errors && (registerForm.get('dateOfBirth')?.touched || registerForm.get('dateOfBirth')?.dirty)">
-          <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')">تاريخ الميلاد مطلوب</span>
-          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']">مثال (28-07-2003)</span>
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('dateOfBirth')?.errors &&
+            (registerForm.get('dateOfBirth')?.touched ||
+              registerForm.get('dateOfBirth')?.dirty)
+          "
+        >
+          <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')"
+            >تاريخ الميلاد مطلوب</span
+          >
+          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']"
+            >مثال (28-07-2003)</span
+          >
         </div>
       </div>
 
       <!-- Gender -->
       <div class="input-group mb-3">
-        <select class="form-control gender-select" id="gender" formControlName="gender" required>
+        <select
+          class="form-control gender-select"
+          id="gender"
+          formControlName="gender"
+          required
+        >
           <option [value]="" disabled selected hidden>اختر النوع</option>
           <option [value]="1">ذكر</option>
           <option [value]="2">أنثى</option>
@@ -140,52 +200,121 @@
             <i class="fa fa-envelope"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('email')?.errors && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)">
-          <span *ngIf="registerForm.get('email')?.getError('required')">البريد الاكتروني مطلوب</span>
-          <span *ngIf="registerForm.get('email')?.errors?.['email']">البريد الاكتروني غير صحيح</span>
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('email')?.errors &&
+            (registerForm.get('email')?.touched ||
+              registerForm.get('email')?.dirty)
+          "
+        >
+          <span *ngIf="registerForm.get('email')?.getError('required')"
+            >البريد الاكتروني مطلوب</span
+          >
+          <span *ngIf="registerForm.get('email')?.errors?.['email']"
+            >البريد الاكتروني غير صحيح</span
+          >
         </div>
       </div>
 
       <!-- Password -->
-      <div class="form-group">
+      <div class="form-group position-relative">
         <div class="input-group">
           <input
+            [type]="showPassword ? 'text' : 'password'"
             autocomplete="off"
-            type="password"
             class="form-control"
             id="password"
             formControlName="password"
             placeholder="كلمة المرور"
           />
-          <div class="input-icon">
-            <i class="fa fa-lock"></i>
+
+          <!-- أيقونة العين -->
+          <div
+            class="position-absolute"
+            style="
+              top: 29%;
+              left: 12px;
+              color: rgba(255, 255, 255, 0.6);
+              cursor: pointer;
+              z-index: 5;
+            "
+            (click)="togglePasswordVisibility()"
+          >
+            <i class="fa fa-eye"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('password')?.errors && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)">
-          <span *ngIf="registerForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة</span>
-          <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تحتوي على 8 أحرف على الأقل</span>
-          <span *ngIf="registerForm.get('password')?.errors?.['pattern']">يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)</span>
+
+        <!-- رسائل الخطأ -->
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('password')?.errors &&
+            (registerForm.get('password')?.touched ||
+              registerForm.get('password')?.dirty)
+          "
+        >
+          <span *ngIf="registerForm.get('password')?.errors?.['required']">
+            كلمة المرور مطلوبة
+          </span>
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']">
+            يجب أن تحتوي على 8 أحرف على الأقل
+          </span>
+          <span *ngIf="registerForm.get('password')?.errors?.['pattern']">
+            يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)
+          </span>
         </div>
       </div>
 
       <!-- Confirm Password -->
       <div class="form-group">
-        <div class="input-group">
+        <div class="input-group position-relative">
           <input
+            [type]="showPassword2 ? 'text' : 'password'"
             autocomplete="off"
-            type="password"
             class="form-control"
             id="confirmPassword"
             formControlName="confirmPassword"
             placeholder="تأكيد كلمة المرور"
           />
-          <div class="input-icon">
-            <i class="fa fa-lock"></i>
+
+          <!-- أيقونة العين -->
+          <div
+            class="position-absolute"
+            style="
+              top: 29%;
+              left: 12px;
+              color: rgba(255, 255, 255, 0.6);
+              cursor: pointer;
+              z-index: 5;
+            "
+            (click)="togglePasswordVisibility2()"
+          >
+            <i class="fa fa-eye"></i>
           </div>
         </div>
-        <div class="error-message" *ngIf="registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty">
-          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">كلمة المرور مطلوبة</span>
-          <span *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.value && !registerForm.get('confirmPassword')?.errors?.['required']">كلمة المرور غير متطابقة</span>
+
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('confirmPassword')?.touched ||
+            registerForm.get('confirmPassword')?.dirty
+          "
+        >
+          <span
+            *ngIf="registerForm.get('confirmPassword')?.errors?.['required']"
+          >
+            كلمة المرور مطلوبة
+          </span>
+          <span
+            *ngIf="
+              registerForm.hasError('mismatch') &&
+              registerForm.get('confirmPassword')?.value &&
+              !registerForm.get('confirmPassword')?.errors?.['required']
+            "
+          >
+            كلمة المرور غير متطابقة
+          </span>
         </div>
       </div>
 
@@ -204,13 +333,22 @@
       </div>
 
       <!-- Submit Button -->
-      <button type="submit" class="login-btn" [disabled]="!registerForm.valid || isloading">
+      <button
+        type="submit"
+        class="login-btn"
+        [disabled]="!registerForm.valid || isloading"
+      >
         <span *ngIf="!isloading">إنشاء حساب</span>
         <span *ngIf="isloading">جاري التحميل...</span>
-        <span *ngIf="isloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span
+          *ngIf="isloading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
 
-      <div class="divider">
+      <!-- <div class="divider">
         <span>أو تواصل معنا عبر</span>
       </div>
 
@@ -223,7 +361,7 @@
           <span>جوجل</span>
           <i class="fa-brands fa-google"></i>
         </button>
-      </div>
+      </div> -->
 
       <div class="register-link" routerLink="/login">
         <span>لديك حساب؟ </span>
