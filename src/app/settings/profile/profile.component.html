@@ -1,0 +1,61 @@
+<div class="profile-settings" dir="rtl">
+  <h2>إعدادات الملف الشخصي</h2>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSave()">
+    <div class="form-row">
+      <div class="avatar-wrapper">
+        <img src="https://i.pravatar.cc/100" alt="صورة المستخدم" />
+        <button type="button" class="change-photo">تغيير الصورة</button>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <label>
+        الاسم الكامل
+        <input
+          type="text"
+          formControlName="fullName"
+          placeholder="أدخل اسمك الكامل"
+        />
+      </label>
+
+      <label>
+        البريد الإلكتروني
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="example@domain.com"
+        />
+      </label>
+
+      <label>
+        النوع
+        <select formControlName="gender">
+          <option value="Male">ذكر</option>
+          <option value="Female">أنثى</option>
+        </select>
+      </label>
+
+      <label>
+        تاريخ الميلاد
+        <input type="date" formControlName="dob" />
+      </label>
+
+      <label>
+        رقم الهاتف
+        <input type="text" formControlName="phone" placeholder="01234567890+" />
+      </label>
+
+      <label>
+        العنوان
+        <input
+          type="text"
+          formControlName="address"
+          placeholder="المدينة، الحي، الشارع"
+        />
+      </label>
+    </div>
+
+    <button type="submit" class="save-btn">حفظ التغييرات</button>
+  </form>
+</div>

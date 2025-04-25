@@ -14,40 +14,64 @@ import { BeneficiaryComponent } from './Pages/beneficiary/beneficiary/beneficiar
 import { EwalletPaymentComponent } from './PaymentMethod/ewallet-payment/ewallet-payment.component';
 import { VisaPaymentComponent } from './PaymentMethod/visa-payment/visa-payment.component';
 
+import { SettingsLayoutComponent } from './Layout/settings-layout/settings-layout.component';
+
+import { ProfileComponent } from './settings/profile/profile.component';
+import { AccountSecurityComponent } from './settings/account-security/account-security.component';
+import { PaymentMethodComponent } from './settings/payment-method/payment-method.component';
+import { NotificationsComponent } from './settings/notifications/notifications.component';
+import { WorkComponent } from './settings/work/work.component';
 export const routes: Routes = [
     // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
     { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-    // ✅ صفحات Login & Register بدون Navbar & Footer
-    { path: 'login', title: 'Login', component: LoginComponent },
-    { path: 'register', title: 'Register', component: RegisterComponent },
-    { path: 'forget-password', title: 'Forget Password', component: ForgetpasswordComponent },
+  // ✅ صفحات Login & Register بدون Navbar & Footer
+  { path: 'login', title: 'Login', component: LoginComponent },
+  { path: 'register', title: 'Register', component: RegisterComponent },
+  { path: 'forget-password', title: 'Forget Password', component: ForgetpasswordComponent },
 
-    // ✅ باقي الصفحات داخل Layout يحتوي على Navbar & Footer
-    {
-        path: '',
-        component: RoutesComponent,
-        children: [
-            { path: 'home', title: 'Home', component: HomeComponent },
-           
-            { path: 'donor', title: 'Donor', component: DonorComponent }, 
-            { path: 'super-admin', title: 'Super Admin', component: SuperAdminComponent },
-            { path: 'admin', title: 'Admin', component: AdminComponent },
-            { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
-            { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
-            {
-                path: 'ewallet-payment/:id',
-                title: 'E-Wallet Payment',
-                component: EwalletPaymentComponent
-              },
-              {
-                path: 'visa-payment',
-                title: 'Visa Payment',
-                component: VisaPaymentComponent
-              }
-        ]
-    },
+  // ✅ باقي الصفحات داخل Layout يحتوي على Navbar & Footer
+  {
+    path: '',
+    component: RoutesComponent,
+    children: [
+      { path: 'home', title: 'Home', component: HomeComponent },
 
-    // ✅ صفحة Not Found
-    { path: '**', title: 'Not Found', component: NotfoundComponent }
+      { path: 'donor', title: 'Donor', component: DonorComponent },
+      { path: 'super-admin', title: 'Super Admin', component: SuperAdminComponent },
+      { path: 'admin', title: 'Admin', component: AdminComponent },
+      { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
+      { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
+      {
+        path: 'ewallet-payment/:id',
+        title: 'E-Wallet Payment',
+        component: EwalletPaymentComponent
+      },
+      {
+        path: 'visa-payment',
+        title: 'Visa Payment',
+        component: VisaPaymentComponent
+      }
+    ]
+  },
+
+  // ✅ صفحة Not Found
+  { path: '**', title: 'Not Found', component: NotfoundComponent },
+
+
+  // >>>>>>>>>>>>>>>>>>> Profile
+  {
+    path: 'settings',
+    component: SettingsLayoutComponent,
+    children: [
+      { path: 'profile', component: ProfileComponent },
+      { path: 'account-security', component: AccountSecurityComponent },
+      { path: 'payment-method', component: PaymentMethodComponent },
+      { path: 'notifications', component: NotificationsComponent },
+      { path: '', redirectTo: 'profile', pathMatch: 'full' }
+    ]
+  }
+
 ];

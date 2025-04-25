@@ -8,11 +8,14 @@ import { DonorComponent } from "./Pages/Donor/donor/donor.component";
 import { VolnteerComponent } from "./Pages/volunteer/volnteer/volnteer.component";
 import { NavbarComponent } from "./Layout/navbar/navbar.component";
 
+import { ProfileComponent } from "./settings/profile/profile.component";
+import { SettingsLayoutComponent } from "./Layout/settings-layout/settings-layout.component";
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, VisaPaymentComponent, EwalletPaymentComponent, FooterComponent, DonorComponent, VolnteerComponent, NavbarComponent],
+  imports: [RouterOutlet, VisaPaymentComponent, EwalletPaymentComponent, FooterComponent, DonorComponent, VolnteerComponent, NavbarComponent, ProfileComponent, SettingsLayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
