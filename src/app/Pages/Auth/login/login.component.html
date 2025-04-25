@@ -2,14 +2,15 @@
   <div class="login-modal">
     <div class="modal-header">
       <h2 class="fw-bold">تسجيل الدخول</h2>
-
-      
     </div>
-<button class="close-btn" routerLink="/donor"><i class="fa-solid fa-xmark fs-5" ></i></button>
+    <button class="close-btn" routerLink="/donor">
+      <i class="fa-solid fa-xmark fs-5"></i>
+    </button>
     <form (ngSubmit)="Sigin(siginForm)" [formGroup]="siginForm">
       <div class="form-group">
         <div class="input-group">
-          <input autocomplete="off"
+          <input
+            autocomplete="off"
             type="email"
             class="form-control"
             formControlName="email"
@@ -34,38 +35,44 @@
           >
         </div>
       </div>
-
       <div class="form-group">
-        <div class="input-group">
-          <input autocomplete="off"
-            type="password"
+        <div class="input-group position-relative">
+          <input
+            [type]="showPasswordLogin ? 'text' : 'password'"
+            autocomplete="off"
             class="form-control"
             formControlName="password"
             placeholder="كلمه المرور"
           />
-          <div class="input-icon">
-            <i class="fa fa-lock"></i>
+      
+          <div 
+            class="position-absolute" 
+            style="top: 29%;
+    left: 12px; color: rgba(255, 255, 255, 0.6); cursor: pointer; z-index: 5;"
+            (click)="togglePasswordVisibilityLogin()"
+          >
+            <i class="fa fa-eye"></i>
+         
           </div>
         </div>
+      
         <div
           class="error-message"
-          *ngIf="
-            siginForm.get('password')?.errors &&
-            (siginForm.get('password')?.touched ||
-              siginForm.get('password')?.dirty)
-          "
-        >
-          <span *ngIf="siginForm.get('password')?.errors?.['required']"
-            >كلمة المرور مطلوبة</span
-          >
-          <span *ngIf="siginForm.get('password')?.errors?.['minlength']"
-            >يجب أن تحتوي على 8 أحرف على الأقل</span
-          >
+          *ngIf="siginForm.get('password')?.errors &&
+          (siginForm.get('password')?.touched || siginForm.get('password')?.dirty)">
+          
+          <span *ngIf="siginForm.get('password')?.errors?.['required']">
+            كلمة المرور مطلوبة
+          </span>
+          <span *ngIf="siginForm.get('password')?.errors?.['minlength']">
+            يجب أن تحتوي على 8 أحرف على الأقل
+          </span>
           <span *ngIf="siginForm.get('password')?.errors?.['pattern']">
             يجب أن تشمل حروف، أرقام، ورمز مثل (<strong>&commat;</strong>)
           </span>
         </div>
       </div>
+      
 
       <div class="remember-forgot">
         <div class="remember">
@@ -83,7 +90,7 @@
         [disabled]="!siginForm.valid || isloading"
       >
         <span *ngIf="!isloading">تسجيل</span>
-        
+
         <span *ngIf="isloading">جاري التحميل...</span>
         <span
           *ngIf="isloading"
@@ -110,7 +117,7 @@
 
       <div class="register-link" routerLink="/register">
         <span>ليس لديك حساب؟ </span>
-        <a >سجل حساب</a>
+        <a>سجل حساب</a>
       </div>
     </form>
   </div>

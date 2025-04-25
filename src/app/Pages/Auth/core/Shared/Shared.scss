@@ -238,3 +238,13 @@
     }
   }
   
+  .toggle-password-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 12px; /* غيّر لـ left: 12px لو RTL */
+    cursor: pointer;
+    z-index: 2;
+    color: #888;
+  }
+    

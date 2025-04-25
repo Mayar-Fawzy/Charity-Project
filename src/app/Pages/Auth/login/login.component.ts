@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../core/Services/login.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -99,8 +100,10 @@ if (route) {
       }
     );
   }
-
-  togglePasswordVisibility() {
-    this.passwordFieldType = !this.passwordFieldType;
+  showPasswordLogin = false;
+ 
+  togglePasswordVisibilityLogin() {
+    this.showPasswordLogin = !this.showPasswordLogin;
+   
   }
 }

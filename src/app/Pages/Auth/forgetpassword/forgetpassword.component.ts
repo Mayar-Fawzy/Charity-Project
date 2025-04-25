@@ -125,4 +125,14 @@ export class ForgetpasswordComponent {
           this.codeInvalidLength = value?.toString().length !== 6;
         });
       }
+      showPasswordLogin = false;
+ 
+  togglePasswordVisibilityLogin() {
+    this.showPasswordLogin = !this.showPasswordLogin;
+   
+  }
+  showPassword = false;
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 }
