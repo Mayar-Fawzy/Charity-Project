@@ -38,12 +38,12 @@ export class ForgetpasswordComponent {
       Validators.minLength(8),
       Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
-    
-    confirmPassword: new FormControl(null, [Validators.required]),
+   
     email: new FormControl('', [Validators.required, Validators.email]),
+     
+    confirmPassword: new FormControl(null, [Validators.required])
   }, { validators: this.confirmPassword });
 
-  // constructor(private _AuthService: AuthService, private router: Router ,private _ToastService :ToastService) {}
 
 
   handelforgetpassword(): void {
@@ -92,16 +92,13 @@ export class ForgetpasswordComponent {
 
   handelnewPassword() {
     this.isloading = true;
-    let email = this.forgetpasswordform.value.email;
+    let email = this.newPasswordform.value.email;
     let password = this.newPasswordform.value.password;
     let confirmPassword = this.newPasswordform.value.confirmPassword;
     this._ForgetpasswordService.resetPassword(email,password,confirmPassword).subscribe({
       next: (response) => {
         console.log(response);
         this.isloading = false;
-        // if (response.token) {
-        //   localStorage.setItem("userToken", response.token);
-        //   this.message = 'password reset successfully';
           this._ToastrService.success('success', 'تم تغيير كلمة المرور');
           this.step3 = false;
           this._Router.navigate(['/login']);
