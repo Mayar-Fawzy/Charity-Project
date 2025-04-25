@@ -228,25 +228,30 @@
             formControlName="password"
             placeholder="كلمة المرور"
           />
-      
+
           <!-- أيقونة العين -->
-          <div 
-            class="position-absolute" 
-            style="top: 29%;
-    left: 12px; color: rgba(255, 255, 255, 0.6); cursor: pointer; z-index: 5;"
+          <div
+            class="position-absolute"
+            style="
+              top: 29%;
+              left: 12px;
+              color: rgba(255, 255, 255, 0.6);
+              cursor: pointer;
+              z-index: 5;
+            "
             (click)="togglePasswordVisibility()"
           >
             <i class="fa fa-eye"></i>
-         
           </div>
         </div>
-      
+
         <!-- رسائل الخطأ -->
         <div
           class="error-message"
           *ngIf="
             registerForm.get('password')?.errors &&
-            (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)
+            (registerForm.get('password')?.touched ||
+              registerForm.get('password')?.dirty)
           "
         >
           <span *ngIf="registerForm.get('password')?.errors?.['required']">
@@ -260,7 +265,6 @@
           </span>
         </div>
       </div>
-      
 
       <!-- Confirm Password -->
       <div class="form-group">
@@ -273,23 +277,33 @@
             formControlName="confirmPassword"
             placeholder="تأكيد كلمة المرور"
           />
-      
+
           <!-- أيقونة العين -->
-          <div 
-          class="position-absolute" 
-          style="top: 29%;
-  left: 12px; color: rgba(255, 255, 255, 0.6); cursor: pointer; z-index: 5;"
-          (click)="togglePasswordVisibility2()"
-        >
-          <i class="fa fa-eye"></i>
-       
+          <div
+            class="position-absolute"
+            style="
+              top: 29%;
+              left: 12px;
+              color: rgba(255, 255, 255, 0.6);
+              cursor: pointer;
+              z-index: 5;
+            "
+            (click)="togglePasswordVisibility2()"
+          >
+            <i class="fa fa-eye"></i>
+          </div>
         </div>
-        </div>
-      
-        <div class="error-message"
-          *ngIf="registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty"
+
+        <div
+          class="error-message"
+          *ngIf="
+            registerForm.get('confirmPassword')?.touched ||
+            registerForm.get('confirmPassword')?.dirty
+          "
         >
-          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
+          <span
+            *ngIf="registerForm.get('confirmPassword')?.errors?.['required']"
+          >
             كلمة المرور مطلوبة
           </span>
           <span
@@ -303,7 +317,6 @@
           </span>
         </div>
       </div>
-      
 
       <!-- User Type -->
       <div class="role-selection mt-3">
@@ -335,7 +348,7 @@
         ></span>
       </button>
 
-      <div class="divider">
+      <!-- <div class="divider">
         <span>أو تواصل معنا عبر</span>
       </div>
 
@@ -348,7 +361,7 @@
           <span>جوجل</span>
           <i class="fa-brands fa-google"></i>
         </button>
-      </div>
+      </div> -->
 
       <div class="register-link" routerLink="/login">
         <span>لديك حساب؟ </span>

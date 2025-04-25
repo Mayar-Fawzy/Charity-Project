@@ -44,23 +44,30 @@
             formControlName="password"
             placeholder="كلمه المرور"
           />
-      
-          <div 
-            class="position-absolute" 
-            style="top: 29%;
-    left: 12px; color: rgba(255, 255, 255, 0.6); cursor: pointer; z-index: 5;"
+
+          <div
+            class="position-absolute"
+            style="
+              top: 29%;
+              left: 12px;
+              color: rgba(255, 255, 255, 0.6);
+              cursor: pointer;
+              z-index: 5;
+            "
             (click)="togglePasswordVisibilityLogin()"
           >
             <i class="fa fa-eye"></i>
-         
           </div>
         </div>
-      
+
         <div
           class="error-message"
-          *ngIf="siginForm.get('password')?.errors &&
-          (siginForm.get('password')?.touched || siginForm.get('password')?.dirty)">
-          
+          *ngIf="
+            siginForm.get('password')?.errors &&
+            (siginForm.get('password')?.touched ||
+              siginForm.get('password')?.dirty)
+          "
+        >
           <span *ngIf="siginForm.get('password')?.errors?.['required']">
             كلمة المرور مطلوبة
           </span>
@@ -72,7 +79,6 @@
           </span>
         </div>
       </div>
-      
 
       <div class="remember-forgot">
         <div class="remember">
@@ -100,7 +106,7 @@
         ></span>
       </button>
 
-      <div class="divider">
+      <!-- <div class="divider">
         <span>او تواصل معنا عبر</span>
       </div>
 
@@ -113,7 +119,7 @@
           <span>جوجل</span>
           <i class="fa-brands fa-google"></i>
         </button>
-      </div>
+      </div> -->
 
       <div class="register-link" routerLink="/register">
         <span>ليس لديك حساب؟ </span>
