@@ -25,7 +25,7 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule,TagModule,RoutingModule,CarouselModule,ProjectFilterPipe,FormsModule,ReactiveFormsModule],
   templateUrl: './donor.component.html',
-  styleUrl: './donor.component.scss'
+  styleUrl: './donor.component.scss',
 })
 export class DonorComponent {
   
@@ -86,11 +86,20 @@ isSubmitting = false;
   // نموذج التبرع العيني
   
   donationForm = new FormGroup({
-    name: new FormControl(''),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3)
+    ]),
     itemType: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    DonationStatus: new FormControl('',Validators.required),
-    quantity: new FormControl('', Validators.required),
+    description: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3)
+    ]),
+    DonationStatus: new FormControl('', Validators.required),
+    quantity: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[0-9]*$') // يقبل فقط أرقام
+    ]),
     images: new FormControl<File[]>([])
   });
 
