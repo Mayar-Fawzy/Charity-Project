@@ -4,11 +4,11 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators, A
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ForgetpasswordService } from '../core/Services/forgetpassword.service';
-
+import { InputOtpModule } from 'primeng/inputotp';
 @Component({
   selector: 'app-forgetpassword',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule , RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule , RouterLink,InputOtpModule],
   templateUrl: './forgetpassword.component.html',
   styleUrls:['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss', './forgetpassword.component.scss']
 })
@@ -16,6 +16,7 @@ export class ForgetpasswordComponent {
   private readonly _ToastrService=inject(ToastrService);
   private readonly _ForgetpasswordService=inject(ForgetpasswordService);
   private readonly _Router=inject(Router);
+  codeInvalidLength: boolean = true;
   step1: boolean = true;
   step2: boolean = false;
   step3: boolean = false;
@@ -37,12 +38,12 @@ export class ForgetpasswordComponent {
       Validators.minLength(8),
       Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
-    
-    confirmPassword: new FormControl(null, [Validators.required]),
+   
     email: new FormControl('', [Validators.required, Validators.email]),
+     
+    confirmPassword: new FormControl(null, [Validators.required])
   }, { validators: this.confirmPassword });
 
-  // constructor(private _AuthService: AuthService, private router: Router ,private _ToastService :ToastService) {}
 
 
   handelforgetpassword(): void {
@@ -76,8 +77,9 @@ export class ForgetpasswordComponent {
         console.log(response);
         this.isloading = false;
         this._ToastrService.success('success', 'تم التحقق من الكود');
-        this.step2 = false;
-        this.step3 = true;
+         this.step2 = false;
+         this.step3 = true;
+       
       },
       error: (err) => {
         console.log(err);
@@ -90,16 +92,13 @@ export class ForgetpasswordComponent {
 
   handelnewPassword() {
     this.isloading = true;
-    let email = this.forgetpasswordform.value.email;
+    let email = this.newPasswordform.value.email;
     let password = this.newPasswordform.value.password;
     let confirmPassword = this.newPasswordform.value.confirmPassword;
     this._ForgetpasswordService.resetPassword(email,password,confirmPassword).subscribe({
       next: (response) => {
         console.log(response);
         this.isloading = false;
-        // if (response.token) {
-        //   localStorage.setItem("userToken", response.token);
-        //   this.message = 'password reset successfully';
           this._ToastrService.success('success', 'تم تغيير كلمة المرور');
           this.step3 = false;
           this._Router.navigate(['/login']);
@@ -118,4 +117,19 @@ export class ForgetpasswordComponent {
         const confirmPassword = group.get('confirmPassword')?.value;
         return password === confirmPassword ? null : { mismatch: true };
       }
+      ngOnInit(): void {
+        this.ResetCodeform.get('code')?.valueChanges.subscribe(value => {
+          this.codeInvalidLength = value?.toString().length !== 6;
+        });
+      }
+      showPasswordLogin = false;
+ 
+  togglePasswordVisibilityLogin() {
+    this.showPasswordLogin = !this.showPasswordLogin;
+   
+  }
+  showPassword = false;
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 }
