@@ -45,47 +45,69 @@
     margin: 0 30px;
     flex: 1;
     justify-content: center;
+    transition: transform 0.5s ease;
 
     li {
       margin: 0 10px;
 
       a {
+        white-space: nowrap;
         cursor: pointer;
         text-decoration: none;
         color: white;
         font-size: 1.2rem;
-        transition: color 0.3s ease-in-out;
+        transition: color 0.3s ease-in-out, transform 0.3s ease;
+        position: relative;
 
         &.active,
         &:hover {
-          color: orange;
+          width: 90%;
+          margin: auto;
+          color: #f6a026;
+          transform: scale(1.1);
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -5px;
+          left: 0;
+          width: 0%;
+          height: 0.1rem;
+          background-color: #f6a026;
+          transition: width 0.4s ease-in-out;
+        }
+
+        &:hover::after {
+          width: 100%;
         }
       }
+    }
 
-      &.mobile-user-section {
-        display: block;
-        width: 100%;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        margin-top: 15px;
-        padding-top: 15px;
+    &.mobile-user-section {
+      display: block;
+      width: 100%;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 15px;
+      padding-top: 15px;
 
-        a {
-          color: white;
-          font-size: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: all 0.3s;
+      a {
+        color: white;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        position: relative;
+        transition: all 0.3s;
 
-          i {
-            font-size: 1.2rem;
-          }
+        i {
+          font-size: 1.2rem;
+        }
 
-          &:hover {
-            color: orange;
-            background: rgba(255, 165, 0, 0.1);
-          }
+        &:hover {
+          color: #f6a026;
+          background: rgba(255, 165, 0, 0.1);
         }
       }
     }
@@ -100,8 +122,8 @@
 
     .login-btn {
       background: none;
-      border: 2px solid orange;
-      color: orange;
+      border: 2px solid #f6a026;
+      color: #f6a026;
       padding: 8px 15px;
       border-radius: 5px;
       cursor: pointer;
@@ -109,7 +131,7 @@
       transition: all 0.3s;
 
       &:hover {
-        background: orange;
+        background: #f6a026;
         color: white;
       }
     }
@@ -127,6 +149,7 @@
       border: 2px solid #f6a026;
       border-radius: 50%;
       object-fit: cover;
+      cursor: pointer;
       margin: 8px 8px 8px 10px;
       box-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
     }
@@ -167,7 +190,7 @@
       transition: color 0.3s;
 
       &:hover {
-        color: orange;
+        color: #f6a026;
       }
     }
 
@@ -203,7 +226,7 @@
       }
     }
 
-    .login-btn {
+    .login-btn .logout {
       font-size: 1rem;
     }
 
@@ -221,6 +244,7 @@
 
     .user-name {
       font-size: 1.2rem;
+      color: #fff;
     }
   }
 
@@ -253,8 +277,11 @@
       padding: 10px 0;
       margin: 0;
       border-radius: 0 0 15px 15px;
-      z-index: 999;
+      z-index: 555;
       flex-direction: column;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
 
       li {
         margin: 12px 0;
@@ -262,10 +289,13 @@
 
         a {
           font-size: 1rem;
-          padding: 8px 20px;
+          padding: 5px 20px;
           display: block;
+          transition: background 0.3s ease;
 
           &:hover {
+            width: 80%;
+            margin: auto;
             background: rgba(255, 255, 255, 0.1);
           }
         }
@@ -274,6 +304,10 @@
 
     &.open .navbar__menu {
       display: flex;
+      opacity: 1;
+      transform: translateY(0);
+      width: 350px;
+      border-radius: 8px;
     }
 
     .navbar__toggle {
@@ -285,6 +319,71 @@
     &__user {
       display: none;
     }
+
+    // >>>>>>>>>>>>>>. logout 
+    .mobile-user-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+
+      .login-btn {
+        width: 80%;
+        background: none;
+        border: 2px solid #f6a026;
+        color: #f6a026;
+        padding: 8px;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+
+        &:hover {
+          background: #f6a026;
+          color: white;
+        }
+
+        &.logout {
+          background: rgba(255, 0, 0, 0.1);
+          border-color: red;
+          color: red;
+
+          &:hover {
+            background: red;
+            color: white;
+          }
+        }
+      }
+    }
+
+    &__user {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: white;
+      gap: 10px;
+      position: relative;
+      z-index: 10;
+
+      .user-image {
+        height: 40px;
+        width: 40px;
+        border: 2px solid #f6a026;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        margin: 8px 8px 8px 10px;
+        box-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+      }
+
+      &:hover {
+        width: 90%;
+        margin: auto;
+        color: #f6a026;
+        background: rgba(255, 165, 0, 0.1);
+      }
+    }
+
   }
 
   @media (max-width: 480px) {

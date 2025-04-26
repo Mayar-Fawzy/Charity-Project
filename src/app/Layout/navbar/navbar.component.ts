@@ -28,8 +28,9 @@ export class NavbarComponent implements OnInit {
   isLogin: boolean = false;
   userData: any;
   userName!: string;
-  userImage: string = '/Images/Logo.svg'; // صورة افتراضية
+  userImage: string = '/Images/Logo.svg';
   isMenuOpen: boolean = false;
+  isSmallScreen: boolean = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
@@ -40,18 +41,20 @@ export class NavbarComponent implements OnInit {
 
     this.userData = this._LoginService.saveUserAuth();
     this.userName =
-      this.userData?.[
-      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'
-      ] ?? 'مستخدم';
+      this.userData?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname']
+      ?? 'مستخدم';
 
+    this.checkScreenSize();
   }
 
   navigateToLogin() {
     this._Router.navigate(['/login']);
+    this.isMenuOpen = false;
   }
 
   navigateToSignup() {
     this._Router.navigate(['/register']);
+    this.isMenuOpen = false;
   }
 
   logout() {
@@ -62,6 +65,7 @@ export class NavbarComponent implements OnInit {
     this._LoginService.signOut();
     this.isLogin = false;
     this._Router.navigate(['/login']);
+    this.isMenuOpen = false;
   }
 
   @HostListener('window:scroll', [])
@@ -73,7 +77,29 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+    console.log('Menu Open:', this.isMenuOpen);
   }
+
+  checkScreenSize() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isSmallScreen = window.innerWidth <= 768;
+      if (!this.isSmallScreen) {
+        this.isMenuOpen = false;
+      }
+    }
+  }
+
+  closeMenu() {
+    if (this.isSmallScreen) {
+      this.isMenuOpen = false;
+    }
+  }
+  
 }
