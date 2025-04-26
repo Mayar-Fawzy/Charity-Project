@@ -1,11 +1,25 @@
 <div class="profile-settings" dir="rtl">
   <h2>إعدادات الملف الشخصي</h2>
 
-  <form [formGroup]="profileForm" (ngSubmit)="onSave()">
+  <form>
     <div class="form-row">
       <div class="avatar-wrapper">
-        <img src="https://i.pravatar.cc/100" alt="صورة المستخدم" />
-        <button type="button" class="change-photo">تغيير الصورة</button>
+        <ng-container *ngIf="userImageUrl; else letterAvatar">
+          <img [src]="userImageUrl" alt="صورة المستخدم" />
+        </ng-container>
+
+        <ng-template #letterAvatar>
+          <div
+            class="letter-avatar"
+            [ngStyle]="{ 'background-color': getRandomColor(userFullName) }"
+          >
+            {{ getFirstLetter(userFullName) }}
+          </div>
+        </ng-template>
+
+        <button type="button" class="change-photo">
+          <i class="bi bi-camera"></i>
+        </button>
       </div>
     </div>
 
@@ -43,7 +57,11 @@
 
       <label>
         رقم الهاتف
-        <input type="text" formControlName="phone" placeholder="01234567890+" />
+        <input
+          type="text"
+          formControlName="phone"
+          placeholder="+201025363285"
+        />
       </label>
 
       <label>
@@ -51,7 +69,7 @@
         <input
           type="text"
           formControlName="address"
-          placeholder="المدينة، الحي، الشارع"
+          placeholder="المنوفية شبين الكوم"
         />
       </label>
     </div>
