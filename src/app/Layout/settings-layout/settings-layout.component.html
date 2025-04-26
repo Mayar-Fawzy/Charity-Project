@@ -1,4 +1,4 @@
-<div class="settings-layout" dir="rtl">
+<!-- <div class="settings-layout" dir="rtl">
   <aside class="sidebar">
     <app-sidebar></app-sidebar>
   </aside>
@@ -6,4 +6,31 @@
   <main class="settings-content">
     <router-outlet></router-outlet>
   </main>
+</div> -->
+<div class="banner">
+  <!-- قائمة الأزرار المخصصة بدلاً من p-tabView -->
+  <div class="custom-tabs">
+    <a
+      *ngFor="let tab of tabs | slice:0:5; let i = index"
+      [routerLink]="tab.route"
+      routerLinkActive="active"
+      class="tab-button"
+    >
+      <i *ngIf="tab.icon" [class]="tab.icon" style="margin-left: 8px;"></i>
+      {{ tab.title }}
+    </a>
+  </div>
+
+  <!-- زر الخروج منفصل
+  <div class="logout">
+    <a (click)="logout()" class="logout-button">
+      <i class="bi bi-box-arrow-right" style="margin-left: 8px;"></i> الخروج
+    </a>
+  </div> -->
+
+  <!-- تحميل المكونات الفرعية -->
+   <div class="container">
+
+    <router-outlet></router-outlet>
+   </div>
 </div>

@@ -1,21 +1,94 @@
-.settings-layout {
+/* إزالة الأنماط غير الضرورية لـ p-tabview لأننا لا نستخدمه */
+* {
+    color: black !important;
+  }
+  
+  .settings-layout {
     display: flex;
     height: 100vh;
-
+  
     .sidebar {
-        width: 250px;
-        background-color: #f8f9fa;
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        overflow-y: auto;
+      width: 250px;
+      background-color: #f8f9fa;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      overflow-y: auto;
     }
-
+  
     .settings-content {
-        margin-right: 250px;
-        flex: 1;
-        padding: 1.5rem;
-        overflow-y: auto;
+      margin-right: 250px;
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
     }
-}
+  }
+  
+  .banner {
+    padding-top: 150px;
+    text-align: center; /* محاذاة التبويبات في المنتصف */
+  }
+  
+  .custom-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* زيادة المسافة بين الأزرار */
+    margin-bottom: 30px; /* مسافة أكبر أسفل التبويبات */
+  }
+  
+  .tab-button {
+    display: flex;
+    align-items: center;
+    padding: 12px 30px; /* زيادة الحشوة لجعل الأزرار أكبر */
+    border: 1px solid #dee2e6; /* حدود رمادية */
+    border-radius: 8px; /* حواف مستديرة أكثر */
+    background-color: #fff; /* خلفية بيضاء */
+    color: #000; /* لون النص أسود */
+    text-decoration: none;
+    font-size: 18px; /* زيادة حجم الخط */
+    font-weight: 500; /* جعل النص أكثر وضوحًا */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف */
+    transition: all 0.3s ease;
+  }
+  
+  .tab-button.active {
+    background-color: #b88e2f; /* لون الخلفية النشط (مطابق للزر "تحديث") */
+    color: #fff !important; /* لون النص أبيض للزر النشط */
+    border-color: #b88e2f; /* لون الحدود مطابق للخلفية */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* ظل أقوى للزر النشط */
+  }
+  
+  .tab-button:hover {
+    background-color: #f1f1f1; /* لون الخلفية عند التمرير (hover) */
+    transform: translateY(-2px); /* تأثير رفع خفيف عند التمرير */
+  }
+  
+  .tab-button.active:hover {
+    background-color: #a07d27; /* لون أغمق قليلاً عند التمرير على الزر النشط */
+  }
+  
+  .logout {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .logout-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid #dc3545; /* حدود حمراء */
+    border-radius: 8px;
+    background-color: #fff;
+    color: #dc3545 !important; /* لون النص أحمر */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .logout-button:hover {
+    background-color: #dc3545;
+    color: #fff !important;
+    transform: translateY(-2px);
+  }
