@@ -33,8 +33,7 @@ export class DonorComponent {
    private readonly _LoginService=inject(LoginService)
   private readonly toastr = inject(ToastrService)
    private readonly _HomedonateServiesService=inject(HomedonateServiesService)
-   private readonly _DonateNowService=inject(DonateNowService)
-  private readonly renderer = inject(Renderer2);
+   private readonly _DonateNowService=inject(DonateNowService);
    toastMessage = '';
 showToast = false;
 isSubmitting = false;
