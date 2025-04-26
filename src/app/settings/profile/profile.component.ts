@@ -12,21 +12,18 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class ProfileComponent {
 
-  profileForm = new FormGroup({
-    fullName: new FormControl('', Validators.required),  // حقل الاسم كامل
-    email: new FormControl('', [Validators.required, Validators.email]), // حقل البريد الإلكتروني
-    gender: new FormControl('Male', Validators.required),  // حقل النوع
-    dob: new FormControl('', Validators.required),  // حقل تاريخ الميلاد
-    phone: new FormControl('', Validators.required),  // حقل الهاتف
-    address: new FormControl('', Validators.required),  // حقل العنوان
-  });
+  userFullName: string = 'أحمد سعد';
+  userImageUrl: string | null = null;
 
-  // تابع لحفظ البيانات
-  onSave() {
-    if (this.profileForm.valid) {
-      console.log('Form Data: ', this.profileForm.value);  // عرض البيانات في الكونسول
-    } else {
-      console.log('البيانات غير صالحة');
-    }
+  getFirstLetter(name: string): string {
+    return name ? name.trim().charAt(0).toUpperCase() : '';
+  }
+
+  getRandomColor(name: string): string {
+    const colors = ['#FF9B44', '#6C5CE7', '#00B894', '#0984E3', '#D63031', '#FDCB6E'];
+    const index = name
+      .split('')
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    return colors[index];
   }
 }
