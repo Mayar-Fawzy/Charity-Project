@@ -87,9 +87,10 @@ isSubmitting = false;
   // نموذج التبرع العيني
   
   donationForm = new FormGroup({
-    name: new FormControl('', Validators.required),
+    name: new FormControl(''),
     itemType: new FormControl('', Validators.required),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.required),
+    DonationStatus: new FormControl('',Validators.required),
     quantity: new FormControl('', Validators.required),
     images: new FormControl<File[]>([])
   });
@@ -124,6 +125,11 @@ isSubmitting = false;
     }, 0);
   }
 
+  donationStatuses = [
+    { value: 1, label: 'جديد' },
+    { value: 2, label: 'مستعمل - حالة ممتازة' },
+    { value: 3, label: 'مستعمل - حالة جيدة' }
+  ];
   
   submitDonation() {
    
@@ -135,7 +141,7 @@ isSubmitting = false;
     // البيانات الأساسية
     formData.append('name', formValue.name ?? '');
     formData.append('itemType', String(formValue.itemType));
-
+    formData.append('donationStatus', formValue.DonationStatus ?? '');
     formData.append('description', formValue.description ?? '');
     formData.append('quantity', formValue.quantity ?? '');
   

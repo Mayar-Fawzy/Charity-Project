@@ -104,10 +104,7 @@
               </div>
 
               <!-- زر التبرع -->
-              <button
-                (click)="goToPayment(project.id)"
-                class="btn-donate"
-              >
+              <button (click)="goToPayment(project.id)" class="btn-donate">
                 <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
               </button>
             </div>
@@ -166,100 +163,120 @@
   <div class="donation-wrapper">
     <div class="container">
       <h2 class="fancy-title section-title">تبرع عيني</h2>
-      <div #formWrapper class="form-wrapper" style="position: relative;">
-      <form class="donation-form form-wrapper" [formGroup]="donationForm" (ngSubmit)="submitDonation()" #formWrapper>
-        <!-- نوع التبرع -->
-        <div class="form-group">
-          <label for="category">اختر نوع التبرع</label>
-          <select
-            id="category"
-            class="form-control"
-            formControlName="itemType"
-            (change)="onItemTypeChange($event)"
-          >
-            <option [value]="1">ملابس</option>
-            <option [value]="2">طعام</option>
-            <option [value]="3">مستلزمات طبية</option>
-            <option [value]="4">أخرى</option>
-          </select>
-        </div>
-
-        <!-- الاسم -->
-        <div class="form-group">
-          <label for="name">الاسم</label>
-          <input
-            type="text"
-            id="name"
-            class="form-control"
-            placeholder="الاسم"
-            formControlName="name"
-          />
-        </div>
-
-        <!-- الكمية -->
-        <div class="form-group">
-          <label for="quantity">الكمية</label>
-          <input
-            type="text"
-            id="quantity"
-            class="form-control"
-            placeholder="مثلاً: ٣ صناديق"
-            formControlName="quantity"
-          />
-        </div>
-
-        <!-- الوصف -->
-        <div class="form-group">
-          <label for="description">الوصف</label>
-          <textarea
-            id="description"
-            class="form-control"
-            rows="3"
-            formControlName="description"
-            placeholder="أدخل تفاصيل إضافية عن تبرعك"
-          ></textarea>
-        </div>
-
-        <!-- رفع الصور -->
-        <div class="form-group">
-          <label for="photos" class="form-label">الصور</label>
-          <div class="upload-box" (click)="triggerFileUpload()">
-            <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
-            <div class="upload-text">
-              <strong class="upload-main-text">ارفع الملفات</strong>
-              <span class="upload-sub-text">أو اسحبها وأفلتها هنا</span>
-            </div>
-            <small class="upload-note">PNG أو JPG حتى 10 ميجا بايت</small>
+      <div #formWrapper class="form-wrapper" style="position: relative">
+        <form
+          class="donation-form form-wrapper"
+          [formGroup]="donationForm"
+          (ngSubmit)="submitDonation()"
+          #formWrapper
+        >
+          <!-- نوع التبرع -->
+          <div class="form-group">
+            <label for="category">اختر نوع التبرع</label>
+            <select
+              id="category"
+              class="form-control"
+              formControlName="itemType"
+              (change)="onItemTypeChange($event)"
+            >
+              <option [value]="1">ملابس</option>
+              <option [value]="2">طعام</option>
+              <option [value]="3">مستلزمات طبية</option>
+              <option [value]="4">أخرى</option>
+            </select>
           </div>
-          <input
-            type="file"
-            id="photos"
-            accept="image/png, image/jpeg"
-            multiple
-            (change)="onFileSelected($event)"
-            hidden
-          />
-        </div>
 
-        <!-- زر الإرسال -->
-        <button 
-        type="submit" 
-        class="btn btn-primary submit-btn" 
-        [disabled]="isSubmitting">
-        <span *ngIf="!isSubmitting">إرسال التبرع</span>
-        <span *ngIf="isSubmitting">
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          جاري التحميل...
-        </span>
-      </button>
-      
+          <!-- الاسم -->
+          <div class="form-group">
+            <label for="name">الاسم</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="الاسم"
+              formControlName="name"
+            />
+          </div>
 
-        <p class="note">
-          سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني والرسائل القصيرة.
-        </p>
-        
-      </form>
-    </div>
+          <!-- الكمية -->
+          <div class="form-group">
+            <label for="quantity">الكمية</label>
+            <input
+              type="text"
+              id="quantity"
+              class="form-control"
+              placeholder="مثلاً: ٣ صناديق"
+              formControlName="quantity"
+            />
+          </div>
+          <!-- حالة العنصر -->
+          <div class="form-group">
+            <label>حالة العنصر</label>
+            <div class="radio-options">
+              <label *ngFor="let option of donationStatuses">
+                <input type="radio" [value]="option.value" formControlName="DonationStatus" name="DonationStatus" />
+                <span>{{ option.label }}</span>
+              </label>
+            </div>
+          </div>
+          
+          
+          <!-- الوصف -->
+          <div class="form-group">
+            <label for="description">الوصف</label>
+            <textarea
+              id="description"
+              class="form-control"
+              rows="3"
+              formControlName="description"
+              placeholder="أدخل تفاصيل إضافية عن تبرعك"
+            ></textarea>
+          </div>
+
+          <!-- رفع الصور -->
+          <div class="form-group">
+            <label for="photos" class="form-label">الصور</label>
+            <div class="upload-box" (click)="triggerFileUpload()">
+              <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+              <div class="upload-text">
+                <strong class="upload-main-text">ارفع الملفات</strong>
+                <span class="upload-sub-text">أو اسحبها وأفلتها هنا</span>
+              </div>
+              <small class="upload-note">PNG أو JPG حتى 10 ميجا بايت</small>
+            </div>
+            <input
+              type="file"
+              id="photos"
+              accept="image/png, image/jpeg"
+              multiple
+              (change)="onFileSelected($event)"
+              hidden
+            />
+          </div>
+
+          <!-- زر الإرسال -->
+          <button
+            type="submit"
+            class="btn btn-primary submit-btn"
+            [disabled]="isSubmitting"
+          >
+            <span *ngIf="!isSubmitting">إرسال التبرع</span>
+            <span *ngIf="isSubmitting">
+              <span
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              جاري التحميل...
+            </span>
+          </button>
+
+          <p class="note">
+            سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني
+            والرسائل القصيرة.
+          </p>
+        </form>
+      </div>
     </div>
   </div>
 </section>
