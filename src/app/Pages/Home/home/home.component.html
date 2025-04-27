@@ -1,18 +1,16 @@
-<!-- >>>>>> المقدمة -->
+<!-- >>>>>>>>>>>>>> intro -->
 <section class="cta-section">
   <div class="image-container">
     <img src="/Images/Home.jpg" alt="A child carrying his sister" />
     <div class="overlay"></div>
   </div>
   <div class="container">
-    <!-- <h1>يــــــــــد العطاء  <span>|</span></h1> -->
     <h2 class="cta-title">ساعد في تغيير حياة الآخرين</h2>
     <p class="cta-text">
       انضم إلينا في صنع الفرق. كل مساهمة تسهم في خلق تغيير إيجابي في مجتمعنا.
       معًا يمكننا بناء مستقبل أفضل للمحتاجين.
     </p>
     <!-- الأزرار -->
-
     <div class="action-buttons">
       <button class="btn donate-btn">
         <i class="bi bi-heart-fill"></i>
@@ -32,7 +30,7 @@
   </div>
 </section>
 
-<!-- >>>>>>> قسم خدماتنا  -->
+<!-- >>>>>>> sreivice -->
 <section class="services-section">
   <div class="container">
     <h2 class="h2-title">كيف نساعد<span></span></h2>
@@ -215,7 +213,6 @@
   >
     <!-- Template for each campaign card -->
     <ng-template let-project pTemplate="item">
-      
       <div
         class="campaign-card border border-surface rounded-border m-1 p-1"
         [ngClass]="{ 'active-campaign': project.isActive }"
@@ -231,7 +228,7 @@
         <!-- Card body -->
         <div class="card-body">
           <h3>{{ project.name }}</h3>
-          <p style=" height: 43.2px;">{{ project.description | slice : 8 }}</p>
+          <p style="height: 43.2px">{{ project.description | slice : 8 }}</p>
           <!-- Progress container -->
           <div class="progress-container">
             <div class="progress-label">
@@ -362,23 +359,68 @@
             حقيقي
           </li>
         </ul>
-
         <button class="btn-apply">
           <i class="fa-solid fa-hands-helping"></i><span> قدّم الآن </span>
         </button>
       </div>
 
-      <div class="volunteer-images">
-        <img src="/Images/Gallery-1.png" alt="متطوعين" class="img-main" />
-        <img src="/Images/Gallery-2.png" alt="فريق تطوعي" class="img-overlay" />
+      <div class="volunteer-items">
+        <!-- col-1 -->
+        <div class="col-1">
+          <div class="img-container">
+            <img src="/Images/vol-gall-1.avif" alt="متطوع 1" />
+            <div class="overlay">
+              <h2>التعاون</h2>
+              <p>مساهمة في نشاط خيري</p>
+            </div>
+          </div>
+
+          <div class="img-container">
+            <img src="/Images/vol-gall-2.avif" alt="متطوع 2" />
+            <div class="overlay">
+              <h2>الاصرار</h2>
+              <p>مبادرة بيئية</p>
+            </div>
+          </div>
+
+          <div class="img-container">
+            <img src="/Images/vol-gall-4.avif" alt="متطوع 4" />
+            <div class="overlay">
+              <h2>التشرد</h2>
+              <p> رعاية الأطفال</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- col-2 -->
+        <div class="col-2">
+          <div class="img-container">
+            <img src="/Images/vol-gall-3.avif" alt="متطوع 3" />
+            <div class="overlay">
+              <h2>إطعام</h2>
+              <p>توزيع مساعدات</p>
+            </div>
+          </div>
+        </div>
+        <!-- col-3 -->
+        <div class="col-3">
+          <div class="img-container">
+            <img src="/Images/vol-gall-5.avif" alt="متطوع 5" />
+            <div class="overlay">
+              <h2>الرحمة</h2>
+              <p>مساعده الاطفال</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- >>>>>>>>>>>> Make a Donation -->
-<section  class="donation-section">
-  <h1>تبرع الآن</h1>
+<section class="donation-section">
+  <div class="donat">
+    <h1>تبرع الآن</h1>
 
   <!-- اختيار مجال التبرع -->
   <div class="purpose-box">
@@ -408,7 +450,7 @@
     </div>
 
     <div class="custom-amount">
-      <input type="number" placeholder="مبلغ آخر (بالجنيه المصري)" />
+      <input type="number" placeholder="مبلغ آخر" min="0" step="10" />
     </div>
 
     <label class="monthly-donation">
@@ -423,6 +465,7 @@
     <span>إتمام عملية الدفع</span>
     <i class="fa-solid fa-arrow-left"></i>
   </button>
+  </div>
 </section>
 
 <!-- >>>>>>>>>>>>>>>>> Find Us -->
