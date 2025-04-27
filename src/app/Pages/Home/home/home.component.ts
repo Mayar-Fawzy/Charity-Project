@@ -37,7 +37,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,TagModule,RoutingModule,CarouselModule],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -48,30 +48,30 @@ export class HomeComponent implements AfterViewInit {
   @ViewChild('causesScroll') causesSlider!: ElementRef;
   currentIndex = 0;
   cardWidth = 300;
-  projects:Data[]=[]
-  private readonly _HomedonateServiesService=inject(HomedonateServiesService)
-  private readonly _Router=inject(Router)
-  GetDonation(){
-    this._HomedonateServiesService.GetDonation().subscribe((res)=>{
-      this.projects=res.data;
+  projects: Data[] = []
+  private readonly _HomedonateServiesService = inject(HomedonateServiesService)
+  private readonly _Router = inject(Router)
+  GetDonation() {
+    this._HomedonateServiesService.GetDonation().subscribe((res) => {
+      this.projects = res.data;
       console.log(this.projects);
     }
     )
-  
+
   }
-  
+
   getProgressPercentage(project: any): number {
     // نسبة وهمية مؤقتة لعرض شكل الـ UI
-    const fakeCurrentAmount = project.targetAmount * 0.4; 
+    const fakeCurrentAmount = project.targetAmount * 0.4;
     return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
   }
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   ngOnInit() {
     //Id
-   
-  
+
+
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -142,27 +142,27 @@ export class HomeComponent implements AfterViewInit {
   }
 
   // scroll
-scrollLeft() {
-  if (!this.causesSlider || !this.causesSlider.nativeElement) return;
+  scrollLeft() {
+    if (!this.causesSlider || !this.causesSlider.nativeElement) return;
 
-  this.causesSlider.nativeElement.scrollBy({
-    left: -this.cardWidth,
-    behavior: 'smooth',
-  });
+    this.causesSlider.nativeElement.scrollBy({
+      left: -this.cardWidth,
+      behavior: 'smooth',
+    });
 
-  setTimeout(() => this.updateScrollButtons(), 300);
-}
+    setTimeout(() => this.updateScrollButtons(), 300);
+  }
 
-scrollRight() {
-  if (!this.causesSlider || !this.causesSlider.nativeElement) return;
+  scrollRight() {
+    if (!this.causesSlider || !this.causesSlider.nativeElement) return;
 
-  this.causesSlider.nativeElement.scrollBy({
-    left: this.cardWidth,
-    behavior: 'smooth',
-  });
+    this.causesSlider.nativeElement.scrollBy({
+      left: this.cardWidth,
+      behavior: 'smooth',
+    });
 
-  setTimeout(() => this.updateScrollButtons(), 300);
-}
+    setTimeout(() => this.updateScrollButtons(), 300);
+  }
 
 
   updateScrollButtons() {
@@ -234,4 +234,29 @@ scrollRight() {
   goToPayment(projectId: string) {
     this._Router.navigate(['/ewallet-payment', projectId]);
   }
+
+  // >>>>>>>>>>>>>>>>> Become a Volunteer 
+  initVolunteerImages(): void {
+    const largeImage = document.querySelector<HTMLImageElement>('.img-large');
+    const smallImages = document.querySelectorAll<HTMLImageElement>('.small-images img');
+  
+    if (largeImage) {
+      smallImages.forEach((img) => {
+        img.addEventListener('mouseenter', () => {
+          largeImage.style.opacity = '0'; // تخفي الصورة الكبيرة الأول
+  
+          setTimeout(() => {
+            const tempSrc = largeImage.src;
+            largeImage.src = img.src;
+            img.src = tempSrc;
+            largeImage.style.opacity = '1'; // ترجع الصورة تظهر بهدوء
+          }, 300); // نفس مدة الترانزيشن بالظبط
+        });
+      });
+    }
+  }
+  
+
+
+
 }
