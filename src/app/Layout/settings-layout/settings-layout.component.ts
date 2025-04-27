@@ -6,17 +6,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // 
 import { TabViewModule } from 'primeng/tabview';
 import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
+import { NavbarComponent } from "../navbar/navbar.component";
 @Component({
   selector: 'app-settings-layout',
   standalone: true,
-  imports: [ 
+  imports: [
     RouterOutlet,
     TabViewModule,
     RoutingModule,
-    CommonModule,     
-    // RouterModule,    
-    // SidebarComponent,
-    ],
+    CommonModule,
+    NavbarComponent
+],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss']
 })
