@@ -88,7 +88,7 @@ export class HomeComponent implements AfterViewInit {
         numVisible: 1,
         numScroll: 1
       }
-    
+     
     ];
     this.GetDonation()
     this.initializeCauses();
