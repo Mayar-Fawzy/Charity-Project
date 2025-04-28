@@ -275,7 +275,6 @@
             class="btn btn-primary submit-btn"
             [disabled]="isSubmitting || donationForm.invalid"
           >
-            <span *ngIf="!isSubmitting">إرسال التبرع</span>
             <span *ngIf="isSubmitting">
               <span
                 class="spinner-border spinner-border-sm me-2"
@@ -284,6 +283,8 @@
               ></span>
               جاري التحميل...
             </span>
+            
+            <span *ngIf="!isSubmitting">إرسال التبرع</span>
           </button>
 
           <p class="note">
