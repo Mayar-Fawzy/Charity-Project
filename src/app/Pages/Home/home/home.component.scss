@@ -83,6 +83,8 @@ $light-bg: #f9f9f9;
   position: absolute;
 }
 
+// ============== Global Stylr ============
+
 // ============= intro =================
 .cta-section {
   position: relative;
@@ -395,7 +397,6 @@ $light-bg: #f9f9f9;
 /*>>>>>>>>>>>> Our Mission & Vision >>>>>>>>>>*/
 .mission-section {
   padding: 6rem 0;
-  direction: rtl;
   background: $secoung-bg;
 
   .mission-grid {
@@ -405,13 +406,19 @@ $light-bg: #f9f9f9;
     max-width: 1200px;
     margin: 0 auto;
     align-items: center;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
   }
 
-  /* جزء الصورة */
+  /* image*/
   .mission-image {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    order: 1;
 
     img {
       width: 100%;
@@ -425,9 +432,10 @@ $light-bg: #f9f9f9;
     }
   }
 
-  /* جزء النصوص */
+  /* text*/
   .mission-content {
     padding: 0 2rem;
+    order: 0;
   }
 
   .section-title {
@@ -530,38 +538,37 @@ $light-bg: #f9f9f9;
   @media (max-width: 768px) {
     .mission-section {
       padding: 3rem 0;
+    }
 
-      .mission-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+    .mission-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .mission-image img {
+      height: 300px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+
+      &::after {
+        width: 40px;
+        bottom: -0.8rem;
       }
+    }
 
-      .mission-image img {
-        height: 300px;
-      }
-
-      .section-title {
-        font-size: 2rem;
-
-        &::after {
-          width: 40px;
-          bottom: -0.8rem;
-        }
-      }
-
-      .goal-item {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-      }
+    .goal-item {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
     }
   }
 }
 
-
 // >>>>>>>>>>>>>>>>>> dashborad >>>>>>>>>>>>>>
 .stats-section {
   position: relative;
-  height: 400px;
+  height: auto;
   overflow: hidden;
 
   &::before {
@@ -625,6 +632,10 @@ $light-bg: #f9f9f9;
   }
 
   @media (min-width: 768px) and (max-width: 991px) {
+    .stats-section {
+      height: auto;
+    }
+
     .overlay {
       flex-direction: column;
       justify-content: space-between;
@@ -646,7 +657,7 @@ $light-bg: #f9f9f9;
 
   @media (min-width: 992px) {
     .stats-section {
-      height: 400px;
+      height: auto;
     }
 
     .overlay {
@@ -664,6 +675,12 @@ $light-bg: #f9f9f9;
       p {
         font-size: 1.2rem;
       }
+    }
+  }
+
+  @media (max-width: 992px) {
+    .stats-section {
+      height: 400px;
     }
   }
 }
@@ -1351,39 +1368,40 @@ $light-bg: #f9f9f9;
       flex-direction: column;
       align-items: center;
     }
-  
+
     .volunteer-text,
     .volunteer-items {
       width: 100%;
     }
-  
+
     .volunteer-items {
       margin-top: 30px;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
     }
-  
+
     .volunteer-items .col-1,
     .volunteer-items .col-2,
     .volunteer-items .col-3 {
       width: 45%;
       margin-bottom: 20px;
     }
-  
+
     .volunteer-items .img-container {
       width: 100%;
     }
   }
-  
+
   @media (max-width: 480px) {
+
     .volunteer-items .col-1,
     .volunteer-items .col-2,
     .volunteer-items .col-3 {
       width: 100%;
     }
   }
-  
+
 }
 
 
@@ -1391,7 +1409,7 @@ $light-bg: #f9f9f9;
 .donation-section {
   background-color: #f9f9f9;
   padding: 2rem;
-  
+
   .donat {
     background: white;
     padding: 2rem;
