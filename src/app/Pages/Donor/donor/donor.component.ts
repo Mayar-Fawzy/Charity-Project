@@ -104,7 +104,55 @@ isSubmitting = false;
   });
 
  
-  onItemTypeChange(event: Event) {
+  submitDonation() {
+    if (this.donationForm.invalid) return;
+    this.isSubmitting = true;
+    
+    const formValue = this.donationForm.value;
+    const formData = new FormData();
+    
+    formData.append('name', formValue.name ?? '');
+    formData.append('itemType', String(formValue.itemType));
+    formData.append('donationStatus', formValue.DonationStatus ?? '');
+    formData.append('description', formValue.description ?? '');
+    formData.append('quantity', formValue.quantity ?? '');
+  
+    formValue.images?.forEach((file: File) => {
+      formData.append('images', file);
+    });
+  
+    this.userData = this._LoginService.saveUserAuth();
+    if (!this.userData) {
+      this.isSubmitting = false;
+      this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
+      return;
+    }
+  
+    const donorIdValue = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
+    if (!donorIdValue) {
+      this.isSubmitting = false;
+      this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
+      return;
+    }
+  
+    formData.append('donorId', donorIdValue);
+  
+    this._DonateNowService.CreateInKindDonation(formData).subscribe({
+      next: (res) => {
+        this.isSubmitting = false;
+        console.log('تم التبرع بنجاح:', res);
+        this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
+        this.donationForm.reset();
+      },
+      error: error => {
+        this.isSubmitting = false;
+        console.error('خطأ في إرسال التبرع:', error);
+        this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
+      }
+    });
+  }
+   
+   onItemTypeChange(event: Event) {
     const selectedValue = (event.target as HTMLSelectElement).value;
     this.donationForm.patchValue({ itemType: selectedValue });
   }
@@ -132,60 +180,11 @@ isSubmitting = false;
       }
     }, 0);
   }
-
-  donationStatuses = [
+   donationStatuses = [
     { value: 1, label: 'جديد' },
     { value: 2, label: 'مستعمل - حالة ممتازة' },
     { value: 3, label: 'مستعمل - حالة جيدة' }
   ];
-  
-  submitDonation() {
-   
-    if (this.donationForm.invalid) return;
-    this.isSubmitting = true;
-    const formValue = this.donationForm.value;
-    const formData = new FormData();
-  
-    // البيانات الأساسية
-    formData.append('name', formValue.name ?? '');
-    formData.append('itemType', String(formValue.itemType));
-    formData.append('donationStatus', formValue.DonationStatus ?? '');
-    formData.append('description', formValue.description ?? '');
-    formData.append('quantity', formValue.quantity ?? '');
-  
-    // الصور (إن وجدت)
-    formValue.images?.forEach((file: File) => {
-      formData.append('images', file);
-    });
-   this.userData= this._LoginService.saveUserAuth()
-    // // معرفات ثابتة (يمكن استبدالها لاحقًا)
-     formData.append('donorId', this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] ?? '');
-     console.log(this.userData.id);
-  // formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
-    // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
- 
-    this._DonateNowService.CreateInKindDonation(formData).subscribe({
-      next: (res) => {
-        this.isSubmitting = false;
-        console.log('تم التبرع بنجاح:', res);
-    
-        this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
-    
-        this.donationForm.reset();
-      },
-      error: error => {
-        this.isSubmitting = false;
-        console.error('خطأ في إرسال التبرع:', error);
-        if (error.error) {
-          console.error('تفاصيل الخطأ من السيرفر:', error.error);
-        }
-    
-       
-        this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
-      }
-    });
-    
-  }
   
 DonateNow(){
   
