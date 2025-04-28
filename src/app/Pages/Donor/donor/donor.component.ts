@@ -125,9 +125,14 @@ isSubmitting = false;
     if (!this.userData) {
       this.isSubmitting = false;
       this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
-      return;
+      
+      // setTimeout(() => {
+      //   this._Router.navigate(['/login']);
+      // }, 2000); // بعد 2 ثانية (2000 ملي ثانية)
+    
+      // return;
     }
-  
+    
     const donorIdValue = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
     if (!donorIdValue) {
       this.isSubmitting = false;
