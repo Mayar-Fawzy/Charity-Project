@@ -88,6 +88,7 @@ export class HomeComponent implements AfterViewInit {
         numVisible: 1,
         numScroll: 1
       }
+     
     ];
     this.GetDonation()
     this.initializeCauses();
@@ -95,13 +96,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.cardWidth =
-        this.causesSlider.nativeElement.querySelector('.cause-card')
-          ?.offsetWidth || 300;
-      this.updateScrollButtons();
-      this.addTouchScroll();
-    }
+   
   }
 
   private initializeCauses() {

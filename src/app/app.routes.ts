@@ -68,14 +68,9 @@ export const routes: Routes = [
           { path: '', redirectTo: 'profile', pathMatch: 'full' }
         ]
       }
+     
     ]
   },
-
-  // ✅ صفحة Not Found
-  { path: '**', title: 'Not Found', component: NotfoundComponent },
-
-
-  // >>>>>>>>>>>>>>>>>>> Profile
   {
     path: 'settings',
     component: SettingsLayoutComponent,
@@ -86,6 +81,12 @@ export const routes: Routes = [
       { path: 'notifications', component: NotificationsComponent },
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
-  }
+  },
+  // ✅ صفحة Not Found  
+  { path: '**', title: 'Not Found', component: NotfoundComponent },
+
+
+  // >>>>>>>>>>>>>>>>>>> Profile
+  
 
 ];

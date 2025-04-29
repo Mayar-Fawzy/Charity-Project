@@ -59,38 +59,15 @@ export class LoginComponent {
           localStorage.setItem('userToken', res.data.jwtModel.jwt);
           localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
 
-         // #region role
-const role = this._LoginService.saveUserAuth()?.[
-  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-];
+       
+          
 
-if (!role) {
-  console.error('Error: Role is undefined');
-  return;
-}
-
-localStorage.setItem('role', role);
-
-const roleMap: { [key: string]: string } = {
-  'SuperAdmin': '/super-admin',
-  'Admin': '/admin',
-  'Beneficiary': '/beneficiary',
-  'Volunteer': '/volunteer',
-  'Donor': '/donor'
-};
-
-const route = roleMap[role];
-if (route) {
-  console.log(`Navigating to: ${route}`);
-  this._Router.navigate([route]);
-} else {
-  console.error(`Error: Invalid role (${role})`);
-}
+           
 // #endregion
 
           this._LoginService.saveUserAuth();
         
-       
+            this._Router.navigate(['/home']);
         }
       },
       (error) => {
