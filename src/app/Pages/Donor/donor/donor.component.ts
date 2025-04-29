@@ -85,8 +85,9 @@ isSubmitting = false;
     const token = localStorage.getItem('userToken');
   
     if (!token) {
-     this.toastMessage = 'يجب عليك التسجيل أولًا قبل التبرع.';
-   this.toastr.error(this.toastMessage, 'خطأ');
+  //    this.toastMessage = 'يجب عليك التسجيل أولًا قبل التبرع.';
+  //  this.toastr.error(this.toastMessage, 'خطأ');
+  alert('سجل دخول اولا')
     } else {
       this._Router.navigate(['/ewallet-payment', projectId]);
     }
@@ -150,7 +151,7 @@ isSubmitting = false;
       next: (res) => {
         this.isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
-        
+
         this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
         this.donationForm.reset();
       },
