@@ -10,7 +10,6 @@ import { VolnteerComponent } from './Pages/volunteer/volnteer/volnteer.component
 import { HomeComponent } from './Pages/Home/home/home.component';
 import { RoutesComponent } from './core/routes/routes.component';
 import { SuperAdminComponent } from './Pages/super-admin/super-admin.component';
-import { BeneficiaryComponent } from './Pages/beneficiary/beneficiary/beneficiary.component';
 import { EwalletPaymentComponent } from './PaymentMethod/ewallet-payment/ewallet-payment.component';
 import { VisaPaymentComponent } from './PaymentMethod/visa-payment/visa-payment.component';
 
@@ -42,7 +41,7 @@ export const routes: Routes = [
       { path: 'donor', title: 'Donor', component: DonorComponent },
       { path: 'super-admin', title: 'Super Admin', component: SuperAdminComponent },
       { path: 'admin', title: 'Admin', component: AdminComponent },
-      { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
+      // { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
       { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
       {
         path: 'ewallet-payment/:id',

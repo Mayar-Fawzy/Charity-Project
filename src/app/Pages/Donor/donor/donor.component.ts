@@ -20,10 +20,11 @@ import { DonateNowService } from '../core/Services/donate-now.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { ToastrService } from 'ngx-toastr';
 
+
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule,TagModule,RoutingModule,CarouselModule,ProjectFilterPipe,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule, ],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss',
 })
@@ -81,8 +82,16 @@ isSubmitting = false;
   }
   // نموذج التبرع النقدي
   goToPayment(projectId: string) {
-    this._Router.navigate(['/ewallet-payment', projectId]);
+    const token = localStorage.getItem('userToken');
+  
+    if (!token) {
+      alert('يجب عليك التسجيل أولًا قبل التبرع.');
+      this._Router.navigate(['/login']);
+    } else {
+      this._Router.navigate(['/ewallet-payment', projectId]);
+    }
   }
+  
   // نموذج التبرع العيني
   
   donationForm = new FormGroup({
