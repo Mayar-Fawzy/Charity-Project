@@ -24,7 +24,16 @@
   // font-family: "Noto Kufi Arabic", sans-serif;
   // font-family: "El Messiri", sans-serif;
 
-
+  // :host ::ng-deep{ 
+  //   .custom-toast-position {
+  //   top: 824px  !important;
+  //   padding-right: 38px !important;
+  //   right: 12px !important;
+  //   transform: translateX(50%);
+  //   position: fixed !important;
+  //   z-index: 9999 !important;
+  // }} 
+  
 
   font-weight: 400;
   padding: 0;

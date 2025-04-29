@@ -85,8 +85,8 @@ isSubmitting = false;
     const token = localStorage.getItem('userToken');
   
     if (!token) {
-      alert('يجب عليك التسجيل أولًا قبل التبرع.');
-      this._Router.navigate(['/login']);
+     this.toastMessage = 'يجب عليك التسجيل أولًا قبل التبرع.';
+   this.toastr.error(this.toastMessage, 'خطأ');
     } else {
       this._Router.navigate(['/ewallet-payment', projectId]);
     }
@@ -134,12 +134,7 @@ isSubmitting = false;
     if (!this.userData) {
       this.isSubmitting = false;
       this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
-      
-      // setTimeout(() => {
-      //   this._Router.navigate(['/login']);
-      // }, 2000); // بعد 2 ثانية (2000 ملي ثانية)
-    
-      // return;
+      this.donationForm.reset();
     }
     
     const donorIdValue = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
@@ -155,6 +150,7 @@ isSubmitting = false;
       next: (res) => {
         this.isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
+        
         this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
         this.donationForm.reset();
       },
@@ -162,14 +158,32 @@ isSubmitting = false;
         this.isSubmitting = false;
         console.error('خطأ في إرسال التبرع:', error);
         this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
+        this.donationForm.reset();
       }
     });
   }
+  //change name with select
+  showNameInput = false;
+
    
-   onItemTypeChange(event: Event) {
+  onItemTypeChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
-    this.donationForm.patchValue({ itemType: selectedValue });
+  
+    const typeNameMap: { [key: string]: string } = {
+      '1': 'ملابس',
+      '2': 'طعام',
+      '3': 'مستلزمات طبية',
+    };
+  
+    if (typeNameMap[selectedValue]) {
+      // نملأ الاسم تلقائيًا فقط إذا مش "أخرى"
+      this.donationForm.get('name')?.setValue(typeNameMap[selectedValue]);
+    } else {
+      // في حالة "أخرى" ما نغيرش الاسم، المستخدم يكتب بنفسه
+      this.donationForm.get('name')?.setValue('');
+    }
   }
+  
 
   onFileSelected(event: any) {
     const files = Array.from(event.target.files) as File[];
