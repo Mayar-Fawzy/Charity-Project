@@ -1,79 +1,150 @@
-<div class="profile-settings" dir="rtl">
-  <h2>إعدادات الملف الشخصي</h2>
+<section class="container profile-settings pb-5">
+  <div class="row g-4 flex-row-reverse">
+    <!-- صورة المستخدم -->
+    <div class="col-md-6">
+      <div class="bg-white shadow-sm rounded p-4 text-center">
+        <div class="avatar-wrapper d-inline-block position-relative">
+          <ng-container *ngIf="userImageUrl; else letterAvatar">
+            <img
+              [src]="userImageUrl"
+              alt="صورة المستخدم"
+              class="rounded-circle user-img"
+            />
+          </ng-container>
 
-  <form>
-    <div class="form-row">
-      <div class="avatar-wrapper">
-        <ng-container *ngIf="userImageUrl; else letterAvatar">
-          <img [src]="userImageUrl" alt="صورة المستخدم" />
-        </ng-container>
+          <ng-template #letterAvatar>
+            <div
+              class="letter-avatar rounded-circle d-flex justify-content-center align-items-center text-white"
+              [ngStyle]="{
+                'background-color': getRandomColor(userFullName),
+                width: '100px',
+                height: '100px',
+                fontSize: '36px'
+              }"
+            >
+              {{ getFirstLetter() }}
+            </div>
+          </ng-template>
+        </div>
 
-        <ng-template #letterAvatar>
-          <div
-            class="letter-avatar"
-            [ngStyle]="{ 'background-color': getRandomColor(userFullName) }"
-          >
-            {{ getFirstLetter(userFullName) }}
-          </div>
-        </ng-template>
+        <!-- زر رفع الصورة -->
+        <input
+          type="file"
+          #fileInput
+          accept="image/*"
+          hidden
+          (change)="onImageSelected($event)"
+        />
+        <button
+          type="button"
+          class="btn btn-warning w-100 mt-3"
+          (click)="fileInput.click()"
+        >
+          <i class="bi bi-upload"></i> رفع صورة
+        </button>
 
-        <button type="button" class="change-photo">
-          <i class="bi bi-camera"></i>
+        <!-- زر حذف الصورة -->
+        <button
+          *ngIf="userImageUrl"
+          type="button"
+          class="btn btn-outline-danger w-100 mt-2"
+          (click)="removeImage()"
+        >
+          <i class="bi bi-trash"></i> حذف الصورة
         </button>
       </div>
     </div>
 
-    <div class="form-grid">
-      <label>
-        الاسم الكامل
-        <input
-          type="text"
-          formControlName="fullName"
-          placeholder="أدخل اسمك الكامل"
-        />
-      </label>
+    <!-- بيانات المستخدم -->
+    <div class="col-md-6">
+      <div class="bg-white shadow-sm rounded p-4">
+        <h4 class="text-center mb-4 text-warning">تعديل المستخدم</h4>
 
-      <label>
-        البريد الإلكتروني
-        <input
-          type="email"
-          formControlName="email"
-          placeholder="example@domain.com"
-        />
-      </label>
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">الاسم الأول</label>
+              <input
+                type="text"
+                formControlName="firstName"
+                class="form-control"
+              />
+            </div>
 
-      <label>
-        النوع
-        <select formControlName="gender">
-          <option value="Male">ذكر</option>
-          <option value="Female">أنثى</option>
-        </select>
-      </label>
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">اسم العائلة</label>
+              <input
+                type="text"
+                formControlName="lastName"
+                class="form-control"
+              />
+            </div>
 
-      <label>
-        تاريخ الميلاد
-        <input type="date" formControlName="dob" />
-      </label>
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">البريد الإلكتروني</label>
+              <input
+                type="email"
+                formControlName="email"
+                class="form-control"
+              />
+            </div>
 
-      <label>
-        رقم الهاتف
-        <input
-          type="text"
-          formControlName="phone"
-          placeholder="+201025363285"
-        />
-      </label>
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">رقم الهاتف</label>
+              <input type="text" formControlName="phone" class="form-control" />
+            </div>
 
-      <label>
-        العنوان
-        <input
-          type="text"
-          formControlName="address"
-          placeholder="المنوفية شبين الكوم"
-        />
-      </label>
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">العنوان</label>
+              <input
+                type="text"
+                formControlName="address"
+                class="form-control"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">النوع</label>
+              <select
+                formControlName="gender"
+                class="form-select select-left-arrow"
+              >
+                <option value="Male">ذكر</option>
+                <option value="Female">أنثى</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label d-block text-end">تاريخ الميلاد</label>
+              <div class="input-group flex-row-reverse">
+                <span class="input-group-text"
+                  ><i class="bi bi-calendar3"></i
+                ></span>
+                <input
+                  type="date"
+                  formControlName="dob"
+                  class="form-control no-default-icon text-end"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col">
+              <button type="submit" class="btn btn-warning w-100">تحديث</button>
+            </div>
+            <div class="col">
+              <button
+                type="button"
+                class="btn btn-danger w-100"
+                (click)="onCancel()"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-
-    <button type="submit" class="save-btn">حفظ التغييرات</button>
-  </form>
-</div>
+  </div>
+</section>

@@ -1,0 +1,63 @@
+.password-section {
+    max-width: 600px;
+    margin: auto;
+
+    .card {
+        border-radius: 12px;
+        background-color: #fff;
+
+        h3 {
+            font-weight: bold;
+        }
+
+        .btn {
+            font-weight: bold;
+
+            i {
+                margin-left: 5px;
+            }
+        }
+    }
+
+    .password-toggle {
+        cursor: pointer;
+        background-color: #f8f9fa;
+        border-left: none;
+    }
+
+    .input-group .form-control {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+
+    .input-group-text {
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+    }
+
+    .password-strength {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .strength-bar {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .bg-danger {
+            background-color: #dc3545;
+        }
+
+        .bg-warning {
+            background-color: #ffc107;
+        }
+
+        .bg-success {
+            background-color: #28a745;
+        }
+    }
+
+
+}

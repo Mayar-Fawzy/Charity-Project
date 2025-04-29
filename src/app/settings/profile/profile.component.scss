@@ -2,133 +2,32 @@
     background-color: #f4f4f4;
     padding: 2rem;
     min-height: 100vh;
+    border-radius: 15px;
 
-    .profile-card {
-        background-color: #fff;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        max-width: 900px;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
+    .user-img {
+        width: 100px;
+        height: 100px;   
+    }
 
-        h2 {
-            text-align: right;
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 1rem;
-        }
+    .select-left-arrow {
+        background-position: left 0.75rem center;
+        padding-left: 2rem;
+        padding-right: 0.75rem;
+        direction: rtl;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
+    .no-default-icon::-webkit-calendar-picker-indicator {
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
 
-        .avatar-wrapper {
-            align-self: center;
-            position: relative;
-            width: 120px;
-            height: 120px;
-
-            img,
-            .letter-avatar {
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                object-fit: cover;
-                display: block;
-            }
-
-            .letter-avatar {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 2.5rem;
-                font-weight: bold;
-                color: white;
-                background-color: #ccc;
-                transition: background-color 0.3s ease;
-            }
-
-            .change-photo {
-                position: absolute;
-                bottom: 0;
-                left: 60%;
-                transform: translate(-50%, 50%);
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                background-color: #ffffff;
-                border: 2px solid #ff9b44;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-                transition: all 0.3s ease;
-
-                i {
-                    font-size: 1.1rem;
-                    color: #ff9b44;
-                    transition: color 0.3s ease;
-                }
-
-                &:hover {
-                    background-color: #ff9b44;
-
-                    i {
-                        color: #fff;
-                    }
-                }
-            }
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-
-            label {
-                display: flex;
-                flex-direction: column;
-                font-weight: 500;
-                color: #444;
-
-                input,
-                select {
-                    margin-top: 0.5rem;
-                    padding: 0.7rem;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    font-size: 1rem;
-                    background-color: #fafafa;
-                }
-
-                select {
-                    appearance: none;
-                }
-            }
-        }
-
-        .save-btn {
-            width: fit-content;
-            align-self: flex-end;
-            padding: 0.8rem 2rem;
-            background-color: #ff9b44;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
-
-            &:hover {
-                background-color: #333;
-            }
-        }
+    .letter-avatar {
+        font-weight: bold;
+        font-size: 2rem;
+        text-transform: uppercase;
     }
 }
