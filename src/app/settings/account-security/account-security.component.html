@@ -1,1 +1,81 @@
-<p>account-security works!</p>
+<section class="container password-section mb-5">
+  <div class="card p-4 shadow-sm">
+    <h3 class="text-center text-warning mb-3">تعديل كلمة المرور</h3>
+    <hr />
+
+    <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+      <!-- كلمة المرور الحالية -->
+      <div class="position-relative mb-3">
+        <label class="form-label d-block text-end">كلمة المرور الحالية</label>
+        <div class="input-group">
+          <input
+            [type]="showCurrentPassword ? 'text' : 'password'"
+            formControlName="currentPassword"
+            class="form-control"
+            placeholder="أدخل كلمة المرور الحالية"
+          />
+          <span class="input-group-text password-toggle" (click)="toggleShowCurrentPassword()">
+            <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- كلمة المرور الجديدة -->
+        <div class="col-md-6 mb-3">
+          <label class="form-label d-block text-end">كلمة المرور الجديدة</label>
+          <div class="input-group">
+            <input
+              [type]="showNewPassword ? 'text' : 'password'"
+              formControlName="newPassword"
+              (input)="checkPasswordStrength()"
+              class="form-control"
+              placeholder="أدخل كلمة المرور الجديدة"
+            />
+            <span class="input-group-text password-toggle" (click)="toggleShowNewPassword()">
+              <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </span>
+          </div>
+
+          <!-- password-strength-->
+          <div class="password-strength mt-2">
+            <div
+              class="strength-bar"
+              [ngClass]="getStrengthClass()"
+              [style.width.%]="passwordStrength"
+            ></div>
+          </div>
+          <div class="text-end small mt-1 fw-bold text-muted">
+            {{ passwordStrengthLabel }}
+          </div>
+        </div>
+
+        <!-- تأكيد كلمة المرور -->
+        <div class="col-md-6 mb-3">
+          <label class="form-label d-block text-end">تأكيد كلمة المرور الجديدة</label>
+          <div class="input-group">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              class="form-control"
+              placeholder="أعد إدخال كلمة المرور"
+            />
+            <span class="input-group-text password-toggle" (click)="toggleShowConfirmPassword()">
+              <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- الأزرار -->
+      <div class="d-flex justify-content-between gap-2">
+        <button type="submit" class="btn btn-warning w-50">
+          <i class="bi bi-check-lg"></i> تحديث
+        </button>
+        <button type="button" class="btn btn-danger w-50" (click)="onCancel()">
+          <i class="bi bi-x-lg"></i> إلغاء
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

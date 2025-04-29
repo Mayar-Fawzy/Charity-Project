@@ -17,7 +17,8 @@ import { VisaPaymentComponent } from './PaymentMethod/visa-payment/visa-payment.
 import { SettingsLayoutComponent } from './Layout/settings-layout/settings-layout.component';
 
 import { ProfileComponent } from './settings/profile/profile.component';
-import { AccountSecurityComponent } from './settings/account-security/account-security.component';
+// import { AccountSecurityComponent } from './settings/account-security/account-security.component';
+import { PasswordSettingsComponent } from './settings/account-security/account-security.component'
 import { PaymentMethodComponent } from './settings/payment-method/payment-method.component';
 import { NotificationsComponent } from './settings/notifications/notifications.component';
 import { WorkComponent } from './settings/work/work.component';
@@ -54,6 +55,19 @@ export const routes: Routes = [
         title: 'Visa Payment',
         component: VisaPaymentComponent
       },
+      {
+        path: 'settings',
+        title: 'settings',
+        component: SettingsLayoutComponent,
+        children: [
+          { path: 'profile', component: ProfileComponent },
+          { path: 'account-security', component: PasswordSettingsComponent },
+          { path: 'payment-method', component: PaymentMethodComponent },
+          { path: 'notifications', component: NotificationsComponent },
+          { path: 'work', component: WorkComponent },
+          { path: '', redirectTo: 'profile', pathMatch: 'full' }
+        ]
+      }
      
     ]
   },
@@ -62,7 +76,7 @@ export const routes: Routes = [
     component: SettingsLayoutComponent,
     children: [
       { path: 'profile', component: ProfileComponent },
-      { path: 'account-security', component: AccountSecurityComponent },
+      { path: 'account-security', component: PasswordSettingsComponent },
       { path: 'payment-method', component: PaymentMethodComponent },
       { path: 'notifications', component: NotificationsComponent },
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
