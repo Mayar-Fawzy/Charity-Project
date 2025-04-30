@@ -164,14 +164,26 @@ isSubmitting = false;
       next: (res) => {
         this.isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
-
-        this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
+        Swal.fire({
+          icon: "success",
+          title: "تم التبرع بنجاح",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: " حسنا",
+        });
+      //  this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
         this.donationForm.reset();
       },
       error: error => {
         this.isSubmitting = false;
         console.error('خطأ في إرسال التبرع:', error);
-        this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
+       
+        Swal.fire({
+         icon: "error",
+         title: "خطأ",
+         text: "يجب عليك التسجيل أولًا قبل التبرع",
+         confirmButtonColor: "#f6a026",
+         confirmButtonText: " حسنا",
+       });
         this.donationForm.reset();
       }
     });
