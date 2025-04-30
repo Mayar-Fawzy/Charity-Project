@@ -21,20 +21,18 @@ import { LoginService } from '../../Auth/core/Services/login.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule,],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss',
 })
 export class DonorComponent {
-
-  private readonly _Router = inject(Router)
-  private readonly _LoginService = inject(LoginService)
-  private readonly toastr = inject(ToastrService)
-  private readonly _HomedonateServiesService = inject(HomedonateServiesService)
+  private readonly _Router = inject(Router);
+  private readonly _LoginService = inject(LoginService);
+  private readonly toastr = inject(ToastrService);
+  private readonly _HomedonateServiesService = inject(HomedonateServiesService);
   private readonly _DonateNowService = inject(DonateNowService);
   toastMessage = '';
   showToast = false;
@@ -42,46 +40,30 @@ export class DonorComponent {
   searchText: string = '';
   userData: any = null;
   responsiveOptions: CarouselResponsiveOptions[] = [];
-  projects: Data[] = []
+  projects: Data[] = [];
+
   GetDonation() {
     this._HomedonateServiesService.GetDonation().subscribe((res) => {
       this.projects = res.data;
       console.log(this.projects);
-    }
-    )
-
+    });
   }
 
   getProgressPercentage(project: any): number {
-    // نسبة وهمية مؤقتة لعرض شكل الـ UI
     const fakeCurrentAmount = project.targetAmount * 0.4;
     return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
   }
 
-
   ngOnInit(): void {
     this.responsiveOptions = [
-      {
-        breakpoint: '1024px',
-        numVisible: 3,
-        numScroll: 1
-      },
-      {
-        breakpoint: '768px',
-        numVisible: 2,
-        numScroll: 1
-      },
-      {
-        breakpoint: '560px',
-        numVisible: 1,
-        numScroll: 1
-      }
+      { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
+      { breakpoint: '768px', numVisible: 2, numScroll: 1 },
+      { breakpoint: '560px', numVisible: 1, numScroll: 1 }
     ];
 
-    this.GetDonation()
-
+    this.GetDonation();
   }
-  // نموذج التبرع النقدي
+
   goToPayment(projectId: string) {
     const token = localStorage.getItem('userToken');
 
@@ -93,32 +75,19 @@ export class DonorComponent {
         confirmButtonColor: "#f6a026",
         confirmButtonText: " حسنا",
       });
-
     } else {
       this._Router.navigate(['/ewallet-payment', projectId]);
     }
   }
 
-  // نموذج التبرع العيني
-
   donationForm = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3)
-    ]),
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     itemType: new FormControl('', Validators.required),
-    description: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3)
-    ]),
+    description: new FormControl('', [Validators.required, Validators.minLength(3)]),
     DonationStatus: new FormControl('', Validators.required),
-    quantity: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[0-9]*$') // يقبل فقط أرقام
-    ]),
+    quantity: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
     images: new FormControl<File[]>([])
   });
-
 
   submitDonation() {
     if (this.donationForm.invalid) return;
@@ -140,7 +109,6 @@ export class DonorComponent {
     this.userData = this._LoginService.saveUserAuth();
     if (!this.userData) {
       this.isSubmitting = false;
-      // this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
       Swal.fire({
         icon: "error",
         title: "خطأ",
@@ -169,20 +137,16 @@ export class DonorComponent {
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
       next: (res) => {
         this.isSubmitting = false;
-        console.log('تم التبرع بنجاح:', res);
         Swal.fire({
+          icon: "success",
           title: "تم التبرع بنجاح",
           confirmButtonColor: "#f6a026",
           confirmButtonText: " حسنا",
-          icon: "success"
         });
-
         this.donationForm.reset();
       },
       error: error => {
         this.isSubmitting = false;
-        console.error('خطأ في إرسال التبرع:', error);
-
         Swal.fire({
           icon: "error",
           title: "خطأ",
@@ -194,9 +158,8 @@ export class DonorComponent {
       }
     });
   }
-  //change name with select
-  showNameInput = false;
 
+  showNameInput = false;
 
   onItemTypeChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
@@ -208,14 +171,11 @@ export class DonorComponent {
     };
 
     if (typeNameMap[selectedValue]) {
-      // نملأ الاسم تلقائيًا فقط إذا مش "أخرى"
       this.donationForm.get('name')?.setValue(typeNameMap[selectedValue]);
     } else {
-      // في حالة "أخرى" ما نغيرش الاسم، المستخدم يكتب بنفسه
       this.donationForm.get('name')?.setValue('');
     }
   }
-
 
   onFileSelected(event: any) {
     const files = Array.from(event.target.files) as File[];
@@ -228,7 +188,9 @@ export class DonorComponent {
       input.click();
     }
   }
+
   @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
+
   showCenteredToast(type: 'success' | 'error', message: string, title: string) {
     this.toastr[type](message, title);
 
@@ -240,13 +202,12 @@ export class DonorComponent {
       }
     }, 0);
   }
+
   donationStatuses = [
     { value: 1, label: 'جديد' },
     { value: 2, label: 'مستعمل - حالة ممتازة' },
     { value: 3, label: 'مستعمل - حالة جيدة' }
   ];
 
-  DonateNow() {
-
-  }
+  DonateNow() {}
 }
