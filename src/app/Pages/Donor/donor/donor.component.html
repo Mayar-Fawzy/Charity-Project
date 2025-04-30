@@ -104,10 +104,7 @@
               </div>
 
               <!-- زر التبرع -->
-              <button
-                (click)="goToPayment(project.id)"
-                class="btn-donate"
-              >
+              <button (click)="goToPayment(project.id)" class="btn-donate">
                 <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
               </button>
             </div>
@@ -165,8 +162,13 @@
   <div class="donation-wrapper">
     <div class="container">
       <h2 class="fancy-title section-title">تبرع عيني</h2>
-      <div #formWrapper class="form-wrapper" style="position: relative;">
-      <form class="donation-form form-wrapper" [formGroup]="donationForm" (ngSubmit)="submitDonation()" #formWrapper>
+      <div #formWrapper class="form-wrapper" style="position: relative">
+        <form
+        class="donation-form form-wrapper"
+        [formGroup]="donationForm"
+        (ngSubmit)="submitDonation()"
+        #formWrapper
+      >
         <!-- نوع التبرع -->
         <div class="form-group">
           <label for="category">اختر نوع التبرع</label>
@@ -181,20 +183,34 @@
             <option [value]="3">مستلزمات طبية</option>
             <option [value]="4">أخرى</option>
           </select>
+          <div
+            *ngIf="donationForm.get('itemType')?.invalid && donationForm.get('itemType')?.touched"
+            class="error-message"
+          >
+            نوع التبرع مطلوب
+          </div>
         </div>
+      
+        <!-- الاسم (يظهر حسب الاختيار) -->
+      <!-- الاسم (دائمًا ظاهر وقابل للتعديل) -->
+<div class="form-group">
+  <label for="name">الاسم</label>
+  <input
+    type="text"
+    id="name"
+    class="form-control"
+    placeholder="الاسم"
+    formControlName="name"
+  />
+  <div
+    *ngIf="donationForm.get('name')?.invalid && donationForm.get('name')?.touched"
+    class="error-message"
+  >
+    الاسم مطلوب ويجب أن لا يقل عن ٣ أحرف
+  </div>
+</div>
 
-        <!-- الاسم -->
-        <div class="form-group">
-          <label for="name">الاسم</label>
-          <input
-            type="text"
-            id="name"
-            class="form-control"
-            placeholder="الاسم"
-            formControlName="name"
-          />
-        </div>
-
+      
         <!-- الكمية -->
         <div class="form-group">
           <label for="quantity">الكمية</label>
@@ -205,8 +221,36 @@
             placeholder="أدخل"
             formControlName="quantity"
           />
+          <div
+            *ngIf="donationForm.get('quantity')?.invalid && donationForm.get('quantity')?.touched"
+            class="error-message"
+          >
+            الكمية مطلوبة ويجب أن تكون أرقام صحيحة
+          </div>
         </div>
-
+      
+        <!-- حالة العنصر -->
+        <div class="form-group">
+          <label>حالة العنصر</label>
+          <div class="radio-options">
+            <label *ngFor="let option of donationStatuses">
+              <input
+                type="radio"
+                [value]="option.value"
+                formControlName="DonationStatus"
+                name="DonationStatus"
+              />
+              <span>{{ option.label }}</span>
+            </label>
+          </div>
+          <div
+            *ngIf="donationForm.get('DonationStatus')?.invalid && donationForm.get('DonationStatus')?.touched"
+            class="error-message"
+          >
+            حالة العنصر مطلوبة
+          </div>
+        </div>
+      
         <!-- الوصف -->
         <div class="form-group">
           <label for="description">الوصف</label>
@@ -217,8 +261,14 @@
             formControlName="description"
             placeholder="أدخل تفاصيل إضافية عن تبرعك"
           ></textarea>
+          <div
+            *ngIf="donationForm.get('description')?.invalid && donationForm.get('description')?.touched"
+            class="error-message"
+          >
+            الوصف مطلوب ويجب أن لا يقل عن ٣ أحرف
+          </div>
         </div>
-
+      
         <!-- رفع الصور -->
         <div class="form-group">
           <label for="image-upload" class="form-label">الصور</label>
@@ -260,13 +310,33 @@
         </span>
       </button>
       
-
+        <!-- زر الإرسال -->
+        <button
+          type="submit"
+          class="btn btn-primary submit-btn"
+          [disabled]="isSubmitting || donationForm.invalid"
+        >
+        <span *ngIf="!isSubmitting">إرسال التبرع</span>
+          <span *ngIf="isSubmitting">
+            
+            جاري التحميل...
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          </span>
+      
+        </button>
+      
         <p class="note">
-          سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني والرسائل القصيرة.
+          سيتم مراجعة طلبك خلال ٢٤ ساعة. ستصلك تحديثات عبر البريد الإلكتروني
+          والرسائل القصيرة.
         </p>
-        
       </form>
-    </div>
+      
+      </div>
     </div>
   </div>
 </section>
+

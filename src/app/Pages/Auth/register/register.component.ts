@@ -38,8 +38,7 @@ export class RegisterComponent {
       Validators.minLength(8),
       Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
     ]),
-    confirmPassword: new FormControl(null, [Validators.required]),
-    userType: new FormControl(0, [Validators.required])
+    confirmPassword: new FormControl(null, [Validators.required])
   }, { validators: RegisterComponent.confirmPassword });
 
   // ✅ Password match validator
@@ -57,7 +56,6 @@ export class RegisterComponent {
 
     let formData = { ...forminfo.value };
     formData.gender = Number(formData.gender);
-    formData.userType = Number(formData.userType);
 
     if (formData.dateOfBirth) {
       const date = new Date(formData.dateOfBirth);

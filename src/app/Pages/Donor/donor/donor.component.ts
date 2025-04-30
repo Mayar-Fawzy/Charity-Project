@@ -19,13 +19,15 @@ import { Router } from '@angular/router';
 import { DonateNowService } from '../core/Services/donate-now.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule,],
   templateUrl: './donor.component.html',
-  styleUrl: './donor.component.scss'
+  styleUrl: './donor.component.scss',
 })
 export class DonorComponent {
 
@@ -33,8 +35,7 @@ export class DonorComponent {
   private readonly _LoginService = inject(LoginService)
   private readonly toastr = inject(ToastrService)
   private readonly _HomedonateServiesService = inject(HomedonateServiesService)
-  private readonly _DonateNowService = inject(DonateNowService)
-  private readonly renderer = inject(Renderer2);
+  private readonly _DonateNowService = inject(DonateNowService);
   toastMessage = '';
   showToast = false;
   isSubmitting = false;
@@ -82,23 +83,139 @@ export class DonorComponent {
   }
   // نموذج التبرع النقدي
   goToPayment(projectId: string) {
-    this._Router.navigate(['/ewallet-payment', projectId]);
+    const token = localStorage.getItem('userToken');
+
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: " حسنا",
+      });
+
+    } else {
+      this._Router.navigate(['/ewallet-payment', projectId]);
+    }
   }
+
   // نموذج التبرع العيني
 
   donationForm = new FormGroup({
-    name: new FormControl('', Validators.required),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3)
+    ]),
     itemType: new FormControl('', Validators.required),
-    description: new FormControl(''),
-    quantity: new FormControl('', Validators.required),
+    description: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3)
+    ]),
+    DonationStatus: new FormControl('', Validators.required),
+    quantity: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[0-9]*$') // يقبل فقط أرقام
+    ]),
     images: new FormControl<File[]>([])
   });
 
 
-  onItemTypeChange(event: Event) {
-    const selectedValue = (event.target as HTMLSelectElement).value;
-    this.donationForm.patchValue({ itemType: selectedValue });
+  submitDonation() {
+    if (this.donationForm.invalid) return;
+    this.isSubmitting = true;
+
+    const formValue = this.donationForm.value;
+    const formData = new FormData();
+
+    formData.append('name', formValue.name ?? '');
+    formData.append('itemType', String(formValue.itemType));
+    formData.append('donationStatus', formValue.DonationStatus ?? '');
+    formData.append('description', formValue.description ?? '');
+    formData.append('quantity', formValue.quantity ?? '');
+
+    formValue.images?.forEach((file: File) => {
+      formData.append('images', file);
+    });
+
+    this.userData = this._LoginService.saveUserAuth();
+    if (!this.userData) {
+      this.isSubmitting = false;
+      // this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: " حسنا",
+      });
+      this.donationForm.reset();
+    }
+
+    const donorIdValue = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
+    if (!donorIdValue) {
+      this.isSubmitting = false;
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: " حسنا",
+      });
+      return;
+    }
+
+    formData.append('donorId', donorIdValue);
+
+    this._DonateNowService.CreateInKindDonation(formData).subscribe({
+      next: (res) => {
+        this.isSubmitting = false;
+        console.log('تم التبرع بنجاح:', res);
+        Swal.fire({
+          title: "تم التبرع بنجاح",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: " حسنا",
+          icon: "success"
+        });
+
+        this.donationForm.reset();
+      },
+      error: error => {
+        this.isSubmitting = false;
+        console.error('خطأ في إرسال التبرع:', error);
+
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "يحدث خطأ أثناء الإرسال",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: " حسنا",
+        });
+        this.donationForm.reset();
+      }
+    });
   }
+  //change name with select
+  showNameInput = false;
+
+
+  onItemTypeChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+
+    const typeNameMap: { [key: string]: string } = {
+      '1': 'ملابس',
+      '2': 'طعام',
+      '3': 'مستلزمات طبية',
+    };
+
+    if (typeNameMap[selectedValue]) {
+      // نملأ الاسم تلقائيًا فقط إذا مش "أخرى"
+      this.donationForm.get('name')?.setValue(typeNameMap[selectedValue]);
+    } else {
+      // في حالة "أخرى" ما نغيرش الاسم، المستخدم يكتب بنفسه
+      this.donationForm.get('name')?.setValue('');
+    }
+  }
+
 
   onFileSelected(event: any) {
     const files = Array.from(event.target.files) as File[];
@@ -123,94 +240,13 @@ export class DonorComponent {
       }
     }, 0);
   }
-
-
-  submitDonation() {
-
-    if (this.donationForm.invalid) return;
-    this.isSubmitting = true;
-    const formValue = this.donationForm.value;
-    const formData = new FormData();
-
-    // البيانات الأساسية
-    formData.append('name', formValue.name ?? '');
-    formData.append('itemType', String(formValue.itemType));
-
-    formData.append('description', formValue.description ?? '');
-    formData.append('quantity', formValue.quantity ?? '');
-
-    // الصور (إن وجدت)
-    formValue.images?.forEach((file: File) => {
-      formData.append('images', file);
-    });
-    this.userData = this._LoginService.saveUserAuth()
-    // // معرفات ثابتة (يمكن استبدالها لاحقًا)
-    formData.append('donorId', this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] ?? '');
-    console.log(this.userData.id);
-    // formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
-    // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
-
-    this._DonateNowService.CreateInKindDonation(formData).subscribe({
-      next: (res) => {
-        this.isSubmitting = false;
-        console.log('تم التبرع بنجاح:', res);
-
-        this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
-
-        this.donationForm.reset();
-      },
-      error: error => {
-        this.isSubmitting = false;
-        console.error('خطأ في إرسال التبرع:', error);
-        if (error.error) {
-          console.error('تفاصيل الخطأ من السيرفر:', error.error);
-        }
-
-
-        this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
-      }
-    });
-
-  }
+  donationStatuses = [
+    { value: 1, label: 'جديد' },
+    { value: 2, label: 'مستعمل - حالة ممتازة' },
+    { value: 3, label: 'مستعمل - حالة جيدة' }
+  ];
 
   DonateNow() {
 
-  }
-
-
-
-  // >>>>>>>>>>>>>>>>>>>>>> apppare image in form 
-  @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
-
-  uploadedImages: string[] = [];
-  readonly maxImageSizeMB = 10;
-
-  openImageUploader(): void {
-    this.imageInput.nativeElement.click();
-  }
-
-  handleImageSelection(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files) {
-      this.uploadedImages = [];
-
-      Array.from(input.files).forEach(file => {
-        const isValidType = file.type === 'image/png' || file.type === 'image/jpeg';
-        const isValidSize = file.size <= this.maxImageSizeMB * 1024 * 1024;
-
-        if (isValidType && isValidSize) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            if (reader.result) {
-              this.uploadedImages.push(reader.result as string);
-            }
-          };
-          reader.readAsDataURL(file);
-        } else {
-          console.warn(`الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.`);
-        }
-      });
-    }
   }
 }

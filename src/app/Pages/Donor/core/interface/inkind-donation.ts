@@ -3,6 +3,7 @@ export interface InkindDonation {
     itemType:number,
     description:string,
     quantity:number,
+    donationStatus:number,
     images:File[],
 
 }

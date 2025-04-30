@@ -2,7 +2,7 @@
   <div class="login-modal">
     <div class="modal-header">
       <h2 class="fw-bold">إنشاء حساب الآن</h2>
-      <button class="close-btn" routerLink="/donor">
+      <button class="close-btn" routerLink="/login">
         <i class="fa-solid fa-xmark fs-5"></i>
       </button>
     </div>
@@ -177,8 +177,8 @@
           required
         >
           <option [value]="" disabled selected hidden>اختر النوع</option>
-          <option [value]="1">ذكر</option>
-          <option [value]="2">أنثى</option>
+          <option [value]="0">ذكر</option>
+          <option [value]="1">أنثى</option>
         </select>
         <div class="input-icon">
           <i class="fa fa-venus-mars"></i>
@@ -318,20 +318,7 @@
         </div>
       </div>
 
-      <!-- User Type -->
-      <div class="role-selection mt-3">
-        <label class="role-option">
-          <input type="radio" formControlName="userType" [value]="2" /> متطوع
-        </label>
-        <label class="role-option">
-          <input type="radio" formControlName="userType" [value]="3" checked />
-          <strong>متبرع</strong>
-        </label>
-        <label class="role-option">
-          <input type="radio" formControlName="userType" [value]="1" /> مستفيد
-        </label>
-      </div>
-
+    
       <!-- Submit Button -->
       <button
         type="submit"

@@ -77,7 +77,15 @@ $light-bg: #f9f9f9;
 }
 
 
+.error-message {
+    color: #ffb902;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
 // >>>>>>>>>>>> Header
+
 .donation-hero {
     direction: rtl;
 
