@@ -1,5 +1,8 @@
 * {
     box-sizing: border-box;
+}
+
+body {
     margin: 0;
     padding: 0;
 }
@@ -263,158 +266,119 @@ $light-bg: #f9f9f9;
     }
 }
 
-// >>>>>>>>>>>>>>>success-intro
-.success-intro {
-    background-color: #f4f7f9;
-    text-align: center;
-    padding: 60px 0;
-    width: 100%;
+// >>>>>>>>>>>>>>> Gallery
+.gallery {
+    max-height: 150vh;
+    overflow-y: auto;
 
-    h2 {
-        font-weight: bold;
-        margin-bottom: 10px;
-        font-size: 22px;
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding-bottom: 1rem;
     }
 
-    p {
-        color: #555;
-        margin-bottom: 30px;
-        font-size: 16px;
-    }
-
-    .video-wrapper {
+    .img-container {
         position: relative;
-        width: 100%;
-        max-width: 100%;
-        margin: 0 auto;
-        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 
         img {
+            height: 250px;
             width: 100%;
-            display: block;
+            object-fit: cover;
+            transition: transform 0.5s ease-in-out;
+            border-radius: 0.5rem;
         }
 
-        .play-button {
+        &:hover img {
+            transform: scale(1.05);
+        }
+
+        .overlay {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 50px;
-            color: white;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 50%;
-            padding: 10px 20px;
-            cursor: pointer;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            transform: translateY(100%);
+            transition: transform 0.5s ease-in-out;
+            z-index: 2;
+        }
+
+        &:hover .overlay {
+            transform: translateY(0);
         }
     }
 }
 
-// >>>>>>>>>>> success-cards
-.success-stories-section {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 2rem;
-    background-color: #f8f9fa;
 
-    .side-btn {
-        writing-mode: vertical-rl;
-        background-color: #f6a026;
-        color: white;
-        font-weight: bold;
-        padding: 1rem;
-        border-radius: 8px;
-        text-align: center;
-        height: fit-content;
+
+// >>>>>>>>>>> success-cards
+
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
 
-    .top-btn {
-        position: absolute;
-        top: 1rem;
-        left: 50%;
-        transform: translateX(-50%);
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        button {
-            background-color: #f6a026;
-            color: white;
+.card-animated {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.card {
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    img {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 1rem;
+
+        .btn {
             font-weight: bold;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
         }
     }
+}
 
-    .stories-cards {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
+// >>>>>>>>>>>>>>>>>>> project 
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #222;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
 
-        .story-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            width: 300px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+    i {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+    }
 
-            img {
-                width: 100%;
-                height: 180px;
-                object-fit: cover;
-            }
+    &:hover {
+        color: #fbc02d;
 
-            .card-content {
-                padding: 1rem;
-
-                .user-info {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    margin-bottom: 0.5rem;
-
-                    i {
-                        font-size: 1.5rem;
-                        color: gray;
-                    }
-
-                    strong {
-                        display: block;
-                        font-size: 1rem;
-                        margin-bottom: 0.25rem;
-                    }
-
-                    p {
-                        font-size: 0.85rem;
-                        color: #888;
-                        margin: 0;
-                    }
-                }
-
-                .quote {
-                    position: relative;
-                    background-color: #fdfaf5;
-                    padding: 0.75rem;
-                    border-radius: 8px;
-                    font-style: italic;
-                    font-size: 0.95rem;
-                    color: #444;
-
-                    i {
-                        color: #f6a026;
-                        font-size: 1.2rem;
-                    }
-
-                    p {
-                        display: inline;
-                        margin: 0 0.5rem;
-                    }
-                }
-            }
+        i {
+            transform: translateX(-5px);
         }
     }
 }

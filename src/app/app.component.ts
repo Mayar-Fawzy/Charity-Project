@@ -10,12 +10,13 @@ import { NavbarComponent } from "./Layout/navbar/navbar.component";
 
 import { ProfileComponent } from "./settings/profile/profile.component";
 import { SettingsLayoutComponent } from "./Layout/settings-layout/settings-layout.component";
+import { ScrollToTopComponent } from './shared/scroll-to-top/scroll-to-top.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, VisaPaymentComponent, EwalletPaymentComponent, FooterComponent, DonorComponent, VolnteerComponent, NavbarComponent, ProfileComponent, SettingsLayoutComponent],
+  imports: [RouterOutlet, VisaPaymentComponent, EwalletPaymentComponent, FooterComponent, DonorComponent, VolnteerComponent, NavbarComponent, ProfileComponent, SettingsLayoutComponent, ScrollToTopComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

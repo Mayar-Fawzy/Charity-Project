@@ -99,81 +99,202 @@
   </div>
 </section>
 
-<!-- >>>>>>>>>>>> success-intro -->
-<section class="success-intro">
-  <h2>شكرًا لتبرعاتكم.. أنتم تصنعون التغيير!</h2>
-  <p>شاهدوا قصص النجاح التي ساهمتم في تحقيقها بأياديكم الكريمة.</p>
-  <div class="video-wrapper">
-    <img src="/Images/success-stories.png" alt="قصص النجاح" />
-    <span class="play-button">&#9658;</span>
+<!-- >>>>>>>>>>>> Gallery -->
+<section class="gallery py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">معرض الصور</h2>
+      <p class="text-muted fs-5">
+        تصفّح <span class="text-warning fw-semibold">ألبومنا </span>
+      </p>
+    </div>
+    
+
+    <div class="row g-4">
+      <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of galleryItems">
+        <div class="position-relative overflow-hidden rounded-3 shadow-sm">
+          <div class="img-container">
+            <img
+              [src]="item.image"
+              [alt]="item.title"
+              class="img-fluid w-100"
+            />
+            <div
+              class="overlay d-flex flex-column justify-content-center align-items-center text-white text-center px-3"
+            >
+              <h2 class="h5">{{ item.title }}</h2>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- >>>>>>>>>>>>>>>>>>> success-cards -->
-<section class="success-stories-section">
-  <div class="side-btn">ساهم في كتابة قصة نجاح!</div>
+<section class="success-stories-section position-relative py-5 bg-light">
+  <div class="container">
+    <div
+      class="d-none d-lg-block side-btn bg-warning text-white fw-bold text-center py-3 px-2 rounded-3 position-absolute top-50 translate-middle-y"
+      style="right: -3rem; writing-mode: vertical-rl"
+    >
+      ساهم في كتابة قصة نجاح!
+    </div>
 
-  <div class="top-btn">
-    <button>ساهم في قصص نجاح أكثر!</button>
+    <div class="text-center mb-4">
+      <button class="btn btn-warning fw-bold px-4 py-2">
+        ساهم في قصص نجاح أكثر!
+      </button>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <!-- بطاقة 1 -->
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
+          <img
+            src="/Images/Success-Story-1.png"
+            class="card-img-top"
+            alt="Ahmed"
+          />
+          <div class="card-body">
+            <div class="d-flex align-items-start gap-2 mb-3">
+              <i class="bi bi-person-circle fs-4 text-secondary"></i>
+              <div>
+                <strong>أحمد – مشروع التعليم في القرى النائية</strong>
+                <p class="mb-0 text-muted small">منذ سنة</p>
+              </div>
+            </div>
+            <div
+              class="bg-light p-3 rounded text-muted fst-italic position-relative"
+            >
+              <i class="bi bi-quote text-warning me-1"></i>
+              التعليم غيّر حياتي. الآن أستطيع أن أحلم بمستقبل أفضل. شكراً لكم!
+              <i
+                class="bi bi-quote text-warning ms-1"
+                style="transform: rotateY(180deg)"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- بطاقة 2 -->
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
+          <img
+            src="/Images/Success-Story-2.png"
+            class="card-img-top"
+            alt="Sarah"
+          />
+          <div class="card-body">
+            <div class="d-flex align-items-start gap-2 mb-3">
+              <i class="bi bi-person-circle fs-4 text-secondary"></i>
+              <div>
+                <strong>سارة – مشروع دعم الطلاب</strong>
+                <p class="mb-0 text-muted small">منذ سنة</p>
+              </div>
+            </div>
+            <div
+              class="bg-light p-3 rounded text-muted fst-italic position-relative"
+            >
+              <i class="bi bi-quote text-warning me-1"></i>
+              بفضل دعمكم، أستطيع الآن الذهاب للمدرسة وتحقيق حلمي بأن أصبح طبيبة!
+              <i
+                class="bi bi-quote text-warning ms-1"
+                style="transform: rotateY(180deg)"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- بطاقة 3 -->
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card h-100 shadow-sm rounded-4 overflow-hidden">
+          <img
+            src="/Images/Success-Story-3.png"
+            class="card-img-top"
+            alt="Mohammed"
+          />
+          <div class="card-body">
+            <div class="d-flex align-items-start gap-2 mb-3">
+              <i class="bi bi-person-circle fs-4 text-secondary"></i>
+              <div>
+                <strong
+                  >محمد، 10 سنوات – برنامج التعليم في المناطق الريفية</strong
+                >
+                <p class="mb-0 text-muted small">10 سنوات</p>
+              </div>
+            </div>
+            <div
+              class="bg-light p-3 rounded text-muted fst-italic position-relative"
+            >
+              <i class="bi bi-quote text-warning me-1"></i>
+              الكتب والأدوات التي حصلت عليها فتحت لي آفاقًا جديدة!
+              <i
+                class="bi bi-quote text-warning ms-1"
+                style="transform: rotateY(180deg)"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- >>>>>>>>>>>>>>>>>>> project  -->
+<section class="active-projects-section container py-5">
+  <h2 class="text-center mb-4 fw-bold">المشاريع النشطة</h2>
+
+  <div class="row gy-4 justify-content-center">
+    <div
+      class="col-md-6 col-lg-4"
+      *ngFor="let project of projects; let i = index"
+    >
+      <div
+        class="card card-animated h-100"
+        [ngStyle]="{ 'animation-delay': i * 0.3 + 's' }"
+      >
+        <img [src]="project.image" class="card-img-top" [alt]="project.title" />
+        <div class="card-body">
+          <h5 class="card-title fw-bold">{{ project.title }}</h5>
+          <ul class="list-unstyled text-muted small">
+            <li>
+              <i class="bi bi-geo-alt-fill text-warning me-1"></i>
+              {{ project.location }}
+            </li>
+            <li>
+              <i class="bi bi-clock-fill text-warning me-1"></i>
+              {{ project.duration }}
+            </li>
+            <li>
+              <i class="bi bi-cash-coin text-warning me-1"></i> الهدف:
+              {{ project.target }} جنيه (تم جمع {{ project.raised }} جنيه)
+            </li>
+            <li>
+              <i class="bi bi-people-fill text-warning me-1"></i> مطلوب
+              {{ project.volunteers }} متطوع (سجل
+              {{ project.registered }} بالفعل)
+            </li>
+          </ul>
+          <div class="progress mb-3" style="height: 6px">
+            <div
+              class="progress-bar bg-warning"
+              [style.width.%]="project.progress"
+            ></div>
+          </div>
+          <button class="btn btn-warning w-100">انضم كمتطوع</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="stories-cards">
-    <div class="story-card">
-      <img src="/Images/Success-Story-1.png" alt="Ahmed" />
-      <div class="card-content">
-        <div class="user-info">
-          <i class="bi bi-person-circle"></i>
-          <div>
-            <strong>أحمد – مشروع التعليم في القرى النائية</strong>
-            <p>منذ سنة</p>
-          </div>
-        </div>
-        <div class="quote">
-          <i class="bi bi-quote"></i>
-          <p>
-            التعليم غيّر حياتي. الآن أستطيع أن أحلم بمستقبل أفضل. شكراً لكم!
-          </p>
-          <i class="bi bi-quote" style="transform: rotateY(180deg)"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="story-card">
-      <img src="/Images/Success-Story-2.png" alt="Sarah" />
-      <div class="card-content">
-        <div class="user-info">
-          <i class="bi bi-person-circle"></i>
-          <div>
-            <strong>سارة – مشروع دعم الطلاب</strong>
-            <p>منذ سنة</p>
-          </div>
-        </div>
-        <div class="quote">
-          <i class="bi bi-quote"></i>
-          <p>
-            بفضل دعمكم، أستطيع الآن الذهاب للمدرسة وتحقيق حلمي بأن أصبح طبيبة!
-          </p>
-          <i class="bi bi-quote" style="transform: rotateY(180deg)"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="story-card">
-      <img src="/Images/Success-Story-3.png" alt="Mohammed" />
-      <div class="card-content">
-        <div class="user-info">
-          <i class="bi bi-person-circle"></i>
-          <div>
-            <strong>محمد، 10 سنوات – برنامج التعليم في المناطق الريفية</strong>
-            <p>10 سنوات</p>
-          </div>
-        </div>
-        <div class="quote">
-          <i class="bi bi-quote"></i>
-          <p>الكتب والأدوات التي حصلت عليها فتحت لي آفاقًا جديدة!</p>
-          <i class="bi bi-quote" style="transform: rotateY(180deg)"></i>
-        </div>
-      </div>
-    </div>
+  <div class="view-all-projects text-end mt-4">
+    <button class="view-all-btn" (click)="navigateToMoreProjects()">
+      <span>عرض كل المشاريع</span>
+      <i class="bi bi-arrow-left"></i>
+    </button>
   </div>
 </section>

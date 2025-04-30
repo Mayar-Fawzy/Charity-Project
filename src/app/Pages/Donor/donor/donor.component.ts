@@ -23,41 +23,41 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule,TagModule,RoutingModule,CarouselModule,ProjectFilterPipe,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss'
 })
 export class DonorComponent {
-  
-   private readonly _Router=inject(Router)
-   private readonly _LoginService=inject(LoginService)
+
+  private readonly _Router = inject(Router)
+  private readonly _LoginService = inject(LoginService)
   private readonly toastr = inject(ToastrService)
-   private readonly _HomedonateServiesService=inject(HomedonateServiesService)
-   private readonly _DonateNowService=inject(DonateNowService)
+  private readonly _HomedonateServiesService = inject(HomedonateServiesService)
+  private readonly _DonateNowService = inject(DonateNowService)
   private readonly renderer = inject(Renderer2);
-   toastMessage = '';
-showToast = false;
-isSubmitting = false;
+  toastMessage = '';
+  showToast = false;
+  isSubmitting = false;
   searchText: string = '';
   userData: any = null;
-    responsiveOptions: CarouselResponsiveOptions[] = [];
-    projects:Data[]=[]
-    GetDonation(){
-      this._HomedonateServiesService.GetDonation().subscribe((res)=>{
-        this.projects=res.data;
-        console.log(this.projects);
-      }
-      )
-    
+  responsiveOptions: CarouselResponsiveOptions[] = [];
+  projects: Data[] = []
+  GetDonation() {
+    this._HomedonateServiesService.GetDonation().subscribe((res) => {
+      this.projects = res.data;
+      console.log(this.projects);
     }
-    
-    getProgressPercentage(project: any): number {
-      // نسبة وهمية مؤقتة لعرض شكل الـ UI
-      const fakeCurrentAmount = project.targetAmount * 0.4; 
-      return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
-    }
-  
-   
+    )
+
+  }
+
+  getProgressPercentage(project: any): number {
+    // نسبة وهمية مؤقتة لعرض شكل الـ UI
+    const fakeCurrentAmount = project.targetAmount * 0.4;
+    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+  }
+
+
   ngOnInit(): void {
     this.responsiveOptions = [
       {
@@ -76,16 +76,16 @@ isSubmitting = false;
         numScroll: 1
       }
     ];
-    
+
     this.GetDonation()
-    
+
   }
   // نموذج التبرع النقدي
   goToPayment(projectId: string) {
     this._Router.navigate(['/ewallet-payment', projectId]);
   }
   // نموذج التبرع العيني
-  
+
   donationForm = new FormGroup({
     name: new FormControl('', Validators.required),
     itemType: new FormControl('', Validators.required),
@@ -94,7 +94,7 @@ isSubmitting = false;
     images: new FormControl<File[]>([])
   });
 
- 
+
   onItemTypeChange(event: Event) {
     const selectedValue = (event.target as HTMLSelectElement).value;
     this.donationForm.patchValue({ itemType: selectedValue });
@@ -114,7 +114,7 @@ isSubmitting = false;
   @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
   showCenteredToast(type: 'success' | 'error', message: string, title: string) {
     this.toastr[type](message, title);
-  
+
     setTimeout(() => {
       const toastContainer = document.querySelector('.toast-container');
       if (toastContainer && this.formWrapper?.nativeElement) {
@@ -124,39 +124,39 @@ isSubmitting = false;
     }, 0);
   }
 
-  
+
   submitDonation() {
-   
+
     if (this.donationForm.invalid) return;
     this.isSubmitting = true;
     const formValue = this.donationForm.value;
     const formData = new FormData();
-  
+
     // البيانات الأساسية
     formData.append('name', formValue.name ?? '');
     formData.append('itemType', String(formValue.itemType));
 
     formData.append('description', formValue.description ?? '');
     formData.append('quantity', formValue.quantity ?? '');
-  
+
     // الصور (إن وجدت)
     formValue.images?.forEach((file: File) => {
       formData.append('images', file);
     });
-   this.userData= this._LoginService.saveUserAuth()
+    this.userData = this._LoginService.saveUserAuth()
     // // معرفات ثابتة (يمكن استبدالها لاحقًا)
-     formData.append('donorId', this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] ?? '');
-     console.log(this.userData.id);
-  // formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
+    formData.append('donorId', this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] ?? '');
+    console.log(this.userData.id);
+    // formData.append('donorId', '5031cff5-40b5-4602-9542-c7a2e510a7c3');
     // formData.append('projectId', 'PUT_PROJECT_ID_HERE');
- 
+
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
       next: (res) => {
         this.isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
-    
+
         this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
-    
+
         this.donationForm.reset();
       },
       error: error => {
@@ -165,15 +165,52 @@ isSubmitting = false;
         if (error.error) {
           console.error('تفاصيل الخطأ من السيرفر:', error.error);
         }
-    
-       
+
+
         this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
       }
     });
-    
+
   }
-  
-DonateNow(){
-  
-}
+
+  DonateNow() {
+
+  }
+
+
+
+  // >>>>>>>>>>>>>>>>>>>>>> apppare image in form 
+  @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
+
+  uploadedImages: string[] = [];
+  readonly maxImageSizeMB = 10;
+
+  openImageUploader(): void {
+    this.imageInput.nativeElement.click();
+  }
+
+  handleImageSelection(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files) {
+      this.uploadedImages = [];
+
+      Array.from(input.files).forEach(file => {
+        const isValidType = file.type === 'image/png' || file.type === 'image/jpeg';
+        const isValidSize = file.size <= this.maxImageSizeMB * 1024 * 1024;
+
+        if (isValidType && isValidSize) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            if (reader.result) {
+              this.uploadedImages.push(reader.result as string);
+            }
+          };
+          reader.readAsDataURL(file);
+        } else {
+          console.warn(`الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.`);
+        }
+      });
+    }
+  }
 }

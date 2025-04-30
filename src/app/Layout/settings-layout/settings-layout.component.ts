@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule }      from '@angular/common';
 import { RouterModule, RouterOutlet }      from '@angular/router';
-import { SidebarComponent }  from '../sidebar/sidebar.component';
+import { SidebarComponent }  from '../sidebar/sidebarcomponent';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // 
 import { TabViewModule } from 'primeng/tabview';
 import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
+import { NavbarComponent } from "../navbar/navbar.component";
 @Component({
   selector: 'app-settings-layout',
   standalone: true,
-  imports: [ 
+  imports: [
     RouterOutlet,
     TabViewModule,
     RoutingModule,
-    CommonModule,     
-    // RouterModule,    
-    // SidebarComponent,
-    ],
+    CommonModule,
+    NavbarComponent
+],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss']
 })
