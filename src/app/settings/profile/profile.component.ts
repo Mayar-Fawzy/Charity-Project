@@ -1,8 +1,6 @@
-<<<<<<< HEAD
+
 import { Component, OnInit } from '@angular/core';
-=======
-import { Component, inject } from '@angular/core';
->>>>>>> 6c3824ea53d217a9ba5d68be86c2bf857e682afa
+import {  inject } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -17,14 +15,12 @@ import { ProfileservicesService } from '../Core/Services/profileservices.service
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-<<<<<<< HEAD
+
 export class ProfileComponent implements OnInit {
-=======
-export class ProfileComponent {
+
   private readonly _ProfileservicesService=inject(ProfileservicesService)
      private readonly _ActivatedRoute=inject(ActivatedRoute)
      private readonly _Router=inject(Router)
->>>>>>> 6c3824ea53d217a9ba5d68be86c2bf857e682afa
   userImageUrl: string | null = null;
 
   profileForm = new FormGroup({
