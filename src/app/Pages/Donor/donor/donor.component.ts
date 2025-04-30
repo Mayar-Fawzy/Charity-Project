@@ -172,16 +172,24 @@ isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
         Swal.fire({
           title: "تم التبرع بنجاح",
-          text: "You clicked the button!",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: " حسنا",
           icon: "success"
         });
-        this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
+    
         this.donationForm.reset();
       },
       error: error => {
         this.isSubmitting = false;
         console.error('خطأ في إرسال التبرع:', error);
-        this.showCenteredToast('error', 'حدث خطأ أثناء الإرسال.', 'خطأ');
+     
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "يحدث خطأ أثناء الإرسال",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: " حسنا",
+        });
         this.donationForm.reset();
       }
     });
