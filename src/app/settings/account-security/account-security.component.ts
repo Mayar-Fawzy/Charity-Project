@@ -31,6 +31,7 @@ export class PasswordSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.userData = this._LoginService.saveUserAuth();
+     
     const name = this.userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
 
     this.passwordForm = new FormGroup({
