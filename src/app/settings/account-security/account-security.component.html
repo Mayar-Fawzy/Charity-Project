@@ -5,18 +5,16 @@
 
     <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
       <!-- البريد الإلكتروني -->
-      <div class="mb-3">
-        <label class="form-label d-block text-end">البريد الإلكتروني</label>
-        <input
-          type="email"
-          formControlName="email"
-          class="form-control"
-          placeholder="أدخل بريدك الإلكتروني"
-        />
-        <div class="text-danger text-end small" *ngIf="passwordForm.get('email')?.touched && passwordForm.get('email')?.invalid">
-          البريد الإلكتروني مطلوب
-        </div>
-      </div>
+    <div class="position-relative mb-3">
+  <label class="form-label d-block text-end">البريد الإلكتروني</label>
+  <input
+    type="email"
+    formControlName="email"
+    class="form-control"
+    readonly
+  />
+</div>
+
 
       <div class="row">
         <!-- كلمة المرور الجديدة -->
@@ -34,7 +32,9 @@
               <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
             </span>
           </div>
-          <div class="text-danger text-end small" *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid">
+          
+          <div class="text-danger text-end small" *ngIf="passwordForm.get('newPassword')?.errors  &&
+            (passwordForm.get('newPassword')?.touched || passwordForm.get('newPassword')?.dirty)">
             يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، حرف كبير، رقم ورمز
           </div>
           <div class="password-strength mt-2">
@@ -59,16 +59,32 @@
               <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
             </span>
           </div>
-          <div class="text-danger text-end small" *ngIf="passwordForm.get('confirmPassword')?.touched && passwordForm.hasError('mismatch')">
-            كلمة المرور غير متطابقة
+          <div class="text-danger text-end small" *ngIf="passwordForm.get('confirmPassword')?.touched || passwordForm.get('confirmPassword')?.dirty">
+            <span
+            *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']"
+            >كلمة المرور مطلوبة</span
+          >
+          <span
+          *ngIf="passwordForm.hasError('mismatch') && !passwordForm.get('confirmPassword')?.errors?.['required']"
+        >
+          كلمة المرور غير متطابقة
+        </span>
           </div>
         </div>
       </div>
 
       <!-- الأزرار -->
       <div class="d-flex justify-content-between gap-2">
-        <button type="submit" class="btn btn-warning w-50" [disabled]="isLoading">
-          <i class="bi bi-check-lg"></i> تحديث
+        <button type="submit"  [disabled]="!passwordForm.valid || isLoading" class="btn btn-warning w-50" [disabled]="isLoading">
+           <span *ngIf="!isLoading">          <i class="bi bi-check-lg"></i> تحديث</span>
+        
+        <span *ngIf="isLoading">جاري التحميل...</span>
+<span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
         </button>
         <button type="button" class="btn btn-danger w-50" (click)="onCancel()">
           <i class="bi bi-x-lg"></i> إلغاء
