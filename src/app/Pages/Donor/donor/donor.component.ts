@@ -30,7 +30,7 @@ import Swal from 'sweetalert2';
   styleUrl: './donor.component.scss',
 })
 export class DonorComponent {
-  
+  //dependency injection
    private readonly _Router=inject(Router)
    private readonly _LoginService=inject(LoginService)
   private readonly toastr = inject(ToastrService)
