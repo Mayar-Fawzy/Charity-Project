@@ -17,6 +17,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 interface CharityCause {
   title: string;
@@ -232,8 +233,22 @@ export class HomeComponent implements AfterViewInit {
     return (cause.amountRaised / cause.fundingGoal) * 100;
   }
   goToPayment(projectId: string) {
-    this._Router.navigate(['/ewallet-payment', projectId]);
-  }
+     const token = localStorage.getItem('userToken');
+   
+     if (!token) {
+       Swal.fire({
+         icon: "error",
+         title: "خطأ",
+         text: "يجب عليك التسجيل أولًا قبل التبرع",
+         confirmButtonColor: "#f6a026",
+         confirmButtonText: " حسنا",
+       });
+      
+     } else {
+       this._Router.navigate(['/ewallet-payment', projectId]);
+     }
+   }
+  
 
   // >>>>>>>>>>>>>>>>> Become a Volunteer 
   initVolunteerImages(): void {

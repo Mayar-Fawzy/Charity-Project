@@ -54,7 +54,7 @@ export class LoginComponent {
    
         if (res.isSucceeded) {
           this.isloading = true;
-          this._ToastService.success(res.message, '', { timeOut: 3000 });
+          this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
 
           localStorage.setItem('userToken', res.data.jwtModel.jwt);
           localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
