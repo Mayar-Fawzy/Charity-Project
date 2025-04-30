@@ -22,6 +22,7 @@ import { PaymentMethodComponent } from './settings/payment-method/payment-method
 import { NotificationsComponent } from './settings/notifications/notifications.component';
 import { WorkComponent } from './settings/work/work.component';
 import { AuthGuard } from './core/Guards/auth.guard';
+import { BeneficaryComponent } from './Pages/beneficiary/beneficary/beneficary.component';
 export const routes: Routes = [
     // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -43,7 +44,7 @@ export const routes: Routes = [
       { path: 'donor', title: 'Donor', component: DonorComponent },
       { path: 'super-admin', title: 'Super Admin', component: SuperAdminComponent },
       { path: 'admin', title: 'Admin', component: AdminComponent },
-      // { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
+      { path: 'beneficiary', title: 'Beneficiary', component: BeneficaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
       { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
       {
         path: 'ewallet-payment/:id',
