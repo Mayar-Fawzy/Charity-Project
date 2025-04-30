@@ -158,7 +158,6 @@
 </section>
 
 <!-- In-Kind Donation Section -->
-<!-- In-Kind Donation Section -->
 <section class="in-kind-donation" id="donate-form">
   <div class="donation-wrapper">
     <div class="container">
@@ -219,7 +218,7 @@
             type="text"
             id="quantity"
             class="form-control"
-            placeholder="مثلاً: ٣ صناديق"
+            placeholder="أدخل"
             formControlName="quantity"
           />
           <div
@@ -272,8 +271,9 @@
       
         <!-- رفع الصور -->
         <div class="form-group">
-          <label for="photos" class="form-label">الصور</label>
-          <div class="upload-box" (click)="triggerFileUpload()">
+          <label for="image-upload" class="form-label">الصور</label>
+        
+          <div class="upload-box" (click)="openImageUploader()">
             <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
             <div class="upload-text">
               <strong class="upload-main-text">ارفع الملفات</strong>
@@ -281,15 +281,34 @@
             </div>
             <small class="upload-note">PNG أو JPG حتى 10 ميجا بايت</small>
           </div>
+        
           <input
+            #imageInput
             type="file"
-            id="photos"
+            id="image-upload"
             accept="image/png, image/jpeg"
             multiple
-            (change)="onFileSelected($event)"
+            (change)="handleImageSelection($event)"
             hidden
           />
+        
+          <div class="preview-container" *ngIf="uploadedImages.length">
+            <img *ngFor="let img of uploadedImages" [src]="img" class="preview-img" />
+          </div>
         </div>
+        
+
+        <!-- زر الإرسال -->
+        <button 
+        type="submit" 
+        class="btn btn-primary submit-btn" 
+        [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">إرسال التبرع</span>
+        <span *ngIf="isSubmitting">
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          جاري التحميل...
+        </span>
+      </button>
       
         <!-- زر الإرسال -->
         <button

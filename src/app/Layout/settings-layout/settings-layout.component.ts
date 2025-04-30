@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule }      from '@angular/common';
 import { RouterModule, RouterOutlet }      from '@angular/router';
-import { SidebarComponent }  from '../sidebar/sidebar.component';
+import { SidebarComponent }  from '../sidebar/sidebarcomponent';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // 
 import { TabViewModule } from 'primeng/tabview';

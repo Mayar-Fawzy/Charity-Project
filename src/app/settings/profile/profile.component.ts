@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { Component, OnInit } from '@angular/core';
+=======
 import { Component, inject } from '@angular/core';
+>>>>>>> 6c3824ea53d217a9ba5d68be86c2bf857e682afa
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -13,10 +17,14 @@ import { ProfileservicesService } from '../Core/Services/profileservices.service
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
+<<<<<<< HEAD
+export class ProfileComponent implements OnInit {
+=======
 export class ProfileComponent {
   private readonly _ProfileservicesService=inject(ProfileservicesService)
      private readonly _ActivatedRoute=inject(ActivatedRoute)
      private readonly _Router=inject(Router)
+>>>>>>> 6c3824ea53d217a9ba5d68be86c2bf857e682afa
   userImageUrl: string | null = null;
 
   profileForm = new FormGroup({
@@ -29,6 +37,13 @@ export class ProfileComponent {
     dob: new FormControl('2002-11-19')
   });
 
+  ngOnInit(): void {
+    const storedImage = localStorage.getItem('userImage');
+    if (storedImage) {
+      this.userImageUrl = storedImage;
+    }
+  }
+
   get userFullName(): string {
     const first = this.profileForm.get('firstName')?.value || '';
     const last = this.profileForm.get('lastName')?.value || '';
@@ -40,7 +55,6 @@ export class ProfileComponent {
     return firstName ? firstName.trim().charAt(0).toUpperCase() : '';
   }
 
-   // دي الوان خلفيات بيختار منها عشوائي
   getRandomColor(name: string): string {
     const colors = ['#FF9B44', '#6C5CE7', '#00B894', '#0984E3', '#D63031', '#FDCB6E'];
     const index = name
@@ -55,7 +69,6 @@ export class ProfileComponent {
     }
   }
 
-  // دي لو عايز يلغي التعديل اللي عمله
   onCancel() {
     this.profileForm.reset({
       firstName: 'Ahmed',
@@ -68,20 +81,21 @@ export class ProfileComponent {
     });
   }
 
-  // دي حته رفع الصورة بدل الصورة ال (defult)
   onImageSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.userImageUrl = e.target?.result as string;
+        const result = e.target?.result as string;
+        this.userImageUrl = result;
+        localStorage.setItem('userImage', result);
       };
       reader.readAsDataURL(input.files[0]);
     }
   }
 
-   //ده زر انا عملته علشان لو رفع صورة وعايز يحذفها ويرجع ل(defult)
   removeImage() {
     this.userImageUrl = null;
+    localStorage.removeItem('userImage');
   }
 }
