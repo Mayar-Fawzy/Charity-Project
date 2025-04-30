@@ -20,6 +20,7 @@ import { AccountSecurityComponent } from './settings/account-security/account-se
 import { PaymentMethodComponent } from './settings/payment-method/payment-method.component';
 import { NotificationsComponent } from './settings/notifications/notifications.component';
 import { WorkComponent } from './settings/work/work.component';
+import { AuthGuard } from './core/Guards/auth.guard';
 export const routes: Routes = [
     // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -46,7 +47,8 @@ export const routes: Routes = [
       {
         path: 'ewallet-payment/:id',
         title: 'E-Wallet Payment',
-        component: EwalletPaymentComponent
+        component: EwalletPaymentComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'visa-payment',
