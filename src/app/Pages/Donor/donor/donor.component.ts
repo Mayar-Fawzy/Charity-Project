@@ -154,7 +154,13 @@ isSubmitting = false;
     const donorIdValue = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
     if (!donorIdValue) {
       this.isSubmitting = false;
-      this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: " حسنا",
+      });
       return;
     }
   
@@ -164,7 +170,11 @@ isSubmitting = false;
       next: (res) => {
         this.isSubmitting = false;
         console.log('تم التبرع بنجاح:', res);
-
+        Swal.fire({
+          title: "تم التبرع بنجاح",
+          text: "You clicked the button!",
+          icon: "success"
+        });
         this.showCenteredToast('success', 'تم إرسال التبرع بنجاح!', 'نجاح');
         this.donationForm.reset();
       },
