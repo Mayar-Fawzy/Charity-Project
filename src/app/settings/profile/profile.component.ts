@@ -3,7 +3,8 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import { ProfileservicesService } from './Core/Services/profileservices.service';
+import { ProfileservicesService } from '../Core/Services/profileservices.service';
+
 
 @Component({
   selector: 'app-profile',
