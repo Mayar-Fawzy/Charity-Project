@@ -1,30 +1,53 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { ResetpassService } from '../Core/Services/resetpass.service';
+import { LoginService } from '../../Pages/Auth/core/Services/login.service';
 
 @Component({
   selector: 'app-account-security',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './account-security.component.html',
-  styleUrl: './account-security.component.scss'
+  styleUrls: ['./account-security.component.scss']
 })
-export class PasswordSettingsComponent {
-  showCurrentPassword = false;
+export class PasswordSettingsComponent implements OnInit {
+  private readonly _toastr = inject(ToastrService);
+  private readonly _router = inject(Router);
+  private readonly _ResetpassService = inject(ResetpassService);
+  private readonly _LoginService = inject(LoginService);
+
+  userData: any = null;
   showNewPassword = false;
   showConfirmPassword = false;
 
+  isLoading = false;
   passwordStrength = 0;
   passwordStrengthLabel = 'ضعيفة';
 
-  passwordForm = new FormGroup({
-    currentPassword: new FormControl('', [Validators.required]),
-    newPassword: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required]),
-  });
+  passwordForm!: FormGroup;
 
-  toggleShowCurrentPassword() {
-    this.showCurrentPassword = !this.showCurrentPassword;
+  ngOnInit(): void {
+    this.userData = this._LoginService.saveUserAuth();
+    const name = this.userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+
+    this.passwordForm = new FormGroup({
+      email: new FormControl({ value: name, disabled: true }, [Validators.required, Validators.email]),
+      newPassword: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+      ]),
+      confirmPassword: new FormControl('', [Validators.required])
+    }, { validators: [this.confirmPasswordValidator] });
+  }
+
+  confirmPasswordValidator(group: AbstractControl): { [key: string]: boolean } | null {
+    const password = group.get('newPassword')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return password === confirm ? null : { mismatch: true };
   }
 
   toggleShowNewPassword() {
@@ -55,21 +78,51 @@ export class PasswordSettingsComponent {
     }
   }
 
-  getStrengthClass() {
+  getStrengthClass(): string {
     if (this.passwordStrength < 50) return 'bg-danger';
     if (this.passwordStrength < 75) return 'bg-warning';
     return 'bg-success';
   }
 
   updatePassword() {
-    if (this.passwordForm.valid) {
-      console.log('تم إرسال البيانات:', this.passwordForm.value);
+    this.isLoading = true;
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
     }
+
+    const email = this.passwordForm.get('email')?.value;
+    const newPassword = this.passwordForm.get('newPassword')?.value;
+    const confirmPassword = this.passwordForm.get('confirmPassword')?.value;
+    this.isLoading = true;
+
+    this._ResetpassService.resetPassword(email, newPassword, confirmPassword).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this._toastr.success('تم تحديث كلمة المرور بنجاح');
+
+        this.onCancel();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error(err?.error?.message);
+        this._toastr.error(err?.error?.message || 'فشل تحديث كلمة المرور', 'حدث خطأ');
+        this.onCancel();
+      },
+      complete: () => this.isLoading = false
+    });
   }
 
   onCancel() {
-    this.passwordForm.reset();
+    this.passwordForm.reset({
+      email: { value: this.userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"], disabled: true },
+      newPassword: '',
+      confirmPassword: ''
+    });
+  
     this.passwordStrength = 0;
     this.passwordStrengthLabel = 'ضعيفة';
   }
+  
+  
 }

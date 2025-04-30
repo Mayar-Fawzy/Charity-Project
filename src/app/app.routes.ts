@@ -56,19 +56,6 @@ export const routes: Routes = [
         title: 'Visa Payment',
         component: VisaPaymentComponent
       },
-      {
-        path: 'settings',
-        title: 'settings',
-        component: SettingsLayoutComponent,
-        children: [
-          { path: 'profile', component: ProfileComponent },
-          { path: 'account-security', component: PasswordSettingsComponent },
-          { path: 'payment-method', component: PaymentMethodComponent },
-          { path: 'notifications', component: NotificationsComponent },
-          { path: 'work', component: WorkComponent },
-          { path: '', redirectTo: 'profile', pathMatch: 'full' }
-        ]
-      }
      
     ]
   },
@@ -80,6 +67,7 @@ export const routes: Routes = [
       { path: 'account-security', component: PasswordSettingsComponent },
       { path: 'payment-method', component: PaymentMethodComponent },
       { path: 'notifications', component: NotificationsComponent },
+      { path: 'work', component: WorkComponent },
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
   },
