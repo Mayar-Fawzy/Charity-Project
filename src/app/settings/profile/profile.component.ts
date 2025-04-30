@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { ProfileservicesService } from './Core/Services/profileservices.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,6 +13,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
+  private readonly _ProfileservicesService=inject(ProfileservicesService)
+     private readonly _ActivatedRoute=inject(ActivatedRoute)
+     private readonly _Router=inject(Router)
   userImageUrl: string | null = null;
 
   profileForm = new FormGroup({
