@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { DonateNowService } from '../core/Services/donate-now.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -85,9 +86,14 @@ isSubmitting = false;
     const token = localStorage.getItem('userToken');
   
     if (!token) {
-  //    this.toastMessage = 'يجب عليك التسجيل أولًا قبل التبرع.';
-  //  this.toastr.error(this.toastMessage, 'خطأ');
-  alert('سجل دخول اولا')
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: " حسنا",
+      });
+     
     } else {
       this._Router.navigate(['/ewallet-payment', projectId]);
     }
@@ -134,7 +140,14 @@ isSubmitting = false;
     this.userData = this._LoginService.saveUserAuth();
     if (!this.userData) {
       this.isSubmitting = false;
-      this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
+     // this.showCenteredToast('error', 'برجاء تسجيل الدخول اولا', 'خطأ');
+     Swal.fire({
+      icon: "error",
+      title: "خطأ",
+      text: "يجب عليك التسجيل أولًا قبل التبرع",
+      confirmButtonColor: "#f6a026",
+      confirmButtonText: " حسنا",
+    });
       this.donationForm.reset();
     }
     
