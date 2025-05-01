@@ -131,7 +131,14 @@
 
           <div class="row mt-4">
             <div class="col">
-              <button type="submit" class="btn btn-warning w-100">تحديث</button>
+              <button type="submit" class="btn btn-warning w-100" [disabled]="isLoading">
+                <span *ngIf="!isLoading">تحديث</span>
+                <span *ngIf="isLoading">
+                  جاري التحميل...
+                  <i class="spinner-border spinner-border-sm me-1"></i>
+                </span>
+              </button>
+              
             </div>
             <div class="col">
               <button

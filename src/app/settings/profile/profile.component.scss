@@ -31,3 +31,8 @@
         text-transform: uppercase;
     }
 }
+:host ::ng-deep .toast-container {
+    margin-top: 48px !important;
+    margin-right: 6px !important;
+  }
+  
