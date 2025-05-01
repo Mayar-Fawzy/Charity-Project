@@ -65,10 +65,11 @@ export const routes: Routes = [
     component: SettingsLayoutComponent,
     children: [
       { path: 'profile/:id', component: ProfileComponent },
-      { path: 'account-security', component: PasswordSettingsComponent },
-      { path: 'payment-method', component: PaymentMethodComponent },
-      { path: 'notifications', component: NotificationsComponent },
-      { path: 'work', component: WorkComponent },
+      { path: 'account-security/:id', component: PasswordSettingsComponent },
+{ path: 'payment-method/:id', component: PaymentMethodComponent },
+{ path: 'notifications/:id', component: NotificationsComponent },
+{ path: 'work/:id', component: WorkComponent },
+
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
   },
