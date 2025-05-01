@@ -9,7 +9,7 @@ import { ProfileservicesService } from '../Core/Services/profileservices.service
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
   private readonly _ProfileservicesService = inject(ProfileservicesService);
@@ -18,6 +18,8 @@ export class ProfileComponent implements OnInit {
 
   userImageUrl: string | null = null;
   selectedImage: File | null = null;
+  userData: any = null;
+  originalUserData: any = null;
 
   profileForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
@@ -25,107 +27,123 @@ export class ProfileComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     phoneNumber: new FormControl('', [Validators.required]),
     address: new FormControl(''),
-    gender: new FormControl('0'), // 0: Male, 1: Female
-    dateOfBirth: new FormControl('', [Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]) // Ensure correct format
+    gender: new FormControl({ value: '', disabled: true }), // ⛔ النوع غير قابل للتعديل
+    dateOfBirth: new FormControl({ value: '', disabled: true }, [
+      Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
+    ]) // ⛔ التاريخ غير قابل للتعديل
   });
 
   ngOnInit(): void {
-    const storedImage = localStorage.getItem('userImage');
-    if (storedImage) {
-      this.userImageUrl = storedImage;
+    const id = this._ActivatedRoute.snapshot.paramMap.get('id');
+    if (!id) {
+      alert('لم يتم العثور على معرف المستخدم.');
+      return;
     }
+
+    this._ProfileservicesService.GetUserById(id).subscribe({
+      next: (data: any) => {
+        this.userData = data.data;
+        this.originalUserData = { ...data.data };
+        this.userImageUrl = data.data.imageUrl ; // تعيين صورة المستخدم من الـ API
+        this.profileForm.patchValue({
+          firstName: data.data.firstName,
+          lastName: data.data.lastName,
+          email: data.data.email,
+          phoneNumber: data.data.phoneNumber,
+          address: data.data.address,
+
+          gender: data.data.gender?.toString() || '',
+          dateOfBirth: data.data.dateOfBirth ? data.data.dateOfBirth.split('T')[0] : ''
+        });
+      },
+      error: (error: any) => {
+        console.error('فشل في جلب بيانات المستخدم', error);
+      }
+    });
   }
 
-  get userFullName(): string {
-    const first = this.profileForm.get('firstName')?.value || '';
-    const last = this.profileForm.get('lastName')?.value || '';
-    return `${first} ${last}`.trim();
+  // دالة لتوليد لون عشوائي بناءً على الاسم الكامل
+  getRandomColor(fullName: string): string {
+    const hash = Array.from(fullName).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const randomColor = (hash % 16777215).toString(16); // توليد لون بالصيغة hex
+    return `#${randomColor.padStart(6, '0')}`;
   }
 
+  // دالة للحصول على أول حرف من الاسم الكامل
   getFirstLetter(): string {
-    const firstName = this.profileForm.get('firstName')?.value;
-    return firstName ? firstName.trim().charAt(0).toUpperCase() : '';
+    if (this.userData && this.userData.firstName && this.userData.lastName) {
+      return (this.userData.firstName[0] + this.userData.lastName[0]).toUpperCase();
+    }
+    return '';
   }
 
-  getRandomColor(name: string): string {
-    const colors = ['#FF9B44', '#6C5CE7', '#00B894', '#0984E3', '#D63031', '#FDCB6E'];
-    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-    return colors[index];
+  // خاصية للحصول على الاسم الكامل
+  get userFullName(): string {
+    return `${this.userData?.firstName} ${this.userData?.lastName}`;
   }
 
-  onImageSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.selectedImage = input.files[0];
-
+  // دالة للتعامل مع اختيار صورة
+  onImageSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file;
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        this.userImageUrl = result;
-        localStorage.setItem('userImage', result);
+      reader.onload = () => {
+        this.userImageUrl = reader.result as string;
       };
-      reader.readAsDataURL(this.selectedImage);
+      reader.readAsDataURL(file);
     }
   }
 
-  removeImage() {
+  // دالة لحذف الصورة
+  removeImage(): void {
     this.userImageUrl = null;
     this.selectedImage = null;
-    localStorage.removeItem('userImage');
   }
 
-  onSubmit() {
+  // دالة للتعامل مع تحديث البيانات
+  onSubmit(): void {
     if (this.profileForm.valid) {
       const formData = new FormData();
-
-      const id = this._ActivatedRoute.snapshot.paramMap.get('id');
-      if (!id) {
-        alert('لم يتم العثور على معرف المستخدم.');
-        return;
-      }
-
-      formData.append('id', id);
-      formData.append('firstName', this.profileForm.get('firstName')?.value || '');
-      formData.append('lastName', this.profileForm.get('lastName')?.value || '');
-      formData.append('email', this.profileForm.get('email')?.value || '');
-      formData.append('userName', this.profileForm.get('email')?.value || '');
-      formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value || '');
-      formData.append('address', this.profileForm.get('address')?.value || '');
-      formData.append('gender', this.profileForm.get('gender')?.value || '0');
-
-      const dob = this.profileForm.get('dateOfBirth')?.value;
-      if (dob) {
-        formData.append('dateOfBirth', new Date(dob).toISOString().split('T')[0]);
-      }
-
-      formData.append('createdDate', new Date().toISOString());
-
+  
+      formData.append('Id', this.userData?.id ?? ''); // مهم جدًا
+      formData.append('UserName', this.userData?.userName ?? ''); // مهم جدًا
+      formData.append('firstName', this.profileForm.value.firstName ?? '');
+      formData.append('lastName', this.profileForm.value.lastName ?? '');
+      formData.append('email', this.profileForm.value.email ?? '');
+      formData.append('phoneNumber', this.profileForm.value.phoneNumber ?? '');
+      formData.append('address', this.profileForm.value.address ?? '');
+  
       if (this.selectedImage) {
-        formData.append('image', this.selectedImage);
+        formData.append('image', this.selectedImage, this.selectedImage.name);
       }
-
-      this._ProfileservicesService.UpdateUser(id, formData).subscribe({
-        next: (res) => {
-          console.log('تم تحديث البيانات بنجاح', res);
-          alert('تم تحديث البيانات بنجاح');
-        },
-        error: (err) => {
-          console.error('حدث خطأ أثناء التحديث', err.error.errors);
-          alert('حدث خطأ أثناء التحديث');
-        }
-      });
+  
+      const id = this._ActivatedRoute.snapshot.paramMap.get('id');
+      if (id) {
+        this._ProfileservicesService.UpdateUser(id, formData).subscribe({
+          next: (response: any) => {
+            console.log('✅ تم التحديث بنجاح', response);
+            alert('✅ تم تحديث البيانات بنجاح');
+          },
+          error: (error: any) => {
+            console.error('❌ خطأ أثناء التحديث', error);
+            alert('❌ حدث خطأ أثناء التحديث');
+          }
+        });
+      } else {
+        alert('❌ لم يتم العثور على معرف المستخدم.');
+      }
+    } else {
+      alert('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
+  
+  
+  
 
-  onCancel() {
-    this.profileForm.reset({
-      firstName: 'Ahmed',
-      lastName: 'Saad',
-      email: 'ahmed@example.com',
-      phoneNumber: '+201025363285',
-      address: 'المنوفية شبين الكوم',
-      gender: '0',
-      dateOfBirth: '2002-11-19'
-    });
+  // دالة لإلغاء التغييرات
+  onCancel(): void {
+    this.profileForm.patchValue(this.originalUserData);
+    alert('تم إلغاء التغييرات');
   }
 }

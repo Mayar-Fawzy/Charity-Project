@@ -1,4 +1,4 @@
-<section class="container profile-settings pb-5">
+<section class="container profile-settings">
   <div class="row g-4 flex-row-reverse">
     <!-- صورة المستخدم -->
     <div class="col-md-6">
@@ -10,7 +10,7 @@
               alt="صورة المستخدم"
               class="rounded-circle user-img"
             />
-          </ng-container> 
+          </ng-container>
 
           <ng-template #letterAvatar>
             <div
@@ -57,7 +57,7 @@
 
     <!-- بيانات المستخدم -->
     <div class="col-md-6">
-      <div class="bg-white shadow-sm rounded p-4">
+      <div class="bg-white shadow-sm rounded p-3">
         <h4 class="text-center mb-4 text-warning">تعديل المستخدم</h4>
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
@@ -109,8 +109,8 @@
                 formControlName="gender"
                 class="form-select select-left-arrow"
               >
-                <option value="Male">ذكر</option>
-                <option value="Female">أنثى</option>
+                <option [value]="0">ذكر</option>
+                <option [value]="1">أنثى</option>
               </select>
             </div>
 

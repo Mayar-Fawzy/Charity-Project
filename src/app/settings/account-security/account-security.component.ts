@@ -33,7 +33,6 @@ export class PasswordSettingsComponent implements OnInit {
     this.userData = this._LoginService.saveUserAuth();
       
     const name = this.userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-
     this.passwordForm = new FormGroup({
       email: new FormControl({ value: name, disabled: true }, [Validators.required, Validators.email]),
       newPassword: new FormControl('', [
