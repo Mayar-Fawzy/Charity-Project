@@ -64,7 +64,7 @@ export const routes: Routes = [
     path: 'settings',
     component: SettingsLayoutComponent,
     children: [
-      { path: 'profile', component: ProfileComponent },
+      { path: 'profile/:id', component: ProfileComponent },
       { path: 'account-security', component: PasswordSettingsComponent },
       { path: 'payment-method', component: PaymentMethodComponent },
       { path: 'notifications', component: NotificationsComponent },
