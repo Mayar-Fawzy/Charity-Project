@@ -188,6 +188,7 @@ export class DonorComponent {
       input.click();
     }
   }
+  
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
 
   uploadedImages: string[] = [];
