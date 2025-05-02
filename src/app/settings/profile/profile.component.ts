@@ -93,13 +93,49 @@ export class ProfileComponent implements OnInit {
         this.userImageUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
+  
+      // ارفع الصورة مباشرة بعد الاختيار
+      this.uploadImage(file);
     }
   }
+  
 
   removeImage(): void {
-    this.userImageUrl = null;
-    this.selectedImage = null;
+    if (!this.userData) return;
+  
+    this.isLoading = true;
+  
+    const formData = new FormData();
+    formData.append('Id', this.userData.id ?? '');
+    formData.append('UserName', this.userData.userName ?? '');
+    formData.append('firstName', this.userData.firstName ?? '');
+    formData.append('lastName', this.userData.lastName ?? '');
+    formData.append('email', this.userData.email ?? '');
+    formData.append('phoneNumber', this.userData.phoneNumber ?? '');
+    formData.append('address', this.userData.address ?? '');
+    formData.append('gender', this.userData.gender ?? '');
+    formData.append('dateOfBirth', this.userData.dateOfBirth ?? '');
+    
+    // هنا لا نضيف الصورة => معناها حذف
+    formData.append('image', ''); // إرسال الصورة فاضية
+  
+    this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        this.userImageUrl = null;
+        this.selectedImage = null;
+        this.userData.imageUrl = null;
+        this._Toastr.success('تم حذف الصورة بنجاح');
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this._Toastr.error('حدث خطأ أثناء حذف الصورة');
+        console.error('خطأ أثناء حذف الصورة', error);
+      }
+    });
   }
+  
+  
 
   onSubmit(): void {
     if (this.profileForm.valid) {
@@ -139,7 +175,35 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
-
+  uploadImage(file: File): void {
+    if (!file || !this.userData) return;
+  
+    const formData = new FormData();
+    formData.append('Id', this.userData.id ?? '');
+    formData.append('UserName', this.userData.userName ?? '');
+    formData.append('firstName', this.userData.firstName ?? '');
+    formData.append('lastName', this.userData.lastName ?? '');
+    formData.append('email', this.userData.email ?? '');
+    formData.append('phoneNumber', this.userData.phoneNumber ?? '');
+    formData.append('address', this.userData.address ?? '');
+    formData.append('gender', this.userData.gender ?? '');
+    formData.append('dateOfBirth', this.userData.dateOfBirth ?? '');
+    formData.append('image', file);
+  
+    this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
+      next: (response: any) => {
+        this._Toastr.success('تم رفع الصورة بنجاح');
+        this.userImageUrl = response.data.data.imageUrl;
+      },
+      error: (error: any) => {
+        this._Toastr.error('حدث خطأ أثناء رفع الصورة');
+        console.error('خطأ أثناء رفع الصورة', error);
+      }
+    });
+  }
+  
+  
+  
   onCancel(): void {
     this.profileForm.patchValue(this.originalUserData);
     this._Toastr.info('تم إلغاء التغييرات');
