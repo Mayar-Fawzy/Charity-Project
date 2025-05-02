@@ -4,37 +4,37 @@ $text-color: #333;
 $light-bg: #f9f9f9;
 
 :host ::ng-deep {
-    .p-carousel-items-container {
-        display: flex;
-        align-items: stretch;
-    }
+  .p-carousel-items-container {
+      display: flex;
+      align-items: stretch;
+  }
 
-    .p-carousel-item {
-        height: 100%;
-        display: flex;
-    }
+  .p-carousel-item {
+      height: 100%;
+      display: flex;
+  }
 
-    .p-carousel-indicator-active .p-carousel-indicator-button {
-        background: #f6a026 !important;
-    }
+  .p-carousel-indicator-active .p-carousel-indicator-button {
+      background: #f6a026 !important;
+  }
 
-    .p-carousel-indicator.p-highlight {
-        background: #f6a026 !important;
-        width: 14px;
-        height: 14px;
-    }
+  .p-carousel-indicator.p-highlight {
+      background: #f6a026 !important;
+      width: 14px;
+      height: 14px;
+  }
 
-    .p-button-text {
-        background: transparent;
-        border-color: transparent;
-        color: #f6a026 !important;
-    }
+  .p-button-text {
+      background: transparent;
+      border-color: transparent;
+      color: #f6a026 !important;
+  }
 
-    .p-carousel-indicator.p-highlight {
-        background: #f6a026 !important;
-        width: 14px;
-        height: 14px;
-    }
+  .p-carousel-indicator.p-highlight {
+      background: #f6a026 !important;
+      width: 14px;
+      height: 14px;
+  }
 }
 
 // h2 style 

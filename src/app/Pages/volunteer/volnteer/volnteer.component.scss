@@ -11,7 +11,53 @@ $primary-color: #2c3e50;
 $secondary-color: #f6a026;
 $text-color: #333;
 $light-bg: #f9f9f9;
+:host ::ng-deep {
+    .p-carousel-items-container {
+      display: flex;
+      align-items: stretch;
+    }
+  
+    .p-carousel-item {
+      height: 100%;
+      display: flex;
+    }
+  
+    .p-carousel-item > div {
+      height: 100%;
+      width: 100%;
+    }
+  
+    .card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .card-img-top {
+      object-fit: cover;
+      height: 180px;
+    }
+  
+    .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  
+    .p-carousel-indicator-active .p-carousel-indicator-button,
+    .p-carousel-indicator.p-highlight {
+      background: #f6a026 !important;
 
+    }
+  
+    .p-button-text {
+      background: transparent;
+      border-color: transparent;
+      color: #f6a026 !important;
+    }
+  }
+  
 // >>>>>>>>>>>>> header 
 .cta-section {
     position: relative;
@@ -357,6 +403,29 @@ $light-bg: #f9f9f9;
 }
 
 // >>>>>>>>>>>>>>>>>>> project 
+
+.progress-container {
+    margin-bottom: 1rem;
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .progress-bar {
+      background: #eee;
+      border-radius: 1rem;
+      overflow: hidden;
+      height: 8px;
+
+      .progress {
+        height: 100%;
+        background-color: $secondary-color;
+      }
+    }
+  }
 .view-all-btn {
     display: inline-flex;
     align-items: center;

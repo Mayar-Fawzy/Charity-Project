@@ -1,53 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProjectService } from './core/Services/project.service';
+import { Data } from './../../Donor/core/interface/iproject-donate';
+import { CarouselResponsiveOptions } from 'primeng/carousel';
+import { CarouselModule } from 'primeng/carousel';
 
 @Component({
   selector: 'app-volnteer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,CarouselModule],
   templateUrl: './volnteer.component.html',
   styleUrl: './volnteer.component.scss'
 })
 export class VolnteerComponent {
-  projects = [
-    {
-      title: 'مشروع تعليم لـ 1000 طفل',
-      image: '/Images/volt-pro-1.png',
-      location: 'أسوان - صعيد مصر',
-      duration: '6 أشهر',
-      target: 200000,
-      raised: 120000,
-      volunteers: 20,
-      registered: 15,
-      progress: 60
-    },
-    {
-      title: 'برنامج الرعاية الصحية',
-      image: '/Images/volt-pro-2.png',
-      location: 'المجتمعات الريفية',
-      duration: '12 شهرًا',
-      target: 300000,
-      raised: 150000,
-      volunteers: 30,
-      registered: 20,
-      progress: 50
-    },
-    {
-      title: 'مجتمعات مستدامة',
-      image: '/Images/volt-pro-3.png',
-      location: 'المناطق الحضرية',
-      duration: '8 أشهر',
-      target: 150000,
-      raised: 90000,
-      volunteers: 25,
-      registered: 18,
-      progress: 60
+//project And Assest
+private readonly _ProjectService=inject(ProjectService);
+    responsiveOptions: CarouselResponsiveOptions[] = [];
+     Projects: Data[] = [];
+   
+     ngOnInit(): void {
+      this.responsiveOptions = [
+        { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
+        { breakpoint: '768px', numVisible: 2, numScroll: 1 },
+        { breakpoint: '560px', numVisible: 1, numScroll: 1 }
+      ];
+      this.GetDonation();
     }
-  ];
+  
+    GetDonation() {
+      this._ProjectService.GetDonation().subscribe((res) => {
+        this.Projects = res.data;
+        console.log("VolnteerProjects", this.Projects);
+      });
+    }
+
+ 
+
+  getProgressPercentage(project: any): number {
+    const fakeCurrentAmount = project.targetAmount * 0.4;
+    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+  }
 
   navigateToMoreProjects() {
     window.location.href = '';
   }
+  // project.component.ts
+
+getProjectDurationInDays(startDate: string, endDate: string): number {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+ 
 
   // >>>>>>>>>>>> gallery 
   galleryItems = [

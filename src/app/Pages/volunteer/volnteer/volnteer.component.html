@@ -33,7 +33,7 @@
 </section>
 
 <!-- >>>>>>>>>>>>>>>>>>> dashborad -->
-<section class="dashboard" id="dashboard">
+<!-- <section class="dashboard" id="dashboard">
   <div class="container">
     <div class="stats">
       <div class="stat-item" onclick="this.classList.toggle('flipped')">
@@ -97,10 +97,10 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 <!-- >>>>>>>>>>>> Gallery -->
-<section class="gallery py-5 bg-white">
+<!-- <section class="gallery py-5 bg-white">
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="fw-bold">معرض الصور</h2>
@@ -130,7 +130,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 <!-- >>>>>>>>>>>>>>>>>>> success-cards -->
 <section class="success-stories-section position-relative py-5 bg-light">
@@ -248,48 +248,58 @@
 <section class="active-projects-section container py-5">
   <h2 class="text-center mb-4 fw-bold">المشاريع النشطة</h2>
 
-  <div class="row gy-4 justify-content-center">
-    <div
-      class="col-md-6 col-lg-4"
-      *ngFor="let project of projects; let i = index"
-    >
-      <div
-        class="card card-animated h-100"
-        [ngStyle]="{ 'animation-delay': i * 0.3 + 's' }"
-      >
-        <img [src]="project.image" class="card-img-top" [alt]="project.title" />
-        <div class="card-body">
-          <h5 class="card-title fw-bold">{{ project.title }}</h5>
-          <ul class="list-unstyled text-muted small">
-            <li>
-              <i class="bi bi-geo-alt-fill text-warning me-1"></i>
-              {{ project.location }}
-            </li>
-            <li>
-              <i class="bi bi-clock-fill text-warning me-1"></i>
-              {{ project.duration }}
-            </li>
-            <li>
-              <i class="bi bi-cash-coin text-warning me-1"></i> الهدف:
-              {{ project.target }} جنيه (تم جمع {{ project.raised }} جنيه)
-            </li>
-            <li>
-              <i class="bi bi-people-fill text-warning me-1"></i> مطلوب
-              {{ project.volunteers }} متطوع (سجل
-              {{ project.registered }} بالفعل)
-            </li>
-          </ul>
-          <div class="progress mb-3" style="height: 6px">
-            <div
-              class="progress-bar bg-warning"
-              [style.width.%]="project.progress"
-            ></div>
+  <p-carousel
+    [value]="Projects"
+    [responsiveOptions]="responsiveOptions"
+    [numVisible]="3"
+    [numScroll]="1"
+    [circular]="true"
+    [autoplayInterval]="5000"
+    [showIndicators]="false"
+    *ngIf="Projects.length > 0"
+  >
+    <ng-template let-project pTemplate="item">
+      <div class="px-2">
+        <div class="card card-animated h-100">
+          <img
+            [src]="project.imageUrl"
+            class="card-img-top"
+            [alt]="project.name"
+          />
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ project.name }}</h5>
+            <ul class="list-unstyled text-muted small">
+              <li>
+                <i class="bi bi-calendar-event text-warning me-1"></i>
+                المدة: {{ getProjectDurationInDays(project.startDate, project.endDate) }} يوم
+              </li>
+              <li>
+                <i class="bi bi-cash-coin text-warning me-1"></i>
+                الهدف: {{ project.targetAmount | number }} جنيه
+              </li>
+            </ul>
+            <!-- نسبة التقدم -->
+            <div class="progress-container">
+              <div class="progress-label">
+                <span class="title">نسبة التقدم</span>
+                <span class="percentage">
+                  {{ getProgressPercentage(project) }}%
+                </span>
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress"
+                  [style.width.%]="getProgressPercentage(project)"
+                ></div>
+              </div>
+            </div>
+  
+            <button class="btn btn-warning w-100">انضم كمتطوع</button>
           </div>
-          <button class="btn btn-warning w-100">انضم كمتطوع</button>
         </div>
       </div>
-    </div>
-  </div>
+    </ng-template>
+  </p-carousel>
 
   <div class="view-all-projects text-end mt-4">
     <button class="view-all-btn" (click)="navigateToMoreProjects()">
