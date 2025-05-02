@@ -188,6 +188,7 @@ export class DonorComponent {
       input.click();
     }
   }
+  
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
 
   uploadedImages: string[] = [];
@@ -243,4 +244,37 @@ export class DonorComponent {
   ];
 
   DonateNow() {}
+  // @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
+
+  // uploadedImages: string[] = [];
+  // readonly maxImageSizeMB = 10;
+
+  // openImageUploader(): void {
+  //   this.imageInput.nativeElement.click();
+  // }
+
+  // handleImageSelection(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+
+  //   if (input.files) {
+  //     this.uploadedImages = [];
+
+  //     Array.from(input.files).forEach(file => {
+  //       const isValidType = file.type === 'image/png' || file.type === 'image/jpeg';
+  //       const isValidSize = file.size <= this.maxImageSizeMB * 1024 * 1024;
+
+  //       if (isValidType && isValidSize) {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           if (reader.result) {
+  //             this.uploadedImages.push(reader.result as string);
+  //           }
+  //         };
+  //         reader.readAsDataURL(file);
+  //       } else {
+  //         console.warn('الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.');
+  //       }
+  //     });
+  //   }
+  // }
 }
