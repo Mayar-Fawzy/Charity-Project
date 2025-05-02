@@ -4,11 +4,12 @@ import { ProjectService } from './core/Services/project.service';
 import { Data } from './../../Donor/core/interface/iproject-donate';
 import { CarouselResponsiveOptions } from 'primeng/carousel';
 import { CarouselModule } from 'primeng/carousel';
+import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 
 @Component({
   selector: 'app-volnteer',
   standalone: true,
-  imports: [CommonModule,CarouselModule],
+  imports: [CommonModule,CarouselModule,RoutingModule],
   templateUrl: './volnteer.component.html',
   styleUrl: './volnteer.component.scss'
 })
@@ -41,9 +42,6 @@ private readonly _ProjectService=inject(ProjectService);
     return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
   }
 
-  navigateToMoreProjects() {
-    window.location.href = '';
-  }
   // project.component.ts
 
 getProjectDurationInDays(startDate: string, endDate: string): number {
