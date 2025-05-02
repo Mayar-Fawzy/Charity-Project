@@ -48,7 +48,7 @@
     </div>
     <section class="projects-list" id="projects">
       <h2 class="fancy-title section-title">المشاريع المتاحة للتبرع</h2>
-
+    
       <p-carousel
         class="p-0"
         *ngIf="(projects | projectFilter : searchText).length > 0"
@@ -59,29 +59,21 @@
         [responsiveOptions]="responsiveOptions"
       >
         <ng-template let-project pTemplate="item">
-          <div
-            class="project-card border border-surface rounded-border m-1 p-1"
-          >
+          <div class="project-card">
             <!-- صورة المشروع -->
             <div class="image-wrapper">
               <img [src]="project.imageUrl" [alt]="project.name" />
-
-              <div class="badge">
-                {{ project.projectStatus }}
-              </div>
+    
+              <div class="badge">{{ project.projectStatus }}</div>
             </div>
-
+    
             <!-- محتوى المشروع -->
             <div class="project-content">
-              <!-- عنوان ووصف -->
-              <div class="progress-label">
-                <h4>{{ project.name }}</h4>
-                <span class="title">{{ project.name }}</span>
-                <span class="percentage" style="height: 43.2px">
-                  {{ project.description | slice : 0 : 80 }}...
-                </span>
-              </div>
-
+              <h4>{{ project.name }}</h4>
+              <p class="description">
+                {{ project.description | slice: 0:80 }}...
+              </p>
+    
               <!-- نسبة التقدم -->
               <div class="progress-container">
                 <div class="progress-label">
@@ -97,12 +89,12 @@
                   ></div>
                 </div>
               </div>
-
+    
               <!-- الهدف -->
               <div class="goal">
                 الهدف: {{ project.targetAmount | number }} جنيه
               </div>
-
+    
               <!-- زر التبرع -->
               <button (click)="goToPayment(project.id)" class="btn-donate">
                 <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
@@ -111,12 +103,7 @@
           </div>
         </ng-template>
       </p-carousel>
-      <!-- <div
-        *ngIf="(projects | projectFilter : searchText).length === 0"
-        class="text-center mt-4"
-      >
-        <p>لا يوجد مشروع مطابق لبحثك.</p>
-      </div> -->
+    
       <!-- زر عرض المزيد -->
       <div class="projects-controls mt-3 text-center">
         <a class="view-more-link" href="#">
@@ -125,6 +112,7 @@
         </a>
       </div>
     </section>
+    
   </div>
 </section>
 

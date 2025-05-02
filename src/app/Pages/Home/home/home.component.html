@@ -202,7 +202,6 @@
 <section class="active-campaigns" style="cursor: pointer">
   <h2 class="section-title h2-title">الحملات النشطة<span></span></h2>
 
-  <!-- Replace campaigns-grid with p-carousel -->
   <p-carousel
     class="p-0"
     [value]="projects"
@@ -211,25 +210,26 @@
     [circular]="true"
     [responsiveOptions]="responsiveOptions"
   >
-    <!-- Template for each campaign card -->
     <ng-template let-project pTemplate="item">
       <div
         class="campaign-card border border-surface rounded-border m-1 p-1"
         [ngClass]="{ 'active-campaign': project.isActive }"
       >
+        <!-- صورة الحملة -->
         <div class="card-image">
           <img
             [src]="project.imageUrl"
             [alt]="project.name"
-            class="campaign-card w-100 rounded-border"
+            class="campaign-card-img"
           />
         </div>
 
-        <!-- Card body -->
+        <!-- محتوى الكارت -->
         <div class="card-body">
           <h3>{{ project.name }}</h3>
-          <p style="height: 43.2px">{{ project.description | slice : 8 }}</p>
-          <!-- Progress container -->
+          <p>{{ project.description | slice : 8 }}</p>
+
+          <!-- شريط التقدم -->
           <div class="progress-container">
             <div class="progress-label">
               <span class="title">نسبة التقدم</span>
@@ -245,12 +245,12 @@
             </div>
           </div>
 
-          <!-- Goal -->
+          <!-- الهدف -->
           <div class="goal">
             الهدف: {{ project.targetAmount | number }} جنيه
           </div>
 
-          <!-- Donate button -->
+          <!-- زر التبرع -->
           <button (click)="goToPayment(project.id)" class="btn-donate">
             <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
           </button>

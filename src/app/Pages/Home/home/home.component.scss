@@ -803,71 +803,44 @@ $light-bg: #f9f9f9;
     margin-bottom: 30px;
   }
 
-  .campaigns-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
   .campaign-card {
     height: 100%;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    max-height: fit-content;
-    position: relative;
-    transform: translateY(30px);
-    opacity: 0;
-    animation: fadeInUp 0.8s forwards;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-
-    @for $i from 1 through 10 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{0.15 * $i}s;
-      }
-    }
 
     &:hover {
       transform: translateY(-6px);
-
-      .overlay {
-        opacity: 1;
-      }
 
       img {
         transform: scale(1.05);
       }
     }
 
-    .overlay {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
+    .card-image {
       width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.2));
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      z-index: 1;
-    }
+      height: 200px;
+      overflow: hidden;
 
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 0.4s ease;
-      z-index: 0;
-      position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        display: block;
+      }
     }
 
     .card-body {
       padding: 15px;
-      position: relative;
-      z-index: 2;
-      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
 
       h3 {
         font-size: 1.1rem;
@@ -879,9 +852,10 @@ $light-bg: #f9f9f9;
         font-size: 0.9rem;
         color: #555;
         margin-bottom: 10px;
+        height: 43.2px; // مثلما كان في الكود السابق
+        overflow: hidden;
       }
 
-      // progress bar
       .progress-container {
         display: flex;
         flex-direction: column;
@@ -891,7 +865,6 @@ $light-bg: #f9f9f9;
         .progress-label {
           display: flex;
           justify-content: space-between;
-          align-items: center;
           font-size: 0.85rem;
 
           .title {
@@ -910,12 +883,10 @@ $light-bg: #f9f9f9;
           border-radius: 50px;
           height: 8px;
           width: 100%;
-          overflow: hidden;
 
           .progress {
             background-color: #f89b29;
             height: 100%;
-            width: 70%;
             border-radius: 50px;
             transition: width 1s ease;
           }
@@ -937,7 +908,6 @@ $light-bg: #f9f9f9;
         border-radius: 8px;
         font-weight: bold;
         cursor: pointer;
-        transition: background-color 0.3s;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -954,34 +924,19 @@ $light-bg: #f9f9f9;
     }
   }
 
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  // Responsive 
   @media (min-width: 768px) {
-    .campaigns-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
     .section-title {
       font-size: 1.8rem;
     }
   }
 
   @media (min-width: 1024px) {
-    .campaigns-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
     .section-title {
       font-size: 2rem;
     }
   }
 }
+
 
 // >>>>>>>>>>>>>>> vOur Volunteers
 .our-volunteers {
