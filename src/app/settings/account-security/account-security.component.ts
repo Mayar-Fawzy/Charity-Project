@@ -46,7 +46,7 @@ export class PasswordSettingsComponent implements OnInit {
       newPassword: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
       ]),
       confirmPassword: new FormControl('', [Validators.required])
     }, { validators: [this.confirmPasswordValidator] });
