@@ -326,16 +326,11 @@ $light-bg: #f9f9f9;
                 align-items: center;
                 gap: 0.5rem;
                 background-color: $secondary-color;
-                /* #f6a026 */
                 color: white;
                 padding: 0.4rem 1rem;
-                /* زيادة الـ padding عشان يبقى شكله أحسن */
                 border-radius: 2rem;
-                /* بيخلي الـ badge دائري أكتر */
                 font-size: 0.9rem;
-                /* حجم الخط أكبر شوية */
                 font-weight: 500;
-                /* النص يكون bold شوية */
                 text-transform: capitalize;
             }
 

@@ -12,6 +12,9 @@ import { RoutesComponent } from './core/routes/routes.component';
 import { SuperAdminComponent } from './Pages/super-admin/super-admin.component';
 import { EwalletPaymentComponent } from './PaymentMethod/ewallet-payment/ewallet-payment.component';
 import { VisaPaymentComponent } from './PaymentMethod/visa-payment/visa-payment.component';
+import { BeneficiaryComponent } from './Pages/beneficiary/beneficiary/beneficiary.component'
+import { ProjectsComponent } from './Pages/Projects/projects/projects.component';
+
 
 import { SettingsLayoutComponent } from './Layout/settings-layout/settings-layout.component';
 
@@ -23,8 +26,8 @@ import { NotificationsComponent } from './settings/notifications/notifications.c
 import { WorkComponent } from './settings/work/work.component';
 import { AuthGuard } from './core/Guards/auth.guard';
 export const routes: Routes = [
-    // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
@@ -43,8 +46,9 @@ export const routes: Routes = [
       { path: 'donor', title: 'Donor', component: DonorComponent },
       { path: 'super-admin', title: 'Super Admin', component: SuperAdminComponent },
       { path: 'admin', title: 'Admin', component: AdminComponent },
-      // { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
+      { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent },
       { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
+      { path: 'projects', title: 'Projects', component: ProjectsComponent },
       {
         path: 'ewallet-payment/:id',
         title: 'E-Wallet Payment',
@@ -56,7 +60,7 @@ export const routes: Routes = [
         title: 'Visa Payment',
         component: VisaPaymentComponent
       },
-     
+
     ]
   },
   {
@@ -76,6 +80,6 @@ export const routes: Routes = [
 
 
   // >>>>>>>>>>>>>>>>>>> Profile
-  
+
 
 ];

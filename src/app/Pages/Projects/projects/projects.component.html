@@ -1,0 +1,88 @@
+<section class="cta-section">
+  <div class="image-container">
+    <img src="/Images/Projects.png" alt="A child carrying his sister" />
+    <div class="overlay"></div>
+  </div>
+  <div class="container">
+    <h2 class="cta-title">ساعد في تغيير حياة الآخرين</h2>
+    <p class="cta-text">
+      انضم إلينا في صنع الفرق. كل مساهمة تسهم في خلق تغيير إيجابي في مجتمعنا.
+      معًا يمكننا بناء مستقبل أفضل للمحتاجين.
+    </p>
+  </div>
+</section>
+
+<!-- >>>>>>>>>>>>>> Search  -->
+<section class="search-box mb-3 text-end">
+  <div
+    class="input-group"
+    style="max-width: 300px; margin-right: auto; margin-left: auto"
+  >
+    <input
+      type="text"
+      class="form-control"
+      placeholder="ابحث عن مشروع..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    />
+    <span class="input-group-text bg-white">
+      <i class="bi bi-search text-muted"></i>
+    </span>
+  </div>
+</section>
+
+<!-- >>>>>>>>>>>>> Projects  -->
+<section class="container my-5">
+  <div class="row justify-content-center">
+    <div
+      class="col-md-6 col-lg-4 mb-4"
+      *ngFor="let project of filteredProjects"
+    >
+      <div class="project-card shadow-sm">
+        <div class="image-wrapper">
+          <img [src]="project.imageUrl" [alt]="project.name" />
+          <div class="badge">{{ project.projectStatus }}</div>
+        </div>
+
+        <div class="project-content">
+          <h4 class="title">{{ project.name }}</h4>
+          <p class="description">
+            {{ project.description | slice : 0 : 80 }}...
+          </p>
+
+          <div class="progress-container my-2">
+            <div class="progress-label d-flex justify-content-between">
+              <span>نسبة التقدم</span>
+              <span>{{ getProgressPercentage(project) }}%</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress"
+                [style.width.%]="getProgressPercentage(project)"
+              ></div>
+            </div>
+          </div>
+
+          <p class="goal">الهدف: {{ project.targetAmount | number }} جنيه</p>
+
+          <button (click)="goToPayment(project.id)" class="btn-donate">
+            <i class="fa-solid fa-hand-holding-dollar"></i> تبرع الآن
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <nav class="pagination-wrapper">
+    <ul class="pagination justify-content-center">
+      <li
+        class="page-item"
+        [class.active]="currentPage === i"
+        *ngFor="let i of totalPagesArray"
+      >
+        <button class="page-link" (click)="goToPage(i)">{{ i }}</button>
+      </li>
+    </ul>
+  </nav>
+</section>
