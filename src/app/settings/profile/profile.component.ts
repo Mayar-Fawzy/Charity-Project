@@ -25,11 +25,11 @@ export class ProfileComponent implements OnInit {
   isLoading: boolean = false; // ← حالة التحميل
 
   profileForm = new FormGroup({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl('', [Validators.required]),
-    address: new FormControl(''),
+    firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    lastName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    email: new FormControl(null, [Validators.required, Validators.email]),
+    phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11}$/)]),
+    address: new FormControl(null, [Validators.required, Validators.minLength(5)]),
     gender: new FormControl({ value: '', disabled: true }),
     dateOfBirth: new FormControl({ value: '', disabled: true }, [
       Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
@@ -46,6 +46,7 @@ export class ProfileComponent implements OnInit {
     this._ProfileservicesService.GetUserById(id).subscribe({
       next: (data: any) => {
         this.userData = data.data;
+        console.log(data.data.dateOfBirth );
         this.originalUserData = { ...data.data };
         this.userImageUrl = data.data.imageUrl;
         this.profileForm.patchValue({
@@ -58,6 +59,7 @@ export class ProfileComponent implements OnInit {
           dateOfBirth: data.data.dateOfBirth ? data.data.dateOfBirth.split('T')[0] : ''
         });
       },
+      
       error: (error: any) => {
         console.error('فشل في جلب بيانات المستخدم', error);
         this._Toastr.error(' فشل في جلب بيانات المستخدم');

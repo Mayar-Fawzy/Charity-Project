@@ -69,6 +69,22 @@
                 formControlName="firstName"
                 class="form-control"
               />
+              <div
+                class="error-message"
+                *ngIf="
+                  profileForm.get('firstName')?.errors &&
+                  (profileForm.get('firstName')?.touched ||
+                    profileForm.get('firstName')?.dirty)
+                "
+              >
+                <span *ngIf="profileForm.get('firstName')?.getError('required')"
+                  >الاسم مطلوب</span
+                >
+                <span
+                  *ngIf="profileForm.get('firstName')?.errors?.['minlength']"
+                  >يجب أن يكون أكثر من 3 حروف</span
+                >
+              </div>
             </div>
 
             <div class="col-md-6">
@@ -78,20 +94,71 @@
                 formControlName="lastName"
                 class="form-control"
               />
+              <div
+                class="error-message"
+                *ngIf="
+                  profileForm.get('lastName')?.errors &&
+                  (profileForm.get('lastName')?.touched ||
+                    profileForm.get('lastName')?.dirty)
+                "
+              >
+                <span *ngIf="profileForm.get('lastName')?.getError('required')"
+                  >الاسم مطلوب</span
+                >
+                <span *ngIf="profileForm.get('lastName')?.errors?.['minlength']"
+                  >يجب أن يكون أكثر من 3 حروف</span
+                >
+              </div>
             </div>
 
             <div class="col-md-6">
-              <label class="form-label d-block text-end">البريد الإلكتروني</label>
+              <label class="form-label d-block text-end"
+                >البريد الإلكتروني</label
+              >
               <input
                 type="email"
                 formControlName="email"
                 class="form-control"
               />
+              <div
+                class="error-message"
+                *ngIf="
+                  profileForm.get('email')?.errors &&
+                  (profileForm.get('email')?.touched ||
+                    profileForm.get('email')?.dirty)
+                "
+              >
+                <span *ngIf="profileForm.get('email')?.getError('required')"
+                  >البريد الاكتروني مطلوب</span
+                >
+                <span *ngIf="profileForm.get('email')?.errors?.['email']"
+                  >البريد الاكتروني غير صحيح</span
+                >
+              </div>
             </div>
 
             <div class="col-md-6">
               <label class="form-label d-block text-end">رقم الهاتف</label>
-              <input type="text" formControlName="phoneNumber" class="form-control" />
+              <input
+                type="text"
+                formControlName="phoneNumber"
+                class="form-control"
+              />
+              <div
+              class="error-message"
+              *ngIf="
+                profileForm.get('phoneNumber')?.errors &&
+                (profileForm.get('phoneNumber')?.touched ||
+                  profileForm.get('phoneNumber')?.dirty)
+              "
+            >
+              <span *ngIf="profileForm.get('phoneNumber')?.getError('required')"
+                >الرقم مطلوب</span
+              >
+              <span *ngIf="profileForm.get('phoneNumber')?.errors?.['pattern']"
+                >يجب أن يكون 11 رقم</span
+              >
+            </div>
             </div>
 
             <div class="col-md-6">
@@ -101,6 +168,21 @@
                 formControlName="address"
                 class="form-control"
               />
+              <div
+          class="error-message"
+          *ngIf="
+            profileForm.get('address')?.errors &&
+            (profileForm.get('address')?.touched ||
+              profileForm.get('address')?.dirty)
+          "
+        >
+          <span *ngIf="profileForm.get('address')?.getError('required')"
+            >العنوان مطلوب</span
+          >
+          <span *ngIf="profileForm.get('address')?.getError('minlength')"
+            >يجب ان يكون اكتر من 5 حروف</span
+          >
+        </div>
             </div>
 
             <div class="col-md-6">
@@ -131,14 +213,17 @@
 
           <div class="row mt-4">
             <div class="col">
-              <button type="submit" class="btn btn-warning w-100" [disabled]="isLoading">
+              <button
+                type="submit"
+                class="btn btn-warning w-100"
+                [disabled]="isLoading"
+              >
                 <span *ngIf="!isLoading">تحديث</span>
                 <span *ngIf="isLoading">
                   جاري التحميل...
                   <i class="spinner-border spinner-border-sm me-1"></i>
                 </span>
               </button>
-              
             </div>
             <div class="col">
               <button
