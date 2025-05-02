@@ -105,6 +105,7 @@ export class ProjectsComponent {
     this.router.navigate(['/ewallet-payment', projectId]);
   }
 
+  // >>>>>>>>>>>> Pagination 
 
   itemsPerPage = 6;
   currentPage = 1;
