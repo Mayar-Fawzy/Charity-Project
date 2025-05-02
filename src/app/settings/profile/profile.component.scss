@@ -1,7 +1,7 @@
 .profile-settings {
     background-color: #f4f4f4;
-    padding: 2rem;
-    min-height: 100vh;
+    padding: 1rem;
+    min-height: 40vh;
     border-radius: 15px;
 
     .user-img {
@@ -31,3 +31,15 @@
         text-transform: uppercase;
     }
 }
+:host ::ng-deep .toast-container {
+    margin-top: 48px !important;
+    margin-right: 6px !important;
+  }
+  .error-message {
+    color: #ffb902;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+    text-align: right; /* أضف هذا السطر */
+  }
+  

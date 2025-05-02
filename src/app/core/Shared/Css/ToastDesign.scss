@@ -4,6 +4,7 @@
 // Change background color, font, and shadow
 
 .toast-success {
+  top: 53px !important;
   background-color: #B88E2F !important;
   color: white !important;
   font-weight: bold;
@@ -15,19 +16,26 @@
   background-color: #dc3545 !important;
   color: white !important;
   font-weight: bold;
+  
+  top: 53px !important;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .toast-warning {
-  background-color: #ffc107 !important;
+  
+  top: 53px !important;
+  background-color: #B88E2F !important;
   color: black !important;
   font-weight: bold;
   border-radius: 8px;
 }
 
 .toast-info {
-  background-color: #17a2b8 !important;
+  
+  top: 53px !important;
+  background-color: #B88E2F !important;
   color: white !important;
   font-weight: bold;
 }
+

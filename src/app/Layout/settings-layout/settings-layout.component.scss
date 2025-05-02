@@ -29,6 +29,7 @@
 }
 
 .custom-tabs {
+    margin-top: -13px !important;
   display: flex;
   justify-content: center;
   gap: 15px;
@@ -89,4 +90,45 @@
   background-color: #dc3545;
   color: #fff !important;
   transform: translateY(-2px);
+}
+@media (max-width: 768px) {
+  .custom-tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .tab-button {
+    width: 90%;
+    font-size: 16px;
+    padding: 10px 20px;
+    justify-content: center;
+  }
+
+  .banner {
+    padding-top: 100px;
+    padding-bottom: 30px;
+  }
+
+  .logout-button {
+    width: 90%;
+    justify-content: center;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .tab-button {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .logout-button {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
 }

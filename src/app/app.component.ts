@@ -16,7 +16,7 @@ import { ScrollToTopComponent } from './shared/scroll-to-top/scroll-to-top.compo
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, VisaPaymentComponent, EwalletPaymentComponent, FooterComponent, DonorComponent, VolnteerComponent, NavbarComponent, ProfileComponent, SettingsLayoutComponent, ScrollToTopComponent],
+  imports: [RouterOutlet, ScrollToTopComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

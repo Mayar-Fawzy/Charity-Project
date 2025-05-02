@@ -188,28 +188,6 @@ export class DonorComponent {
       input.click();
     }
   }
-
-  @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
-
-  showCenteredToast(type: 'success' | 'error', message: string, title: string) {
-    this.toastr[type](message, title);
-
-    setTimeout(() => {
-      const toastContainer = document.querySelector('.toast-container');
-      if (toastContainer && this.formWrapper?.nativeElement) {
-        this.formWrapper.nativeElement.appendChild(toastContainer);
-        toastContainer.classList.add('toast-inside-form');
-      }
-    }, 0);
-  }
-
-  donationStatuses = [
-    { value: 1, label: 'جديد' },
-    { value: 2, label: 'مستعمل - حالة ممتازة' },
-    { value: 3, label: 'مستعمل - حالة جيدة' }
-  ];
-
-  DonateNow() {}
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
 
   uploadedImages: string[] = [];
@@ -238,9 +216,64 @@ export class DonorComponent {
           };
           reader.readAsDataURL(file);
         } else {
-          console.warn('الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.');
+          console.warn(`الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.`);
         }
-      });
-    }
+      });
+    }
+  }
+
+  @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
+
+  showCenteredToast(type: 'success' | 'error', message: string, title: string) {
+    this.toastr[type](message, title);
+
+    setTimeout(() => {
+      const toastContainer = document.querySelector('.toast-container');
+      if (toastContainer && this.formWrapper?.nativeElement) {
+        this.formWrapper.nativeElement.appendChild(toastContainer);
+        toastContainer.classList.add('toast-inside-form');
+      }
+    }, 0);
   }
+
+  donationStatuses = [
+    { value: 1, label: 'جديد' },
+    { value: 2, label: 'مستعمل - حالة ممتازة' },
+    { value: 3, label: 'مستعمل - حالة جيدة' }
+  ];
+
+  DonateNow() {}
+  // @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
+
+  // uploadedImages: string[] = [];
+  // readonly maxImageSizeMB = 10;
+
+  // openImageUploader(): void {
+  //   this.imageInput.nativeElement.click();
+  // }
+
+  // handleImageSelection(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+
+  //   if (input.files) {
+  //     this.uploadedImages = [];
+
+  //     Array.from(input.files).forEach(file => {
+  //       const isValidType = file.type === 'image/png' || file.type === 'image/jpeg';
+  //       const isValidSize = file.size <= this.maxImageSizeMB * 1024 * 1024;
+
+  //       if (isValidType && isValidSize) {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //           if (reader.result) {
+  //             this.uploadedImages.push(reader.result as string);
+  //           }
+  //         };
+  //         reader.readAsDataURL(file);
+  //       } else {
+  //         console.warn('الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.');
+  //       }
+  //     });
+  //   }
+  // }
 }

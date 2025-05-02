@@ -69,7 +69,8 @@
         </ng-container>
 
         <ng-template #loggedInMobile>
-          <div class="navbar__user" routerLink="/settings">
+          <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
+
             <img
               [src]="userImage"
               alt="User"
@@ -93,7 +94,7 @@
       </ng-container>
 
       <ng-template #loggedInDesktop>
-        <div class="navbar__user" routerLink="/settings">
+        <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
           <img [src]="userImage" alt="User" class="user-image" />
           <span>مرحبًا، {{ userName }}</span>
           <div class="notification-container">

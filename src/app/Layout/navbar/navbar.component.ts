@@ -28,6 +28,7 @@ export class NavbarComponent implements OnInit {
   isLogin: boolean = false;
   userData: any;
   userName!: string;
+  userId!: string;
   userImage: string = '/Images/Logo.svg';
   isMenuOpen: boolean = false;
   isSmallScreen: boolean = false;
@@ -43,7 +44,8 @@ export class NavbarComponent implements OnInit {
     this.userName =
       this.userData?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname']
       ?? 'مستخدم';
-
+      this.userId =
+      this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
     this.checkScreenSize();
   }
 
