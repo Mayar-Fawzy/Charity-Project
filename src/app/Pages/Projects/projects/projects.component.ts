@@ -1,17 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-interface Project {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  projectStatus: string;
-  currentAmount: number;
-  targetAmount: number;
-}
+import { Data } from '../../../Pages/Donor/core/interface/iproject-donate';
+import { ProjectPagenationService } from '../Core/Services/project-pagenation.service';
 
 @Component({
   selector: 'app-projects',
@@ -20,16 +12,23 @@ interface Project {
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss']
 })
-export class ProjectsComponent {
-  
-  // >>>>>>>>>>>>>>>>>> Search
+export class ProjectsComponent implements OnInit {
+
   searchTerm: string = '';
-  projects: Project[] = [];
-  filteredProjects: Project[] = [];
+  projects: Data[] = [];
+  filteredProjects: Data[] = [];
+
+  itemsPerPage = 6;
+  currentPage = 1;
+  totalCount = 0;
+
+  constructor(
+    private router: Router,
+    private projectService: ProjectPagenationService
+  ) {}
 
   ngOnInit() {
-    this.projects = this.getProjectsFromService();
-    this.filteredProjects = [...this.projects];
+    this.getPaginatedProjectsFromAPI();
   }
 
   onSearch() {
@@ -39,84 +38,36 @@ export class ProjectsComponent {
     );
   }
 
-
-  // >>>>>>>>>>>>>>. Projects 
-  getProjectsFromService(): Project[] {
-    return [
-      {
-        id: 1,
-        name: 'التعليم للجميع',
-        description: 'المساعدة في توفير اللوازم التعليمية والدعم للأطفال المحرومين.',
-        imageUrl: '/Images/project-1.png',
-        projectStatus: 'Ongoing',
-        currentAmount: 360000,
-        targetAmount: 900000,
+  getPaginatedProjectsFromAPI() {
+    this.projectService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
+      next: (response: any) => {
+        this.projects = response.data;
+        this.totalCount = response.totalCount;
+        this.onSearch(); // إعادة فلترة حسب البحث
       },
-      {
-        id: 2,
-        name: 'المياه للجميع',
-        description: 'مشروع لتوفير المياه النظيفة للمجتمعات المحرومة.',
-        imageUrl: '/Images/project-2.png',
-        projectStatus: 'Ongoing',
-        currentAmount: 450000,
-        targetAmount: 1000000,
-      },
-      {
-        id: 3,
-        name: 'مساعدة الأطفال',
-        description: 'مساعدة الأطفال الذين يعيشون في ظروف صعبة.',
-        imageUrl: '/Images/project-3.png',
-        projectStatus: 'Completed',
-        currentAmount: 1200000,
-        targetAmount: 1200000,
-      },
-      {
-        id: 4,
-        name: 'التعليم للجميع',
-        description: 'المساعدة في توفير اللوازم التعليمية والدعم للأطفال المحرومين.',
-        imageUrl: '/Images/project-1.png',
-        projectStatus: 'Ongoing',
-        currentAmount: 360000,
-        targetAmount: 900000,
-      },
-      {
-        id: 5,
-        name: 'المياه للجميع',
-        description: 'مشروع لتوفير المياه النظيفة للمجتمعات المحرومة.',
-        imageUrl: '/Images/project-2.png',
-        projectStatus: 'Ongoing',
-        currentAmount: 450000,
-        targetAmount: 1000000,
-      },
-
-    ];
+      error: (err) => {
+        console.error('حدث خطأ أثناء جلب المشاريع:', err);
+      }
+    });
   }
 
-  // >>>>>>>>>>>>>>>>>>>>> Calc percentage 
-  getProgressPercentage(project: Project): number {
-    return Math.round((project.currentAmount / project.targetAmount) * 100);
+  getProgressPercentage(project: Data): number {
+    // افتراض أن currentAmount موجود في الـ Data لو عايز تحسب نسبة التقدم
+    // return Math.round((project.currentAmount / project.targetAmount) * 100);
+    return 0;
   }
 
-
-
-  // >>>>>>>>>>>>>>>> go to Payment 
-  constructor(private router: Router) { }
-  goToPayment(projectId: number) {
+  goToPayment(projectId: string) {
     this.router.navigate(['/ewallet-payment', projectId]);
   }
 
-  // >>>>>>>>>>>> Pagination 
-
-  itemsPerPage = 6;
-  currentPage = 1;
-
   get totalPages(): number {
-    return Math.ceil(this.filteredProjects.length / this.itemsPerPage);
+    return Math.ceil(this.totalCount / this.itemsPerPage);
   }
 
+  // لم نعد نستخدم slice لأن البيانات جاهزة من الـ API للصفحة الحالية
   get paginatedProjects() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredProjects.slice(start, start + this.itemsPerPage);
+    return this.filteredProjects;
   }
 
   get displayedPages(): number[] {
@@ -152,18 +103,21 @@ export class ProjectsComponent {
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.getPaginatedProjectsFromAPI();
     }
   }
 
   goToPrevious() {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.getPaginatedProjectsFromAPI();
     }
   }
 
   goToNext() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.getPaginatedProjectsFromAPI();
     }
   }
 }
