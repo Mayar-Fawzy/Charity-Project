@@ -123,7 +123,9 @@ export class PasswordSettingsComponent implements OnInit {
 
     this._ResetpassService.resetPassword(email, newPassword, confirmPassword).subscribe({
       next: () => {
-        this._toastr.success('تم تحديث كلمة المرور بنجاح');
+        this._toastr.success('  تم تحديث كلمة المرور برجاء تسجيل الدخول مرة أخرى');
+        this._LoginService.signOut(); // تسجيل الخروج بعد تغيير كلمة المرور
+        this._router.navigate(['/login']);
         this.onCancel();
       },
       error: (err) => {
