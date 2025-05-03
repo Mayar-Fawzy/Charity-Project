@@ -1,3 +1,4 @@
+<!-- >>>>>>>>>>>>>> header  -->
 <section class="cta-section">
   <div class="image-container">
     <img src="/Images/request-ar.png" alt="Request help" />
@@ -10,4 +11,135 @@
           معًا يمكننا بناء مستقبل أفضل للمحتاجين.
         </p>
       </div> -->
+</section>
+
+<!-- >>>>>>>>>>>>>>>>>>> cards  -->
+<section class="container p-5">
+  <!-- >>>>>>>>>>> search  -->
+  <div
+  class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3"
+  dir="rtl"
+>
+  <h4 class="fw-bold m-0">العناصر المتاحة</h4>
+  <div class="input-group w-100 w-md-auto" style="max-width: 300px">
+    <input
+      type="text"
+      class="form-control rounded-top-0 rounded-bottom-0 rounded-end-3"
+      placeholder="ابحث عن عنصر..."
+    />
+    <button
+      class="btn btn-outline-secondary rounded-top-0 rounded-bottom-0 rounded-start-3"
+      type="button"
+    >
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+</div>
+
+
+  <div class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-4" *ngFor="let product of products">
+      <div class="card product-card shadow-sm rounded-4 h-100">
+        <div class="image-container position-relative">
+          <img
+            *ngIf="product.images.length"
+            [src]="product.images[product.currentIndex]"
+            class="main-img"
+            alt="صورة المنتج"
+          />
+
+          <!-- أزرار الأسهم -->
+          <button
+            *ngIf="product.images.length > 1"
+            class="nav-btn left"
+            (click)="prevImage(product)"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <button
+            *ngIf="product.images.length > 1"
+            class="nav-btn right"
+            (click)="nextImage(product)"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div
+          class="card-body text-end d-flex flex-column justify-content-between"
+        >
+          <div>
+            <h5 class="card-title">{{ product.title }}</h5>
+            <div class="d-flex justify-content-between mb-2 flex-wrap">
+              <span class="badge bg-warning text-dark">{{
+                product.condition
+              }}</span>
+              <span class="badge bg-primary text-white">{{
+                product.category
+              }}</span>
+              <span>الكمية: {{ product.quantity }}</span>
+            </div>
+            <p class="card-text small">{{ product.description }}</p>
+          </div>
+          <div class="d-grid mt-3">
+            <button
+              class="btn btn-warning request-btn"
+              (click)="animateRequest($event)"
+            >
+              طلب العنصر
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- >>>>>>>>>>>>>>>>>>>>> Form to requect Help  -->
+<section
+  class="custom-request my-5 p-4 rounded-4 shadow-sm bg-light text-center"
+>
+  <h5 class="fw-bold mb-2">لم تجد ما تبحث عنه؟</h5>
+  <p class="text-muted mb-4">
+    يمكنك إرسال طلب وسنحاول مطابقتك مع التبرعات المتاحة أو إشعارك عند توفر عناصر
+    مشابهة.
+  </p>
+
+  <form class="mx-auto text-start" style="max-width: 600px">
+    <div class="mb-3">
+      <label for="needInput" class="form-label fw-semibold"
+        >ما الذي تحتاجه؟</label
+      >
+      <textarea
+        class="form-control"
+        id="needInput"
+        rows="3"
+        placeholder="صف ما تحتاجه..."
+      ></textarea>
+    </div>
+
+    <div class="form-check mb-4">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="termsCheck"
+        required
+      />
+      <label class="form-check-label" for="termsCheck">
+        أوافق على
+        <a href="#" class="text-decoration-none text-warning"
+          >الشروط والأحكام</a
+        >
+        و
+        <a href="#" class="text-decoration-none text-warning">سياسة الخصوصية</a>
+      </label>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-warning submit-btn">
+        إرسال الطلب
+      </button>
+    </div>
+  </form>
 </section>
