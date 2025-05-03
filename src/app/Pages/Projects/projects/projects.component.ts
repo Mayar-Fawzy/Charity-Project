@@ -51,11 +51,11 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  getProgressPercentage(project: Data): number {
-    // افتراض أن currentAmount موجود في الـ Data لو عايز تحسب نسبة التقدم
-    // return Math.round((project.currentAmount / project.targetAmount) * 100);
-    return 0;
+  getProgressPercentage(project: any): number {
+    const fakeCurrentAmount = project.targetAmount * 0.4;
+    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
   }
+
 
   goToPayment(projectId: string) {
     this.router.navigate(['/ewallet-payment', projectId]);

@@ -9,7 +9,7 @@
         انضم إلينا في صنع الفرق. كل تبرع يجلب الأمل ويُحدث تغييرًا دائمًا في
         المجتمعات حول العالم.
       </p>
-      <a href="#projects" class="btn btn-primary">استعرض المشاريع</a>
+      <a routerLink="/projects" class="btn btn-primary">استعرض المشاريع</a>
     </div>
   </div>
 </section>
@@ -23,11 +23,12 @@
         <label class="input-wrapper">
           <i class="bi bi-search"></i>
           <input
-            type="text"
-            [(ngModel)]="searchText"
-            placeholder="ابحث ب اسم المشروع..."
-            class="search-input"
-          />
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+          placeholder="ابحث باسم المشروع..."
+          class="search-input"
+        />
         </label>
 
         <!-- <select class="filter-select">
@@ -51,8 +52,8 @@
     
       <p-carousel
         class="p-0"
-        *ngIf="(projects | projectFilter : searchText).length > 0"
-        [value]="projects | projectFilter : searchText"
+        
+        [value]="filteredProjects"
         [numVisible]="3"
         [numScroll]="2"
         [circular]="true"

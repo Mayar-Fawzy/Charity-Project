@@ -24,7 +24,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, ProjectFilterPipe, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, FormsModule, ReactiveFormsModule, FormsModule],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss',
 })
@@ -41,10 +41,12 @@ export class DonorComponent {
   userData: any = null;
   responsiveOptions: CarouselResponsiveOptions[] = [];
   projects: Data[] = [];
-
+  searchTerm: string = '';
+  filteredProjects: Data[] = [];
   GetDonation() {
     this._HomedonateServiesService.GetDonation().subscribe((res) => {
       this.projects = res.data;
+      this.filteredProjects = [...this.projects];
       console.log(this.projects);
     });
   }
@@ -53,7 +55,12 @@ export class DonorComponent {
     const fakeCurrentAmount = project.targetAmount * 0.4;
     return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
   }
-
+  onSearch() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredProjects = this.projects.filter(project =>
+      project.name.toLowerCase().includes(term)
+    );
+  }
   ngOnInit(): void {
     this.responsiveOptions = [
       { breakpoint: '1024px', numVisible: 3, numScroll: 1 },

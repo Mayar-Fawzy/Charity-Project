@@ -33,10 +33,7 @@
 <!-- >>>>>>>>>>>>> Projects  -->
 <section class="container my-5">
   <div class="row justify-content-center">
-    <div
-      class="col-md-6 col-lg-4 mb-4"
-      *ngFor="let project of paginatedProjects"
-    >
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let project of paginatedProjects">
       <div class="project-card shadow-sm">
         <div class="image-wrapper">
           <img [src]="project.imageUrl" [alt]="project.name" />
@@ -55,10 +52,7 @@
               <span>{{ getProgressPercentage(project) }}%</span>
             </div>
             <div class="progress-bar">
-              <div
-                class="progress"
-                [style.width.%]="getProgressPercentage(project)"
-              ></div>
+              <div class="progress" [style.width.%]="getProgressPercentage(project)"></div>
             </div>
           </div>
 
@@ -75,21 +69,16 @@
   <!-- Pagination -->
   <nav class="pagination-wrapper mt-4">
     <ul class="pagination justify-content-center">
-
       <!-- >>> Previous -->
-      <li
-        class="page-item"
-        *ngIf="totalPages > 4"
-        [class.disabled]="currentPage === 1"
-      >
-        <button class="page-link" (click)="goToPrevious()">السابق</button>
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
       </li>
 
       <li class="page-item" *ngIf="showLeftDots">
         <span class="page-link">...</span>
       </li>
 
-      <!-- >>> Page number-->
+      <!-- >>> Page numbers -->
       <li
         class="page-item"
         *ngFor="let page of displayedPages"
@@ -98,18 +87,13 @@
         <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
       </li>
 
-      
       <li class="page-item" *ngIf="showRightDots">
         <span class="page-link">...</span>
       </li>
 
-      <!-- >>> next -->
-      <li
-        class="page-item"
-        *ngIf="totalPages > 4"
-        [class.disabled]="currentPage === totalPages"
-      >
-        <button class="page-link" (click)="goToNext()">التالي</button>
+      <!-- >>> Next -->
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">التالي</button>
       </li>
     </ul>
   </nav>
