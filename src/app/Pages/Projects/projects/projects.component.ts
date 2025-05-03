@@ -74,7 +74,7 @@ export class ProjectsComponent implements OnInit {
 
     if (!token) {
       Swal.fire({
-        icon: "error",
+        icon: 'warning',
         title: "خطأ",
         text: "يجب عليك التسجيل أولًا قبل التبرع",
         confirmButtonColor: "#f6a026",

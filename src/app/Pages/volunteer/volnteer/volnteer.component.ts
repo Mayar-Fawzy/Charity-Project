@@ -1,12 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CarouselModule } from 'primeng/carousel';
+import { CarouselResponsiveOptions } from 'primeng/carousel';
+import { Router } from '@angular/router';
 
 import { Data } from './../../Donor/core/interface/iproject-donate';
-import { CarouselResponsiveOptions } from 'primeng/carousel';
-import { CarouselModule } from 'primeng/carousel';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
-import { Router } from '@angular/router';
 import { ProjectService } from '../core/Services/project.service';
+import { LoginService } from '../../Auth/core/Services/login.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-volnteer',
@@ -15,37 +17,43 @@ import { ProjectService } from '../core/Services/project.service';
   templateUrl: './volnteer.component.html',
   styleUrl: './volnteer.component.scss'
 })
-export class VolnteerComponent {
-  private readonly _ProjectService = inject(ProjectService);
-  private readonly _Router = inject(Router);
+export class VolnteerComponent implements OnInit {
+  private readonly projectService = inject(ProjectService);
+  private readonly router = inject(Router);
+  private readonly loginService = inject(LoginService);
+
   responsiveOptions: CarouselResponsiveOptions[] = [];
   Projects: Data[] = [];
-  progressPercentages: number[] = [20, 50, 75, 30, 60, 90]; // نسب تقدم ثابتة
+  selectedProjectId: string = '';
+  userData: any = null;
+
+  // مؤقتًا لتوضيح التقدم، لكن يُفضل مستقبلاً جلبه من API
+  private readonly dummyProgress = [20, 50, 75, 30, 60, 90];
 
   ngOnInit(): void {
+    this.setupCarouselOptions();
+    this.loadProjects();
+  }
+
+  private setupCarouselOptions(): void {
     this.responsiveOptions = [
       { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
       { breakpoint: '768px', numVisible: 2, numScroll: 1 },
       { breakpoint: '560px', numVisible: 1, numScroll: 1 }
     ];
-    this.GetDonation();
   }
 
-  GetDonation() {
-    this._ProjectService.GetDonation().subscribe((res) => {
-      // تعيين progressPercentage لكل مشروع بناءً على المصفوفة
-      this.Projects = res.data.map((project: Data, index: number) => {
-        return {
-          ...project,
-          progressPercentage: this.progressPercentages[index % this.progressPercentages.length], // تعيين نسبة تقدم ثابتة
-        };
-      });
-      console.log("VolnteerProjects", this.Projects);
+  private loadProjects(): void {
+    this.projectService.GetDonation().subscribe(res => {
+      this.Projects = res.data.map((project: Data, index: number) => ({
+        ...project,
+        progressPercentage: this.dummyProgress[index % this.dummyProgress.length]
+      }));
+      console.log("Loaded Volunteer Projects:", this.Projects);
     });
   }
 
   getProgressPercentage(project: any): number {
-    // استرجاع القيمة المخزنة في progressPercentage مباشرة
     return project.progressPercentage || 0;
   }
 
@@ -53,17 +61,54 @@ export class VolnteerComponent {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
-  joinAsVolunteer(projectId: string) {
-    // افتراض أن الزر سيؤدي إلى صفحة تسجيل المتطوعين
-    this._Router.navigate(['/volunteer-registration', projectId]);
-    // التمرير إلى أعلى الصفحة بسلاسة
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  onJoinProject(projectId: string): void {
+    this.selectedProjectId = projectId;
+    this.createVolunteerApplication();
+  }
+
+  private createVolunteerApplication(): void {
+    this.userData = this.loginService.saveUserAuth();
+  
+    if (!this.userData) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'يجب تسجيل الدخول',
+        text: 'يرجى تسجيل الدخول أولاً لتقديم طلب التطوع.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      })
+      return;
+    }
+  
+    const volunteerAppBody = {
+      volunteerId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
+      requestDetails: 'يرجى توضيح النشاط', // يمكن استبدالها لاحقًا بمدخل من المستخدم
+      volunteerActivityId: null,
+      projectId: this.selectedProjectId
+    };
+  
+    this.projectService.CreateVolunteerApplication(volunteerAppBody).subscribe(res => {
+      if (res.isSucceeded) {
+        Swal.fire({
+          icon: 'success',
+          title: 'تم تقديم طلب التطوع بنجاح!',
+          text: 'شكرًا لمساهمتك في العمل التطوعي!',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'فشل تقديم الطلب',
+          text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+        console.error('Error creating volunteer application:', res.message);
+      }
     });
   }
 

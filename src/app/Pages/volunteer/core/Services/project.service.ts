@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IprojectDonate } from '../../../Donor/core/interface/iproject-donate';
 import { Environment } from '../../../Auth/core/Environment/Environment';
+import { VolnteerAppBody } from '../interfaces/volnteer-app-body';
 
 
 @Injectable({
@@ -15,6 +16,9 @@ export class ProjectService {
     return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}Project/GetAllProjects`)
   }
   getProjectById(id: string): Observable<IprojectDonate>{
-    return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}/GetProjectById?id=${id}`);
+    return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}GetProjectById?id=${id}`);
+  }
+  CreateVolunteerApplication(data: VolnteerAppBody): Observable<IprojectDonate> {
+    return this._HttpClient.post<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerApplication/CreateVolunteerApplication`, data);
   }
 }
