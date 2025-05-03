@@ -17,6 +17,7 @@ export interface IprojectDonate {
     startDate: string
     endDate: string
     managerId: string
+    
     createdDate: string
     modifiedDate: string
   }

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Data } from '../../../Pages/Donor/core/interface/iproject-donate';
 import { ProjectPagenationService } from '../Core/Services/project-pagenation.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-projects',
@@ -13,19 +14,16 @@ import { ProjectPagenationService } from '../Core/Services/project-pagenation.se
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-
+  private readonly projectService = inject(ProjectPagenationService);
+  private readonly _Router = inject(Router);
   searchTerm: string = '';
   projects: Data[] = [];
   filteredProjects: Data[] = [];
-
+  progressPercentages: number[] = [20, 50, 75, 30, 60, 90]; // نسب تقدم مختلفة
   itemsPerPage = 6;
   currentPage = 1;
+  totalPages = 1;
   totalCount = 0;
-
-  constructor(
-    private router: Router,
-    private projectService: ProjectPagenationService
-  ) {}
 
   ngOnInit() {
     this.getPaginatedProjectsFromAPI();
@@ -41,31 +39,52 @@ export class ProjectsComponent implements OnInit {
   getPaginatedProjectsFromAPI() {
     this.projectService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
       next: (response: any) => {
-        this.projects = response.data;
+        this.projects = response.data.map((project: Data, index: number) => {
+          return {
+            ...project,
+            progressPercentage: this.progressPercentages[index % this.progressPercentages.length], // تعيين نسبة تقدم ثابتة
+          };
+        });
+        this.filteredProjects = [...this.projects]; // نسخ المشاريع إلى filteredProjects
         this.totalCount = response.totalCount;
+        this.currentPage = response.currentPage; // تحديث الصفحة الحالية من الـ API
+        this.totalPages = response.totalPages;   // تحديث إجمالي الصفحات من الـ API
         this.onSearch(); // إعادة فلترة حسب البحث
       },
       error: (err) => {
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "حدث خطأ أثناء جلب المشاريع",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: "حسنا",
+        });
         console.error('حدث خطأ أثناء جلب المشاريع:', err);
       }
     });
   }
 
   getProgressPercentage(project: any): number {
-    const fakeCurrentAmount = project.targetAmount * 0.4;
-    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+    // استخدام القيمة المخزنة بدلاً من الحساب الديناميكي
+    return project.progressPercentage || 0;
   }
-
 
   goToPayment(projectId: string) {
-    this.router.navigate(['/ewallet-payment', projectId]);
+    const token = localStorage.getItem('userToken');
+
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: "حسنا",
+      });
+    } else {
+      this._Router.navigate(['/ewallet-payment', projectId]);
+    }
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.totalCount / this.itemsPerPage);
-  }
-
-  // لم نعد نستخدم slice لأن البيانات جاهزة من الـ API للصفحة الحالية
   get paginatedProjects() {
     return this.filteredProjects;
   }
@@ -79,6 +98,7 @@ export class ProjectsComponent implements OnInit {
     let start = Math.max(1, this.currentPage - half);
     let end = Math.min(total, this.currentPage + half);
 
+    // ضبط النطاق إذا كان الصفحة الحالية قريبة من البداية أو النهاية
     if (this.currentPage <= half) {
       end = Math.min(total, maxPagesToShow);
     } else if (this.currentPage + half > total) {
@@ -108,6 +128,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   goToPrevious() {
+    // الاعتماد على hasPreviousPage من الـ API
     if (this.currentPage > 1) {
       this.currentPage--;
       this.getPaginatedProjectsFromAPI();
@@ -115,6 +136,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   goToNext() {
+    // الاعتماد على hasNextPage من الـ API
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.getPaginatedProjectsFromAPI();

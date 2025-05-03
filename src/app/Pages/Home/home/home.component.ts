@@ -12,7 +12,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { HomedonateServiesService } from '../../Donor/core/Services/homedonate-servies.service';
-
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
@@ -49,56 +48,55 @@ export class HomeComponent implements AfterViewInit {
   @ViewChild('causesScroll') causesSlider!: ElementRef;
   currentIndex = 0;
   cardWidth = 300;
-  projects: Data[] = []
-  private readonly _HomedonateServiesService = inject(HomedonateServiesService)
-  private readonly _Router = inject(Router)
+  projects: Data[] = [];
+  progressPercentages: number[] = [20, 50, 75, 30, 60, 90]; // نسب تقدم ثابتة
+  private readonly _HomedonateServiesService = inject(HomedonateServiesService);
+  private readonly _Router = inject(Router);
+
   GetDonation() {
     this._HomedonateServiesService.GetDonation().subscribe((res) => {
-      this.projects = res.data;
+      // تعيين progressPercentage لكل مشروع بناءً على المصفوفة
+      this.projects = res.data.map((project: Data, index: number) => {
+        return {
+          ...project,
+          progressPercentage: this.progressPercentages[index % this.progressPercentages.length], // تعيين نسبة تقدم ثابتة
+        };
+      });
       console.log(this.projects);
-    }
-    )
-
+    });
   }
 
   getProgressPercentage(project: any): number {
-    // نسبة وهمية مؤقتة لعرض شكل الـ UI
-    const fakeCurrentAmount = project.targetAmount * 0.4;
-    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+    // استرجاع القيمة المخزنة في progressPercentage مباشرة
+    return project.progressPercentage || 0;
   }
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
-    //Id
-
-
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
         numVisible: 3,
-        numScroll: 1
+        numScroll: 1,
       },
       {
         breakpoint: '768px',
         numVisible: 2,
-        numScroll: 1
+        numScroll: 1,
       },
       {
         breakpoint: '560px',
         numVisible: 1,
-        numScroll: 1
-      }
-     
+        numScroll: 1,
+      },
     ];
-    this.GetDonation()
+    this.GetDonation();
     this.initializeCauses();
     this.initializeTestimonials();
   }
 
-  ngAfterViewInit() {
-   
-  }
+  ngAfterViewInit() {}
 
   private initializeCauses() {
     this.causes = [
@@ -142,7 +140,6 @@ export class HomeComponent implements AfterViewInit {
     ];
   }
 
-  // scroll
   scrollLeft() {
     if (!this.causesSlider || !this.causesSlider.nativeElement) return;
 
@@ -165,7 +162,6 @@ export class HomeComponent implements AfterViewInit {
     setTimeout(() => this.updateScrollButtons(), 300);
   }
 
-
   updateScrollButtons() {
     if (this.causesSlider?.nativeElement) {
       const container = this.causesSlider.nativeElement;
@@ -181,6 +177,7 @@ export class HomeComponent implements AfterViewInit {
       }
     }
   }
+
   addTouchScroll() {
     if (this.causesSlider?.nativeElement) {
       const slider = this.causesSlider.nativeElement;
@@ -232,34 +229,32 @@ export class HomeComponent implements AfterViewInit {
   getProgress(cause: CharityCause): number {
     return (cause.amountRaised / cause.fundingGoal) * 100;
   }
-  goToPayment(projectId: string) {
-     const token = localStorage.getItem('userToken');
-   
-     if (!token) {
-       Swal.fire({
-         icon: "error",
-         title: "خطأ",
-         text: "يجب عليك التسجيل أولًا قبل التبرع",
-         confirmButtonColor: "#f6a026",
-         confirmButtonText: " حسنا",
-       });
-      
-     } else {
-       this._Router.navigate(['/ewallet-payment', projectId]);
-     }
-   }
-  
 
-  // >>>>>>>>>>>>>>>>> Become a Volunteer 
+  goToPayment(projectId: string) {
+    const token = localStorage.getItem('userToken');
+
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ',
+        text: 'يجب عليك التسجيل أولًا قبل التبرع',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+    } else {
+      this._Router.navigate(['/ewallet-payment', projectId]);
+    }
+  }
+
   initVolunteerImages(): void {
     const largeImage = document.querySelector<HTMLImageElement>('.img-large');
     const smallImages = document.querySelectorAll<HTMLImageElement>('.small-images img');
-  
+
     if (largeImage) {
       smallImages.forEach((img) => {
         img.addEventListener('mouseenter', () => {
           largeImage.style.opacity = '0'; // تخفي الصورة الكبيرة الأول
-  
+
           setTimeout(() => {
             const tempSrc = largeImage.src;
             largeImage.src = img.src;
@@ -270,8 +265,4 @@ export class HomeComponent implements AfterViewInit {
       });
     }
   }
-  
-
-
-
 }

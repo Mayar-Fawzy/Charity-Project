@@ -5,56 +5,67 @@ import { Data } from './../../Donor/core/interface/iproject-donate';
 import { CarouselResponsiveOptions } from 'primeng/carousel';
 import { CarouselModule } from 'primeng/carousel';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-volnteer',
   standalone: true,
-  imports: [CommonModule,CarouselModule,RoutingModule],
+  imports: [CommonModule, CarouselModule, RoutingModule],
   templateUrl: './volnteer.component.html',
   styleUrl: './volnteer.component.scss'
 })
 export class VolnteerComponent {
-//project And Assest
-private readonly _ProjectService=inject(ProjectService);
-    responsiveOptions: CarouselResponsiveOptions[] = [];
-     Projects: Data[] = [];
-   
-     ngOnInit(): void {
-      this.responsiveOptions = [
-        { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
-        { breakpoint: '768px', numVisible: 2, numScroll: 1 },
-        { breakpoint: '560px', numVisible: 1, numScroll: 1 }
-      ];
-      this.GetDonation();
-    }
-  
-    GetDonation() {
-      this._ProjectService.GetDonation().subscribe((res) => {
-        this.Projects = res.data;
-        console.log("VolnteerProjects", this.Projects);
-      });
-    }
+  private readonly _ProjectService = inject(ProjectService);
+  private readonly _Router = inject(Router);
+  responsiveOptions: CarouselResponsiveOptions[] = [];
+  Projects: Data[] = [];
+  progressPercentages: number[] = [20, 50, 75, 30, 60, 90]; // نسب تقدم ثابتة
 
- 
-
-  getProgressPercentage(project: any): number {
-    const fakeCurrentAmount = project.targetAmount * 0.4;
-    return Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+  ngOnInit(): void {
+    this.responsiveOptions = [
+      { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
+      { breakpoint: '768px', numVisible: 2, numScroll: 1 },
+      { breakpoint: '560px', numVisible: 1, numScroll: 1 }
+    ];
+    this.GetDonation();
   }
 
-  // project.component.ts
+  GetDonation() {
+    this._ProjectService.GetDonation().subscribe((res) => {
+      // تعيين progressPercentage لكل مشروع بناءً على المصفوفة
+      this.Projects = res.data.map((project: Data, index: number) => {
+        return {
+          ...project,
+          progressPercentage: this.progressPercentages[index % this.progressPercentages.length], // تعيين نسبة تقدم ثابتة
+        };
+      });
+      console.log("VolnteerProjects", this.Projects);
+    });
+  }
 
-getProjectDurationInDays(startDate: string, endDate: string): number {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
-}
+  getProgressPercentage(project: any): number {
+    // استرجاع القيمة المخزنة في progressPercentage مباشرة
+    return project.progressPercentage || 0;
+  }
 
- 
+  getProjectDurationInDays(startDate: string, endDate: string): number {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
 
-  // >>>>>>>>>>>> gallery 
+  joinAsVolunteer(projectId: string) {
+    // افتراض أن الزر سيؤدي إلى صفحة تسجيل المتطوعين
+    this._Router.navigate(['/volunteer-registration', projectId]);
+    // التمرير إلى أعلى الصفحة بسلاسة
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
   galleryItems = [
     {
       image: '/Images/4.png',
