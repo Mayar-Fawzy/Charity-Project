@@ -186,7 +186,7 @@ export class DonorComponent {
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     itemType: new FormControl('', Validators.required),
     description: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    DonationStatus: new FormControl('', Validators.required),
+    donationStatus: new FormControl('', Validators.required),
     quantity: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
     images: new FormControl<File[]>([])
   });
@@ -234,7 +234,7 @@ export class DonorComponent {
   
     formData.append('name', formValue.name ?? '');
     formData.append('itemType', String(formValue.itemType));
-    formData.append('donationStatus', formValue.DonationStatus ?? '');
+    formData.append('donationStatus', formValue.donationStatus ?? '');
     formData.append('description', formValue.description ?? '');
     formData.append('quantity', formValue.quantity ?? '');
     formData.append('donorId', donorIdValue);
@@ -280,7 +280,7 @@ export class DonorComponent {
     const formValue = this.donationForm.value;
     const isEmpty = !formValue.name &&
                     !formValue.itemType &&
-                    !formValue.DonationStatus &&
+                    !formValue.donationStatus &&
                     !formValue.description &&
                     !formValue.quantity &&
                     (!formValue.images || formValue.images.length === 0);

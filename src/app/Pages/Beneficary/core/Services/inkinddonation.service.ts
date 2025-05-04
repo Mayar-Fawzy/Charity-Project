@@ -13,7 +13,7 @@ export class InkinddonationService {
     private readonly _HttpClient = inject(HttpClient);
   
   
-    GetPaginatedinKindDonations(pageNumber:number,pageSize:number,orderByDirection:number=1):Observable<IprojectDonate>{
-      return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/GetPaginatedinKindDonations?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
+    GetPaginatedinKindDonations(pageNumber:number,pageSize:number,orderByDirection:number=1):Observable<any>{
+      return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/GetPaginatedinKindDonations?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
     }
 }
