@@ -73,7 +73,7 @@
                 <p class="card-text small">{{ product.description }}</p>
               </div>
               <div class="d-grid mt-3">
-                <button class="btn btn-warning request-btn" (click)="animateRequest($event)">
+                <button class="btn btn-warning request-btn" (click)="SubmitVolunteerActivity(product.id)">
                   طلب العنصر
                 </button>
               </div>
@@ -145,7 +145,7 @@
       </label>
     </div>
     <div class="text-center">
-      <button type="submit" class="btn btn-warning submit-btn">إرسال الطلب</button>
+      <button type="submit"  class="btn btn-warning submit-btn">إرسال الطلب</button>
     </div>
   </form>
 </section>

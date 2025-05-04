@@ -52,10 +52,10 @@ export class NavbarComponent implements OnInit {
         'http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid'
       ];
 
-    if (!this.userId) {
-      this._Toastr.error('لم يتم العثور على معرف المستخدم.');
-      return;
-    }
+    // if (!this.userId) {
+    //   this._Toastr.error('لم يتم العثور على معرف المستخدم.');
+    //   return;
+    // }
 
     this._ProfileservicesService.GetUserById(this.userId).subscribe((res) => {
       this.userName.set(res.data.firstName);
