@@ -19,6 +19,7 @@ import { DonateNowService } from '../core/Services/donate-now.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { InkinddonationService } from '../../Beneficary/core/Services/inkinddonation.service';
 
 @Component({
   selector: 'app-donor',

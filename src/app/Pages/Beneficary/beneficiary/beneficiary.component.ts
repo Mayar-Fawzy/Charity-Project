@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { InkinddonationService } from '../core/Services/inkinddonation.service';
 
 @Component({
   selector: 'app-beneficiary',
@@ -9,6 +10,14 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./beneficiary.component.scss']
 })
 export class BeneficiaryComponent {
+
+   private readonly _inkind= inject(InkinddonationService);
+    
+   ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    
+   }
 
   products = [
     {
