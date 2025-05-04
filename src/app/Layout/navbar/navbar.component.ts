@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -6,12 +6,14 @@ import {
   Inject,
   PLATFORM_ID,
   inject,
+  signal,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../Pages/Auth/core/Services/login.service';
-import { Decode } from '../../core/interfaces/decode';
 import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
+import { ProfileservicesService } from '../../settings/Core/Services/profileservices.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
@@ -23,17 +25,21 @@ import { RoutingModule } from '../../core/Shared/Models/routing/routing.module';
 export class NavbarComponent implements OnInit {
   private readonly _Router = inject(Router);
   private readonly _LoginService = inject(LoginService);
+  private readonly _ProfileservicesService = inject(ProfileservicesService);
+  private readonly _ActivatedRoute = inject(ActivatedRoute);
+  private readonly _Toastr = inject(ToastrService);
+  private readonly _cdr = inject(ChangeDetectorRef);
 
   isNavbarHidden: boolean = false;
   isLogin: boolean = false;
   userData: any;
-  userName!: string;
+  userName = signal<string>(''); // signal بدلاً من string
   userId!: string;
-  userImage: string = '/Images/Logo.svg';
+  userImage: string = 'assets/images/default.png'; // صورة افتراضية
   isMenuOpen: boolean = false;
   isSmallScreen: boolean = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('userToken')) {
@@ -41,11 +47,27 @@ export class NavbarComponent implements OnInit {
     }
 
     this.userData = this._LoginService.saveUserAuth();
-    this.userName =
-      this.userData?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname']
-      ?? 'مستخدم';
-      this.userId =
-      this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
+    this.userId =
+      this.userData?.[
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid'
+      ];
+
+    if (!this.userId) {
+      this._Toastr.error('لم يتم العثور على معرف المستخدم.');
+      return;
+    }
+
+    this._ProfileservicesService.GetUserById(this.userId).subscribe((res) => {
+      this.userName.set(res.data.firstName);
+
+      this.userImage =
+        res.data.imageUrl && res.data.imageUrl !== ''
+          ? res.data.imageUrl
+          : 'assets/images/default.png';
+
+      this._cdr.detectChanges(); // يجبر Angular يعيد التحديث
+    });
+
     this.checkScreenSize();
   }
 
@@ -86,7 +108,6 @@ export class NavbarComponent implements OnInit {
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
-    console.log('Menu Open:', this.isMenuOpen);
   }
 
   checkScreenSize() {
@@ -103,5 +124,4 @@ export class NavbarComponent implements OnInit {
       this.isMenuOpen = false;
     }
   }
-  
 }

@@ -8,7 +8,7 @@
     <!-- Logo -->
     <div class="navbar__brand">
       <span>يـــــــد</span>
-      <img src="/Images/Logo.svg" alt="Logo" class="navbar__logo" />
+      <img  src="/Images/Logo.svg" alt="Logo" class="navbar__logo" />
       <span>العطاء</span>
     </div>
 
@@ -69,10 +69,10 @@
         </ng-container>
 
         <ng-template #loggedInMobile>
-          <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
+          <div class="navbar__user"  [routerLink]="['/settings/profile', userId]">
 
             <img
-              [src]="userImage"
+            [src]="userImage ? userImage : 'assets/images/default.png'"
               alt="User"
               class="user-image"
             />
@@ -94,9 +94,9 @@
       </ng-container>
 
       <ng-template #loggedInDesktop>
-        <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
-          <img [src]="userImage" alt="User" class="user-image" />
-          <span>مرحبًا، {{ userName }}</span>
+        <div class="navbar__user"  [routerLink]="['/settings/profile', userId]">
+          <img   [src]="userImage && userImage !== '' ? userImage : 'assets/images/default.png'" alt="User" class="user-image" />
+          <span >مرحبًا، {{ userName() }}</span>
           <div class="notification-container">
             <i class="bi bi-bell notification"></i>
           </div>
