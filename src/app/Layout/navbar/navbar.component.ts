@@ -63,7 +63,7 @@ export class NavbarComponent implements OnInit {
       this.userImage =
         res.data.imageUrl && res.data.imageUrl !== ''
           ? res.data.imageUrl
-          : 'assets/images/default.png';
+          : '/Images/Logo.svg';
 
       this._cdr.detectChanges(); // يجبر Angular يعيد التحديث
     });
