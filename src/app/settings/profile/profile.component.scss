@@ -6,14 +6,14 @@
 
     .user-img {
         width: 100px;
-        height: 100px;   
+        height: 100px;
     }
 
-    .select-left-arrow {
-        background-position: left 0.75rem center;
-        padding-left: 2rem;
-        padding-right: 0.75rem;
-        direction: rtl;
+    .no-arrow {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: none !important;
     }
 
     .no-default-icon::-webkit-calendar-picker-indicator {
@@ -31,15 +31,17 @@
         text-transform: uppercase;
     }
 }
+
 :host ::ng-deep .toast-container {
     margin-top: 48px !important;
     margin-right: 6px !important;
-  }
-  .error-message {
+}
+
+.error-message {
     color: #ffb902;
     font-size: 14px;
     font-weight: 600;
     margin-top: 5px;
-    text-align: right; /* أضف هذا السطر */
-  }
-  
+    text-align: right;
+    /* أضف هذا السطر */
+}

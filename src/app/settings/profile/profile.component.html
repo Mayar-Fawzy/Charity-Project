@@ -145,20 +145,22 @@
                 class="form-control"
               />
               <div
-              class="error-message"
-              *ngIf="
-                profileForm.get('phoneNumber')?.errors &&
-                (profileForm.get('phoneNumber')?.touched ||
-                  profileForm.get('phoneNumber')?.dirty)
-              "
-            >
-              <span *ngIf="profileForm.get('phoneNumber')?.getError('required')"
-                >الرقم مطلوب</span
+                class="error-message"
+                *ngIf="
+                  profileForm.get('phoneNumber')?.errors &&
+                  (profileForm.get('phoneNumber')?.touched ||
+                    profileForm.get('phoneNumber')?.dirty)
+                "
               >
-              <span *ngIf="profileForm.get('phoneNumber')?.errors?.['pattern']"
-                >يجب أن يكون 11 رقم</span
-              >
-            </div>
+                <span
+                  *ngIf="profileForm.get('phoneNumber')?.getError('required')"
+                  >الرقم مطلوب</span
+                >
+                <span
+                  *ngIf="profileForm.get('phoneNumber')?.errors?.['pattern']"
+                  >يجب أن يكون 11 رقم</span
+                >
+              </div>
             </div>
 
             <div class="col-md-6">
@@ -169,28 +171,25 @@
                 class="form-control"
               />
               <div
-          class="error-message"
-          *ngIf="
-            profileForm.get('address')?.errors &&
-            (profileForm.get('address')?.touched ||
-              profileForm.get('address')?.dirty)
-          "
-        >
-          <span *ngIf="profileForm.get('address')?.getError('required')"
-            >العنوان مطلوب</span
-          >
-          <span *ngIf="profileForm.get('address')?.getError('minlength')"
-            >يجب ان يكون اكتر من 5 حروف</span
-          >
-        </div>
+                class="error-message"
+                *ngIf="
+                  profileForm.get('address')?.errors &&
+                  (profileForm.get('address')?.touched ||
+                    profileForm.get('address')?.dirty)
+                "
+              >
+                <span *ngIf="profileForm.get('address')?.getError('required')"
+                  >العنوان مطلوب</span
+                >
+                <span *ngIf="profileForm.get('address')?.getError('minlength')"
+                  >يجب ان يكون اكتر من 5 حروف</span
+                >
+              </div>
             </div>
 
             <div class="col-md-6">
               <label class="form-label d-block text-end">النوع</label>
-              <select
-                formControlName="gender"
-                class="form-select select-left-arrow"
-              >
+              <select formControlName="gender" class="form-select no-arrow">
                 <option [value]="0">ذكر</option>
                 <option [value]="1">أنثى</option>
               </select>
@@ -198,15 +197,36 @@
 
             <div class="col-md-6">
               <label class="form-label d-block text-end">تاريخ الميلاد</label>
-              <div class="input-group flex-row-reverse">
-                <span class="input-group-text"
-                  ><i class="bi bi-calendar3"></i
-                ></span>
-                <input
-                  type="text"
-                  formControlName="dateOfBirth"
-                  class="form-control no-default-icon text-end"
-                />
+              <div
+                class="d-flex justify-content-between gap-2 flex-row-reverse birthdate-display"
+              >
+                <div class="text-center flex-fill">
+                  <label class="form-label">اليوم</label>
+                  <input
+                    type="number"
+                    class="form-control text-center"
+                    [value]="day"
+                    disabled
+                  />
+                </div>
+                <div class="text-center flex-fill">
+                  <label class="form-label">الشهر</label>
+                  <input
+                    type="number"
+                    class="form-control text-center"
+                    [value]="month"
+                    disabled
+                  />
+                </div>
+                <div class="text-center flex-fill">
+                  <label class="form-label">السنة</label>
+                  <input
+                    type="number"
+                    class="form-control text-center"
+                    [value]="year"
+                    disabled
+                  />
+                </div>
               </div>
             </div>
           </div>
