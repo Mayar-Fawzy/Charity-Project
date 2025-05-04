@@ -27,6 +27,43 @@
     }
 }
 
+// >>>>>>>>>>>>>>>>> Search 
+.custom-search-input {
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:focus {
+        border-color: #ffc107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+}
+
+.custom-search-btn {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    i {
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background-color: #ffc107;
+        color: #000;
+
+        i {
+            transform: scale(1.2);
+        }
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+}
+
+
+
 // >>>>>>>>>>>>>>>>>> cards
 .container {
     h1 {

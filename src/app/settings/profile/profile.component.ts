@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileservicesService } from '../Core/Services/profileservices.service';
-import { ToastrService } from 'ngx-toastr'; 
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -16,13 +16,18 @@ export class ProfileComponent implements OnInit {
   private readonly _ProfileservicesService = inject(ProfileservicesService);
   private readonly _ActivatedRoute = inject(ActivatedRoute);
   private readonly _Router = inject(Router);
-  private readonly _Toastr = inject(ToastrService); 
+  private readonly _Toastr = inject(ToastrService);
 
   userImageUrl: string | null = null;
   selectedImage: File | null = null;
   userData: any = null;
   originalUserData: any = null;
-  isLoading: boolean = false; // ← حالة التحميل
+  isLoading: boolean = false;
+
+  // >>>>>>>>>>>> brithdata
+  day: number | null = null;
+  month: number | null = null;
+  year: number | null = null;
 
   profileForm = new FormGroup({
     firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
@@ -46,7 +51,7 @@ export class ProfileComponent implements OnInit {
     this._ProfileservicesService.GetUserById(id).subscribe({
       next: (data: any) => {
         this.userData = data.data;
-        console.log(data.data.dateOfBirth );
+        console.log(data.data.dateOfBirth);
         this.originalUserData = { ...data.data };
         this.userImageUrl = data.data.imageUrl;
         this.profileForm.patchValue({
@@ -58,8 +63,16 @@ export class ProfileComponent implements OnInit {
           gender: data.data.gender?.toString() || '',
           dateOfBirth: data.data.dateOfBirth ? data.data.dateOfBirth.split('T')[0] : ''
         });
+
+        // >>>>>>>>>>>> هنا فصل اليوم والشهر والسنة
+        if (data.data.dateOfBirth) {
+          const [year, month, day] = data.data.dateOfBirth.split('T')[0].split('-').map(Number);
+          this.year = year;
+          this.month = month;
+          this.day = day;
+        }
       },
-      
+
       error: (error: any) => {
         console.error('فشل في جلب بيانات المستخدم', error);
         this._Toastr.error(' فشل في جلب بيانات المستخدم');
@@ -93,18 +106,16 @@ export class ProfileComponent implements OnInit {
         this.userImageUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
-  
-      // ارفع الصورة مباشرة بعد الاختيار
+
       this.uploadImage(file);
     }
   }
-  
 
   removeImage(): void {
     if (!this.userData) return;
-  
+
     this.isLoading = true;
-  
+
     const formData = new FormData();
     formData.append('Id', this.userData.id ?? '');
     formData.append('UserName', this.userData.userName ?? '');
@@ -115,10 +126,8 @@ export class ProfileComponent implements OnInit {
     formData.append('address', this.userData.address ?? '');
     formData.append('gender', this.userData.gender ?? '');
     formData.append('dateOfBirth', this.userData.dateOfBirth ?? '');
-    
-    // هنا لا نضيف الصورة => معناها حذف
-    formData.append('image', ''); // إرسال الصورة فاضية
-  
+    formData.append('image', '');
+
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
@@ -134,8 +143,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-  
-  
 
   onSubmit(): void {
     if (this.profileForm.valid) {
@@ -175,9 +182,10 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
+
   uploadImage(file: File): void {
     if (!file || !this.userData) return;
-  
+
     const formData = new FormData();
     formData.append('Id', this.userData.id ?? '');
     formData.append('UserName', this.userData.userName ?? '');
@@ -189,7 +197,7 @@ export class ProfileComponent implements OnInit {
     formData.append('gender', this.userData.gender ?? '');
     formData.append('dateOfBirth', this.userData.dateOfBirth ?? '');
     formData.append('image', file);
-  
+
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
       next: (response: any) => {
         this._Toastr.success('تم رفع الصورة بنجاح');
@@ -201,9 +209,7 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-  
-  
-  
+
   onCancel(): void {
     this.profileForm.patchValue(this.originalUserData);
     this._Toastr.info('تم إلغاء التغييرات');
