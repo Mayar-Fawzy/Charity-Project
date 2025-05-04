@@ -35,6 +35,7 @@ export class ProfileComponent implements OnInit {
     email: new FormControl(null, [Validators.required, Validators.email]),
     phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11}$/)]),
     address: new FormControl(null, [Validators.required, Validators.minLength(5)]),
+    age: new FormControl({ value: '', disabled: true }),
     gender: new FormControl({ value: '', disabled: true }),
     dateOfBirth: new FormControl({ value: '', disabled: true }, [
       Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
@@ -60,6 +61,7 @@ export class ProfileComponent implements OnInit {
           email: data.data.email,
           phoneNumber: data.data.phoneNumber,
           address: data.data.address,
+          age:data.data.age,
           gender: data.data.gender?.toString() || '',
           dateOfBirth: data.data.dateOfBirth ? data.data.dateOfBirth.split('T')[0] : ''
         });
@@ -126,6 +128,7 @@ export class ProfileComponent implements OnInit {
     formData.append('address', this.userData.address ?? '');
     formData.append('gender', this.userData.gender ?? '');
     formData.append('dateOfBirth', this.userData.dateOfBirth ?? '');
+    formData.append('age', this.userData.age ?? '');
     formData.append('image', '');
 
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
@@ -156,6 +159,7 @@ export class ProfileComponent implements OnInit {
       formData.append('email', this.profileForm.value.email ?? '');
       formData.append('phoneNumber', this.profileForm.value.phoneNumber ?? '');
       formData.append('address', this.profileForm.value.address ?? '');
+      formData.append('dateOfBirth', this.userData?.dateOfBirth ?? '');
 
       if (this.selectedImage) {
         formData.append('image', this.selectedImage, this.selectedImage.name);

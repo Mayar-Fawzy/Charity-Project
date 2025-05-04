@@ -72,7 +72,7 @@
           <div class="navbar__user"  [routerLink]="['/settings/profile', userId]">
 
             <img
-            [src]="userImage ? userImage : 'assets/images/default.png'"
+            [src]="userImage ? userImage : '/Images/Logo.svg'"
               alt="User"
               class="user-image"
             />
@@ -95,7 +95,7 @@
 
       <ng-template #loggedInDesktop>
         <div class="navbar__user"  [routerLink]="['/settings/profile', userId]">
-          <img   [src]="userImage && userImage !== '' ? userImage : 'assets/images/default.png'" alt="User" class="user-image" />
+          <img   [src]="userImage && userImage !== '' ? userImage : '/Images/Logo.svg'" class="user-image" />
           <span >مرحبًا، {{ userName() }}</span>
           <div class="notification-container">
             <i class="bi bi-bell notification"></i>

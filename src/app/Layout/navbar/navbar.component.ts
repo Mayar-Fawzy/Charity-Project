@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   userData: any;
   userName = signal<string>(''); // signal بدلاً من string
   userId!: string;
-  userImage: string = 'assets/images/default.png'; // صورة افتراضية
+  userImage: string = '/Images/Logo.svg'; // صورة افتراضية
   isMenuOpen: boolean = false;
   isSmallScreen: boolean = false;
 
