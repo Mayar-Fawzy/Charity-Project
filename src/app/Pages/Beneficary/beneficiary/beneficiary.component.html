@@ -104,9 +104,7 @@
         <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
       </li>
 
-      <li class="page-item" *ngIf="showLeftDots">
-        <span class="page-link">...</span>
-      </li>
+     
 
       <!-- >>> Page numbers -->
       <li
@@ -117,9 +115,6 @@
         <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
       </li>
 
-      <li class="page-item" *ngIf="showRightDots">
-        <span class="page-link">...</span>
-      </li>
 
       <!-- >>> Next -->
       <li class="page-item" [class.disabled]="currentPage === totalPages">

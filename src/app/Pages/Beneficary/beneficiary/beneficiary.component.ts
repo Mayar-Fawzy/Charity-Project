@@ -15,6 +15,7 @@ import { InkindData } from '../core/Interface/inkind-pages';
 })
 export class BeneficiaryComponent implements OnInit {
   private readonly _inkind = inject(InkinddonationService);
+
   // Map to track the current image index for each product
   private imageIndices = new Map<string, number>();
   products: InkindData[] = [];
@@ -73,6 +74,7 @@ export class BeneficiaryComponent implements OnInit {
     const newIndex = (currentIndex + 1) % imageCount;
     this.imageIndices.set(productId, newIndex);
   }
+
  // Navigate to the previous image for a specific product
  prevImage(productId: string, imageCount: number): void {
   const currentIndex = this.imageIndices.get(productId) || 0;
@@ -99,33 +101,39 @@ animateRequest(event: Event) {
 
   get displayedPages(): number[] {
     const pages: number[] = [];
-    const total = this.totalPages;
-    const maxPagesToShow = 5;
-    const half = Math.floor(maxPagesToShow / 2);
+  const total = this.totalPages;
 
-    let start = Math.max(1, this.currentPage - half);
-    let end = Math.min(total, this.currentPage + half);
+  // نبدأ من الصفحة الحالية
+  let start = this.currentPage;
+  // النهاية هتبقى الصفحة الحالية + 1 (يعني 2 أرقام بس)
+  let end = Math.min(total, this.currentPage + 1);
 
-    if (this.currentPage <= half) {
-      end = Math.min(total, maxPagesToShow);
-    } else if (this.currentPage + half > total) {
-      start = Math.max(1, total - maxPagesToShow + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
+  // لو الصفحة الحالية هي آخر صفحة، هنظهر الصفحة اللي قبلها والصفحة الحالية
+  if (this.currentPage === total && total > 1) {
+    start = this.currentPage - 1;
+    end = this.currentPage;
+  }
+  // لو الصفحة الحالية هي 1 وفيه صفحة واحدة بس، هنظهر الصفحة 1 بس
+  else if (this.currentPage === 1 && total === 1) {
+    start = 1;
+    end = 1;
   }
 
-  get showLeftDots(): boolean {
-    return this.displayedPages[0] > 1;
+  // نملّي المصفوفة بالأرقام من start لـ end
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
   }
 
-  get showRightDots(): boolean {
-    return this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
+  return pages;
   }
+
+  // get showLeftDots(): boolean {
+  //   return this.displayedPages[0] > 1;
+  // }
+
+  // get showRightDots(): boolean {
+  //   return this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
+  // }
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
