@@ -24,6 +24,8 @@ export class BeneficiaryComponent implements OnInit {
   products: InkindData[] = [];
   filteredProjects: InkindData[] = [];
   loading = false;
+  requestDetails: string = '';
+
   error: string | null = null;
   userData: any = null;
   searchTerm: string = '';
@@ -122,8 +124,8 @@ createVolunteerApplication(): void {
       if (res.isSucceeded) {
         Swal.fire({
           icon: 'success',
-          title: 'تم تقديم طلب التطوع بنجاح!',
-          text: 'شكرًا لمساهمتك في العمل التطوعي!',
+          title: 'تم تقديم طلبك بنجاح!',
+          text: 'سيتم مراجعة طلبك قريبًا.',
           confirmButtonColor: '#f6a026',
           confirmButtonText: 'حسنا',
         });
@@ -200,4 +202,79 @@ createVolunteerApplication(): void {
       this.loadPage();
     }
   }
+  SubmitVolunteerActivity2() {
+    if (this.loading) return;
+  
+    this.userData = this.loginService.saveUserAuth();
+  
+    if (!this.userData) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'يجب تسجيل الدخول',
+        text: 'يرجى تسجيل الدخول أولاً لتقديم الطلب.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      return;
+    }
+  
+    if (!this.requestDetails || this.requestDetails.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ',
+        text: 'برجاء توضيح طلبك.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      return;
+    }
+  
+    this.loading = true;
+  
+    const AssistanceRequestBody = {
+      beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
+      requestDetails: this.requestDetails,
+      inKindDonationId: null
+    };
+  
+    this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe({
+      next: (res) => {
+        if (res.isSucceeded) {
+          Swal.fire({
+            icon: 'success',
+            title: 'تم تقديم طلبك بنجاح!',
+            text: 'سيتم مراجعة طلبك قريبًا.',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا',
+          });
+          this.requestDetails = ''; // مسح الحقل بعد النجاح
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'فشل تقديم الطلب',
+            text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا',
+          });
+          console.error('Error creating volunteer application:', res.message);
+        }
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الاتصال بالخادم',
+          text: 'يرجى المحاولة لاحقًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+        console.error('Request error:', err);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  
+    console.log(AssistanceRequestBody);
+  }
+  
 }
