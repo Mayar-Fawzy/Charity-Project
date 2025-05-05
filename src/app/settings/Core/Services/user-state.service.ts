@@ -5,16 +5,11 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class UserStateService {
-  userImage = signal<string>('assets/images/default.png');
+  private userImageSource = new BehaviorSubject<string>('/Images/Logo.svg');
+  userImage$ = this.userImageSource.asObservable();
 
-  userFirstName = signal<string>('');  
-
-  setUserFirstName(name: string) {
-    this.userFirstName.set(name); 
-  }
-
-  setUserImage(newImage: string) {
-    this.userImage.set(newImage);
+  updateUserImage(newImage: string) {
+    this.userImageSource.next(newImage);
   }
 
   
