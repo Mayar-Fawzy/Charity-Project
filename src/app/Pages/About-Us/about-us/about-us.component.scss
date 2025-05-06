@@ -1,0 +1,146 @@
+
+$primary-bg: hsl(0, 0%, 95%);
+$secoung-bg: hsl(0, 0%, 90%);
+$primary-color: #f6a026;
+$text-color: #333;
+$light-bg: #f9f9f9;
+
+.cta-section {
+    position: relative;
+    height: 100vh;
+    direction: rtl;
+
+    .image-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover !important;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 24, 39, 0.8);
+            z-index: 2;
+        }
+    }
+
+    // محتوى النص والأزرار
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        color: white;
+        text-align: center;
+        max-width: 1200px;
+        width: 90%;
+        padding: 1rem;
+        margin: 0 auto;
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-text {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+    }
+
+    //  الأزرار
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .btn {
+            padding: 0.5rem 2rem;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .bi {
+                font-size: 1.3rem;
+                margin-left: 0.3rem;
+            }
+
+            // زر التبرع
+            &.donate-btn {
+                background: $primary-color;
+                color: $light-bg;
+
+                &:hover {
+                    background: darken(#2C3E50, 12%);
+                }
+            }
+
+            // زر التطوع
+            &.volunteer-btn {
+                background: $light-bg;
+                color: #000;
+
+                &:hover {
+                    background: lighten($primary-color, 12%);
+                }
+            }
+
+            // زر المساعدة
+            &.help-btn {
+                background: transparent;
+                color: $light-bg;
+                border: 2px solid $light-bg;
+
+                &:hover {
+                    background: $primary-color;
+                    color: $light-bg;
+                }
+            }
+        }
+    }
+
+    // responsive
+    @media (max-width: 768px) {
+        .cta-section {
+            height: auto;
+            min-height: 100vh;
+
+            .container {
+                padding-top: 4rem;
+
+                .cta-title {
+                    font-size: 2rem;
+                }
+
+                .action-buttons .btn {
+                    width: 100%;
+                    max-width: 300px;
+                }
+            }
+        }
+    }
+}
