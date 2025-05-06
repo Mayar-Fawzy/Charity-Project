@@ -8,7 +8,7 @@
     <!-- Logo -->
     <div class="navbar__brand">
       <span>يـــــــد</span>
-      <img src="/Images/Logo.svg" alt="Logo" class="navbar__logo" />
+      <img  src="/Images/Logo.svg" alt="Logo" class="navbar__logo" />
       <span>العطاء</span>
     </div>
 
@@ -72,12 +72,23 @@
         </ng-container>
 
         <ng-template #loggedInMobile>
+<<<<<<< HEAD
           <div
             class="navbar__user"
             [routerLink]="['/settings/profile', userId]"
           >
             <img [src]="userImage" alt="User" class="user-image" />
             <span>الملف الشخصى</span>
+=======
+          <div class="navbar__user"  [routerLink]="['/settings/profile', userId]">
+
+            <img
+            [src]="userImage ? userImage : '/Images/Logo.svg'"
+              alt="User"
+              class="user-image"
+            />
+            <span>البروفايل</span>
+>>>>>>> aab33a66e8484673147ee26988bb5ca6fcd44a96
           </div>
           <button class="login-btn logout" (click)="handleLogout()">
             تسجيل الخروج
@@ -95,9 +106,9 @@
       </ng-container>
 
       <ng-template #loggedInDesktop>
-        <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
-          <img [src]="userImage" alt="User" class="user-image" />
-          <span>مرحبًا، {{ userName }}</span>
+        <div class="navbar__user"  [routerLink]="['/settings/profile', userId]">
+          <img   [src]="userImage && userImage !== '' ? userImage : '/Images/Logo.svg'" class="user-image" />
+          <span >مرحبًا، {{ userName() }}</span>
           <div class="notification-container">
             <i class="bi bi-bell notification"></i>
           </div>

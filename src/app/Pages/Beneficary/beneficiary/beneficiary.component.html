@@ -110,6 +110,7 @@
                   class="btn btn-warning request-btn"
                   (click)="animateRequest($event)"
                 >
+                <button class="btn btn-warning request-btn" (click)="SubmitVolunteerActivity(product.id)">
                   طلب العنصر
                 </button>
               </div>
@@ -180,6 +181,7 @@
   </p>
   <form class="mx-auto text-start" style="max-width: 600px">
     <div class="mb-3">
+<<<<<<< HEAD
       <label for="needInput" class="form-label fw-semibold"
         >ما الذي تحتاجه؟</label
       >
@@ -189,6 +191,18 @@
         rows="3"
         placeholder="صف ما تحتاجه..."
       ></textarea>
+=======
+      <label for="needInput" class="form-label fw-semibold">ما الذي تحتاجه؟</label>
+      <textarea
+  class="form-control"
+  id="needInput"
+  rows="3"
+  placeholder="صف ما تحتاجه..."
+  [(ngModel)]="requestDetails"
+  name="requestDetails">
+</textarea>
+
+>>>>>>> aab33a66e8484673147ee26988bb5ca6fcd44a96
     </div>
     <div class="form-check mb-4">
       <input
@@ -207,9 +221,24 @@
       </label>
     </div>
     <div class="text-center">
+<<<<<<< HEAD
       <button type="submit" class="btn btn-warning submit-btn">
         إرسال الطلب
       </button>
+=======
+      <button
+      type="submit"
+      [disabled]="loading"
+      class="btn btn-warning submit-btn w-100"
+      (click)="SubmitVolunteerActivity2()">
+      <span *ngIf="!loading">إرسال الطلب</span>
+      <span *ngIf="loading">
+      
+        جاري الإرسال...  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      </span>
+    </button>
+    
+>>>>>>> aab33a66e8484673147ee26988bb5ca6fcd44a96
     </div>
   </form>
 </section>

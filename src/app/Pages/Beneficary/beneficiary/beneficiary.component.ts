@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InkinddonationService } from '../core/Services/inkinddonation.service';
 import Swal from 'sweetalert2';
 import { InkindData } from '../core/Interface/inkind-pages';
+import { LoginService } from '../../Auth/core/Services/login.service';
+import { VolunteerActivityReqService } from '../core/Services/volunteer-activity-req.service';
 
 
 @Component({
@@ -15,18 +17,24 @@ import { InkindData } from '../core/Interface/inkind-pages';
 })
 export class BeneficiaryComponent implements OnInit {
   private readonly _inkind = inject(InkinddonationService);
-
+ private readonly loginService = inject(LoginService);
+ private readonly _VolunteerActivityReqService=inject(VolunteerActivityReqService)
   // Map to track the current image index for each product
   private imageIndices = new Map<string, number>();
   products: InkindData[] = [];
   filteredProjects: InkindData[] = [];
   loading = false;
+  requestDetails: string = '';
+
   error: string | null = null;
+  userData: any = null;
   searchTerm: string = '';
   itemsPerPage = 6;
   currentPage = 1;
   totalPages = 1;
   totalCount = 0;
+  
+  selectedProjectId: string = '';
 
   ngOnInit(): void {
     this.loadPage();
@@ -87,14 +95,53 @@ getCurrentImageIndex(productId: string): number {
   return this.imageIndices.get(productId) || 0;
 }
 
-animateRequest(event: Event) {
-  const btn = event.target as HTMLElement | null;
-  if (btn) {
-    btn.classList.add('animate');
-    setTimeout(() => btn.classList.remove('animate'), 500);
-  }
-}
 
+SubmitVolunteerActivity(projectId: string): void {
+  this.selectedProjectId = projectId;
+  this.createVolunteerApplication();
+}
+createVolunteerApplication(): void {
+    this.userData = this.loginService.saveUserAuth();
+  
+    if (!this.userData) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'يجب تسجيل الدخول',
+        text: 'يرجى تسجيل الدخول أولاً لتقديم طلب التطوع.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      })
+      return;
+    }
+  
+    const AssistanceRequestBody = {
+      beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
+      requestDetails: 'يرجى توضيح النشاط', // يمكن استبدالها لاحقًا بمدخل من المستخدم
+      inKindDonationId: this.selectedProjectId
+    };
+  
+    this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe(res => {
+      if (res.isSucceeded) {
+        Swal.fire({
+          icon: 'success',
+          title: 'تم تقديم طلبك بنجاح!',
+          text: 'سيتم مراجعة طلبك قريبًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'فشل تقديم الطلب',
+          text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+        console.error('Error creating volunteer application:', res.message);
+      }
+    });
+
+}
   get paginatedProjects() {
     return this.filteredProjects;
   }
@@ -155,4 +202,79 @@ animateRequest(event: Event) {
       this.loadPage();
     }
   }
+  SubmitVolunteerActivity2() {
+    if (this.loading) return;
+  
+    this.userData = this.loginService.saveUserAuth();
+  
+    if (!this.userData) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'يجب تسجيل الدخول',
+        text: 'يرجى تسجيل الدخول أولاً لتقديم الطلب.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      return;
+    }
+  
+    if (!this.requestDetails || this.requestDetails.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ',
+        text: 'برجاء توضيح طلبك.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      return;
+    }
+  
+    this.loading = true;
+  
+    const AssistanceRequestBody = {
+      beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
+      requestDetails: this.requestDetails,
+      inKindDonationId: null
+    };
+  
+    this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe({
+      next: (res) => {
+        if (res.isSucceeded) {
+          Swal.fire({
+            icon: 'success',
+            title: 'تم تقديم طلبك بنجاح!',
+            text: 'سيتم مراجعة طلبك قريبًا.',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا',
+          });
+          this.requestDetails = ''; // مسح الحقل بعد النجاح
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'فشل تقديم الطلب',
+            text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا',
+          });
+          console.error('Error creating volunteer application:', res.message);
+        }
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الاتصال بالخادم',
+          text: 'يرجى المحاولة لاحقًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+        console.error('Request error:', err);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  
+    console.log(AssistanceRequestBody);
+  }
+  
 }
