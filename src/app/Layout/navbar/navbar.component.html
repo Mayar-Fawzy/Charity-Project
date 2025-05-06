@@ -41,18 +41,21 @@
         >
       </li>
       <li>
-        <a routerLink="/beneficiary" routerLinkActive="active" (click)="closeMenu()"
+        <a
+          routerLink="/beneficiary"
+          routerLinkActive="active"
+          (click)="closeMenu()"
           >المساعدات</a
+        >
+      </li>
+      <li>
+        <a routerLink="/volunteer-activity" routerLinkActive="active" (click)="closeMenu()"
+          >الأنشطة التطوعية</a
         >
       </li>
       <li>
         <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()"
           >من نحن</a
-        >
-      </li>
-      <li>
-        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()"
-          >تواصل معنا</a
         >
       </li>
 
@@ -69,14 +72,12 @@
         </ng-container>
 
         <ng-template #loggedInMobile>
-          <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
-
-            <img
-              [src]="userImage"
-              alt="User"
-              class="user-image"
-            />
-            <span>البروفايل</span>
+          <div
+            class="navbar__user"
+            [routerLink]="['/settings/profile', userId]"
+          >
+            <img [src]="userImage" alt="User" class="user-image" />
+            <span>الملف الشخصى</span>
           </div>
           <button class="login-btn logout" (click)="handleLogout()">
             تسجيل الخروج

@@ -13,6 +13,8 @@ import { EwalletPaymentComponent } from './PaymentMethod/ewallet-payment/ewallet
 import { VisaPaymentComponent } from './PaymentMethod/visa-payment/visa-payment.component';
 import { ProjectsComponent } from './Pages/Projects/projects/projects.component';
 import { BeneficiaryComponent } from './Pages/Beneficary/beneficiary/beneficiary.component';
+import { VolunteerActivityComponent } from './Pages/VolunteerActivity/volunteer-activity/volunteer-activity.component';
+import { AboutUsComponent } from './Pages/About-Us/about-us/about-us.component';
 
 
 import { SettingsLayoutComponent } from './Layout/settings-layout/settings-layout.component';
@@ -48,6 +50,8 @@ export const routes: Routes = [
     { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
       { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
       { path: 'projects', title: 'Projects', component: ProjectsComponent },
+      { path: 'volunteer-activity', title: 'volunteer-activity', component: VolunteerActivityComponent},
+      { path: 'about', title: 'About', component: AboutUsComponent},
       {
         path: 'ewallet-payment/:id',
         title: 'E-Wallet Payment',
