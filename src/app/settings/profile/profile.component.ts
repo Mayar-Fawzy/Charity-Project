@@ -39,7 +39,8 @@ export class ProfileComponent implements OnInit {
     gender: new FormControl({ value: '', disabled: true }),
     dateOfBirth: new FormControl({ value: '', disabled: true }, [
       Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
-    ])
+    ]),
+
   });
 
   ngOnInit(): void {
@@ -53,22 +54,22 @@ export class ProfileComponent implements OnInit {
       next: (data: any) => {
         this.userData = data.data;
         console.log(data.data.dateOfBirth);
-        this.originalUserData = { ...data.data };
-        this.userImageUrl = data.data.imageUrl;
+       // this.originalUserData = { ...data.data };
+        this.userImageUrl = data.image;
         this.profileForm.patchValue({
-          firstName: data.data.firstName,
-          lastName: data.data.lastName,
-          email: data.data.email,
-          phoneNumber: data.data.phoneNumber,
-          address: data.data.address,
-          age:data.data.age,
-          gender: data.data.gender?.toString() || '',
-          dateOfBirth: data.data.dateOfBirth ? data.data.dateOfBirth.split('T')[0] : ''
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          address: data.address,
+          age:data.age,
+          gender: data.gender?.toString() || '',
+          dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : ''
         });
 
         // >>>>>>>>>>>> هنا فصل اليوم والشهر والسنة
-        if (data.data.dateOfBirth) {
-          const [year, month, day] = data.data.dateOfBirth.split('T')[0].split('-').map(Number);
+        if (data.dateOfBirth) {
+          const [year, month, day] = data.dateOfBirth.split('T')[0].split('-').map(Number);
           this.year = year;
           this.month = month;
           this.day = day;
@@ -160,16 +161,17 @@ export class ProfileComponent implements OnInit {
       formData.append('phoneNumber', this.profileForm.value.phoneNumber ?? '');
       formData.append('address', this.profileForm.value.address ?? '');
       formData.append('dateOfBirth', this.userData?.dateOfBirth ?? '');
-
-      if (this.selectedImage) {
-        formData.append('image', this.selectedImage, this.selectedImage.name);
-      }
-
+   
+        formData.append('image',this.selectedImage ?? '');
+    
       const id = this._ActivatedRoute.snapshot.paramMap.get('id');
       if (id) {
         this._ProfileservicesService.UpdateUser(id, formData).subscribe({
           next: (response: any) => {
             this.isLoading = false;
+            this.userData = response.data;
+            this.userImageUrl = response.data.imageUrl;
+
             this._Toastr.success(' تم تحديث البيانات بنجاح');
           },
           error: (error: any) => {
@@ -205,7 +207,7 @@ export class ProfileComponent implements OnInit {
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
       next: (response: any) => {
         this._Toastr.success('تم رفع الصورة بنجاح');
-        this.userImageUrl = response.data.data.imageUrl;
+        this.userImageUrl = response.data.image;
       },
       error: (error: any) => {
         this._Toastr.error('حدث خطأ أثناء رفع الصورة');

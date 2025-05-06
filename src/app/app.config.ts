@@ -20,6 +20,7 @@ import Aura from '@primeng/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideClientHydration(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
@@ -28,7 +29,6 @@ export const appConfig: ApplicationConfig = {
     BrowserAnimationsModule,
     provideAnimations(),
     provideToastr(),
-    provideClientHydration(),
     provideHttpClient(withFetch(), withInterceptors([headersInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
