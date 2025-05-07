@@ -25,6 +25,7 @@ export class ProfileComponent implements OnInit {
   userData: any = null;
   originalUserData: any = null;
   isLoading: boolean = false;
+  isLoading2: boolean = false;
   id:any;
   day: number | null = null;
   month: number | null = null;
@@ -66,7 +67,7 @@ export class ProfileComponent implements OnInit {
           phoneNumber: data.phoneNumber,
           address: data.address,
           age: data.age,
-          gender: data.gender?.toString() || '',
+          gender: data.gender,
           dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : ''
         });
 
@@ -114,8 +115,62 @@ export class ProfileComponent implements OnInit {
     }
   }
   uploadImage(file: File): void {
-    this.onSubmit(); // ✅ استدعاء دالة onSubmit لرفع الصورة
- 
+    if (this.profileForm.valid) {
+      this.isLoading2 = true;
+      const id = this._ActivatedRoute.snapshot.paramMap.get('id');
+      if (id) {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
+        formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
+        formData.append('email', this.profileForm.get('email')?.value ?? '');
+        formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
+        formData.append('address', this.profileForm.get('address')?.value ?? '');
+        formData.append('gender', this.profileForm.get('gender')?.value ?? '');
+        formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
+        formData.append('age', this.profileForm.get('age')?.value ?? '');
+
+        if (this.selectedImage) {
+          formData.append('image', this.selectedImage);
+        } else if (this.userData.imageUrl) {
+          formData.append('imageUrl', this.userData.imageUrl);
+        } else {
+          formData.append('imageUrl', '');
+        }
+
+        this._ProfileservicesService.UpdateUser(id, formData).pipe(
+          timeout(30000),
+          finalize(() => {
+            this.isLoading2 = false;
+          })
+        ).subscribe({
+          next: (response: any) => {
+            if (response?.isSucceeded) {
+              this._Toastr.success('تم تحديث البيانات بنجاح');
+              window.location.reload();
+              if (response.data) {
+                this.userData = response.data;
+                this.originalUserData = { ...response.data }; // تحديث البيانات الأصلية
+                this.userImageUrl = response.data.imageUrl || response.data.image;
+                this.selectedImage = null; 
+                
+              }
+            } else {
+              this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
+            }
+          },
+          error: (error: any) => {
+            this._Toastr.error('حدث خطأ أثناء التحديث');
+            console.error('❌ خطأ أثناء التحديث:', error);
+          }
+        });
+      } else {
+        this.isLoading2 = false;
+        this._Toastr.error('لم يتم العثور على معرف المستخدم.');
+      }
+    } else {
+      this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
+    }
   }
 
   removeImage(): void {
@@ -145,6 +200,8 @@ export class ProfileComponent implements OnInit {
         this.userImageUrl = null;
         this.selectedImage = null;
         this.userData.imageUrl = null;
+        this.originalUserData.imageUrl = null; // تحديث البيانات الأصلية
+        window.location.reload();
         this._Toastr.success('تم حذف الصورة بنجاح');
       },
       error: (error: any) => {
@@ -212,24 +269,43 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
-
   onCancel(): void {
-    if (this.originalUserData) {
-      this.profileForm.patchValue({
-        firstName: this.originalUserData.firstName,
-        lastName: this.originalUserData.lastName,
-        email: this.originalUserData.email,
-        phoneNumber: this.originalUserData.phoneNumber,
-        address: this.originalUserData.address,
-        age: this.originalUserData.age,
-        gender: this.originalUserData.gender?.toString() || '',
-        dateOfBirth: this.originalUserData.dateOfBirth ? this.originalUserData.dateOfBirth.split('T')[0] : ''
-      });
-      this.userImageUrl = this.originalUserData.imageUrl;
-      this.selectedImage = null;
-      this._Toastr.info('تم إلغاء التغييرات');
-    } else {
-      this._Toastr.warning('لا توجد بيانات لإلغاء التغييرات');
-    }
+  
+      if (this.originalUserData) {
+        this.profileForm.patchValue({
+          firstName: this.originalUserData.firstName || '',
+          lastName: this.originalUserData.lastName || '',
+          email: this.originalUserData.email || '',
+          phoneNumber: this.originalUserData.phoneNumber || '',
+          address: this.originalUserData.address || '',
+          age: this.originalUserData.age || '',
+          gender: this.originalUserData.gender || '',
+          dateOfBirth: this.originalUserData.dateOfBirth
+            ? this.originalUserData.dateOfBirth.split('T')[0]
+            : ''
+        });
+  
+        this.userImageUrl = this.originalUserData.imageUrl || null;
+        this.selectedImage = null;
+  
+        if (this.originalUserData.dateOfBirth) {
+          const [year, month, day] = this.originalUserData.dateOfBirth
+            .split('T')[0]
+            .split('-')
+            .map(Number);
+          this.year = year;
+          this.month = month;
+          this.day = day;
+        } else {
+          this.year = null;
+          this.month = null;
+          this.day = null;
+        }
+  
+        this._Toastr.info('تم إلغاء التغييرات');
+      } else {
+        this._Toastr.warning('لا توجد بيانات لإلغاء التغييرات');
+      }
+    
   }
 }
