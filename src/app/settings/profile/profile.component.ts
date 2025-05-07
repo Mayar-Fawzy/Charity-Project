@@ -288,11 +288,11 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('لا توجد بيانات مستخدم للحذف');
       return;
     }
-
+  
     console.log('removeImage: Removing image for user', this.userData.id);
-
+  
     this.isLoading = true;
-
+  
     const formData = new FormData();
     formData.append('id', this.userData.id ?? '');
     formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
@@ -300,11 +300,11 @@ export class ProfileComponent implements OnInit {
     formData.append('email', this.profileForm.get('email')?.value ?? '');
     formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
     formData.append('address', this.profileForm.get('address')?.value ?? '');
-    formData.append('gender', this.profileForm.get('gender')?.value ?? '');
+    formData.append('gender', this.userData.gender?.toString() ?? ''); // استخدام القيمة الأصلية (0 أو 1)
     formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
     formData.append('age', this.profileForm.get('age')?.value ?? '');
     formData.append('image', '');
-
+  
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
       timeout(30000),
       finalize(() => {
@@ -333,7 +333,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
 
   getGenderName(gender: number): string {
     return gender === 0 ? 'ذكر' : 'أنثى';
