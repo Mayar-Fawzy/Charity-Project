@@ -15,6 +15,6 @@ export class ProjectPagenationService {
     return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}Project/GetPaginatedProjects?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
   }
   getProjectById(id: string): Observable<IprojectDonate>{
-    return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}/GetProjectById?id=${id}`);
+    return this._HttpClient.get<IprojectDonate>(`${Environment.baseUrl}${Environment.VersionUrl}GetProjectById?id=${id}`);
   }
 }

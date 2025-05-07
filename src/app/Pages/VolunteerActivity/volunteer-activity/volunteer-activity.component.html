@@ -14,10 +14,10 @@
 
 <div class="container mt-5">
   <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let project of volunteerProjects">
+    <div class="col-md-4 mb-4" *ngFor="let project of volunteerProjectss">
       <div class="card shadow volunteer-card text-end h-100" dir="rtl">
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-warning">{{ project.title }}</h5>
+      <!-- //    <h5 class="card-title fw-bold text-warning">{{ project.title }}</h5> -->
 
           <p class="card-text text-muted flex-grow-1">
             {{ truncate(project.activityDescription, 100) }}
@@ -36,7 +36,7 @@
             تاريخ الإنشاء: {{ project.createdDate | date : "yyyy-MM-dd" }}
           </div>
 
-          <button class="btn btn-warning w-100 text-white fw-bold mt-2">
+          <button class="btn btn-warning w-100 text-white fw-bold mt-2" (click)="onJoinVoulnteerActivity(project.id)">
             انضم للتطوع
           </button>
         </div>
@@ -78,4 +78,35 @@
       </div>
     </div>
   </div>
+ 
 </div>
+ <!-- Pagination -->
+ <nav class="pagination-wrapper mt-4">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <button
+        class="page-link"
+        (click)="goToPrevious()"
+        [disabled]="currentPage === 1"
+      >
+        السابق
+      </button>
+    </li>
+    <li
+      class="page-item"
+      *ngFor="let page of displayedPages"
+      [class.active]="currentPage === page"
+    >
+      <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+    </li>
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <button
+        class="page-link"
+        (click)="goToNext()"
+        [disabled]="currentPage === totalPages"
+      >
+        التالي
+      </button>
+    </li>
+  </ul>
+</nav>

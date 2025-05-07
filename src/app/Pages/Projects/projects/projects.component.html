@@ -33,7 +33,7 @@
 <!-- >>>>>>>>>>>>> Projects  -->
 <section class="container my-5">
   <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let project of paginatedProjects">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let project of filteredProjects">
       <div class="project-card shadow-sm">
         <div class="image-wrapper">
           <img [src]="project.imageUrl" [alt]="project.name" />
