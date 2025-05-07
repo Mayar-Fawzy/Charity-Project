@@ -285,16 +285,19 @@ export class ProfileComponent implements OnInit {
           })
         ).subscribe({
           next: (response: any) => {
-            if (response?.isSucceeded) {
-              this._Toastr.success('تم تحديث البيانات بنجاح');
+            if (response?.isSucceeded) { 
               if (response.data) {
                 this.userData = response.data;
                 this.originalUserData = { ...response.data };
                 this.userImageUrl = response.data.imageUrl || response.data.image || null;
                 this.selectedImage = null;
+                 
                 this.checkFormChanges();
+              //  this._Toastr.success('تم تحديث البيانات بنجاح');
               }
+             // this._Toastr.success('تم تحديث البيانات بنجاح');
               window.location.reload();
+              this._Toastr.success('تم تحديث البيانات بنجاح');
             } else {
               this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
             }
