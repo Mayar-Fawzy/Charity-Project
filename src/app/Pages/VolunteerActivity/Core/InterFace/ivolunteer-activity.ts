@@ -16,6 +16,7 @@
   
   export interface IDataa {
     id: string
+    name: string
     organizerId: string
     activityDescription: string
     createdDate: string

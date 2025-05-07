@@ -17,7 +17,7 @@
     <div class="col-md-4 mb-4" *ngFor="let project of volunteerProjectss">
       <div class="card shadow volunteer-card text-end h-100" dir="rtl">
         <div class="card-body d-flex flex-column">
-      <!-- //    <h5 class="card-title fw-bold text-warning">{{ project.title }}</h5> -->
+        <h5 class="card-title fw-bold text-warning">{{ project.name }}</h5> 
 
           <p class="card-text text-muted flex-grow-1">
             {{ truncate(project.activityDescription, 100) }}
