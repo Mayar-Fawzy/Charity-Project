@@ -96,7 +96,7 @@ export class VolunteerActivityComponent {
            Swal.fire({
              icon: 'success',
              title: 'تم تقديم طلب التطوع بنجاح!',
-             text: 'شكرًا لمساهمتك في العمل التطوعي!',
+             text: 'سيتم مراجعه طلبك قريبًا',
              confirmButtonColor: '#f6a026',
              confirmButtonText: 'حسنا',
            });
