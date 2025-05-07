@@ -107,18 +107,7 @@ export class ProfileComponent implements OnInit {
       currentValues.address !== (this.originalUserData.address || '');
   }
 
-  onImageSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedImage = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.userImageUrl = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-      this.uploadImage(file);
-    }
-  }
+
 
   uploadImage(file: File): void {
     if (this.profileForm.valid) {
@@ -215,4 +204,137 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
+  
+  getRandomColor(fullName: string): string {
+    const hash = Array.from(fullName).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const randomColor = (hash % 16777215).toString(16);
+    return `#${randomColor.padStart(6, '0')}`;
+  }
+
+  getFirstLetter(): string {
+    if (this.userData && this.userData.firstName && this.userData.lastName) {
+      return (this.userData.firstName[0] + this.userData.lastName[0]).toUpperCase();
+    }
+    return '';
+  }
+
+  get userFullName(): string {
+    return `${this.userData?.firstName} ${this.userData?.lastName}`;
+  }
+  onImageSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.userImageUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+
+      this.uploadImage(file);
+    }
+  }
+  onCancel(): void {
+    if (!this.originalUserData) {
+      this._Toastr.warning('لا توجد بيانات أصلية للإعادة');
+      console.warn('onCancel: originalUserData is null');
+      return;
+    }
+
+    console.log('onCancel: Restoring original data', this.originalUserData);
+
+    // Reset form fields to original values
+    this.profileForm.patchValue({
+      firstName: this.originalUserData.firstName || '',
+      lastName: this.originalUserData.lastName || '',
+      email: this.originalUserData.email || '',
+      phoneNumber: this.originalUserData.phoneNumber || '',
+      address: this.originalUserData.address || '',
+      age: this.originalUserData.age || '',
+      gender: this.originalUserData.gender || '',
+      dateOfBirth: this.originalUserData.dateOfBirth
+        ? this.originalUserData.dateOfBirth.split('T')[0]
+        : ''
+    });
+
+    // Reset image state
+    this.userImageUrl = this.originalUserData.imageUrl || null;
+    this.selectedImage = null;
+
+    // Reset birth date display
+    if (this.originalUserData.dateOfBirth) {
+      const [year, month, day] = this.originalUserData.dateOfBirth
+        .split('T')[0]
+        .split('-')
+        .map(Number);
+      this.year = year;
+      this.month = month;
+      this.day = day;
+    } else {
+      this.year = null;
+      this.month = null;
+      this.day = null;
+    }
+
+    // Reset form change tracking
+    this.checkFormChanges();
+    this.profileForm.markAsPristine();
+    this.profileForm.markAsUntouched();
+
+    this._Toastr.info('تم إعادة البيانات إلى حالتها السابقة');
+    console.log('onCancel: Form reset complete, hasFormChanges:', this.hasFormChanges);
+  }
+  removeImage(): void {
+    if (!this.userData) {
+      console.warn('removeImage: userData is null');
+      this._Toastr.warning('لا توجد بيانات مستخدم للحذف');
+      return;
+    }
+
+    console.log('removeImage: Removing image for user', this.userData.id);
+
+    this.isLoading = true;
+
+    const formData = new FormData();
+    formData.append('id', this.userData.id ?? '');
+    formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
+    formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
+    formData.append('email', this.profileForm.get('email')?.value ?? '');
+    formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
+    formData.append('address', this.profileForm.get('address')?.value ?? '');
+    formData.append('gender', this.profileForm.get('gender')?.value ?? '');
+    formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
+    formData.append('age', this.profileForm.get('age')?.value ?? '');
+    formData.append('image', '');
+
+    this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
+      timeout(30000),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (response: any) => {
+        if (response?.isSucceeded) {
+          this.userImageUrl = null;
+          this.selectedImage = null;
+          this.userData.imageUrl = null;
+          this.originalUserData.imageUrl = null;
+          this.profileForm.markAsPristine();
+          this.profileForm.markAsUntouched();
+          this.checkFormChanges();
+          this._Toastr.success('تم حذف الصورة بنجاح');
+          console.log('removeImage: Image removed, hasFormChanges:', this.hasFormChanges, 'formPristine:', this.profileForm.pristine);
+          window.location.reload();
+        } else {
+          this._Toastr.warning(response?.message || 'فشل حذف الصورة');
+        }
+      },
+      error: (error: any) => {
+        this._Toastr.error('حدث خطأ أثناء حذف الصورة');
+        console.error('خطأ أثناء حذف الصورة', error);
+      }
+    });
+  }
+
+
 }
