@@ -17,8 +17,8 @@ import { VolunteerActivityReqService } from '../core/Services/volunteer-activity
 })
 export class BeneficiaryComponent implements OnInit {
   private readonly _inkind = inject(InkinddonationService);
- private readonly loginService = inject(LoginService);
- private readonly _VolunteerActivityReqService=inject(VolunteerActivityReqService)
+  private readonly loginService = inject(LoginService);
+  private readonly _VolunteerActivityReqService = inject(VolunteerActivityReqService)
   // Map to track the current image index for each product
   private imageIndices = new Map<string, number>();
   products: InkindData[] = [];
@@ -33,13 +33,13 @@ export class BeneficiaryComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   totalCount = 0;
-  
+
   selectedProjectId: string = '';
 
   ngOnInit(): void {
     this.loadPage();
   }
-  
+
   onSearch(): void {
     const term = this.searchTerm.toLowerCase();
     this.filteredProjects = this.products.filter(project =>
@@ -77,32 +77,32 @@ export class BeneficiaryComponent implements OnInit {
     });
   }
 
- nextImage(productId: string, imageCount: number): void {
+  nextImage(productId: string, imageCount: number): void {
     const currentIndex = this.imageIndices.get(productId) || 0;
     const newIndex = (currentIndex + 1) % imageCount;
     this.imageIndices.set(productId, newIndex);
   }
 
- // Navigate to the previous image for a specific product
- prevImage(productId: string, imageCount: number): void {
-  const currentIndex = this.imageIndices.get(productId) || 0;
-  const newIndex = (currentIndex - 1 + imageCount) % imageCount;
-  this.imageIndices.set(productId, newIndex);
-}
+  // Navigate to the previous image for a specific product
+  prevImage(productId: string, imageCount: number): void {
+    const currentIndex = this.imageIndices.get(productId) || 0;
+    const newIndex = (currentIndex - 1 + imageCount) % imageCount;
+    this.imageIndices.set(productId, newIndex);
+  }
 
-// Get the current image index for a product
-getCurrentImageIndex(productId: string): number {
-  return this.imageIndices.get(productId) || 0;
-}
+  // Get the current image index for a product
+  getCurrentImageIndex(productId: string): number {
+    return this.imageIndices.get(productId) || 0;
+  }
 
 
-SubmitVolunteerActivity(projectId: string): void {
-  this.selectedProjectId = projectId;
-  this.createVolunteerApplication();
-}
-createVolunteerApplication(): void {
+  SubmitVolunteerActivity(projectId: string): void {
+    this.selectedProjectId = projectId;
+    this.createVolunteerApplication();
+  }
+  createVolunteerApplication(): void {
     this.userData = this.loginService.saveUserAuth();
-  
+
     if (!this.userData) {
       Swal.fire({
         icon: 'warning',
@@ -113,13 +113,13 @@ createVolunteerApplication(): void {
       })
       return;
     }
-  
+
     const AssistanceRequestBody = {
       beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
       requestDetails: 'يرجى توضيح النشاط', // يمكن استبدالها لاحقًا بمدخل من المستخدم
       inKindDonationId: this.selectedProjectId
     };
-  
+
     this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe(res => {
       if (res.isSucceeded) {
         Swal.fire({
@@ -141,37 +141,37 @@ createVolunteerApplication(): void {
       }
     });
 
-}
+  }
   get paginatedProjects() {
     return this.filteredProjects;
   }
 
   get displayedPages(): number[] {
     const pages: number[] = [];
-  const total = this.totalPages;
+    const total = this.totalPages;
 
-  // نبدأ من الصفحة الحالية
-  let start = this.currentPage;
-  // النهاية هتبقى الصفحة الحالية + 1 (يعني 2 أرقام بس)
-  let end = Math.min(total, this.currentPage + 1);
+    // نبدأ من الصفحة الحالية
+    let start = this.currentPage;
+    // النهاية هتبقى الصفحة الحالية + 1 (يعني 2 أرقام بس)
+    let end = Math.min(total, this.currentPage + 1);
 
-  // لو الصفحة الحالية هي آخر صفحة، هنظهر الصفحة اللي قبلها والصفحة الحالية
-  if (this.currentPage === total && total > 1) {
-    start = this.currentPage - 1;
-    end = this.currentPage;
-  }
-  // لو الصفحة الحالية هي 1 وفيه صفحة واحدة بس، هنظهر الصفحة 1 بس
-  else if (this.currentPage === 1 && total === 1) {
-    start = 1;
-    end = 1;
-  }
+    // لو الصفحة الحالية هي آخر صفحة، هنظهر الصفحة اللي قبلها والصفحة الحالية
+    if (this.currentPage === total && total > 1) {
+      start = this.currentPage - 1;
+      end = this.currentPage;
+    }
+    // لو الصفحة الحالية هي 1 وفيه صفحة واحدة بس، هنظهر الصفحة 1 بس
+    else if (this.currentPage === 1 && total === 1) {
+      start = 1;
+      end = 1;
+    }
 
-  // نملّي المصفوفة بالأرقام من start لـ end
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
+    // نملّي المصفوفة بالأرقام من start لـ end
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
 
-  return pages;
+    return pages;
   }
 
   // get showLeftDots(): boolean {
@@ -204,9 +204,9 @@ createVolunteerApplication(): void {
   }
   SubmitVolunteerActivity2() {
     if (this.loading) return;
-  
+
     this.userData = this.loginService.saveUserAuth();
-  
+
     if (!this.userData) {
       Swal.fire({
         icon: 'warning',
@@ -217,7 +217,7 @@ createVolunteerApplication(): void {
       });
       return;
     }
-  
+
     if (!this.requestDetails || this.requestDetails.trim() === '') {
       Swal.fire({
         icon: 'error',
@@ -228,15 +228,15 @@ createVolunteerApplication(): void {
       });
       return;
     }
-  
+
     this.loading = true;
-  
+
     const AssistanceRequestBody = {
       beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
       requestDetails: this.requestDetails,
       inKindDonationId: null
     };
-  
+
     this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe({
       next: (res) => {
         if (res.isSucceeded) {
@@ -273,8 +273,8 @@ createVolunteerApplication(): void {
         this.loading = false;
       }
     });
-  
+
     console.log(AssistanceRequestBody);
   }
-  
+
 }

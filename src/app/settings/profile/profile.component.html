@@ -34,14 +34,24 @@
           accept="image/*"
           hidden
           (change)="onImageSelected($event)"
+          formControlName="imageUrl"
         />
         <button
-          type="button"
+        type="button"
           class="btn btn-warning w-100 mt-3"
           (click)="fileInput.click()"
-        >
-          <i class="bi bi-upload"></i> رفع صورة
-        </button>
+        [disabled]="isLoading2"
+      >
+        <span *ngIf="!isLoading2">
+          <i class="bi bi-upload"></i> رفع صورة</span>
+        <span *ngIf="isLoading2">
+          جاري الرفع...
+         
+       
+        </span>
+      </button>
+       
+          
 
         <!-- زر حذف الصورة -->
         <button
