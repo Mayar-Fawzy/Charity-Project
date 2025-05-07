@@ -111,7 +111,8 @@ export class ProfileComponent implements OnInit {
 
       this.uploadImage(file);
     }
-  }
+  } 
+  
 
   removeImage(): void {
     if (!this.userData) return;
