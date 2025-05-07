@@ -1,9 +1,11 @@
+import { IupdateData } from './../Core/Interface/iupdate-data';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileservicesService } from '../Core/Services/profileservices.service';
 import { ToastrService } from 'ngx-toastr';
+import { finalize, timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +26,6 @@ export class ProfileComponent implements OnInit {
   originalUserData: any = null;
   isLoading: boolean = false;
 
-  // >>>>>>>>>>>> brithdata
   day: number | null = null;
   month: number | null = null;
   year: number | null = null;
@@ -39,8 +40,7 @@ export class ProfileComponent implements OnInit {
     gender: new FormControl({ value: '', disabled: true }),
     dateOfBirth: new FormControl({ value: '', disabled: true }, [
       Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
-    ]),
-
+    ])
   });
 
   ngOnInit(): void {
@@ -49,25 +49,27 @@ export class ProfileComponent implements OnInit {
       this._Toastr.error('لم يتم العثور على معرف المستخدم.');
       return;
     }
+    this.GetUserData(id);
+  }
 
+  GetUserData(id: string): void {
     this._ProfileservicesService.GetUserById(id).subscribe({
-      next: (data: any) => {
-        this.userData = data.data;
-        console.log(data.data.dateOfBirth);
-       // this.originalUserData = { ...data.data };
-        this.userImageUrl = data.image;
+      next: ({ data }: any) => {
+        this.userData = data;
+        this.originalUserData = { ...data }; // تخزين البيانات الأصلية
+        this.userImageUrl = data.imageUrl;
+
         this.profileForm.patchValue({
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
           phoneNumber: data.phoneNumber,
           address: data.address,
-          age:data.age,
+          age: data.age,
           gender: data.gender?.toString() || '',
           dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : ''
         });
 
-        // >>>>>>>>>>>> هنا فصل اليوم والشهر والسنة
         if (data.dateOfBirth) {
           const [year, month, day] = data.dateOfBirth.split('T')[0].split('-').map(Number);
           this.year = year;
@@ -75,10 +77,9 @@ export class ProfileComponent implements OnInit {
           this.day = day;
         }
       },
-
       error: (error: any) => {
         console.error('فشل في جلب بيانات المستخدم', error);
-        this._Toastr.error(' فشل في جلب بيانات المستخدم');
+        this._Toastr.error('فشل في جلب بيانات المستخدم');
       }
     });
   }
@@ -99,7 +100,6 @@ export class ProfileComponent implements OnInit {
   get userFullName(): string {
     return `${this.userData?.firstName} ${this.userData?.lastName}`;
   }
-
   onImageSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -113,6 +113,10 @@ export class ProfileComponent implements OnInit {
       this.uploadImage(file);
     }
   }
+  uploadImage(file: File): void {
+    this.onSubmit(); // ✅ استدعاء دالة onSubmit لرفع الصورة
+    
+  }
 
   removeImage(): void {
     if (!this.userData) return;
@@ -120,8 +124,7 @@ export class ProfileComponent implements OnInit {
     this.isLoading = true;
 
     const formData = new FormData();
-    formData.append('Id', this.userData.id ?? '');
-    formData.append('UserName', this.userData.userName ?? '');
+    formData.append('id', this.userData.id ?? '');
     formData.append('firstName', this.userData.firstName ?? '');
     formData.append('lastName', this.userData.lastName ?? '');
     formData.append('email', this.userData.email ?? '');
@@ -132,16 +135,19 @@ export class ProfileComponent implements OnInit {
     formData.append('age', this.userData.age ?? '');
     formData.append('image', '');
 
-    this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
-      next: (response: any) => {
+    this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
+      timeout(30000),
+      finalize(() => {
         this.isLoading = false;
+      })
+    ).subscribe({
+      next: (response: any) => {
         this.userImageUrl = null;
         this.selectedImage = null;
         this.userData.imageUrl = null;
         this._Toastr.success('تم حذف الصورة بنجاح');
       },
       error: (error: any) => {
-        this.isLoading = false;
         this._Toastr.error('حدث خطأ أثناء حذف الصورة');
         console.error('خطأ أثناء حذف الصورة', error);
       }
@@ -151,73 +157,77 @@ export class ProfileComponent implements OnInit {
   onSubmit(): void {
     if (this.profileForm.valid) {
       this.isLoading = true;
-
-      const formData = new FormData();
-      formData.append('Id', this.userData?.id ?? '');
-      formData.append('UserName', this.userData?.userName ?? '');
-      formData.append('firstName', this.profileForm.value.firstName ?? '');
-      formData.append('lastName', this.profileForm.value.lastName ?? '');
-      formData.append('email', this.profileForm.value.email ?? '');
-      formData.append('phoneNumber', this.profileForm.value.phoneNumber ?? '');
-      formData.append('address', this.profileForm.value.address ?? '');
-      formData.append('dateOfBirth', this.userData?.dateOfBirth ?? '');
-   
-        formData.append('image',this.selectedImage ?? '');
-    
       const id = this._ActivatedRoute.snapshot.paramMap.get('id');
       if (id) {
-        this._ProfileservicesService.UpdateUser(id, formData).subscribe({
-          next: (response: any) => {
-            this.isLoading = false;
-            this.userData = response.data;
-            this.userImageUrl = response.data.imageUrl;
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
+        formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
+        formData.append('email', this.profileForm.get('email')?.value ?? '');
+        formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
+        formData.append('address', this.profileForm.get('address')?.value ?? '');
+        formData.append('gender', this.profileForm.get('gender')?.value ?? '');
+        formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
+        formData.append('age', this.profileForm.get('age')?.value ?? '');
 
-            this._Toastr.success(' تم تحديث البيانات بنجاح');
+        if (this.selectedImage) {
+          formData.append('image', this.selectedImage);
+        } else if (this.userData.imageUrl) {
+          formData.append('imageUrl', this.userData.imageUrl);
+        } else {
+          formData.append('imageUrl', '');
+        }
+
+        this._ProfileservicesService.UpdateUser(id, formData).pipe(
+          timeout(30000),
+          finalize(() => {
+            this.isLoading = false;
+          })
+        ).subscribe({
+          next: (response: any) => {
+            if (response?.isSucceeded) {
+              this._Toastr.success('تم تحديث البيانات بنجاح');
+              if (response.data) {
+                this.userData = response.data;
+                this.originalUserData = { ...response.data }; // تحديث البيانات الأصلية
+                this.userImageUrl = response.data.imageUrl || response.data.image;
+                this.selectedImage = null; // إعادة تعيين الصورة المختارة
+              }
+            } else {
+              this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
+            }
           },
           error: (error: any) => {
-            this.isLoading = false;
-            this._Toastr.error(' حدث خطأ أثناء التحديث');
-            console.error(' خطأ أثناء التحديث', error);
+            this._Toastr.error('حدث خطأ أثناء التحديث');
+            console.error('❌ خطأ أثناء التحديث:', error);
           }
         });
       } else {
         this.isLoading = false;
-        this._Toastr.error(' لم يتم العثور على معرف المستخدم.');
+        this._Toastr.error('لم يتم العثور على معرف المستخدم.');
       }
     } else {
       this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
 
-  uploadImage(file: File): void {
-    if (!file || !this.userData) return;
-
-    const formData = new FormData();
-    formData.append('Id', this.userData.id ?? '');
-    formData.append('UserName', this.userData.userName ?? '');
-    formData.append('firstName', this.userData.firstName ?? '');
-    formData.append('lastName', this.userData.lastName ?? '');
-    formData.append('email', this.userData.email ?? '');
-    formData.append('phoneNumber', this.userData.phoneNumber ?? '');
-    formData.append('address', this.userData.address ?? '');
-    formData.append('gender', this.userData.gender ?? '');
-    formData.append('dateOfBirth', this.userData.dateOfBirth ?? '');
-    formData.append('image', file);
-
-    this._ProfileservicesService.UpdateUser(this.userData.id, formData).subscribe({
-      next: (response: any) => {
-        this._Toastr.success('تم رفع الصورة بنجاح');
-        this.userImageUrl = response.data.image;
-      },
-      error: (error: any) => {
-        this._Toastr.error('حدث خطأ أثناء رفع الصورة');
-        console.error('خطأ أثناء رفع الصورة', error);
-      }
-    });
-  }
-
   onCancel(): void {
-    this.profileForm.patchValue(this.originalUserData);
-    this._Toastr.info('تم إلغاء التغييرات');
+    if (this.originalUserData) {
+      this.profileForm.patchValue({
+        firstName: this.originalUserData.firstName,
+        lastName: this.originalUserData.lastName,
+        email: this.originalUserData.email,
+        phoneNumber: this.originalUserData.phoneNumber,
+        address: this.originalUserData.address,
+        age: this.originalUserData.age,
+        gender: this.originalUserData.gender?.toString() || '',
+        dateOfBirth: this.originalUserData.dateOfBirth ? this.originalUserData.dateOfBirth.split('T')[0] : ''
+      });
+      this.userImageUrl = this.originalUserData.imageUrl;
+      this.selectedImage = null;
+      this._Toastr.info('تم إلغاء التغييرات');
+    } else {
+      this._Toastr.warning('لا توجد بيانات لإلغاء التغييرات');
+    }
   }
 }

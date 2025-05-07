@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Environment } from '../../../Pages/Auth/core/Environment/Environment';
 import { Observable } from 'rxjs';
+import { IupdateData } from '../Interface/iupdate-data';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ProfileservicesService {
     return this._HttpClient.get(`${Environment.baseUrl}${Environment.VersionUrl}User/GetUserById?id=${id}`);
   }
 
-  UpdateUser(id: string, userData: FormData):Observable<any> {
+  UpdateUser(id: string, userData: any):Observable<any> {
     return this._HttpClient.put(`${Environment.baseUrl}${Environment.VersionUrl}User/UpdateUser?id=${id}`, userData);
   }
 }
