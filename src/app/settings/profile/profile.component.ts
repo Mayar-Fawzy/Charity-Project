@@ -30,15 +30,14 @@ export class ProfileComponent implements OnInit {
   day: number | null = null;
   month: number | null = null;
   year: number | null = null;
-
   profileForm = new FormGroup({
     firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     lastName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     email: new FormControl(null, [Validators.required, Validators.email]),
     phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]{11}$/)]),
     address: new FormControl(null, [Validators.required, Validators.minLength(5)]),
-    age: new FormControl({ value: '', disabled: true }),
-    gender: new FormControl({ value: '', disabled: true }),
+    age: new FormControl({ value: '', disabled: true }), // يبقى معطل
+    gender: new FormControl({ value: '', disabled: true }), // إزالة disabled ليصبح قابل للتعديل
     dateOfBirth: new FormControl({ value: '', disabled: true }, [
       Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
     ])
@@ -57,14 +56,13 @@ export class ProfileComponent implements OnInit {
       this.checkFormChanges();
     });
   }
-
   GetUserData(id: string): void {
     this._ProfileservicesService.GetUserById(id).subscribe({
       next: ({ data }: any) => {
         this.userData = data;
         this.originalUserData = { ...data };
         this.userImageUrl = data.imageUrl || null;
-
+  
         this.profileForm.patchValue({
           firstName: data.firstName || '',
           lastName: data.lastName || '',
@@ -72,17 +70,17 @@ export class ProfileComponent implements OnInit {
           phoneNumber: data.phoneNumber || '',
           address: data.address || '',
           age: data.age || '',
-          gender: data.gender === 0 ? 'ذكر' : data.gender === 1 ? 'أنثى' : '',
+          gender: this.getGenderName(data.gender),
           dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : ''
         });
-
+  
         if (data.dateOfBirth) {
           const [year, month, day] = data.dateOfBirth.split('T')[0].split('-').map(Number);
           this.year = year;
           this.month = month;
           this.day = day;
         }
-
+  
         this.checkFormChanges();
       },
       error: (error: any) => {
@@ -337,4 +335,7 @@ export class ProfileComponent implements OnInit {
   }
 
 
+  getGenderName(gender: number): string {
+    return gender === 0 ? 'ذكر' : 'أنثى';
+  }
 }
