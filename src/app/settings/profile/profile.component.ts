@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   userData: any = null;
   originalUserData: any = null;
   isLoading: boolean = false;
-
+  id:any;
   day: number | null = null;
   month: number | null = null;
   year: number | null = null;
@@ -44,12 +44,12 @@ export class ProfileComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const id = this._ActivatedRoute.snapshot.paramMap.get('id');
-    if (!id) {
+     this.id = this._ActivatedRoute.snapshot.paramMap.get('id');
+    if (!this.id) {
       this._Toastr.error('لم يتم العثور على معرف المستخدم.');
       return;
     }
-    this.GetUserData(id);
+    this.GetUserData(this.id);
   }
 
   GetUserData(id: string): void {
@@ -115,7 +115,7 @@ export class ProfileComponent implements OnInit {
   }
   uploadImage(file: File): void {
     this.onSubmit(); // ✅ استدعاء دالة onSubmit لرفع الصورة
-    
+ 
   }
 
   removeImage(): void {
@@ -187,11 +187,13 @@ export class ProfileComponent implements OnInit {
           next: (response: any) => {
             if (response?.isSucceeded) {
               this._Toastr.success('تم تحديث البيانات بنجاح');
+              window.location.reload();
               if (response.data) {
                 this.userData = response.data;
                 this.originalUserData = { ...response.data }; // تحديث البيانات الأصلية
                 this.userImageUrl = response.data.imageUrl || response.data.image;
-                this.selectedImage = null; // إعادة تعيين الصورة المختارة
+                this.selectedImage = null; 
+                
               }
             } else {
               this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
