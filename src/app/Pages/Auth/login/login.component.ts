@@ -66,8 +66,13 @@ export class LoginComponent {
 // #endregion
 
           this._LoginService.saveUserAuth();
-        
+          if(formInfo.value.email == 'GivingHand@gmail.com'&& formInfo.value.password == '1Q2w3e4@'){
+            this._Router.navigate(['/admin']);
+          }
+          else{
+
             this._Router.navigate(['/home']);
+          }
         }
       },
       (error) => {

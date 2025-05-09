@@ -46,7 +46,7 @@ export const routes: Routes = [
       { path: 'home', title: 'Home', component: HomeComponent },
 
       { path: 'donor', title: 'Donor', component: DonorComponent },
-      { path: 'admin', title: 'Admin', component: AdminComponent },
+   
     { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
       { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
       { path: 'projects', title: 'Projects', component: ProjectsComponent },
@@ -65,7 +65,9 @@ export const routes: Routes = [
       },
 
     ]
+    
   },
+  {    path: 'admin', title: 'Admin', component: AdminComponent },
   {
     path: 'settings',
     component: SettingsLayoutComponent,
