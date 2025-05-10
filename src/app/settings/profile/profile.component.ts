@@ -106,103 +106,6 @@ export class ProfileComponent implements OnInit {
   }
 
 
-
-  uploadImage(file: File): void {
-    if (this.profileForm.valid) {
-      this.isLoading2 = true;
-      const id = this._ActivatedRoute.snapshot.paramMap.get('id');
-      if (id) {
-        const formData = new FormData();
-        formData.append('id', id);
-        formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
-        formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
-        formData.append('email', this.profileForm.get('email')?.value ?? '');
-        formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
-        formData.append('address', this.profileForm.get('address')?.value ?? '');
-        formData.append('gender', this.userData.gender?.toString() ?? '');
-        formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
-        formData.append('age', this.profileForm.get('age')?.value ?? '');
-
-        if (this.selectedImage) {
-          formData.append('image', this.selectedImage);
-        } else if (this.userData.imageUrl) {
-          formData.append('imageUrl', this.userData.imageUrl);
-        } else {
-          formData.append('imageUrl', '');
-        }
-
-        this._ProfileservicesService.UpdateUser(id, formData).pipe(
-          timeout(30000),
-          finalize(() => {
-            this.isLoading2 = false;
-          })
-        ).subscribe({
-          next: (response: any) => {
-            if (response?.isSucceeded) {
-              this._Toastr.success('تم تحديث البيانات بنجاح');
-              window.location.reload();
-            } else {
-              this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
-            }
-          },
-          error: (error: any) => {
-            this._Toastr.error('حدث خطأ أثناء التحديث');
-          }
-        });
-      }
-    } else {
-      this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
-    }
-  }
-
-  onSubmit(): void {
-    if (this.profileForm.valid) {
-      this.isLoading = true;
-      const id = this._ActivatedRoute.snapshot.paramMap.get('id');
-      if (id) {
-        const formData = new FormData();
-        formData.append('id', id);
-        formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
-        formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
-        formData.append('email', this.profileForm.get('email')?.value ?? '');
-        formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
-        formData.append('address', this.profileForm.get('address')?.value ?? '');
-        formData.append('gender', this.userData.gender?.toString() ?? '');
-        formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
-        formData.append('age', this.profileForm.get('age')?.value ?? '');
-
-        if (this.selectedImage) {
-          formData.append('image', this.selectedImage);
-        } else if (this.userData.imageUrl) {
-          formData.append('imageUrl', this.userData.imageUrl);
-        } else {
-          formData.append('imageUrl', '');
-        }
-
-        this._ProfileservicesService.UpdateUser(id, formData).pipe(
-          timeout(30000),
-          finalize(() => {
-            this.isLoading = false;
-          })
-        ).subscribe({
-          next: (response: any) => {
-            if (response?.isSucceeded) {
-              this._Toastr.success('تم تحديث البيانات بنجاح');
-              window.location.reload();
-            } else {
-              this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
-            }
-          },
-          error: (error: any) => {
-            this._Toastr.error('حدث خطأ أثناء التحديث');
-          }
-        });
-      }
-    } else {
-      this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
-    }
-  }
-  
   getRandomColor(fullName: string): string {
     const hash = Array.from(fullName).reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const randomColor = (hash % 16777215).toString(16);
@@ -282,57 +185,161 @@ export class ProfileComponent implements OnInit {
     this._Toastr.info('تم إعادة البيانات إلى حالتها السابقة');
     console.log('onCancel: Form reset complete, hasFormChanges:', this.hasFormChanges);
   }
-  removeImage(): void {
-    if (!this.userData) {
-      console.warn('removeImage: userData is null');
-      this._Toastr.warning('لا توجد بيانات مستخدم للحذف');
-      return;
-    }
-  
-    console.log('removeImage: Removing image for user', this.userData.id);
-  
-    this.isLoading = true;
-  
-    const formData = new FormData();
-    formData.append('id', this.userData.id ?? '');
-    formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
-    formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
-    formData.append('email', this.profileForm.get('email')?.value ?? '');
-    formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
-    formData.append('address', this.profileForm.get('address')?.value ?? '');
-    formData.append('gender', this.userData.gender?.toString() ?? ''); // استخدام القيمة الأصلية (0 أو 1)
-    formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
-    formData.append('age', this.profileForm.get('age')?.value ?? '');
-    formData.append('image', '');
-  
-    this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
-      timeout(30000),
-      finalize(() => {
-        this.isLoading = false;
-      })
-    ).subscribe({
-      next: (response: any) => {
-        if (response?.isSucceeded) {
-          this.userImageUrl = null;
-          this.selectedImage = null;
-          this.userData.imageUrl = null;
-          this.originalUserData.imageUrl = null;
-          this.profileForm.markAsPristine();
-          this.profileForm.markAsUntouched();
-          this.checkFormChanges();
-          this._Toastr.success('تم حذف الصورة بنجاح');
-          console.log('removeImage: Image removed, hasFormChanges:', this.hasFormChanges, 'formPristine:', this.profileForm.pristine);
-          window.location.reload();
-        } else {
-          this._Toastr.warning(response?.message || 'فشل حذف الصورة');
-        }
-      },
-      error: (error: any) => {
-        this._Toastr.error('حدث خطأ أثناء حذف الصورة');
-        console.error('خطأ أثناء حذف الصورة', error);
+ // ...
+uploadImage(file: File): void {
+  if (this.profileForm.valid) {
+    this.isLoading2 = true;
+    const id = this._ActivatedRoute.snapshot.paramMap.get('id');
+    if (id) {
+      const formData = new FormData();
+      const createdDate = new Date().toISOString();
+      formData.append('id', id);
+      formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
+      formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
+      formData.append('email', this.profileForm.get('email')?.value ?? '');
+      formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
+      formData.append('address', this.profileForm.get('address')?.value ?? '');
+      formData.append('gender', this.userData.gender?.toString() ?? '');
+      formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
+      formData.append('age', this.profileForm.get('age')?.value ?? '');
+      formData.append('createdDate', createdDate);
+
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage);
+      } else if (this.userData.imageUrl) {
+        formData.append('imageUrl', this.userData.imageUrl);
+      } else {
+        formData.append('imageUrl', '');
       }
-    });
+
+      this._ProfileservicesService.UpdateUser(id, formData).pipe(
+        timeout(30000),
+        finalize(() => {
+          this.isLoading2 = false;
+        })
+      ).subscribe({
+        next: (response: any) => {
+          if (response?.isSucceeded) {
+            this._Toastr.success('تم تحديث البيانات بنجاح');
+            window.location.reload();
+          } else {
+            this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
+          }
+        },
+        error: (error: any) => {
+          this._Toastr.error('حدث خطأ أثناء التحديث');
+        }
+      });
+    }
+  } else {
+    this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
   }
+}
+
+onSubmit(): void {
+  if (this.profileForm.valid) {
+    this.isLoading = true;
+    const id = this._ActivatedRoute.snapshot.paramMap.get('id');
+    if (id) {
+      const formData = new FormData();
+      const createdDate = new Date().toISOString();
+      formData.append('id', id);
+      formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
+      formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
+      formData.append('email', this.profileForm.get('email')?.value ?? '');
+      formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
+      formData.append('address', this.profileForm.get('address')?.value ?? '');
+      formData.append('gender', this.userData.gender?.toString() ?? '');
+      formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
+      formData.append('age', this.profileForm.get('age')?.value ?? '');
+      formData.append('createdDate', createdDate);
+
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage);
+      } else if (this.userData.imageUrl) {
+        formData.append('imageUrl', this.userData.imageUrl);
+      } else {
+        formData.append('imageUrl', '');
+      }
+
+      this._ProfileservicesService.UpdateUser(id, formData).pipe(
+        timeout(30000),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      ).subscribe({
+        next: (response: any) => {
+          if (response?.isSucceeded) {
+            this._Toastr.success('تم تحديث البيانات بنجاح');
+            window.location.reload();
+          } else {
+            this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
+          }
+        },
+        error: (error: any) => {
+          this._Toastr.error('حدث خطأ أثناء التحديث');
+        }
+      });
+    }
+  } else {
+    this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
+  }
+}
+
+removeImage(): void {
+  if (!this.userData) {
+    console.warn('removeImage: userData is null');
+    this._Toastr.warning('لا توجد بيانات مستخدم للحذف');
+    return;
+  }
+
+  console.log('removeImage: Removing image for user', this.userData.id);
+
+  this.isLoading = true;
+
+  const formData = new FormData();
+  const createdDate = new Date().toISOString();
+  formData.append('id', this.userData.id ?? '');
+  formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
+  formData.append('lastName', this.profileForm.get('lastName')?.value ?? '');
+  formData.append('email', this.profileForm.get('email')?.value ?? '');
+  formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
+  formData.append('address', this.profileForm.get('address')?.value ?? '');
+  formData.append('gender', this.userData.gender?.toString() ?? '');
+  formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
+  formData.append('age', this.profileForm.get('age')?.value ?? '');
+  formData.append('image', '');
+  formData.append('createdDate', createdDate);
+
+  this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
+    timeout(30000),
+    finalize(() => {
+      this.isLoading = false;
+    })
+  ).subscribe({
+    next: (response: any) => {
+      if (response?.isSucceeded) {
+        this.userImageUrl = null;
+        this.selectedImage = null;
+        this.userData.imageUrl = null;
+        this.originalUserData.imageUrl = null;
+        this.profileForm.markAsPristine();
+        this.profileForm.markAsUntouched();
+        this.checkFormChanges();
+        this._Toastr.success('تم حذف الصورة بنجاح');
+        console.log('removeImage: Image removed, hasFormChanges:', this.hasFormChanges, 'formPristine:', this.profileForm.pristine);
+        window.location.reload();
+      } else {
+        this._Toastr.warning(response?.message || 'فشل حذف الصورة');
+      }
+    },
+    error: (error: any) => {
+      this._Toastr.error('حدث خطأ أثناء حذف الصورة');
+      console.error('خطأ أثناء حذف الصورة', error);
+    }
+  });
+}
+
 
   getGenderName(gender: number): string {
     return gender === 0 ? 'ذكر' : 'أنثى';
