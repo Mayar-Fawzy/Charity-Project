@@ -1,7 +1,31 @@
 <section class="container my-4 text-end">
-  <button class="btn btn-warning mb-4" (click)="openAddModal(projectModal)">
-    <i class="bi bi-plus-circle"></i> إضافة مشروع
-  </button>
+  <!-- Header with Add Button and Pagination -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <button class="btn btn-warning" (click)="openAddModal(projectModal)">
+      <i class="bi bi-plus-circle"></i> إضافة مشروع
+    </button>
+
+    <!-- Pagination -->
+    <nav class="pagination-wrapper">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
+        </li>
+        <li class="page-item dots" *ngIf="showLeftDots">
+          <span class="page-link">...</span>
+        </li>
+        <li class="page-item" *ngFor="let page of displayedPages" [class.active]="currentPage === page">
+          <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+        </li>
+        <li class="page-item dots" *ngIf="showRightDots">
+          <span class="page-link">...</span>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">التالي</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
   <div class="row g-3">
     <div class="col-md-6 col-lg-4" *ngFor="let project of projectss">
@@ -22,8 +46,16 @@
           </div>
 
           <p class="mb-2">الهدف: {{ project.targetAmount | number }}</p>
-          <p class="mb-2">تاريخ البداية: {{ project.startDate | date:'yyyy-MM-dd' }}</p>
-          <p class="mb-2">تاريخ النهاية: {{ project.endDate | date:'yyyy-MM-dd' }}</p>
+          <div class="date-container mb-2 d-flex justify-content-between">
+            <div class="date-item">
+              <span class="date-label">البداية:</span>
+              <span class="date-value">{{ project.startDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="date-item">
+              <span class="date-label">النهاية:</span>
+              <span class="date-value">{{ project.endDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
           <div class="d-flex justify-content-between">
             <button class="btn btn-outline-primary btn-sm" (click)="openEditModal(project, projectModal)">
               <i class="bi bi-pencil-square"></i> تحديث
@@ -118,25 +150,4 @@
       </form>
     </div>
   </ng-template>
-
-  <!-- Pagination -->
-  <nav class="pagination-wrapper mt-4">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
-      </li>
-      <li class="page-item" *ngIf="showLeftDots">
-        <span class="page-link">...</span>
-      </li>
-      <li class="page-item" *ngFor="let page of displayedPages" [class.active]="currentPage === page">
-        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-      </li>
-      <li class="page-item" *ngIf="showRightDots">
-        <span class="page-link">...</span>
-      </li>
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">التالي</button>
-      </li>
-    </ul>
-  </nav>
 </section>
