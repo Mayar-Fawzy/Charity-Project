@@ -15,5 +15,7 @@ export class CRUDProjService {
     GetPaginatedProjects(pageNumber:number,pageSize:number,orderByDirection:number=1):Observable<IGetProj>{
         return this._HttpClient.get<IGetProj>(`${Environment.baseUrl}${Environment.VersionUrl}Project/GetPaginatedProjects?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
       } 
-      
+      Delete(id:string):Observable<IGetProj>{
+        return this._HttpClient.delete<IGetProj>(`${Environment.baseUrl}${Environment.VersionUrl}Project/DeleteProject?id=${id}`)
+      }
 }

@@ -152,9 +152,39 @@ export class ProjectsComponent {
     modal.close();
   }
 
-  deleteProject(project: any) {
-    this.projects = this.projects.filter(p => p !== project);
-  }
+deleteProject(projectid: string) {
+  Swal.fire({
+    title: 'هل أنت متأكد؟',
+    text: 'لن تتمكن من التراجع عن هذا!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#f6a026',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'نعم، احذفه!',
+    cancelButtonText: 'إلغاء'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this._CRUDProjService.Delete(projectid).subscribe(
+        (response) => {
+          this.projectss = this.projectss.filter((project) => project.id !== projectid);
+          Swal.fire(
+            'تم الحذف!',
+            'تم حذف المشروع بنجاح.',
+            'success'
+          );
+        },
+        (error) => {
+          Swal.fire(
+            'خطأ!',
+            'حدث خطأ أثناء حذف المشروع.',
+            'error'
+          );
+        }
+      );
+    }
+  });
+}
+
 
   onImageSelected(event: any) {
     const file = event.target.files[0];
