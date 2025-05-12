@@ -53,8 +53,7 @@ export class LoginComponent {
         console.log('resLogin', res);
    
         if (res.isSucceeded) {
-          this.isloading = true;
-          this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
+        
 
           localStorage.setItem('userToken', res.data.jwtModel.jwt);
           localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
@@ -70,7 +69,8 @@ export class LoginComponent {
             this._Router.navigate(['/admin']);
           }
           else{
-
+            this.isloading = true;
+          this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
             this._Router.navigate(['/home']);
           }
         }
