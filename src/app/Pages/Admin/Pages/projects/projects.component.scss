@@ -1,7 +1,18 @@
-.card {
-  border-radius: 12px;
-  overflow: hidden;
+$primary-color: #2c3e50;
+$secondary-color: #f6a026;
 
+$text-color: #333;
+$light-bg: #f9f9f9;
+.card {
+   cursor: pointer;
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    padding: 9px;
+  margin: 13px;
+    display: flex;
+    flex-direction: column;
+  
   .card-img-top {
     height: 180px;
     object-fit: cover;
@@ -11,6 +22,29 @@
     background-color: #f6a026;
   }
 }
+
+      .progress-container {
+        margin-bottom: 1rem;
+
+        .progress-label {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.9rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .progress-bar {
+          background: #eee;
+          border-radius: 1rem;
+          overflow: hidden;
+          height: 8px;
+
+          .progress {
+            height: 100%;
+            background-color: $secondary-color;
+          }
+        }
+      }
 
 .section-title {
   font-weight: bold;

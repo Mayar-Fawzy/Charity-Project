@@ -4,22 +4,24 @@
   </button>
 
   <div class="row g-3">
-    <div class="col-md-6 col-lg-4" *ngFor="let project of projects">
+    <div class="col-md-6 col-lg-4" *ngFor="let project of projectss">
       <div class="card h-100 shadow-sm">
-        <img [src]="project.image" class="card-img-top" alt="Project Image" />
-        <div class="card-body text-end">
-          <h5 class="card-title">{{ project.title }}</h5>
-          <p class="card-text">{{ project.description }}</p>
-          <div class="progress mb-2">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              [style.width.%]="project.progress"
-            >
-              {{ project.progress }}%
+        <img [src]="project.imageUrl" class="card-img-top" alt="Project Image" />
+        <div class="card-body p-0 text-end">
+          <h5 class="card-title pt-3">{{ project.name }}</h5>
+          <p class="card-text">   {{ project.description | slice : 0 : 60 }}...</p>
+         
+          <div class="progress-container my-2">
+            <div class="progress-label d-flex justify-content-between">
+              <span>نسبة التقدم</span>
+              <span>{{ getProgressPercentage(project) }}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" [style.width.%]="getProgressPercentage(project)"></div>
             </div>
           </div>
-          <p class="mb-2">الهدف: {{ project.goal | number }}</p>
+
+          <p class="mb-2">الهدف: {{ project.targetAmount| number }}</p>
           <div class="d-flex justify-content-between">
             <button
               class="btn btn-outline-primary btn-sm"
