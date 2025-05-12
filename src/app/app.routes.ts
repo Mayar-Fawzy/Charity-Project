@@ -71,11 +71,11 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     children: [
-      { path: 'help-requests', loadComponent: () => import('./Pages/Admin/help-requests/help-requests.component').then(m => m.HelpRequestsComponent)},
-      { path: 'item-donations', loadComponent: () => import('./Pages/Admin/item-donations/item-donations.component').then(m => m.ItemDonationsComponent) },
-      { path: 'overview', loadComponent: () => import('./Pages/Admin/overview/overview.component').then(m => m.OverviewComponent) },
-      { path: 'projects', loadComponent: () => import('./Pages/Admin/projects/projects.component').then(m => m.ProjectsComponent) },
-      { path: 'volunteers', loadComponent: () => import('./Pages/Admin/volunteers/volunteers.component').then(m => m.VolunteersComponent) },
+      { path: 'help-requests', loadComponent: () => import('./Pages/Admin/Pages/help-requests/help-requests.component').then(m => m.HelpRequestsComponent)},
+      { path: 'item-donations', loadComponent: () => import('./Pages/Admin/Pages/item-donations/item-donations.component').then(m => m.ItemDonationsComponent) },
+      { path: 'overview', loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component').then(m => m.OverviewComponent) },
+      { path: 'projects', loadComponent: () => import('./Pages/Admin/Pages/projects/projects.component').then(m => m.ProjectsComponent) },
+      { path: 'volunteers', loadComponent: () => import('./Pages/Admin/Pages/volunteers/volunteers.component').then(m => m.VolunteersComponent) },
       { path: '', redirectTo: 'overview', pathMatch: 'full' }
     ]
   },
