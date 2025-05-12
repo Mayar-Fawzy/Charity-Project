@@ -158,9 +158,9 @@ deleteProject(projectid: string) {
     text: 'لن تتمكن من التراجع عن هذا!',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#f6a026',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'نعم، احذفه!',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#f6a026 ',
+    confirmButtonText: 'حذف',
     cancelButtonText: 'إلغاء'
   }).then((result) => {
     if (result.isConfirmed) {
