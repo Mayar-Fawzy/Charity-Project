@@ -1,0 +1,95 @@
+.admin-layout {
+    direction: rtl;
+    font-family: 'Cairo', sans-serif;
+
+    .sidebar {
+        width: 250px;
+        background: linear-gradient(to bottom, #f6a026, #f39c12);
+        color: white;
+        min-height: 100vh;
+        transition: width 0.3s ease-in-out;
+        overflow: hidden;
+
+        .toggle-btn {
+            text-align: end;
+
+            button {
+                color: white;
+                border-color: white;
+                transition: background-color 0.3s, color 0.3s;
+
+                &:hover {
+                    background-color: white;
+                    color: #f6a026;
+                }
+            }
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            gap: 10px;
+            transition: all 0.3s ease-in-out;
+
+            i {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+
+            span {
+                flex: 1;
+                text-align: right;
+                white-space: nowrap;
+                opacity: 1;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                transform: translateX(0);
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                transform: translateX(-5px);
+            }
+
+            &.active {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        &.closed {
+            width: 70px;
+
+            .nav-link {
+                justify-content: center;
+
+                span {
+                    opacity: 0;
+                    transform: translateX(-20px);
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+
+    .main-content {
+        background-color: #f9f9f9;
+        transition: margin 0.3s ease;
+
+        .navbar {
+            flex-direction: row;
+
+            .navbar__logo {
+                height: 45px;
+                margin: 0 10px;
+            }
+
+            .logo-text {
+                color: #f39c12;
+            }
+        }
+    }
+}

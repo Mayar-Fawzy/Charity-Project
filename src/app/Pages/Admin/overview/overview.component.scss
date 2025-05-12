@@ -1,0 +1,66 @@
+.dashboard-overview {
+    direction: rtl;
+
+    .dashboard-refresh {
+        small {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        button {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            transition: 0.3s ease;
+
+            i {
+                font-size: 1rem;
+            }
+
+            &:hover {
+                background-color: #f8f9fa;
+                border-color: #adb5bd;
+            }
+        }
+    }
+
+    .card {
+        border-radius: 1rem;
+        transition: 0.3s ease-in-out;
+
+        .icon-container {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+
+            &.bg-yellow {
+                background-color: #fdd835;
+            }
+
+            &.bg-green {
+                background-color: #4caf50;
+            }
+
+            &.bg-blue {
+                background-color: #42a5f5;
+            }
+
+            &.bg-orange {
+                background-color: #ffb300;
+            }
+
+            &.bg-purple {
+                background-color: #ba68c8;
+            }
+
+            &.bg-red {
+                background-color: #ef5350;
+            }
+        }
+    }
+}

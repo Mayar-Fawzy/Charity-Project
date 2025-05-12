@@ -46,12 +46,12 @@ export const routes: Routes = [
       { path: 'home', title: 'Home', component: HomeComponent },
 
       { path: 'donor', title: 'Donor', component: DonorComponent },
-   
-    { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
+
+      { path: 'beneficiary', title: 'Beneficiary', component: BeneficiaryComponent }, // تعديل اسم المسار من "customor" إلى "customer"
       { path: 'volunteer', title: 'Volunteer', component: VolnteerComponent },
       { path: 'projects', title: 'Projects', component: ProjectsComponent },
-      { path: 'volunteer-activity', title: 'volunteer-activity', component: VolunteerActivityComponent},
-      { path: 'about', title: 'About', component: AboutUsComponent},
+      { path: 'volunteer-activity', title: 'volunteer-activity', component: VolunteerActivityComponent },
+      { path: 'about', title: 'About', component: AboutUsComponent },
       {
         path: 'ewallet-payment/:id',
         title: 'E-Wallet Payment',
@@ -65,18 +65,30 @@ export const routes: Routes = [
       },
 
     ]
-    
+
   },
-  {    path: 'admin', title: 'Admin', component: AdminComponent },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+      { path: 'help-requests', loadComponent: () => import('./Pages/Admin/help-requests/help-requests.component').then(m => m.HelpRequestsComponent)},
+      { path: 'item-donations', loadComponent: () => import('./Pages/Admin/item-donations/item-donations.component').then(m => m.ItemDonationsComponent) },
+      { path: 'overview', loadComponent: () => import('./Pages/Admin/overview/overview.component').then(m => m.OverviewComponent) },
+      { path: 'projects', loadComponent: () => import('./Pages/Admin/projects/projects.component').then(m => m.ProjectsComponent) },
+      { path: 'volunteers', loadComponent: () => import('./Pages/Admin/volunteers/volunteers.component').then(m => m.VolunteersComponent) },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' }
+    ]
+  },
+
   {
     path: 'settings',
     component: SettingsLayoutComponent,
     children: [
       { path: 'profile/:id', component: ProfileComponent },
       { path: 'account-security/:id', component: PasswordSettingsComponent },
-{ path: 'payment-method/:id', component: PaymentMethodComponent },
-{ path: 'notifications/:id', component: NotificationsComponent },
-{ path: 'work/:id', component: WorkComponent },
+      { path: 'payment-method/:id', component: PaymentMethodComponent },
+      { path: 'notifications/:id', component: NotificationsComponent },
+      { path: 'work/:id', component: WorkComponent },
 
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
@@ -85,7 +97,9 @@ export const routes: Routes = [
   { path: '**', title: 'Not Found', component: NotfoundComponent },
 
 
-  // >>>>>>>>>>>>>>>>>>> Profile
+  // >>>>>>>>>>>>>>>>>>> admin
+
+
 
 
 ];

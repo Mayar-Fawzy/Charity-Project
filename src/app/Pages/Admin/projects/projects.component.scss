@@ -1,0 +1,40 @@
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+
+  .card-img-top {
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .progress-bar {
+    background-color: #f6a026;
+  }
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #f6a026;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.modal-header {
+  direction: rtl;
+
+  .btn-close {
+    margin-left: 0;
+  }
+
+  .modal-title {
+    font-weight: bold;
+    color: #333;
+  }
+}

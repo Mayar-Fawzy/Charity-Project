@@ -1,0 +1,39 @@
+<section class="dashboard-overview container text-end" dir="rtl">
+    <h4 class="mb-4 fw-bold">إحصائيات</h4>
+
+    <div class="w-75 ms-auto d-flex justify-content-between align-items-center mb-4">
+        <button
+            class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
+            (click)="refreshStats()"
+            >
+            <i class="bi bi-arrow-clockwise"></i>
+            تحديث
+        </button>
+
+        <small class="text-muted">
+            آخر تحديث:
+            {{ lastUpdated | date : "yyyy/MM/dd - hh:mm a" }}  <!--   : "" : "ar-EG" -->
+        </small>
+    </div>
+
+    <div class="row gy-4">
+        <div class="col-md-4" *ngFor="let stat of stats">
+        <div class="card shadow-sm p-3">
+            <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="text-muted">{{ stat.title }}</h6>
+                <h3>{{ stat.value }}</h3>
+                <p class="text-success mb-0" *ngIf="stat.change">
+                <i class="bi bi-arrow-up"></i>
+                {{ stat.change }}
+                <span class="text-muted">{{ stat.period }}</span>
+                </p>
+            </div>
+            <div class="icon-container" [ngClass]="stat.iconBg">
+                <i [class]="stat.icon"></i>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
