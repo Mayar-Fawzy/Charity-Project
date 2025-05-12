@@ -22,10 +22,10 @@ export class CRUDProjService {
       Delete(id:string):Observable<IGetProj>{
         return this._HttpClient.delete<IGetProj>(`${Environment.baseUrl}${Environment.VersionUrl}Project/DeleteProject?id=${id}`)
       }
-      CreateProject(formData: IAddProj):Observable<ResCrud>{
+      CreateProject(formData: FormData):Observable<ResCrud>{
            return this._HttpClient.post<ResCrud>(`${Environment.baseUrl}${Environment.VersionUrl}Project/CreateProject`,formData)
       }
-      UpdateProject(id:string,formData:IEditProj):Observable<ResCrud>{
+      UpdateProject(id:string,formData: FormData):Observable<ResCrud>{
         return this._HttpClient.put<ResCrud>(`${Environment.baseUrl}${Environment.VersionUrl}Project/UpdateProject?id=${id}`,formData)
       }
       GetProjectById(id:string):Observable<ProjId>{
