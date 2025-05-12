@@ -109,4 +109,36 @@
       </button>
     </div>
   </ng-template>
+    <!-- Pagination -->
+  <nav class="pagination-wrapper mt-4">
+    <ul class="pagination justify-content-center">
+      <!-- >>> Previous -->
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
+      </li>
+
+      <li class="page-item" *ngIf="showLeftDots">
+        <span class="page-link">...</span>
+      </li>
+
+      <!-- >>> Page numbers -->
+      <li
+        class="page-item"
+        *ngFor="let page of displayedPages"
+        [class.active]="currentPage === page"
+      >
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+
+      <li class="page-item" *ngIf="showRightDots">
+        <span class="page-link">...</span>
+      </li>
+
+      <!-- >>> Next -->
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">التالي</button>
+      </li>
+    </ul>
+  </nav>
+
 </section>
