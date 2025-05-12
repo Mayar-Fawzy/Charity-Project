@@ -8,6 +8,7 @@ import { IGetProj } from '../InterFace/iget-proj';
 import { IAddProj } from '../InterFace/iadd-proj';
 import { IEditProj } from '../InterFace/iedit-proj';
 import { ResCrud } from '../InterFace/res-crud';
+import { ProjId } from '../InterFace/proj-id';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,8 @@ export class CRUDProjService {
       }
       UpdateProject(id:string,formData:IEditProj):Observable<ResCrud>{
         return this._HttpClient.put<ResCrud>(`${Environment.baseUrl}${Environment.VersionUrl}Project/UpdateProject?id=${id}`,formData)
+      }
+      GetProjectById(id:string):Observable<ProjId>{
+        return this._HttpClient.get<ProjId>(`${Environment.baseUrl}${Environment.VersionUrl}Project/GetProjectById?id=${id}`)
       }
 }
