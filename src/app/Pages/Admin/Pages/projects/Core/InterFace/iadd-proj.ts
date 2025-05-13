@@ -1,5 +1,5 @@
 export interface IAddProj {
-    image: File | null; 
+    Image: File | null; 
   name: string; 
   targetAmount: number; 
   description: string; 

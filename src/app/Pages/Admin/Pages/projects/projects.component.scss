@@ -104,62 +104,73 @@ $light-bg: #f9f9f9;
 
   .pagination {
     display: flex;
-    gap: 10px;
+    gap: 5px;
     margin-bottom: 0;
     align-items: center;
+    padding: 0;
+    list-style: none;
 
     .page-item {
       .page-link {
-        border: 1px solid $primary-color;
-        color: $primary-color;
-        padding: 10px 20px;
-        border-radius: 10px;
-        font-size: 1rem;
+        border: 1px solid #dee2e6;
+        color: #6c757d;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 4px;
+        font-size: 0.875rem;
         font-weight: 500;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         background-color: #fff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: none;
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
 
         &:hover {
-          background-color: $secondary-color;
-          color: #fff;
-          border-color: $secondary-color;
-          transform: translateY(-3px);
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+          background-color: #f8f9fa;
+          color: #212529;
+          border-color: #dee2e6;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        i {
+          font-size: 0.75rem;
         }
       }
 
       &.active .page-link {
-        background-color: $primary-color;
+        background-color: #ffb902; // Dark blue color from the screenshot
         color: #fff;
-        border-color: $primary-color;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        transform: translateY(-1px);
-      }
-
-      &.disabled .page-link {
-        opacity: 0.4;
-        cursor: not-allowed;
-        box-shadow: none;
+        border-color: #ffb902;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-weight: 600;
         transform: none;
       }
 
-      // Styling for the dots
+      &.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+        pointer-events: none;
+      }
+
       &.dots .page-link {
         border: none;
         background: none;
         box-shadow: none;
-        color: $text-color;
-        font-size: 1.2rem;
+        color: #6c757d;
+        font-size: 1rem;
         padding: 0;
         cursor: default;
+        min-width: 20px;
 
         &:hover {
           background: none;
-          color: $text-color;
+          color: #6c757d;
           transform: none;
           box-shadow: none;
         }
@@ -167,6 +178,24 @@ $light-bg: #f9f9f9;
     }
   }
 }
+
+
+// Media queries for responsive design
+@media (max-width: 576px) {
+  .pagination-wrapper {
+    .pagination {
+      .page-item {
+        .page-link {
+          min-width: 32px;
+          height: 32px;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+
 
 // Fade-in Animation for Project Cards
 @keyframes fadeIn {
@@ -182,4 +211,11 @@ $light-bg: #f9f9f9;
 
 .project-card {
   animation: fadeIn 0.4s ease-in-out;
+}
+
+.error-message {
+    color: #ffb902;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
 }

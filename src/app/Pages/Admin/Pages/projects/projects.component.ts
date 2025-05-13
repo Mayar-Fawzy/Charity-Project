@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { CRUDProjService } from './Core/Services/crudproj.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Auth/core/Services/login.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-projects',
@@ -212,16 +213,17 @@ saveProject(modal: any) {
       next: (response) => {
         this.isloading = false;
         if (response.isSucceeded) {
-          this.getPaginatedProjectsFromAPI();
+          
           Swal.fire('نجاح', 'تم تحديث المشروع بنجاح', 'success');
           modal.close();
+          this.getPaginatedProjectsFromAPI();
         } else {
-          Swal.fire('خطأ', response.message || 'فشل التحديث', 'error');
+          Swal.fire('خطأ', response.errors || 'فشل التحديث', 'error');
         }
       },
       error: (err) => {
         this.isloading = false;
-        Swal.fire('خطأ', 'حدث خطأ أثناء التحديث', 'error');
+        Swal.fire('خطأ', err.errors , 'error');
         console.error(err);
       }
     });
@@ -259,7 +261,7 @@ saveProject(modal: any) {
           // Update total count and total pages
           this.totalCount++;
           this.totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
-
+           this.getPaginatedProjectsFromAPI()
           // Reset to the first page to show the new project
           this.currentPage = 1;
 
@@ -278,12 +280,12 @@ saveProject(modal: any) {
             }, 500);
           });
         } else {
-          Swal.fire('خطأ', response.message || 'فشل الإضافة', 'error');
+          Swal.fire('خطأ', response.errors || 'فشل الإضافة', 'error');
         }
       },
       error: (err) => {
         this.isloading = false;
-        Swal.fire('خطأ', err.message || 'حدث خطأ أثناء الإضافة', 'error');
+        Swal.fire('خطأ', err.errors );
         console.error(err);
       }
     });
