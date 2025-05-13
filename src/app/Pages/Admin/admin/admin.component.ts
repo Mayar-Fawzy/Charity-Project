@@ -13,8 +13,13 @@ import { LoginService } from '../../Auth/core/Services/login.service';
 export class AdminComponent {
   private readonly _LoginService=inject(LoginService)
   sidebarOpen = true;
+<<<<<<< HEAD
   userData:any
   userName!:string
+=======
+  showItemDonationsSubmenu = false;
+
+>>>>>>> 148fa6d (dashbord-inkinddonation)
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
   }

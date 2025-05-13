@@ -1,0 +1,32 @@
+.written-request-card {
+    border-radius: 12px;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+    }
+
+    .card-title {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-subtitle {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .card-text {
+        white-space: pre-line;
+        font-size: 1rem;
+        color: #444;
+        line-height: 1.6;
+    }
+
+    .btn {
+        min-width: 100px;
+        font-weight: bold;
+    }
+}

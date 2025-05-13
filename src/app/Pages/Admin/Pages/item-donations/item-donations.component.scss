@@ -1,30 +1,44 @@
-.card {
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    background: #fff;
+$main-color: #f0ad4e;
 
-    &:hover {
-        transform: translateY(-5px);
-    }
-
-    h5 {
-        color: #f6a026;
-    }
-
-    .btn {
-        border-radius: 8px;
-    }
-
-    .bg-light {
-        font-size: 0.875rem;
-    }
+.custom-tabs .nav-link {
+    transition: all 0.3s ease-in-out;
+    color: #444;
+    font-weight: 500;
+    font-size: 1.05rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1.25rem;
 }
 
-.modal-header {
-    direction: rtl;
+.custom-tabs .nav-link:hover {
+    color: $main-color;
+    background-color: #fdf8f3;
+    border-color: $main-color;
+}
 
-    .btn-close {
-        margin-left: 0;
+.custom-tabs .nav-link.active {
+    color: $main-color;
+    background-color: #fff;
+    border-bottom: 3px solid $main-color;
+    font-weight: 600;
+}
+
+.fade-container {
+    position: relative;
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

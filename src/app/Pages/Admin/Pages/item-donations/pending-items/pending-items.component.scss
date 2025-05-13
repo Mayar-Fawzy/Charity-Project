@@ -1,0 +1,56 @@
+.product-card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+    .image-container {
+        height: 200px;
+        overflow: hidden;
+        background-color: #f8f9fa;
+
+        .main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        font-family: 'Cairo', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .description {
+        margin-top: 0.5rem;
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-weight: bold;
+        transition: transform 0.2s ease-in-out;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+}

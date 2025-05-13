@@ -1,1 +1,22 @@
-<p>help-requests works!</p>
+<section class="row g-4">
+  <div class="col-md-4" *ngFor="let request of otherHelpRequests">
+    <div class="card shadow-sm p-3 written-request-card">
+      <div class="card-body text-end">
+        <!-- <h5 class="card-title mb-2">مقدم الطلب: {{ request.requesterName }}</h5> -->
+        <p class="card-subtitle text-muted mb-2">
+          تاريخ الطلب: {{ request.date | date : "yyyy/MM/dd" }}
+        </p>
+        <p class="card-text">{{ request.description }}</p>
+        <div class="mt-3 d-flex flex-wrap gap-2 justify-content-end">
+          <button class="btn btn-success" (click)="approve(request)">
+            قبول
+          </button>
+          <button class="btn btn-danger" (click)="reject(request)">رفض</button>
+          <button class="btn btn-outline-primary" (click)="contact(request)">
+            تواصل
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

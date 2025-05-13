@@ -1,0 +1,29 @@
+<section class="row g-4">
+  <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of pendingItems">
+    <div class="card shadow-sm h-100 product-card">
+      <div class="image-container">
+        <img [src]="item.image" class="main-img" alt="..." />
+      </div>
+      <div class="card-body text-end d-flex flex-column justify-content-between">
+        <div>
+          <h5 class="card-title">{{ item.name }}</h5>
+
+          <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+            <span class="badge bg-primary">{{ item.category }}</span>
+            <span class="badge bg-warning text-dark">{{ item.status }}</span>
+            <span class="text-muted">الكمية: {{ item.quantity }}</span>
+          </div>
+
+          <p class="card-text description">
+            {{ item.description }}
+          </p>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-success w-50" (click)="approve(item)">قبول</button>
+          <button class="btn btn-danger w-50" (click)="reject(item)">رفض</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

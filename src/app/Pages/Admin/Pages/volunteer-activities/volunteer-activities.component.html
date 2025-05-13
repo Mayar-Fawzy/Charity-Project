@@ -1,0 +1,107 @@
+<section class="container my-4 text-end">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <button class="btn btn-warning" (click)="openAddModal(activityModal)">
+        <i class="bi bi-plus-circle"></i> إضافة نشاط تطوعي
+        </button>
+
+        <div class="d-flex align-items-center gap-2">
+        <label for="sortSelect" class="form-label mb-0">ترتيب حسب:</label>
+        <select
+            id="sortSelect"
+            class="form-select form-select-sm w-auto"
+            [(ngModel)]="sortOrder"
+            (change)="sortActivities()"
+        >
+            <option value="newest">الأحدث</option>
+            <option value="oldest">الأقدم</option>
+        </select>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6 col-lg-4" *ngFor="let activity of sortedActivities">
+        <div class="card h-100 shadow-sm p-3 text-end">
+            <h5 class="fw-bold text-warning mb-2">{{ activity.title }}</h5>
+
+            <p class="text-muted">
+            {{ truncate(activity.description, 100) }}
+            <span
+                *ngIf="activity.description.length > 100"
+                class="text-success text-decoration-none"
+                style="cursor: pointer"
+                (click)="openModal(activity.description)"
+            >
+                عرض المزيد
+            </span>
+            </p>
+
+            <div
+            class="bg-light border border-warning-subtle p-2 rounded mb-3 small"
+            >
+            <i class="bi bi-calendar-plus text-dark ms-1"></i>
+            تاريخ الإنشاء: {{ activity.createdAt | date : "dd-MM-yyyy" }}
+            </div>
+
+            <div class="d-flex justify-content-between">
+            <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="openEditModal(activity, activityModal)"
+            >
+                <i class="bi bi-pencil-square"></i> تحديث
+            </button>
+            <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="deleteActivity(activity)"
+            >
+                <i class="bi bi-trash"></i> حذف
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal Template -->
+    <ng-template #activityModal let-modal>
+        <div class="modal-header justify-content-between">
+        <h5 class="modal-title ms-auto">
+            {{ selectedActivity ? "تحديث نشاط" : "إضافة نشاط تطوعي" }}
+        </h5>
+        <button
+            type="button"
+            class="btn-close me-auto"
+            aria-label="Close"
+            (click)="modal.dismiss()"
+        ></button>
+        </div>
+
+        <div class="modal-body">
+        <form>
+            <div class="mb-3">
+            <label class="form-label">عنوان النشاط</label>
+            <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="activityForm.title"
+                name="title"
+            />
+            </div>
+
+            <div class="mb-3">
+            <label class="form-label">الوصف</label>
+            <textarea
+                class="form-control"
+                [(ngModel)]="activityForm.description"
+                name="description"
+            ></textarea>
+            </div>
+        </form>
+        </div>
+
+        <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="modal.dismiss()">إلغاء</button>
+        <button class="btn btn-success" (click)="saveActivity(modal)">
+            <i class="bi bi-check-circle"></i> حفظ
+        </button>
+        </div>
+    </ng-template>
+</section>
