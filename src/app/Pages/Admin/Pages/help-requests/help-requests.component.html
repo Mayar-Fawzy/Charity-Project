@@ -1,20 +1,75 @@
-<section class="row g-4">
-  <div class="col-md-4" *ngFor="let request of otherHelpRequests">
-    <div class="card shadow-sm p-3 written-request-card">
-      <div class="card-body text-end">
-        <!-- <h5 class="card-title mb-2">مقدم الطلب: {{ request.requesterName }}</h5> -->
-        <p class="card-subtitle text-muted mb-2">
-          تاريخ الطلب: {{ request.date | date : "yyyy/MM/dd" }}
-        </p>
-        <p class="card-text">{{ request.description }}</p>
-        <div class="mt-3 d-flex flex-wrap gap-2 justify-content-end">
-          <button class="btn btn-success" (click)="approve(request)">
-            قبول
-          </button>
-          <button class="btn btn-danger" (click)="reject(request)">رفض</button>
-          <button class="btn btn-outline-primary" (click)="contact(request)">
-            تواصل
-          </button>
+<section class="container pt-5 my-3">
+  <h2 class="text-center mb-4">إدارة طلبات المساعدة</h2>
+
+  <!-- حالة التحميل -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">جاري التحميل...</span>
+    </div>
+  </div>
+
+  <!-- رسالة عند عدم وجود أي طلبات -->
+  <div *ngIf="!isLoading && totalCount === 0" class="text-center">
+    <p class="text-muted">لا توجد طلبات مساعدة متاحة حاليًا</p>
+  </div>
+
+  <!-- Pagination -->
+  <nav class="pagination-wrapper" *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">
+          <i class="bi bi-chevron-right"></i> <!-- السهم الأيمن للصفحة السابقة في RTL -->
+        </button>
+      </li>
+      <li class="page-item dots" *ngIf="showLeftDots">
+        <span class="page-link">...</span>
+      </li>
+      <li class="page-item" *ngFor="let page of displayedPages" [class.active]="currentPage === page">
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+      <li class="page-item dots" *ngIf="showRightDots">
+        <span class="page-link">...</span>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">
+          <i class="bi bi-chevron-left"></i> <!-- السهم الأيسر للصفحة التالية في RTL -->
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- جميع الطلبات -->
+  <div class="section mb-5" *ngIf="totalCount > 0">
+    <h3 class="text-end">طلبات المساعدة</h3>
+    <div class="request-list">
+      <!-- عرض الطلبات الحقيقية -->
+      <div class="card shadow-lg p-4 written-request-card" *ngFor="let request of otherHelpRequests">
+        <div class="card-body">
+          <p class="card-text">{{ request.requestDetails || 'لا توجد تفاصيل' }}</p>
+          <!-- عرض حالة الطلب -->
+          <p class="card-text status-text" [ngClass]="{
+            'text-success': request.requestStatus === 1,
+            'text-danger': request.requestStatus === 2
+          }">
+            {{ request.requestStatus === 1 ? 'تم القبول' : (request.requestStatus === 2 ? 'تم الرفض' : '') }}
+          </p>
+          <!-- إذا لم يكن تم قبوله أو رفضه، تظهر الأزرار -->
+          <div class="mt-3 d-flex gap-2 justify-content-end" *ngIf="request.requestStatus !== 1 && request.requestStatus !== 2">
+            <button class="btn btn-success btn-lg" (click)="approve(request)">قبول</button>
+            <button class="btn btn-danger btn-lg" (click)="reject(request)">رفض</button>
+            <button class="btn btn-outline-primary btn-lg" (click)="contact(request)">تواصل</button>
+          </div>
+        </div>
+      </div>
+      <!-- إضافة بطاقات وهمية -->
+      <div class="card shadow-lg p-4 written-request-card placeholder-card" *ngFor="let i of [].constructor(3 - otherHelpRequests.length)">
+        <div class="card-body">
+          <p class="card-text text-muted">طلب غير متاح</p>
+          <div class="mt-3 d-flex gap-2 justify-content-end">
+            <button class="btn btn-success btn-lg" disabled>قبول</button>
+            <button class="btn btn-danger btn-lg" disabled>رفض</button>
+            <button class="btn btn-outline-primary btn-lg" disabled>تواصل</button>
+          </div>
         </div>
       </div>
     </div>
