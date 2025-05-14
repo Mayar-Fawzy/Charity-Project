@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PendingItemsComponent } from './pending-items/pending-items.component';
 import { AcceptItemsComponent } from './accept-items/accept-items.component';
-
 
 @Component({
   selector: 'app-item-donations',
@@ -14,4 +13,5 @@ import { AcceptItemsComponent } from './accept-items/accept-items.component';
 export class ItemDonationsComponent {
 
   selectedTab: 'accept' | 'pending'= 'accept';
+ 
 }

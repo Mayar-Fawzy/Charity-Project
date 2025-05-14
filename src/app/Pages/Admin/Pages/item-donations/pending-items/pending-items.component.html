@@ -1,29 +1,162 @@
-<section class="row g-4">
-  <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of pendingItems">
-    <div class="card shadow-sm h-100 product-card">
-      <div class="image-container">
-        <img [src]="item.image" class="main-img" alt="..." />
-      </div>
-      <div class="card-body text-end d-flex flex-column justify-content-between">
-        <div>
-          <h5 class="card-title">{{ item.name }}</h5>
+<section class="container p-2">
+    <!-- Pagination -->
+  <nav class="pagination-wrapper mt-4">
+    <ul class="pagination justify-content-center">
+      <!-- >>> Previous -->
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button
+          class="page-link"
+          (click)="goToPrevious()"
+          [disabled]="currentPage === 1"
+        >
+          السابق
+        </button>
+      </li>
 
-          <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
-            <span class="badge bg-primary">{{ item.category }}</span>
-            <span class="badge bg-warning text-dark">{{ item.status }}</span>
-            <span class="text-muted">الكمية: {{ item.quantity }}</span>
-          </div>
+      <!-- >>> Page numbers -->
+      <li
+        class="page-item"
+        *ngFor="let page of displayedPages"
+        [class.active]="currentPage === page"
+      >
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
 
-          <p class="card-text description">
-            {{ item.description }}
-          </p>
-        </div>
-
-        <div class="d-flex gap-2 mt-3">
-          <button class="btn btn-success w-50" (click)="approve(item)">قبول</button>
-          <button class="btn btn-danger w-50" (click)="reject(item)">رفض</button>
-        </div>
-      </div>
+      <!-- >>> Next -->
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button
+          class="page-link"
+          (click)="goToNext()"
+          [disabled]="currentPage === totalPages"
+        >
+          التالي
+        </button>
+      </li>
+    </ul>
+  </nav>
+  <!-- Search -->
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3"
+    dir="rtl"
+  >
+    <h4 class="fw-bold m-0">العناصر المتاحة</h4>
+    <div class="input-group w-100 w-md-auto" style="max-width: 300px">
+      <input
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        type="text"
+        class="form-control custom-search-input rounded-top-0 rounded-bottom-0 rounded-end-3"
+        placeholder="ابحث عن عنصر..."
+      />
+      <button
+        class="btn custom-search-btn rounded-top-0 rounded-bottom-0 rounded-start-3"
+        type="button"
+      >
+        <i class="bi bi-search"></i>
+      </button>
     </div>
   </div>
+
+  <div class="row g-3">
+    <ng-container *ngIf="!loading && !error; else loadingOrError">
+      <ng-container *ngIf="filteredProjects.length; else noProducts">
+        <div
+          class="col-12 col-sm-6 col-lg-4"
+          *ngFor="let product of filteredProjects"
+        >
+          <div class="card product-card shadow-sm rounded-4 h-100">
+            <div class="image-container position-relative">
+              <ng-container
+                *ngIf="product.imageUrls?.length; else placeholderImage"
+              >
+                <img
+                  [src]="product.imageUrls[getCurrentImageIndex(product.id)]"
+                  class="main-img"
+                  alt="صورة المنتج"
+                />
+                <!-- Previous Button -->
+                <button
+                  *ngIf="product.imageUrls.length > 1"
+                  class="nav-btn left"
+                  (click)="prevImage(product.id, product.imageUrls.length)"
+                >
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <!-- Next Button -->
+                <button
+                  *ngIf="product.imageUrls.length > 1"
+                  class="nav-btn right"
+                  (click)="nextImage(product.id, product.imageUrls.length)"
+                >
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </ng-container>
+              <ng-template #placeholderImage>
+                <img
+                  src="/Images/request-ar.png"
+                  class="main-img"
+                  alt="صورة افتراضية"
+                  onerror="this.src='/Images/request-ar.png'"
+                />
+              </ng-template>
+            </div>
+            <div
+              class="card-body text-end d-flex flex-column justify-content-between"
+            >
+              <div>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <div class="d-flex justify-content-between mb-2 flex-wrap">
+                  <span class="badge bg-primary text-white">
+                    {{
+                      product.itemType === 1
+                        ? "ملابس"
+                        : product.itemType === 2
+                        ? "طعام"
+                        : product.itemType === 3
+                        ? "مستلزمات طبية"
+                        : "أخرى"
+                    }}
+                  </span>
+                  <span class="badge bg-warning text-dark">
+                    {{
+                      product.donationStatus === 1
+                        ? "جديد"
+                        : product.donationStatus === 2
+                        ? "مستعمل - حالة ممتازة"
+                        : "مستعمل - حالة جيدة"
+                    }}
+                  </span>
+
+                  <span>الكمية: {{ product.quantity }}</span>
+                </div>
+                <p class="card-text small">{{ product.description }}</p>
+              </div>
+               <div class="d-flex justify-content-between pt-2">
+            <button class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-pencil-square"></i> تحديث
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteProject(product.id)">
+              <i class="bi bi-trash"></i> حذف
+            </button>
+          </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #loadingOrError>
+      <div class="col-12 text-center">
+        <p *ngIf="loading" class="text-muted">جاري التحميل...</p>
+        <p *ngIf="error" class="text-danger">{{ error }}</p>
+      </div>
+    </ng-template>
+    <ng-template #noProducts>
+      <div class="col-12 text-center">
+        <p class="text-muted">لا توجد عناصر متاحة حاليًا.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Pagination Controls -->
+
 </section>

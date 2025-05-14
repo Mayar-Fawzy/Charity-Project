@@ -7,8 +7,8 @@
       <a class="nav-link" [class.active]="selectedTab === 'pending'" (click)="selectedTab = 'pending'">قيد المراجعة</a>
     </li>
   </ul>
-
-  <div [ngSwitch]="selectedTab" class="fade-container">
+   <app-pending-items></app-pending-items>
+  <!-- <div [ngSwitch]="selectedTab" class="fade-container">
     <div *ngSwitchCase="'accept'" class="fade-in">
       <app-accept-items></app-accept-items>
     </div>
@@ -16,6 +16,6 @@
       <app-pending-items></app-pending-items>
     </div>
 
-  </div>
+  </div> -->
 
 </section>
