@@ -19,7 +19,7 @@
   </nav>
 
   <!-- Search -->
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3" dir="rtl">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
     <h4 class="fw-bold m-0">العناصر المتاحة</h4>
     <div class="input-group w-100 w-md-auto" style="max-width: 300px">
       <input
@@ -177,11 +177,11 @@
             نوع العنصر مطلوب.
           </div>
         </div>
-
-        <div class="mb-3">
+<div class="d-flex">
+   <div class="mb-3">
           <label class="form-label section-title"><i class="bi bi-box"></i> حالة التبرع</label>
           <select
-            class="form-control"
+            class="form-control w-100"
             formControlName="donationStatus"
             [ngClass]="{'is-invalid': itemForm.get('donationStatus')?.invalid && itemForm.get('donationStatus')?.touched}"
           >
@@ -195,11 +195,11 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" style="    margin-right: 69px;">
           <label class="form-label section-title"><i class="bi bi-123"></i> الكمية</label>
           <input
             type="number"
-            class="form-control"
+            class="form-control w-50"
             formControlName="quantity"
             placeholder="ادخل الكمية"
             [ngClass]="{'is-invalid': itemForm.get('quantity')?.invalid && itemForm.get('quantity')?.touched}"
@@ -208,6 +208,8 @@
             الكمية مطلوبة ويجب أن تكون أكبر من 0.
           </div>
         </div>
+</div>
+       
 
         <div class="mb-3">
           <label class="form-label section-title"><i class="bi bi-image"></i> صور العنصر</label>
