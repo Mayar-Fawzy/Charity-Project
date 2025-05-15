@@ -53,6 +53,8 @@ export class VolunteerActivitiesComponent {
           this.totalCount = response.totalCount;
           this.totalPages = response.totalPages;
           this.currentPage = response.currentPage;
+          // Apply client-side sorting to ensure consistency
+          this.sortActivitiesClientSide();
         },
         error: (err) => {
           console.error('Error fetching activities:', err);
@@ -154,9 +156,18 @@ export class VolunteerActivitiesComponent {
   }
 
   sortActivities() {
-    this.orderByDirection = this.sortOrder === 'newest' ? -1 : 1;
+    this.orderByDirection = this.sortOrder === 'newest' ? 1 : 2;
     this.currentPage = 1; // Reset to first page on sort change
     this.fetchActivities();
+  }
+
+  // Client-side sorting by createdDate as a fallback
+  sortActivitiesClientSide() {
+    this.volunteerActivities.sort((a, b) => {
+      const dateA = new Date(a.createdDate).getTime();
+      const dateB = new Date(b.createdDate).getTime();
+      return this.sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
   }
 
   goToPage(page: number) {
