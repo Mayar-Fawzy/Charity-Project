@@ -1,67 +1,127 @@
 <section class="container pt-5 my-3">
-  <h2 class="text-center mb-4">إدارة طلبات المساعدة</h2>
-
-  <!-- حالة التحميل -->
   <div *ngIf="isLoading" class="text-center">
     <div class="spinner-border text-warning" role="status">
       <span class="visually-hidden">جاري التحميل...</span>
     </div>
   </div>
 
-  <!-- رسالة عند عدم وجود أي طلبات -->
   <div *ngIf="!isLoading && totalCount === 0" class="text-center">
     <p class="text-muted">لا توجد طلبات مساعدة متاحة حاليًا</p>
+  </div>
+
+  <ul
+    class="nav nav-tabs custom-tabs justify-content-center mb-4"
+    id="requestTabs"
+  >
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'pending'"
+        (click)="changeTab('pending')"
+      >
+        قيد المراجعة
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'approved'"
+        (click)="changeTab('approved')"
+      >
+        مقبولة
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'rejected'"
+        (click)="changeTab('rejected')"
+      >
+        مرفوضة
+      </button>
+    </li>
+  </ul>
+
+  <div *ngIf="filteredProjects.length > 0" class="row g-4 mb-5 fade-container">
+    <div class="col-md-4 fade-in" *ngFor="let request of filteredProjects">
+      <div class="card shadow-sm h-100 written-request-card">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <p class="card-text">
+              {{ request.requestDetails || "لا توجد تفاصيل" }}
+            </p>
+            <p
+              class="card-text status-text"
+              [ngClass]="{
+                'text-success': request.requestStatus === 1,
+                'text-danger': request.requestStatus === 2
+              }"
+            >
+              {{
+                request.requestStatus === 1
+                  ? "تم القبول"
+                  : request.requestStatus === 2
+                  ? "تم الرفض"
+                  : "قيد المراجعة"
+              }}
+            </p>
+          </div>
+          <div
+            class="mt-3 d-flex gap-2 justify-content-end"
+            *ngIf="request.requestStatus === 0"
+          >
+            <button class="btn btn-success btn-sm" (click)="approve(request)">
+              قبول
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="reject(request)">
+              رفض
+            </button>
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="contact(request)"
+            >
+              تواصل
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Pagination -->
   <nav class="pagination-wrapper" *ngIf="totalPages > 1">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">
-          <i class="bi bi-chevron-right"></i> 
+        <button
+          class="page-link"
+          (click)="goToPrevious()"
+          [disabled]="currentPage === 1"
+        >
+          <i class="bi bi-chevron-right"></i>
         </button>
       </li>
       <li class="page-item dots" *ngIf="showLeftDots">
         <span class="page-link">...</span>
       </li>
-      <li class="page-item" *ngFor="let page of displayedPages" [class.active]="currentPage === page">
+      <li
+        class="page-item"
+        *ngFor="let page of displayedPages"
+        [class.active]="currentPage === page"
+      >
         <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
       </li>
       <li class="page-item dots" *ngIf="showRightDots">
         <span class="page-link">...</span>
       </li>
       <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">
-          <i class="bi bi-chevron-left"></i> 
+        <button
+          class="page-link"
+          (click)="goToNext()"
+          [disabled]="currentPage === totalPages"
+        >
+          <i class="bi bi-chevron-left"></i>
         </button>
       </li>
     </ul>
   </nav>
-
-  <!-- جميع الطلبات -->
-  <div class="section mb-5" *ngIf="totalCount > 0">
-    <h3 class="text-end">طلبات المساعدة</h3>
-    <div class="request-list">
-      <!-- عرض الطلبات الحقيقية -->
-      <div class="card shadow-lg p-4 written-request-card" *ngFor="let request of otherHelpRequests">
-        <div class="card-body">
-          <p class="card-text">{{ request.requestDetails || 'لا توجد تفاصيل' }}</p>
-          <!-- عرض حالة الطلب -->
-          <p class="card-text status-text" [ngClass]="{
-            'text-success': request.requestStatus === 1,
-            'text-danger': request.requestStatus === 2
-          }">
-            {{ request.requestStatus === 1 ? 'تم القبول' : (request.requestStatus === 2 ? 'تم الرفض' : '') }}
-          </p>
-          <!-- إذا لم يكن تم قبوله أو رفضه، تظهر الأزرار -->
-          <div class="mt-3 d-flex gap-2 justify-content-end" *ngIf="request.requestStatus !== 1 && request.requestStatus !== 2">
-            <button class="btn btn-success btn-lg" (click)="approve(request)">قبول</button>
-            <button class="btn btn-danger btn-lg" (click)="reject(request)">رفض</button>
-            <button class="btn btn-outline-primary btn-lg" (click)="contact(request)">تواصل</button>
-          </div>
-        </div>
-      </div>
-     
-    </div>
-  </div>
 </section>

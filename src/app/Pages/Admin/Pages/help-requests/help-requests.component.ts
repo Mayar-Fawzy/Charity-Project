@@ -1,10 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssistanceRequestService } from './Core/Services/assistance-request.service';
-import { LoginService } from '../../../Auth/core/Services/login.service';
-import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { IAssistanceRequest, Daum } from './Core/Interface/iassistance-request';
+import { Daum } from './Core/Interface/iassistance-request';
 
 @Component({
   selector: 'app-help-requests',
@@ -15,177 +13,131 @@ import { IAssistanceRequest, Daum } from './Core/Interface/iassistance-request';
 })
 export class HelpRequestsComponent {
   private readonly _AssistanceRequestService = inject(AssistanceRequestService);
-  private readonly _LoginService = inject(LoginService);
-  private readonly _Router = inject(Router);
 
-  userData: any = null;
-  isLoading: boolean = false;
+  otherHelpRequests: Daum[] = [];
   filteredProjects: Daum[] = [];
-  itemsPerPage = 3;
+  isLoading = false;
+
+  activeTab: 'pending' | 'approved' | 'rejected' = 'pending';
+
+  itemsPerPage = 6;
   currentPage = 1;
   totalPages = 1;
   totalCount = 0;
-  selectedProject: Daum[] = [];
-  otherHelpRequests: Daum[] = [];
 
-  ngOnInit(): void {
-    this.getPaginatedReqFromAPI();
+  ngOnInit() {
+    this.loadRequests();
   }
 
-  getPaginatedReqFromAPI() {
+  loadRequests() {
     this.isLoading = true;
     this._AssistanceRequestService.GetPaginatedAssistanceRequests(this.currentPage, this.itemsPerPage).subscribe({
       next: (response) => {
-        // جلب جميع الطلبات بغض النظر عن حالتها
         this.otherHelpRequests = response.data || [];
-        this.filteredProjects = [...this.otherHelpRequests];
-        this.totalCount = response.totalCount || 0;
-        this.currentPage = response.currentPage || 1;
-        this.totalPages = response.totalPages || 1;
         this.isLoading = false;
-        console.log(this.otherHelpRequests);
+        this.applyFilterAndPagination();
       },
       error: (err) => {
         this.isLoading = false;
         Swal.fire({
-          icon: "error",
-          title: "خطأ",
-          text: err.message || "حدث خطأ أثناء جلب الطلبات",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
+          icon: 'error',
+          title: 'خطأ',
+          text: err.message || 'حدث خطأ أثناء جلب الطلبات',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا'
         });
-        console.error('حدث خطأ أثناء جلب الطلبات:', err);
       }
     });
   }
 
-  get paginatedProjects() {
-    return this.filteredProjects;
+  changeTab(tab: 'pending' | 'approved' | 'rejected') {
+    this.activeTab = tab;
+    this.currentPage = 1;
+    this.applyFilterAndPagination();
   }
 
-  get displayedPages(): number[] {
-    const pages: number[] = [];
-    const total = this.totalPages || 1;
-    const maxPagesToShow = 5;
-    const half = Math.floor(maxPagesToShow / 2);
+  applyFilterAndPagination() {
+    let statusFilter = 1;
 
-    let start = Math.max(1, this.currentPage - half);
-    let end = Math.min(total, this.currentPage + half);
-
-    if (this.currentPage <= half) {
-      end = Math.min(total, maxPagesToShow);
-    } else if (this.currentPage + half > total) {
-      start = Math.max(1, total - maxPagesToShow + 1);
+    if (this.activeTab === 'approved') {
+      statusFilter = 3;
+    } else if (this.activeTab === 'rejected') {
+      statusFilter = 2;
     }
 
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
+    const filtered = this.otherHelpRequests.filter(r => r.requestStatus === statusFilter);
 
-    return pages;
+    this.totalCount = filtered.length;
+    this.totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
+
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.filteredProjects = filtered.slice(startIndex, endIndex);
   }
 
-  get showLeftDots(): boolean {
-    return this.displayedPages[0] > 1;
-  }
-
-  get showRightDots(): boolean {
-    return this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
-  }
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.getPaginatedReqFromAPI();
+      this.applyFilterAndPagination();
     }
   }
 
   goToPrevious() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getPaginatedReqFromAPI();
+      this.applyFilterAndPagination();
     }
   }
 
   goToNext() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getPaginatedReqFromAPI();
+      this.applyFilterAndPagination();
     }
+  }
+
+  get displayedPages(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    let start = Math.max(1, this.currentPage - 2);
+    let end = Math.min(this.totalPages, start + maxPagesToShow - 1);
+
+    if (end - start < maxPagesToShow - 1) {
+      start = Math.max(1, end - maxPagesToShow + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  get showLeftDots() {
+    return this.displayedPages.length > 0 && this.displayedPages[0] > 1;
+  }
+
+  get showRightDots() {
+    return this.displayedPages.length > 0 && this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
   }
 
   approve(request: Daum) {
     const updatedRequest = { ...request, requestStatus: 1 };
-    this._AssistanceRequestService.UpdateReq(updatedRequest).subscribe({
-      next: (response) => {
-        console.log('تمت الموافقة على الطلب:', response);
-        // تحديث حالة الطلب في القائمة
-        const index = this.otherHelpRequests.findIndex(r => r.id === request.id);
-        if (index !== -1) {
-          this.otherHelpRequests[index].requestStatus = 1;
-          this.filteredProjects = [...this.otherHelpRequests];
-        }
-        Swal.fire({
-          icon: "success",
-          title: "نجاح",
-          text: "تم قبول الطلب بنجاح",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
-        });
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: "error",
-          title: "خطأ",
-          text: err.message || "فشل في قبول الطلب",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
-        });
-        console.error('فشل في تحديث الطلب:', err);
-      }
+    this._AssistanceRequestService.UpdateReq(updatedRequest).subscribe(() => {
+      Swal.fire('نجاح', 'تم قبول الطلب بنجاح', 'success');
+      this.loadRequests();
     });
   }
 
   reject(request: Daum) {
     const updatedRequest = { ...request, requestStatus: 2 };
-    this._AssistanceRequestService.UpdateReq(updatedRequest).subscribe({
-      next: (response) => {
-        console.log('تم رفض الطلب:', response);
-        // تحديث حالة الطلب في القائمة
-        const index = this.otherHelpRequests.findIndex(r => r.id === request.id);
-        if (index !== -1) {
-          this.otherHelpRequests[index].requestStatus = 2;
-          this.filteredProjects = [...this.otherHelpRequests];
-        }
-        Swal.fire({
-          icon: "success",
-          title: "نجاح",
-          text: "تم رفض الطلب بنجاح",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
-        });
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: "error",
-          title: "خطأ",
-          text: err.message || "فشل في رفض الطلب",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
-        });
-        console.error('فشل في تحديث الطلب:', err);
-      }
+    this._AssistanceRequestService.UpdateReq(updatedRequest).subscribe(() => {
+      Swal.fire('نجاح', 'تم رفض الطلب بنجاح', 'success');
+      this.loadRequests();
     });
   }
 
   contact(request: Daum) {
-    console.log('التواصل مع مقدم الطلب:', request);
-    Swal.fire({
-      icon: "info",
-      title: "تواصل",
-      text: `سيتم التواصل مع مدير المشروع`,
-      confirmButtonColor: "#f6a026",
-      confirmButtonText: "حسنا",
-    });
+    Swal.fire('تواصل', 'سيتم التواصل مع مدير المشروع', 'info');
   }
 }
