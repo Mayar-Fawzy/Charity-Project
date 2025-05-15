@@ -50,7 +50,7 @@ export class HelpRequestsComponent {
     });
   }
 
-  changeTab(tab: 'pending' | 'approved' | 'rejected') {
+  changeTab(tab:   'approved' |'pending'| 'rejected') {
     this.activeTab = tab;
     this.currentPage = 1;
     this.applyFilterAndPagination();
@@ -59,7 +59,7 @@ export class HelpRequestsComponent {
   applyFilterAndPagination() {
     let statusFilter = 1;
 
-    if (this.activeTab === 'approved') {
+    if (this.activeTab === 'pending') {
       statusFilter = 3;
     } else if (this.activeTab === 'rejected') {
       statusFilter = 2;
