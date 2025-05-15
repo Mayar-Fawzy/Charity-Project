@@ -67,8 +67,8 @@
             </p>
           </div>
           <div
-            class="mt-3 d-flex gap-2 justify-content-end"
-            *ngIf="request.requestStatus === 0"
+            class="mt-3 d-flex gap-2 justify-content-around"
+            *ngIf="request.requestStatus === 3"
           >
             <button class="btn btn-success btn-sm" (click)="approve(request)">
               قبول
@@ -89,7 +89,7 @@
   </div>
 
   <!-- Pagination -->
-  <nav class="pagination-wrapper" *ngIf="totalPages > 1">
+  <nav class="pagination-wrapper" *ngIf="totalPages >= 1">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="currentPage === 1">
         <button

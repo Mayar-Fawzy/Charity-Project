@@ -30,7 +30,7 @@ donorId: string | null = null;
     const token = localStorage.getItem('userToken');
     if (token) {
       this.userData = jwtDecode(token);
-      this.donorId = this.userData.jti; 
+      this.donorId = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"]; 
       return this.userData;
     }
     return null;
