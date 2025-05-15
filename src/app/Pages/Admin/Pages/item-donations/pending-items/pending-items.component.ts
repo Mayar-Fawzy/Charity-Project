@@ -169,13 +169,7 @@ saveItem(modal: any): void {
                         this.onSearch();
                     }
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'نجاح',
-                        text: 'تم تحديث العنصر بنجاح',
-                        confirmButtonColor: '#f6a026',
-                        confirmButtonText: 'حسنا'
-                    });
+                  
 
                     modal.close();
                     this.loadPage();

@@ -91,7 +91,7 @@ export class VolunteerActivitiesComponent {
           if (response.isSucceeded) {
             modal.close();
             this.fetchActivities();
-            Swal.fire('نجاح!', 'تم تحديث النشاط بنجاح.', 'success');
+        
           } else {
             Swal.fire('خطأ!', response.message || 'فشل التحديث', 'error');
           }
