@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { VolunteerActivitySService } from './Core/Services/volunteer-activity-s.service';
+import { IVolunteerActivities, IGetPaginatedVolunteerActivities, ICreateVolunteerActivity, IUpdateVolunteerActivity } from './Core/Interfaces/volunter-activity';
+import { LoginService } from '../../../Auth/core/Services/login.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-volunteer-activities',
@@ -11,99 +15,147 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './volunteer-activities.component.scss'
 })
 export class VolunteerActivitiesComponent {
-
-
-  volunteerActivities: any[] = [];
-  sortedActivities: any[] = [];
+  private readonly _modalService = inject(NgbModal);
+  private readonly _loginService = inject(LoginService);
+  private readonly _volunteerActivityService = inject(VolunteerActivitySService);
+  volunteerActivities: IVolunteerActivities[] = [];
+  sortedActivities: IVolunteerActivities[] = [];
   sortOrder: string = 'newest';
-  activityForm: any = {
-    title: '',
-    description: ''
+  activityForm: Partial<IVolunteerActivities> = {
+    name: '',
+    activityDescription: ''
   };
+  selectedActivity: IVolunteerActivities | null = null;
 
-  selectedActivity: any = null;
+  // Pagination properties
+  pageSize: number = 18;
+  currentPage: number = 1;
+  totalCount: number = 0;
+  totalPages: number = 0;
+  orderByDirection: number = 1;
 
-  constructor(private modalService: NgbModal) { }
+  // Modal-related properties
+  selectedDescription: string = '';
+  @ViewChild('descriptionModal') descriptionModal: any;
 
   ngOnInit() {
-    this.volunteerActivities = [
-      {
-        title: 'ملابس شتوية للأطفال',
-        description: 'جمع وتوزيع ملابس شتوية بحالة جيدة للأطفال المحتاجين في القرى النائية.',
-        createdAt: new Date('2025-05-12')
-      },
-      {
-        title: 'ملابس شتوية للأطفال',
-        description: 'جمع وتوزيع ملابس شتوية بحالة جيدة للأطفال المحتاجين في القرى النائية.',
-        createdAt: new Date('2025-05-12')
-      },
-      {
-        title: 'ملابس شتوية للأطفال',
-        description: 'جمع وتوزيع ملابس شتوية بحالة جيدة للأطفال المحتاجين في القرى النائية.',
-        createdAt: new Date('2025-05-12')
-      },
-      {
-        title: 'ملابس شتوية للأطفال',
-        description: 'جمع وتوزيع ملابس شتوية بحالة جيدة للأطفال المحتاجين في القرى النائية.',
-        createdAt: new Date('2025-05-12')
-      },
-      {
-        title: 'ملابس شتوية للأطفال',
-        description: 'جمع وتوزيع ملابس شتوية بحالة جيدة للأطفال المحتاجين في القرى النائية.',
-        createdAt: new Date('2025-05-12')
-      },
+    this.fetchActivities();
+  }
 
-    ];
-
-    this.sortActivities();
+  fetchActivities() {
+    this._volunteerActivityService
+      .GetPaginatedVolunteerActivities(this.currentPage, this.pageSize, this.orderByDirection)
+      .subscribe({
+        next: (response: IGetPaginatedVolunteerActivities) => {
+          this.volunteerActivities = response.data.map((activity: IVolunteerActivities) => ({
+            id: activity.id,
+            organizerId: activity.organizerId,
+            name: activity.name,
+            activityDescription: activity.activityDescription,
+            createdDate: activity.createdDate,
+            modifiedDate: activity.modifiedDate
+          }));
+          this.totalCount = response.totalCount;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.currentPage;
+      
+        },
+        error: (err) => {
+          console.error('Error fetching activities:', err);
+        }
+      });
   }
 
   openAddModal(content: any) {
     this.selectedActivity = null;
-    this.activityForm = { title: '', description: '' };
-    this.modalService.open(content);
+    this.activityForm = { name: '', activityDescription: '' };
+    this._modalService.open(content);
   }
 
-  openEditModal(activity: any, content: any) {
+  openEditModal(activity: IVolunteerActivities, content: any) {
     this.selectedActivity = activity;
     this.activityForm = { ...activity };
-    this.modalService.open(content);
+    this._modalService.open(content);
   }
 
-  saveActivity(modal: any) {
+  saveActivity(modal: NgbModalRef) {
+    const organizerId = this._loginService.donorId || 'default-organizer-id';
+
     if (this.selectedActivity) {
-      Object.assign(this.selectedActivity, this.activityForm);
-    } else {
-      const newActivity = {
-        ...this.activityForm,
-        createdAt: new Date()
+      // Update existing activity
+      const updateData: IUpdateVolunteerActivity = {
+        id: this.selectedActivity.id,
+        organizerId: organizerId,
+        name: this.activityForm.name || '',
+        activityDescription: this.activityForm.activityDescription || ''
       };
-      this.volunteerActivities.push(newActivity);
+
+      this._volunteerActivityService.UpdateProject(updateData).subscribe({
+        next: (response: any) => {
+          if (response.isSucceeded) {
+            modal.close();
+            this.fetchActivities();
+          }
+        },
+        error: (err) => {
+          console.error('Error updating activity:', err);
+        }
+      });
+    } else {
+      // Create new activity
+      const createData: ICreateVolunteerActivity = {
+        organizerId: organizerId,
+        name: this.activityForm.name || '',
+        activityDescription: this.activityForm.activityDescription || ''
+      };
+
+      this._volunteerActivityService.CreateVolunteerActivity(createData).subscribe({
+        next: (response: any) => {
+          if (response.isSucceeded) {
+            modal.close();
+            this.fetchActivities();
+          }
+        },
+        error: (err) => {
+          console.error('Error creating activity:', err);
+        }
+      });
     }
-
-    modal.close();
-    this.sortActivities();
   }
 
-  deleteActivity(activity: any) {
-    this.volunteerActivities = this.volunteerActivities.filter(a => a !== activity);
-    this.sortActivities();
-  }
+  
+ deleteActivity(activitytId: string): void {
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: 'لن تتمكن من التراجع عن هذا!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#f6a026',
+      confirmButtonText: 'حذف',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+         this._volunteerActivityService.Delete(activitytId).subscribe({
+          next: (response) => {
+            if (response.isSucceeded) {
+                 this.fetchActivities();
 
-  sortActivities() {
-    this.sortedActivities = [...this.volunteerActivities].sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return this.sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+              Swal.fire('تم الحذف!', 'تم حذف العنصر بنجاح.', 'success');
+            } else {
+              Swal.fire('خطأ!', response.message || 'فشل الحذف', 'error');
+            }
+          },
+          error: (error) => {
+            Swal.fire('خطأ!', 'حدث خطأ أثناء حذف العنصر.', 'error');
+          }
+        });
+      }
     });
   }
-
-  truncate(text: string, limit: number): string {
-    return text.length > limit ? text.slice(0, limit) + '...' : text;
-  }
-
-  openModal(description: string): void {
-    this.selectedActivity.description = description;
-    this.modalService.open(description);
+  
+  openDescriptionModal(description: string): void {
+    this.selectedDescription = description;
+    this._modalService.open(this.descriptionModal);
   }
 }
