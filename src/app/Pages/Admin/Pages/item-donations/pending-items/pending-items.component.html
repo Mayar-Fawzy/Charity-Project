@@ -1,29 +1,238 @@
-<section class="row g-4">
-  <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of pendingItems">
-    <div class="card shadow-sm h-100 product-card">
-      <div class="image-container">
-        <img [src]="item.image" class="main-img" alt="..." />
-      </div>
-      <div class="card-body text-end d-flex flex-column justify-content-between">
-        <div>
-          <h5 class="card-title">{{ item.name }}</h5>
+<section class="container p-2">
+  <!-- Pagination -->
+  <nav class="pagination-wrapper mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">
+          السابق
+        </button>
+      </li>
+      <li class="page-item" *ngFor="let page of displayedPages" [class.active]="currentPage === page">
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">
+          التالي
+        </button>
+      </li>
+    </ul>
+  </nav>
 
-          <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
-            <span class="badge bg-primary">{{ item.category }}</span>
-            <span class="badge bg-warning text-dark">{{ item.status }}</span>
-            <span class="text-muted">الكمية: {{ item.quantity }}</span>
-          </div>
-
-          <p class="card-text description">
-            {{ item.description }}
-          </p>
-        </div>
-
-        <div class="d-flex gap-2 mt-3">
-          <button class="btn btn-success w-50" (click)="approve(item)">قبول</button>
-          <button class="btn btn-danger w-50" (click)="reject(item)">رفض</button>
-        </div>
-      </div>
+  <!-- Search -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+    <h4 class="fw-bold m-0">العناصر المتاحة</h4>
+    <div class="input-group w-100 w-md-auto" style="max-width: 300px">
+      <input
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        type="text"
+        class="form-control custom-search-input rounded-top-0 rounded-bottom-0 rounded-end-3"
+        placeholder="ابحث عن عنصر..."
+      />
+      <button class="btn custom-search-btn rounded-top-0 rounded-bottom-0 rounded-start-3" type="button">
+        <i class="bi bi-search"></i>
+      </button>
     </div>
   </div>
+
+  <div class="row g-3">
+    <ng-container *ngIf="!loading && !error; else loadingOrError">
+      <ng-container *ngIf="filteredProjects.length; else noProducts">
+        <div class="col-12 col-sm-6 col-lg-4" *ngFor="let product of filteredProjects">
+          <div class="card product-card shadow-sm rounded-4 h-100">
+            <div class="image-container position-relative">
+              <ng-container *ngIf="product.imageUrls?.length; else placeholderImage">
+                <img
+                  [src]="product.imageUrls[getCurrentImageIndex(product.id)]"
+                  class="main-img"
+                  alt="صورة المنتج"
+                />
+                <button
+                  *ngIf="product.imageUrls.length > 1"
+                  class="nav-btn left"
+                  (click)="prevImage(product.id, product.imageUrls.length)"
+                >
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <button
+                  *ngIf="product.imageUrls.length > 1"
+                  class="nav-btn right"
+                  (click)="nextImage(product.id, product.imageUrls.length)"
+                >
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </ng-container>
+              <ng-template #placeholderImage>
+                <img
+                  src="/Images/request-ar.png"
+                  class="main-img"
+                  alt="صورة افتراضية"
+                  onerror="this.src='/Images/request-ar.png'"
+                />
+              </ng-template>
+            </div>
+            <div class="card-body text-end d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title">{{ product.name }}</h5>
+                <div class="d-flex justify-content-between mb-2 flex-wrap">
+                  <span class="badge bg-primary text-white">
+                    {{
+                      product.itemType === 1
+                        ? "ملابس"
+                        : product.itemType === 2
+                        ? "طعام"
+                        : product.itemType === 3
+                        ? "مستلزمات طبية"
+                        : "أخرى"
+                    }}
+                  </span>
+                  <span class="badge bg-warning text-dark">
+                    {{
+                      product.donationStatus === 1
+                        ? "جديد"
+                        : product.donationStatus === 2
+                        ? "مستعمل - حالة ممتازة"
+                        : "مستعمل - حالة جيدة"
+                    }}
+                  </span>
+                  <span>الكمية: {{ product.quantity }}</span>
+                </div>
+                <p class="card-text small">{{ product.description }}</p>
+              </div>
+              <div class="d-flex justify-content-between pt-2">
+                <button class="btn btn-outline-primary btn-sm" (click)="openEditModal(product, itemModal)">
+                  <i class="bi bi-pencil-square"></i> تحديث
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteProject(product.id)">
+                  <i class="bi bi-trash"></i> حذف
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #loadingOrError>
+      <div class="col-12 text-center">
+        <p *ngIf="loading" class="text-muted">جاري التحميل...</p>
+        <p *ngIf="error" class="text-danger">{{ error }}</p>
+      </div>
+    </ng-template>
+    <ng-template #noProducts>
+      <div class="col-12 text-center">
+        <p class="text-muted">لا توجد عناصر متاحة حاليًا.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Modal Template for Editing -->
+  <ng-template #itemModal let-modal>
+    <div class="modal-header justify-content-between">
+      <h5 class="modal-title ms-auto">تحديث عنصر</h5>
+      <button type="button" class="btn-close me-auto" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="itemForm" (ngSubmit)="saveItem(modal)">
+        <div class="mb-3">
+          <label class="form-label section-title"><i class="bi bi-highlighter"></i> اسم العنصر</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="ادخل اسم العنصر"
+            [ngClass]="{'is-invalid': itemForm.get('name')?.invalid && itemForm.get('name')?.touched}"
+          >
+          <div *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched" class="invalid-feedback">
+            اسم العنصر مطلوب ويجب أن يكون بين 3 و40 حرفًا.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label section-title"><i class="bi bi-card-text"></i> وصف العنصر</label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            placeholder="ادخل وصف العنصر"
+            [ngClass]="{'is-invalid': itemForm.get('description')?.invalid && itemForm.get('description')?.touched}"
+          ></textarea>
+          <div *ngIf="itemForm.get('description')?.invalid && itemForm.get('description')?.touched" class="invalid-feedback">
+            وصف العنصر مطلوب ويجب ألا يتجاوز 500 حرف.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label section-title"><i class="bi bi-tag"></i> نوع العنصر</label>
+          <select
+            class="form-control"
+            formControlName="itemType"
+            [ngClass]="{'is-invalid': itemForm.get('itemType')?.invalid && itemForm.get('itemType')?.touched}"
+          >
+            <option value="" disabled>اختر نوع العنصر</option>
+            <option value="1">ملابس</option>
+            <option value="2">طعام</option>
+            <option value="3">مستلزمات طبية</option>
+            <option value="4">أخرى</option>
+          </select>
+          <div *ngIf="itemForm.get('itemType')?.invalid && itemForm.get('itemType')?.touched" class="invalid-feedback">
+            نوع العنصر مطلوب.
+          </div>
+        </div>
+<div class="d-flex">
+   <div class="mb-3">
+          <label class="form-label section-title"><i class="bi bi-box"></i> حالة التبرع</label>
+          <select
+            class="form-control w-100"
+            formControlName="donationStatus"
+            [ngClass]="{'is-invalid': itemForm.get('donationStatus')?.invalid && itemForm.get('donationStatus')?.touched}"
+          >
+            <option value="" disabled>اختر حالة التبرع</option>
+            <option value="1">جديد</option>
+            <option value="2">مستعمل - حالة ممتازة</option>
+            <option value="3">مستعمل - حالة جيدة</option>
+          </select>
+          <div *ngIf="itemForm.get('donationStatus')?.invalid && itemForm.get('donationStatus')?.touched" class="invalid-feedback">
+            حالة التبرع مطلوبة.
+          </div>
+        </div>
+
+        <div class="mb-3" style="    margin-right: 69px;">
+          <label class="form-label section-title"><i class="bi bi-123"></i> الكمية</label>
+          <input
+            type="number"
+            class="form-control w-50"
+            formControlName="quantity"
+            placeholder="ادخل الكمية"
+            [ngClass]="{'is-invalid': itemForm.get('quantity')?.invalid && itemForm.get('quantity')?.touched}"
+          >
+          <div *ngIf="itemForm.get('quantity')?.invalid && itemForm.get('quantity')?.touched" class="invalid-feedback">
+            الكمية مطلوبة ويجب أن تكون أكبر من 0.
+          </div>
+        </div>
+</div>
+       
+
+        <div class="mb-3">
+          <label class="form-label section-title"><i class="bi bi-image"></i> صور العنصر</label>
+          <input
+            type="file"
+            class="form-control"
+            multiple
+            accept="image/*"
+            (change)="onImagesSelected($event)"
+          >
+        </div>
+
+        <div class="modal-footer">
+          
+          <button type="submit" class="btn btn-success" [disabled]="isLoading || itemForm.invalid">
+            @if(!isLoading) {
+              <span><i class="bi bi-check-circle"></i> حفظ</span>
+            } @else {
+              <span>حفظ...</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
 </section>
