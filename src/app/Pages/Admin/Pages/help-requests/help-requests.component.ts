@@ -60,9 +60,9 @@ export class HelpRequestsComponent {
     let statusFilter = 1;
 
     if (this.activeTab === 'approved') {
-      statusFilter = 3;
-    } else if (this.activeTab === 'rejected') {
       statusFilter = 2;
+    } else if (this.activeTab === 'rejected') {
+      statusFilter = 3;
     }
 
     const filtered = this.otherHelpRequests.filter(r => r.requestStatus === statusFilter);
