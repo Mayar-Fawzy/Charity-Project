@@ -7,15 +7,23 @@ import { Environment } from '../../../../../Auth/core/Environment/Environment';
   providedIn: 'root'
 })
 export class AssistanceRequestService {
- private readonly _HttpClient = inject(HttpClient);
-    GetPaginatedAssistanceRequests(pageNumber:number,pageSize:number,orderByDirection:number=1):Observable<any>{
-        return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/GetPaginatedAssistanceRequests?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
-      }
-      UpdateReq(body:any):Observable<any>{
-        return this._HttpClient.put(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/UpdateAssistanceRequest `,body)
-      }
-      Delete(id:string):Observable<any>{
-        return this._HttpClient.delete(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/DeleteAssistanceRequest?id=${id}`)
-      }
-      
+  private readonly _HttpClient = inject(HttpClient);
+  // GetPaginatedAssistanceRequests(pageNumber: number, pageSize: number, orderByDirection: number = 1): Observable<any> {
+  //   return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/GetPaginatedAssistanceRequests?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
+  // }
+
+  GetPaginatedAssistanceRequests(pageNumber: number, pageSize: number, status: number, orderByDirection: number = 1): Observable<any> {
+    const url = `${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/GetPaginatedAssistanceRequests?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}&status=${status}`;
+    return this._HttpClient.get<any>(url);
+  }
+
+
+  UpdateReq(body: any): Observable<any> {
+    return this._HttpClient.put(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/UpdateAssistanceRequest `, body)
+  }
+  Delete(id: string): Observable<any> {
+    return this._HttpClient.delete(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/DeleteAssistanceRequest?id=${id}`)
+  }
+  
+
 }

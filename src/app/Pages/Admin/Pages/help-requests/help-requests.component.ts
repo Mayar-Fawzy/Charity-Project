@@ -20,7 +20,7 @@ export class HelpRequestsComponent {
 
   activeTab: 'pending' | 'approved' | 'rejected' = 'pending';
 
-  itemsPerPage = 6;
+  itemsPerPage = 9;
   currentPage = 1;
   totalPages = 1;
   totalCount = 0;
@@ -31,11 +31,23 @@ export class HelpRequestsComponent {
 
   loadRequests() {
     this.isLoading = true;
-    this._AssistanceRequestService.GetPaginatedAssistanceRequests(this.currentPage, this.itemsPerPage).subscribe({
+
+    let statusFilter: number;
+    if (this.activeTab === 'pending') {
+      statusFilter = 3;
+    } else if (this.activeTab === 'rejected') {
+      statusFilter = 2;
+    } else {
+      statusFilter = 1; // approved
+    }
+
+    this._AssistanceRequestService.GetPaginatedAssistanceRequests(this.currentPage, this.itemsPerPage, statusFilter).subscribe({
       next: (response) => {
         this.otherHelpRequests = response.data || [];
+        this.totalCount = response.totalCount;
+        this.totalPages = response.totalPages;
         this.isLoading = false;
-        this.applyFilterAndPagination();
+        this.filteredProjects = this.otherHelpRequests; // البيانات جايه جاهزة من السيرفر
       },
       error: (err) => {
         this.isLoading = false;
@@ -50,50 +62,30 @@ export class HelpRequestsComponent {
     });
   }
 
-  changeTab(tab:   'approved' |'pending'| 'rejected') {
+  changeTab(tab: 'approved' | 'pending' | 'rejected') {
     this.activeTab = tab;
     this.currentPage = 1;
-    this.applyFilterAndPagination();
+    this.loadRequests();
   }
-
-  applyFilterAndPagination() {
-    let statusFilter = 1;
-
-    if (this.activeTab === 'pending') {
-      statusFilter = 3;
-    } else if (this.activeTab === 'rejected') {
-      statusFilter = 2;
-    }
-
-    const filtered = this.otherHelpRequests.filter(r => r.requestStatus === statusFilter);
-
-    this.totalCount = filtered.length;
-    this.totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
-
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.filteredProjects = filtered.slice(startIndex, endIndex);
-  }
-
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.applyFilterAndPagination();
+      this.loadRequests();
     }
   }
 
   goToPrevious() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.applyFilterAndPagination();
+      this.loadRequests();
     }
   }
 
   goToNext() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.applyFilterAndPagination();
+      this.loadRequests();
     }
   }
 
@@ -120,6 +112,31 @@ export class HelpRequestsComponent {
   get showRightDots() {
     return this.displayedPages.length > 0 && this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
   }
+
+  deleteRequest(request: Daum) {
+    Swal.fire({
+      title: 'هل أنت متأكد من حذف هذا الطلب؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'نعم، احذفه',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._AssistanceRequestService.Delete(request.id).subscribe({
+          next: () => {
+            Swal.fire('تم الحذف!', 'تم حذف الطلب بنجاح.', 'success');
+            this.loadRequests();
+          },
+          error: (err) => {
+            Swal.fire('خطأ', err.message || 'حدث خطأ أثناء حذف الطلب', 'error');
+          }
+        });
+      }
+    });
+  }
+
 
   approve(request: Daum) {
     const updatedRequest = { ...request, requestStatus: 1 };

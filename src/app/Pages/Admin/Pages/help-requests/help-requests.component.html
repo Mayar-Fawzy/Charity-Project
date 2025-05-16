@@ -42,45 +42,63 @@
     </li>
   </ul>
 
+  <!-- عرض الطلبات -->
   <div *ngIf="filteredProjects.length > 0" class="row g-4 mb-5 fade-container">
     <div class="col-md-4 fade-in" *ngFor="let request of filteredProjects">
       <div class="card shadow-sm h-100 written-request-card">
         <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <p class="card-text">
-              {{ request.requestDetails || "لا توجد تفاصيل" }}
-            </p>
-            <p
-              class="card-text status-text"
-              [ngClass]="{
-                'text-success': request.requestStatus === 1,
-                'text-danger': request.requestStatus === 2
-              }"
-            >
-              {{
-                request.requestStatus === 1
-                  ? "تم القبول"
-                  : request.requestStatus === 2
-                  ? "تم الرفض"
-                  : "قيد المراجعة"
-              }}
-            </p>
-          </div>
+          <p class="card-text mb-2 fw-bold text-end">
+            {{ request.requestDetails || "لا توجد تفاصيل" }}
+          </p>
+
           <div
-            class="mt-3 d-flex gap-2 justify-content-around"
-            *ngIf="request.requestStatus === 3"
+            class="badge-status mb-3"
+            [ngClass]="{
+              'status-approved': request.requestStatus === 1,
+              'status-rejected': request.requestStatus === 2,
+              'status-pending':
+                request.requestStatus !== 1 && request.requestStatus !== 2
+            }"
           >
-            <button class="btn btn-success btn-sm" (click)="approve(request)">
+            {{
+              request.requestStatus === 1
+                ? "تم القبول"
+                : request.requestStatus === 2
+                ? "تم الرفض"
+                : "قيد المراجعة"
+            }}
+          </div>
+
+          <div class="mt-auto d-flex gap-2 justify-content-around">
+            <button
+              *ngIf="request.requestStatus === 3"
+              class="btn btn-success btn-sm"
+              (click)="approve(request)"
+            >
               قبول
             </button>
-            <button class="btn btn-danger btn-sm" (click)="reject(request)">
+            <button
+              *ngIf="request.requestStatus === 3"
+              class="btn btn-danger btn-sm"
+              (click)="reject(request)"
+            >
               رفض
             </button>
             <button
+              *ngIf="request.requestStatus === 3"
               class="btn btn-outline-primary btn-sm"
               (click)="contact(request)"
             >
               تواصل
+            </button>
+
+            <button
+              *ngIf="request.requestStatus === 1 || request.requestStatus === 2"
+              class="btn btn-outline-danger btn-sm"
+              (click)="deleteRequest(request)"
+              title="حذف الطلب"
+            >
+              حذف
             </button>
           </div>
         </div>
@@ -89,9 +107,9 @@
   </div>
 
   <!-- Pagination -->
-  <nav class="pagination-wrapper" *ngIf="totalPages >= 1">
+  <nav *ngIf="totalPages > 1" class="pagination-wrapper">
     <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="currentPage === 1">
+      <li class="page-item" [class.disabled]="currentPage > 1">
         <button
           class="page-link"
           (click)="goToPrevious()"
@@ -100,19 +118,23 @@
           <i class="bi bi-chevron-right"></i>
         </button>
       </li>
+
       <li class="page-item dots" *ngIf="showLeftDots">
         <span class="page-link">...</span>
       </li>
+
       <li
-        class="page-item"
         *ngFor="let page of displayedPages"
+        class="page-item"
         [class.active]="currentPage === page"
       >
         <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
       </li>
+
       <li class="page-item dots" *ngIf="showRightDots">
         <span class="page-link">...</span>
       </li>
+
       <li class="page-item" [class.disabled]="currentPage === totalPages">
         <button
           class="page-link"
