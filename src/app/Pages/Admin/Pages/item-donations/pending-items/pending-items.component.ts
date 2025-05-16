@@ -199,46 +199,35 @@ saveItem(modal: any): void {
         });
     } 
 }
+ 
   deleteProject(projectId: string): void {
-    Swal.fire({
-      title: 'هل أنت متأكد؟',
-      text: 'لن تتمكن من التراجع عن هذا!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#f6a026',
-      confirmButtonText: 'حذف',
-      cancelButtonText: 'إلغاء'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this._inkind.DeleteInKindDonation(projectId).subscribe({
-          next: (response) => {
-            if (response.isSucceeded) {
-              this.products = this.products.filter((project) => project.id !== projectId);
-              this.filteredProjects = [...this.products];
-              this.totalCount--;
-              this.totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
-
-              if (this.products.length === 0 && this.currentPage > 1) {
-                this.currentPage--;
-                this.loadPage(); 
+      Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: 'لن تتمكن من التراجع عن هذا!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#f6a026',
+        confirmButtonText: 'حذف',
+        cancelButtonText: 'إلغاء'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this._inkind.DeleteInKindDonation(projectId).subscribe({
+            next: (response) => {
+              if (response.isSucceeded) {
+                this.loadPage();
+                Swal.fire('تم الحذف!', 'تم حذف العنصر بنجاح.', 'success');
               } else {
-                this.onSearch(); 
-                this._cdr.detectChanges(); 
+                Swal.fire('خطأ!', response.message || 'فشل الحذف', 'error');
               }
-
-              Swal.fire('تم الحذف!', 'تم حذف العنصر بنجاح.', 'success');
-            } else {
-              Swal.fire('خطأ!', response.message || 'فشل الحذف', 'error');
+            },
+            error: (error) => {
+              Swal.fire('خطأ!', 'حدث خطأ أثناء حذف العنصر.', 'error');
             }
-          },
-          error: (error) => {
-            Swal.fire('خطأ!', 'حدث خطأ أثناء حذف العنصر.', 'error');
-          }
-        });
-      }
-    });
-  }
+          });
+        }
+      });
+    }
 
   nextImage(productId: string, imageCount: number): void {
     const currentIndex = this.imageIndices.get(productId) ?? 0;
