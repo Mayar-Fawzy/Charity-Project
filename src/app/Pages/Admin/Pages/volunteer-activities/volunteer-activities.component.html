@@ -127,12 +127,19 @@
         </div>
       </form>
     </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="modal.dismiss()">إلغاء</button>
-      <button class="btn btn-success" (click)="saveActivity(modal)">
-        <i class="bi bi-check-circle"></i> حفظ
-      </button>
-    </div>
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="modal.dismiss()">إلغاء</button>
+  <!-- trim=>Ensures the name & activityDescription field is not empty or just whitespace -->
+  <button
+    class="btn btn-success"
+    [disabled]="isLoading || !activityForm.name?.trim() || !activityForm.activityDescription?.trim()"
+    (click)="saveActivity(modal)"
+  >  @if(!isLoading) {
+              <span><i class="bi bi-check-circle"></i> حفظ</span>
+            } @else {
+              <span>حفظ...</span>
+            }
+  </button>
+</div>
   </ng-template>
 </section>

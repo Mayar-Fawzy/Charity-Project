@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +19,8 @@ export class VolunteerActivitiesComponent {
   private readonly _loginService = inject(LoginService);
   private readonly _volunteerActivityService = inject(VolunteerActivitySService);
   volunteerActivities: IVolunteerActivities[] = [];
-  sortOrder: string = 'newest';
+  isLoading: boolean = false;
+  sortOrder: string = 'newest'; // 'newest' = descending createdDate, 'oldest' = ascending createdDate
   activityForm: Partial<IVolunteerActivities> = {
     name: '',
     activityDescription: ''
@@ -31,13 +32,14 @@ export class VolunteerActivitiesComponent {
   currentPage: number = 1;
   totalCount: number = 0;
   totalPages: number = 0;
-  orderByDirection: number = 1;
+  orderByDirection: number = 1; // Used for server-side alphabetical sorting by name (1 = asc, 2 = desc)
 
   ngOnInit() {
     this.fetchActivities();
   }
 
   fetchActivities() {
+    // Fetch activities with server-side alphabetical sorting by name (orderByDirection unchanged)
     this._volunteerActivityService
       .GetPaginatedVolunteerActivities(this.currentPage, this.pageSize, this.orderByDirection)
       .subscribe({
@@ -53,7 +55,7 @@ export class VolunteerActivitiesComponent {
           this.totalCount = response.totalCount;
           this.totalPages = response.totalPages;
           this.currentPage = response.currentPage;
-          // Apply client-side sorting to ensure consistency
+          // Apply client-side sorting by createdDate
           this.sortActivitiesClientSide();
         },
         error: (err) => {
@@ -76,6 +78,7 @@ export class VolunteerActivitiesComponent {
   }
 
   saveActivity(modal: NgbModalRef) {
+    this.isLoading = true;
     const organizerId = this._loginService.donorId || 'default-organizer-id';
 
     if (this.selectedActivity) {
@@ -91,7 +94,6 @@ export class VolunteerActivitiesComponent {
           if (response.isSucceeded) {
             modal.close();
             this.fetchActivities();
-        
           } else {
             Swal.fire('خطأ!', response.message || 'فشل التحديث', 'error');
           }
@@ -99,6 +101,9 @@ export class VolunteerActivitiesComponent {
         error: (err) => {
           console.error('Error updating activity:', err);
           Swal.fire('خطأ!', 'حدث خطأ أثناء تحديث النشاط.', 'error');
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     } else {
@@ -113,7 +118,6 @@ export class VolunteerActivitiesComponent {
           if (response.isSucceeded) {
             modal.close();
             this.fetchActivities();
-            Swal.fire('نجاح!', 'تم إنشاء النشاط بنجاح.', 'success');
           } else {
             Swal.fire('خطأ!', response.message || 'فشل الإنشاء', 'error');
           }
@@ -121,6 +125,9 @@ export class VolunteerActivitiesComponent {
         error: (err) => {
           console.error('Error creating activity:', err);
           Swal.fire('خطأ!', 'حدث خطأ أثناء إنشاء النشاط.', 'error');
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     }
@@ -156,12 +163,12 @@ export class VolunteerActivitiesComponent {
   }
 
   sortActivities() {
-    this.orderByDirection = this.sortOrder === 'newest' ? 1 : 2;
-    this.currentPage = 1; // Reset to first page on sort change
-    this.fetchActivities();
+    // Reset to first page and apply client-side sorting by createdDate
+    this.currentPage = 1;
+    this.fetchActivities(); // Fetch data and sort client-side in sortActivitiesClientSide
   }
 
-  // Client-side sorting by createdDate as a fallback
+  // Client-side sorting by createdDate
   sortActivitiesClientSide() {
     this.volunteerActivities.sort((a, b) => {
       const dateA = new Date(a.createdDate).getTime();
