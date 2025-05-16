@@ -9,10 +9,7 @@
     <p class="text-muted">لا توجد طلبات مساعدة متاحة حاليًا</p>
   </div>
 
-  <ul
-    class="nav nav-tabs custom-tabs justify-content-center mb-4"
-    id="requestTabs"
-  >
+  <ul class="nav nav-tabs custom-tabs justify-content-center mb-4" id="requestTabs">
     <li class="nav-item">
       <button
         class="nav-link"
@@ -56,17 +53,10 @@
             [ngClass]="{
               'status-approved': request.requestStatus === 1,
               'status-rejected': request.requestStatus === 2,
-              'status-pending':
-                request.requestStatus !== 1 && request.requestStatus !== 2
+              'status-pending': request.requestStatus === 3
             }"
           >
-            {{
-              request.requestStatus === 1
-                ? "تم القبول"
-                : request.requestStatus === 2
-                ? "تم الرفض"
-                : "قيد المراجعة"
-            }}
+            {{ getStatusText(request.requestStatus) }}
           </div>
 
           <div class="mt-auto d-flex gap-2 justify-content-around">
@@ -109,7 +99,7 @@
   <!-- Pagination -->
   <nav *ngIf="totalPages > 1" class="pagination-wrapper">
     <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="currentPage > 1">
+      <li class="page-item" [class.disabled]="currentPage === 1">
         <button
           class="page-link"
           (click)="goToPrevious()"
