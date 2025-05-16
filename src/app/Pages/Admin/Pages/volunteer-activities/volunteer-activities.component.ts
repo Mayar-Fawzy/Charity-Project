@@ -39,7 +39,7 @@ export class VolunteerActivitiesComponent {
   }
 
   fetchActivities() {
-    // Fetch activities with server-side alphabetical sorting by name (orderByDirection unchanged)
+  
     this._volunteerActivityService
       .GetPaginatedVolunteerActivities(this.currentPage, this.pageSize, this.orderByDirection)
       .subscribe({
@@ -163,12 +163,13 @@ export class VolunteerActivitiesComponent {
   }
 
   sortActivities() {
-    // Reset to first page and apply client-side sorting by createdDate
     this.currentPage = 1;
-    this.fetchActivities(); // Fetch data and sort client-side in sortActivitiesClientSide
+    this.fetchActivities(); 
   }
 
-  // Client-side sorting by createdDate
+//    new Date().getTime() عشان أحوّل التاريخ لرقم نقدر نقارن بيه.
+//    لو اخترت "الأحدث" (sortOrder = 'newest')، بيترتّب من الأحدث للأقدم (يعني التاريخ الأكبر الأول).
+//  لو اخترت "الأقدم" (sortOrder = 'oldest')، بيترتّب من الأقدم للأحدث (يعني التاريخ الأصغر الأول).
   sortActivitiesClientSide() {
     this.volunteerActivities.sort((a, b) => {
       const dateA = new Date(a.createdDate).getTime();
