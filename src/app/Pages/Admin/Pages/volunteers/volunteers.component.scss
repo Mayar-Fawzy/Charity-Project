@@ -1,0 +1,155 @@
+.nav-tabs {
+    border-bottom: 2px solid #f0ad4e;
+}
+
+.custom-tabs .nav-link {
+    transition: all 0.3s ease-in-out;
+    color: #444;
+    font-weight: 500;
+    font-size: 1.05rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1.25rem;
+    background-color: transparent;
+
+    &:hover {
+        color: #f0ad4e;
+        background-color: #fdf8f3;
+        border-color: #f0ad4e;
+    }
+
+    &.active {
+        color: #f0ad4e;
+        background-color: #fff;
+        border-bottom: 3px solid #f0ad4e;
+        font-weight: 600;
+    }
+}
+
+// contact button
+.btn-contact {
+    background-color: #f6a026;
+    color: #fff;
+    border: 1px solid #f6a026;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: #fff;
+        color: #f6a026;
+        border: 1px solid #f6a026;
+    }
+}
+
+// accept button
+.btn-accept {
+    background-color: #28a745;
+    color: #fff;
+    border: 1px solid #28a745;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: #fff;
+        color: #28a745;
+        border: 1px solid #28a745;
+    }
+}
+
+// reject button
+.btn-reject {
+    background-color: #dc3545;
+    color: #fff;
+    border: 1px solid #dc3545;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: #fff;
+        color: #dc3545;
+        border: 1px solid #dc3545;
+    }
+}
+
+
+.avatar-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #f7941e;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.custom-volunteer-card {
+    border-radius: 1rem;
+    transition: 0.3s ease-in-out;
+    overflow: hidden;
+    background-color: #fff;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+
+    label {
+        font-weight: 600;
+        color: #444;
+    }
+
+    textarea.form-control {
+        resize: none;
+    }
+
+    .avatar-img {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #f6a026;
+        padding: 3px;
+        transition: 0.3s;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .card-footer {
+        .btn {
+            font-size: 0.85rem;
+        }
+    }
+}
+
+.modal-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
