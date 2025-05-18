@@ -20,7 +20,7 @@ export interface GetProjj {
   name: string
   targetAmount: number
   description: string
-  projectStatus: string
+  projectStatus: number
   startDate: string
   endDate: string
   managerId: string
