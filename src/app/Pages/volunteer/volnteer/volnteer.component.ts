@@ -9,11 +9,12 @@ import { RoutingModule } from '../../../core/Shared/Models/routing/routing.modul
 import { ProjectService } from '../core/Services/project.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import Swal from 'sweetalert2';
+import { ProjectStatusArPipe } from "../../Projects/Core/Pipe/project-status-ar.pipe";
 
 @Component({
   selector: 'app-volnteer',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RoutingModule],
+  imports: [CommonModule, CarouselModule, RoutingModule, ProjectStatusArPipe],
   templateUrl: './volnteer.component.html',
   styleUrl: './volnteer.component.scss'
 })
