@@ -37,7 +37,7 @@
       <div class="project-card shadow-sm">
         <div class="image-wrapper">
           <img [src]="project.imageUrl" [alt]="project.name" />
-          <div class="badge">{{ project.projectStatus }}</div>
+          <div class="badge" >{{ project.projectStatus | projectStatusAr }}</div>
         </div>
 
         <div class="project-content">

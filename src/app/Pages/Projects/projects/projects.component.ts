@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { Data } from '../../../Pages/Donor/core/interface/iproject-donate';
 import { ProjectPagenationService } from '../Core/Services/project-pagenation.service';
 import Swal from 'sweetalert2';
+import { ProjectStatusArPipe } from '../Core/Pipe/project-status-ar.pipe';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProjectStatusArPipe],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss']
 })
@@ -142,4 +143,5 @@ export class ProjectsComponent implements OnInit {
       this.getPaginatedProjectsFromAPI();
     }
   }
+  
 }
