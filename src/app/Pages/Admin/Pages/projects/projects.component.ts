@@ -7,90 +7,93 @@ import Swal from 'sweetalert2';
 import { CRUDProjService } from './Core/Services/crudproj.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Auth/core/Services/login.service';
-import { error } from 'console';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgbModule],
   templateUrl: './projects.component.html',
-  styleUrl: './projects.component.scss'
+  styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent {
-  private readonly _CRUDProjService = inject(CRUDProjService);
-  private readonly _Router = inject(Router);
+  private readonly crudProjService = inject(CRUDProjService);
+  private readonly router = inject(Router);
   private readonly modalService = inject(NgbModal);
-  private readonly _LoginService = inject(LoginService);
-private readonly cdr = inject(ChangeDetectorRef);
+  private readonly loginService = inject(LoginService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   userData: any = null;
-  isloading: boolean = false;
-  projectss: GetProjj[] = [];
+  isLoading: boolean = false;
+  projects: GetProjj[] = [];
   filteredProjects: GetProjj[] = [];
-  progressPercentages: number[] = [20, 50, 75, 30, 60, 90];
   itemsPerPage = 3;
   currentPage = 1;
   totalPages = 1;
+  progressPercentages: number[] = [20, 50, 75, 30, 60, 90];
   totalCount = 0;
   selectedProject: GetProjj | null = null;
 
-  AddedProj: FormGroup = new FormGroup({
+  projectForm: FormGroup = new FormGroup({
     name: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
-      Validators.maxLength(40),
+      Validators.maxLength(40)
     ]),
-    image: new FormControl<File | null>(null),
+    image: new FormControl(null, [Validators.required]),
     targetAmount: new FormControl(0, [Validators.required, Validators.min(1)]),
+    projectStatus: new FormControl(null), // No validators for add
     description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
-    managerId: new FormControl(''),
+    managerId: new FormControl('')
   });
 
   ngOnInit() {
-    this.userData = this._LoginService.saveUserAuth();
+    this.userData = this.loginService.saveUserAuth();
     if (this.userData) {
-      this.AddedProj.get('managerId')?.setValue(this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"]);
+      this.projectForm.get('managerId')?.setValue(this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"]);
+      this.getPaginatedProjects();
     } else {
-      console.error('لم يتم جلب بيانات المستخدم.');
       Swal.fire({
         icon: "error",
         title: "خطأ",
         text: "لم يتم جلب بيانات المستخدم. يرجى تسجيل الدخول مرة أخرى.",
         confirmButtonColor: "#f6a026",
-        confirmButtonText: "حسنا",
+        confirmButtonText: "حسنا"
+      }).then(() => {
+        this.router.navigate(['/login']);
       });
-      this._Router.navigate(['/login']);
-      return;
     }
-    this.getPaginatedProjectsFromAPI();
   }
 
-  getPaginatedProjectsFromAPI() {
-    this.isloading = true;
-    this._CRUDProjService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
+  getPaginatedProjects() {
+    this.isLoading = true;
+    this.crudProjService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
       next: (response: IGetProj) => {
-        this.projectss = response.data.map((project: GetProjj, index: number) => ({
-          ...project,
-          progressPercentage: this.progressPercentages[index % this.progressPercentages.length],
-        }));
-        this.filteredProjects = [...this.projectss];
+        this.projects = response.data.map((project: GetProjj, index: number) => {
+          const status = Number(project.projectStatus);
+          return {
+            ...project,
+            projectStatus: status,
+            progressPercentage: this.progressPercentages[index % this.progressPercentages.length]
+          };
+        });
+        this.filteredProjects = [...this.projects];
         this.totalCount = response.totalCount;
         this.currentPage = response.currentPage;
         this.totalPages = response.totalPages;
-        this.isloading = false;
-        console.log(this.projectss);
+        this.isLoading = false;
       },
       error: (err) => {
-        this.isloading = false;
+        this.isLoading = false;
         Swal.fire({
           icon: "error",
           title: "خطأ",
           text: "حدث خطأ أثناء جلب المشاريع",
           confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
+          confirmButtonText: "حسنا"
         });
-        console.error('حدث خطأ أثناء جلب المشاريع:', err);
+        console.error('Error fetching projects:', err);
       }
     });
   }
@@ -105,23 +108,20 @@ private readonly cdr = inject(ChangeDetectorRef);
 
   get displayedPages(): number[] {
     const pages: number[] = [];
-    const total = this.totalPages;
     const maxPagesToShow = 5;
     const half = Math.floor(maxPagesToShow / 2);
-
     let start = Math.max(1, this.currentPage - half);
-    let end = Math.min(total, this.currentPage + half);
+    let end = Math.min(this.totalPages, this.currentPage + half);
 
     if (this.currentPage <= half) {
-      end = Math.min(total, maxPagesToShow);
-    } else if (this.currentPage + half > total) {
-      start = Math.max(1, total - maxPagesToShow + 1);
+      end = Math.min(this.totalPages, maxPagesToShow);
+    } else if (this.currentPage + half > this.totalPages) {
+      start = Math.max(1, this.totalPages - maxPagesToShow + 1);
     }
 
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
-
     return pages;
   }
 
@@ -136,161 +136,133 @@ private readonly cdr = inject(ChangeDetectorRef);
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.getPaginatedProjectsFromAPI();
+      this.getPaginatedProjects();
     }
   }
 
   goToPrevious() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getPaginatedProjectsFromAPI();
+      this.getPaginatedProjects();
     }
   }
 
   goToNext() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getPaginatedProjectsFromAPI();
+      this.getPaginatedProjects();
     }
   }
 
   openAddModal(modal: TemplateRef<any>) {
     this.selectedProject = null;
-    this.AddedProj.reset();
-    if (this.userData) {
-      this.AddedProj.get('managerId')?.setValue(this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"]);
-    }
+    this.projectForm.reset({
+      managerId: this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] || ''
+    });
+    this.projectForm.get('image')?.setValidators([Validators.required]);
+    this.projectForm.get('projectStatus')?.clearValidators();
+    this.projectForm.get('image')?.updateValueAndValidity();
+    this.projectForm.get('projectStatus')?.updateValueAndValidity();
     this.modalService.open(modal);
   }
 
   openEditModal(project: GetProjj, modal: TemplateRef<any>) {
     this.selectedProject = project;
-    this.AddedProj.patchValue({
+    this.projectForm.patchValue({
       name: project.name,
       targetAmount: project.targetAmount,
       description: project.description,
+      projectStatus: project.projectStatus,
       startDate: project.startDate.split('T')[0],
       endDate: project.endDate.split('T')[0],
-      managerId: this.userData ? this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] : '',
+      managerId: this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] || ''
     });
+    this.projectForm.get('image')?.clearValidators();
+    this.projectForm.get('projectStatus')?.setValidators([Validators.required]);
+    this.projectForm.get('image')?.updateValueAndValidity();
+    this.projectForm.get('projectStatus')?.updateValueAndValidity();
     this.modalService.open(modal);
   }
 
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.AddedProj.get('image')?.setValue(file);
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.projectForm.get('image')?.setValue(input.files[0]);
     }
   }
-saveProject(modal: any) {
-  if (this.AddedProj.invalid) {
-    this.AddedProj.markAllAsTouched();
-    return;
-  }
 
-  this.isloading = true;
-  const formData = new FormData();
-  const values = this.AddedProj.value;
+  saveProject(modal: any) {
+    if (this.projectForm.invalid) {
+      this.projectForm.markAllAsTouched();
+      return;
+    }
 
-  formData.set('name', values.name || '');
-  formData.set('targetAmount', values.targetAmount?.toString() || '0');
-  formData.set('description', values.description || '');
-  formData.set('startDate', values.startDate || new Date().toISOString().split('T')[0]);
-  formData.set('endDate', values.endDate || new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]);
-  formData.set('managerId', this.userData ? this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] : '');
-  if (values.image) {
-    formData.set('image', values.image);
-  }
+    this.isLoading = true;
+    const formData = new FormData();
+    const values = this.projectForm.value;
 
-  if (this.selectedProject) {
-    // Update Project
-    formData.set('id', this.selectedProject.id);
-    formData.set('imageUrl', this.selectedProject.imageUrl || '');
-    formData.set('projectStatus', this.selectedProject.projectStatus || 'Ongoing');
-    formData.set('createdDate', this.selectedProject.createdDate || new Date().toISOString());
+    formData.append('name', values.name || '');
+    formData.append('targetAmount', values.targetAmount?.toString() || '0');
+    formData.append('description', values.description || '');
+    formData.append('startDate', values.startDate || '');
+    formData.append('endDate', values.endDate || '');
+    formData.append('managerId', values.managerId || '');
 
-    this._CRUDProjService.UpdateProject(this.selectedProject.id, formData).subscribe({
-      next: (response) => {
-        this.isloading = false;
-        if (response.isSucceeded) {
-          
-          Swal.fire('نجاح', 'تم تحديث المشروع بنجاح', 'success');
-          modal.close();
-          this.getPaginatedProjectsFromAPI();
-        } else {
-          Swal.fire('خطأ', response.errors || 'فشل التحديث', 'error');
-        }
-      },
-      error: (err) => {
-        this.isloading = false;
-        Swal.fire('خطأ', err.errors , 'error');
-        console.error(err);
-      }
-    });
-  } else {
-    // Create Project
-    this._CRUDProjService.CreateProject(formData).subscribe({
-      next: (response) => {
-        this.isloading = false;
-        console.log('API Response:', response); // Debug: Log the response to check structure
+    if (values.image) {
+      formData.append('image', values.image);
+    }
 
-        if (response.isSucceeded) {
-          // Handle case where response.data might be undefined or structured differently
-          const newProjectData = response.data || {};
+    if (this.selectedProject) {
+      // Include projectStatus only when editing
+      formData.append('projectStatus', Number(values.projectStatus).toString());
+      formData.append('id', this.selectedProject.id);
+      formData.append('imageUrl', this.selectedProject.imageUrl || '');
+      formData.append('createdDate', this.selectedProject.createdDate || new Date().toISOString());
 
-          // Create the new project object based on the API response
-          const newProject: GetProjj = {
-            id: newProjectData.id || '', // Ensure ID exists
-            name: newProjectData.name || values.name,
-            managerId: this.userData ? this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] : '',
-            targetAmount: newProjectData.targetAmount || values.targetAmount,
-            description: newProjectData.description || values.description,
-            startDate: newProjectData.startDate || values.startDate,
-            endDate: newProjectData.endDate || values.endDate,
-            imageUrl: newProjectData.imageUrl || '',
-            projectStatus: newProjectData.projectStatus || 'Ongoing',
-            createdDate: newProjectData.createdDate || new Date().toISOString(),
-            modifiedDate:newProjectData.modifiedDate ||  new Date().toISOString()
-          };
-
-          // Add the new project to the beginning of the projectss array
-          this.projectss.unshift(newProject);
-          this.filteredProjects = [...this.projectss];
-          this.cdr.detectChanges(); // Force change detection to update UI
-
-          // Update total count and total pages
-          this.totalCount++;
-          this.totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
-           this.getPaginatedProjectsFromAPI()
-          // Reset to the first page to show the new project
-          this.currentPage = 1;
-
-          // Show success message and close the modal
-          Swal.fire({
-            icon: 'success',
-            title: 'نجاح',
-            text: 'تم إضافة المشروع بنجاح',
-            confirmButtonColor: '#f6a026',
-            confirmButtonText: 'حسناً',
-          }).then(() => {
+      this.crudProjService.UpdateProject(this.selectedProject.id, formData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.isSucceeded) {
+            Swal.fire('نجاح', 'تم تحديث المشروع بنجاح', 'success');
             modal.close();
-            // Re-fetch the project list after a slight delay to ensure server consistency
-            setTimeout(() => {
-              this.getPaginatedProjectsFromAPI();
-            }, 500);
-          });
-        } else {
-          Swal.fire('خطأ', response.errors || 'فشل الإضافة', 'error');
+            this.getPaginatedProjects();
+          } else {
+            Swal.fire('خطأ', response.errors || 'فشل التحديث', 'error');
+          }
+        },
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire('خطأ', err.error?.errors || 'حدث خطأ أثناء التحديث', 'error');
         }
-      },
-      error: (err) => {
-        this.isloading = false;
-        Swal.fire('خطأ', err.errors );
-        console.error(err);
-      }
-    });
+      });
+    } else {
+      this.crudProjService.CreateProject(formData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.isSucceeded) {
+            this.currentPage = 1; // Go to the first page to show the new project
+            Swal.fire({
+              icon: 'success',
+              title: 'نجاح',
+              text: 'تم إضافة المشروع بنجاح',
+              confirmButtonColor: '#f6a026',
+              confirmButtonText: 'حسناً'
+            }).then(() => {
+              modal.close();
+              this.getPaginatedProjects();
+            });
+          } else {
+            Swal.fire('خطأ', response.errors || 'فشل الإضافة', 'error');
+          }
+        },
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire('خطأ', err.error?.errors || 'حدث خطأ أثناء الإضافة', 'error');
+        }
+      });
+    }
   }
-}
+
   deleteProject(projectId: string) {
     Swal.fire({
       title: 'هل أنت متأكد؟',
@@ -303,36 +275,25 @@ saveProject(modal: any) {
       cancelButtonText: 'إلغاء'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isloading = true;
-        this._CRUDProjService.Delete(projectId).subscribe(
-          (response) => {
-            this.isloading = false;
+        this.isLoading = true;
+        this.crudProjService.Delete(projectId).subscribe({
+          next: (response) => {
+            this.isLoading = false;
             if (response.isSucceeded) {
-              // Remove the deleted project from the projectss array
-              this.projectss = this.projectss.filter((project) => project.id !== projectId);
-              this.filteredProjects = [...this.projectss];
-              this.totalCount--;
-              this.totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
-
-              // Adjust the current page if necessary
-              if (this.projectss.length === 0 && this.currentPage > 1) {
+              if (this.projects.length === 1 && this.currentPage > 1) {
                 this.currentPage--;
               }
-
-              // Re-fetch the projects to ensure consistency with the server
-              this.getPaginatedProjectsFromAPI();
-
               Swal.fire('تم الحذف!', 'تم حذف المشروع بنجاح.', 'success');
+              this.getPaginatedProjects();
             } else {
-              Swal.fire('خطأ!', response.message || 'فشل الحذف', 'error');
+              Swal.fire('خطأ!', response.errors || 'فشل الحذف', 'error');
             }
           },
-          (error) => {
-            this.isloading = false;
-            Swal.fire('خطأ!', 'حدث خطأ أثناء حذف المشروع.', 'error');
-            console.error(error);
+          error: (err) => {
+            this.isLoading = false;
+            Swal.fire('خطأ!', err.error?.errors || 'حدث خطأ أثناء الحذف', 'error');
           }
-        );
+        });
       }
     });
   }

@@ -38,6 +38,7 @@ export class PendingItemsComponent {
   itemForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(40)]),
     description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    
     itemType: new FormControl(null, [Validators.required]),
     donationStatus: new FormControl(null, [Validators.required]),
     quantity: new FormControl(0, [Validators.required, Validators.min(1)]),

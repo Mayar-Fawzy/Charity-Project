@@ -1,3 +1,4 @@
+import { PendingItemsComponent } from './Pages/Admin/Pages/item-donations/pending-items/pending-items.component';
 import { Routes } from '@angular/router';
 import { NotfoundComponent } from './Layout/notfound/notfound.component';
 import { AdminComponent } from './Pages/Admin/admin/admin.component';
@@ -69,7 +70,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminComponent,
+    component: AdminComponent,canActivate: [AuthGuard],
     children: [
       {path:'',redirectTo:'overview',pathMatch: 'full'},
       { path: 'overview', loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component').then(m => m.OverviewComponent) },
@@ -77,7 +78,7 @@ export const routes: Routes = [
       { path: 'volunteers', loadComponent: () => import('./Pages/Admin/Pages/volunteers/volunteers.component').then(m => m.VolunteersComponent) },
       { path: 'volunteer-activities', loadComponent: () => import('./Pages/Admin/Pages/volunteer-activities/volunteer-activities.component').then(m => m.VolunteerActivitiesComponent) },
       { path: 'help-requests', loadComponent: () => import('./Pages/Admin/Pages/help-requests/help-requests.component').then(m => m.HelpRequestsComponent) },
-      { path: 'item-donations', loadComponent: () => import('./Pages/Admin/Pages/item-donations/item-donations.component').then(m => m.ItemDonationsComponent)},
+      { path: 'item-donations', loadComponent: () => import('./Pages/Admin/Pages/item-donations/pending-items/pending-items.component').then(m => m.PendingItemsComponent)},
 
     ]
   },

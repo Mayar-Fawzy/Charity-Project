@@ -20,11 +20,12 @@ import { LoginService } from '../../Auth/core/Services/login.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { InkinddonationService } from '../../Beneficary/core/Services/inkinddonation.service';
+import { ProjectStatusArPipe } from "../../Projects/Core/Pipe/project-status-ar.pipe";
 
 @Component({
   selector: 'app-donor',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, TagModule, RoutingModule, CarouselModule, FormsModule, ReactiveFormsModule, ProjectStatusArPipe],
   templateUrl: './donor.component.html',
   styleUrl: './donor.component.scss',
 })
