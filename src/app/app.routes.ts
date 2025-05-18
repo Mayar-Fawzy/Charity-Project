@@ -70,7 +70,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminComponent,
+    component: AdminComponent,canActivate: [AuthGuard],
     children: [
       {path:'',redirectTo:'overview',pathMatch: 'full'},
       { path: 'overview', loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component').then(m => m.OverviewComponent) },
