@@ -41,7 +41,7 @@ export class ProjectsComponent {
     ]),
     image: new FormControl(null, [Validators.required]),
     targetAmount: new FormControl(0, [Validators.required, Validators.min(1)]),
-    projectStatus: new FormControl(null, [Validators.required]),
+    projectStatus: new FormControl(null), // No validators for add
     description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
@@ -65,39 +65,38 @@ export class ProjectsComponent {
       });
     }
   }
-getPaginatedProjects() {
-  this.isLoading = true;
-  this.crudProjService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
-    next: (response: IGetProj) => {
-      this.projects = response.data.map((project: GetProjj, index: number) => {
-        // تحويل projectStatus إلى رقم للتأكد من أنه صحيح
-        const status = Number(project.projectStatus);
-        
-        return {
-          ...project,
-          projectStatus: status, // تأكد من تخزينه كرقم
-          progressPercentage: this.progressPercentages[index % this.progressPercentages.length]
-        };
-      });
-      this.filteredProjects = [...this.projects];
-      this.totalCount = response.totalCount;
-      this.currentPage = response.currentPage;
-      this.totalPages = response.totalPages;
-      this.isLoading = false;
-    },
-    error: (err) => {
-      this.isLoading = false;
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "حدث خطأ أثناء جلب المشاريع",
-        confirmButtonColor: "#f6a026",
-        confirmButtonText: "حسنا"
-      });
-      console.error('Error fetching projects:', err);
-    }
-  });
-}
+
+  getPaginatedProjects() {
+    this.isLoading = true;
+    this.crudProjService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
+      next: (response: IGetProj) => {
+        this.projects = response.data.map((project: GetProjj, index: number) => {
+          const status = Number(project.projectStatus);
+          return {
+            ...project,
+            projectStatus: status,
+            progressPercentage: this.progressPercentages[index % this.progressPercentages.length]
+          };
+        });
+        this.filteredProjects = [...this.projects];
+        this.totalCount = response.totalCount;
+        this.currentPage = response.currentPage;
+        this.totalPages = response.totalPages;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "حدث خطأ أثناء جلب المشاريع",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: "حسنا"
+        });
+        console.error('Error fetching projects:', err);
+      }
+    });
+  }
 
   getProgressPercentage(project: any): number {
     return project.progressPercentage || 0;
@@ -161,7 +160,9 @@ getPaginatedProjects() {
       managerId: this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] || ''
     });
     this.projectForm.get('image')?.setValidators([Validators.required]);
+    this.projectForm.get('projectStatus')?.clearValidators();
     this.projectForm.get('image')?.updateValueAndValidity();
+    this.projectForm.get('projectStatus')?.updateValueAndValidity();
     this.modalService.open(modal);
   }
 
@@ -177,7 +178,9 @@ getPaginatedProjects() {
       managerId: this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] || ''
     });
     this.projectForm.get('image')?.clearValidators();
+    this.projectForm.get('projectStatus')?.setValidators([Validators.required]);
     this.projectForm.get('image')?.updateValueAndValidity();
+    this.projectForm.get('projectStatus')?.updateValueAndValidity();
     this.modalService.open(modal);
   }
 
@@ -189,32 +192,29 @@ getPaginatedProjects() {
   }
 
   saveProject(modal: any) {
-     if (this.projectForm.invalid) {
-    this.projectForm.markAllAsTouched();
-    return;
-  }
+    if (this.projectForm.invalid) {
+      this.projectForm.markAllAsTouched();
+      return;
+    }
 
-  this.isLoading = true;
-  const formData = new FormData();
-  const values = this.projectForm.value;
+    this.isLoading = true;
+    const formData = new FormData();
+    const values = this.projectForm.value;
 
-  // تأكد من تحويل projectStatus إلى رقم
-  const projectStatus = Number(values.projectStatus);
+    formData.append('name', values.name || '');
+    formData.append('targetAmount', values.targetAmount?.toString() || '0');
+    formData.append('description', values.description || '');
+    formData.append('startDate', values.startDate || '');
+    formData.append('endDate', values.endDate || '');
+    formData.append('managerId', values.managerId || '');
 
-  formData.append('name', values.name || '');
-  formData.append('targetAmount', values.targetAmount?.toString() || '0');
-  formData.append('description', values.description || '');
-  formData.append('startDate', values.startDate || '');
-  formData.append('projectStatus', projectStatus.toString()); // تأكد من أنه سلسلة نصية
-  formData.append('endDate', values.endDate || '');
-  formData.append('managerId', values.managerId || '');
-  
-  if (values.image) {
-    formData.append('image', values.image);
-  }
-    console.log('FormData projectStatus:', values.projectStatus);
+    if (values.image) {
+      formData.append('image', values.image);
+    }
 
     if (this.selectedProject) {
+      // Include projectStatus only when editing
+      formData.append('projectStatus', Number(values.projectStatus).toString());
       formData.append('id', this.selectedProject.id);
       formData.append('imageUrl', this.selectedProject.imageUrl || '');
       formData.append('createdDate', this.selectedProject.createdDate || new Date().toISOString());
@@ -238,10 +238,9 @@ getPaginatedProjects() {
     } else {
       this.crudProjService.CreateProject(formData).subscribe({
         next: (response) => {
-          console.log('CreateProject Response:', response);
           this.isLoading = false;
           if (response.isSucceeded) {
-            this.currentPage = 1;
+            this.currentPage = 1; // Go to the first page to show the new project
             Swal.fire({
               icon: 'success',
               title: 'نجاح',
