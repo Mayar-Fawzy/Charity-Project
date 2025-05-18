@@ -265,6 +265,7 @@
             class="card-img-top"
             [alt]="project.name"
           />
+           <div class="badge" >{{ project.projectStatus | projectStatusAr }}</div>
           <div class="card-body">
             <h5 class="card-title fw-bold">{{ project.name }}</h5>
             <ul class="list-unstyled text-muted small">
