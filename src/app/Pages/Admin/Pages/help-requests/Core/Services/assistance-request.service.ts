@@ -23,6 +23,8 @@ export class AssistanceRequestService {
   Delete(id: string): Observable<any> {
     return this._HttpClient.delete(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/DeleteAssistanceRequest?id=${id}`)
   }
-  
+  SendEmail(body: any): Observable<any> {
+    return this._HttpClient.post(`${Environment.baseUrl}${Environment.VersionUrl}Email/SendEmail`,body)
+  }
 
 }

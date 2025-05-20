@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { AssistanceRequestService } from './Core/Services/assistance-request.service';
 import Swal from 'sweetalert2';
 import { Daum } from './Core/Interface/iassistance-request';
+import { ProfileservicesService } from '../../../../settings/Core/Services/profileservices.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-help-requests',
@@ -13,10 +15,11 @@ import { Daum } from './Core/Interface/iassistance-request';
 })
 export class HelpRequestsComponent {
   private readonly _AssistanceRequestService = inject(AssistanceRequestService);
-
+ private readonly _profile=inject(ProfileservicesService);
   otherHelpRequests: Daum[] = [];
   filteredProjects: Daum[] = [];
   isLoading = false;
+  email!:string
   activeTab: 'pending' | 'approved' | 'rejected' = 'pending';
 
   itemsPerPage = 9;
@@ -190,15 +193,91 @@ export class HelpRequestsComponent {
     });
   }
 
-  contact(request: Daum) {
+ async contact(request: Daum, beneficiaryId: string) {
+  try {
+    const userResponse = await lastValueFrom(this._profile.GetUserById(beneficiaryId));
+    this.email = userResponse?.data?.email || '';
+
+    if (!this.email) {
+      Swal.fire({
+        title: 'خطأ',
+        text: 'لم يتم العثور على عنوان بريد إلكتروني للمستفيد',
+        icon: 'error',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا'
+      });
+      return;
+    }
+
+    const { value: formValues } = await Swal.fire({
+      title: 'إرسال بريد إلكتروني',
+      html:
+        '<input id="swal-input1" class="swal2-input" placeholder="الموضوع">' +
+        '<textarea id="swal-input2" class="swal2-textarea" placeholder="نص الرسالة"></textarea>' +
+        '<input id="swal-input3" type="file" class="swal2-file" placeholder="المرفقات">',
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'إرسال',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: '#f6a026',
+      cancelButtonColor: '#3085d6',
+      preConfirm: () => {
+        const subject = (document.getElementById('swal-input1') as HTMLInputElement).value;
+        const body = (document.getElementById('swal-input2') as HTMLTextAreaElement).value;
+        const attachmentsInput = (document.getElementById('swal-input3') as HTMLInputElement);
+        const file = attachmentsInput.files?.length ? attachmentsInput.files[0] : null;
+
+        if (!subject || !body) {
+          Swal.showValidationMessage('يرجى ملء الموضوع ونص الرسالة');
+          return false;
+        }
+
+        return { subject, body, file };
+      }
+    });
+
+    if (formValues) {
+      const formData = new FormData();
+      formData.append('to', this.email);
+      formData.append('subject', formValues.subject);
+      formData.append('body', formValues.body);
+      if (formValues.file) {
+        formData.append('attachments', formValues.file, formValues.file.name);
+      }
+
+      this._AssistanceRequestService.SendEmail(formData).subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'نجاح',
+            text: 'تم إرسال البريد الإلكتروني بنجاح',
+            icon: 'success',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا'
+          });
+        },
+        error: (err) => {
+          Swal.fire({
+            title: 'خطأ',
+            text: err.message || 'حدث خطأ أثناء إرسال البريد الإلكتروني',
+            icon: 'error',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا'
+          });
+          console.log('SendEmail Error:', err);
+        }
+      });
+    }
+  } catch (error) {
     Swal.fire({
-      title: 'تواصل',
-      text: 'سيتم التواصل مع مدير المشروع',
-      icon: 'info',
+      title: 'خطأ',
+      text: 'حدث خطأ أثناء جلب بيانات المستفيد',
+      icon: 'error',
       confirmButtonColor: '#f6a026',
       confirmButtonText: 'حسنا'
     });
+    console.log('GetUserById Error:', error);
   }
+}
 
   getStatusText(status: number): string {
     switch (status) {

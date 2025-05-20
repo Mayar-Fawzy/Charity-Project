@@ -76,7 +76,7 @@
             <button
               *ngIf="request.requestStatus === 1 || request.requestStatus === 2 || request.requestStatus === 3"
               class="btn btn-outline-primary btn-sm"
-              (click)="contact(request)"
+              (click)="contact(request,request.beneficiaryId)"
             >
               تواصل
             </button>
