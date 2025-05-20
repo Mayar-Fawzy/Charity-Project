@@ -40,18 +40,15 @@ export class HelpRequestsComponent {
       statusFilter = 1; // approved
     }
 
-    this._AssistanceRequestService.GetPaginatedAssistanceRequests(this.currentPage, this.itemsPerPage, statusFilter).subscribe({
+    this._AssistanceRequestService.GetPaginatedAssistanceRequests(statusFilter, this.currentPage, this.itemsPerPage).subscribe({
       next: (response) => {
-        this.otherHelpRequests = response.data || [];
-        // Client-side filtering as a safeguard
-        this.filteredProjects = this.otherHelpRequests.filter(request => 
-          request.requestStatus === statusFilter
-        );
-        this.totalCount = response.totalCount;
-        this.totalPages = response.totalPages;
-        this.currentPage = response.currentPage;
+        this.otherHelpRequests = response?.data || [];
+        this.filteredProjects = this.otherHelpRequests; // Server-side filtering should already handle this
+        this.totalCount = response?.totalCount || 0;
+        this.totalPages = response?.totalPages || 1;
+        this.currentPage = response?.currentPage || 1;
         this.isLoading = false;
-        console.log('Filtered Projects:', this.filteredProjects);
+        console.log(response?.data);
       },
       error: (err) => {
         this.isLoading = false;
@@ -62,6 +59,8 @@ export class HelpRequestsComponent {
           confirmButtonColor: '#f6a026',
           confirmButtonText: 'حسنا'
         });
+        
+        console.log(err);
       }
     });
   }
@@ -199,18 +198,18 @@ export class HelpRequestsComponent {
       confirmButtonColor: '#f6a026',
       confirmButtonText: 'حسنا'
     });
-    // Add actual contact logic here (e.g., open email client or send a message)
   }
+
   getStatusText(status: number): string {
-  switch (status) {
-    case 1:
-      return 'تم القبول';
-    case 2:
-      return 'تم الرفض';
-    case 3:
-      return 'قيد المراجعة';
-    default:
-      return 'غير معروف';
+    switch (status) {
+      case 1:
+        return 'تم القبول';
+      case 2:
+        return 'تم الرفض';
+      case 3:
+        return 'قيد المراجعة';
+      default:
+        return 'غير معروف';
+    }
   }
-}
 }

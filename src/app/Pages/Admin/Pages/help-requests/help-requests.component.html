@@ -39,7 +39,6 @@
     </li>
   </ul>
 
-  <!-- عرض الطلبات -->
   <div *ngIf="filteredProjects.length > 0" class="row g-4 mb-5 fade-container">
     <div class="col-md-4 fade-in" *ngFor="let request of filteredProjects">
       <div class="card shadow-sm h-100 written-request-card">
@@ -81,7 +80,6 @@
             >
               تواصل
             </button>
-
             <button
               *ngIf="request.requestStatus === 1 || request.requestStatus === 2"
               class="btn btn-outline-danger btn-sm"
@@ -96,7 +94,6 @@
     </div>
   </div>
 
-  <!-- Pagination -->
   <nav *ngIf="totalPages > 1" class="pagination-wrapper">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="currentPage === 1">
