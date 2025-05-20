@@ -19,13 +19,12 @@ export class HelpRequestsComponent {
 
   otherHelpRequests: Daum[] = [];
   filteredProjects: Daum[] = [];
-  userNames: { [key: string]: string } = {};
   userEmails: { [key: string]: string } = {}; // Map to store beneficiaryId -> email
   isLoading = false;
   email!: string;
   activeTab: 'pending' | 'approved' | 'rejected' = 'pending';
 
-  itemsPerPage = 9;
+  itemsPerPage = 6;
   currentPage = 1;
   totalPages = 1;
   totalCount = 0;
@@ -59,12 +58,12 @@ export class HelpRequestsComponent {
           if (request.beneficiaryId && !this.userEmails[request.beneficiaryId]) {
             this._profile.GetUserById(request.beneficiaryId).subscribe({
               next: (userResponse) => {
-                this.userNames[request.beneficiaryId] = userResponse?.data?.name || 'مستخدم غير معروف';
+                
                 this.userEmails[request.beneficiaryId] = userResponse?.data?.email || 'غير متوفر';
               },
               error: (err) => {
                 console.error(`Error fetching user for beneficiaryId ${request.beneficiaryId}:`, err);
-                this.userNames[request.beneficiaryId] = 'مستخدم غير معروف';
+               
                 this.userEmails[request.beneficiaryId] = 'غير متوفر';
               }
             });
