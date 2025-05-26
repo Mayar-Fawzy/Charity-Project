@@ -19,12 +19,14 @@ export class BeneficiaryComponent implements OnInit {
   private readonly _inkind = inject(InkinddonationService);
   private readonly loginService = inject(LoginService);
   private readonly _VolunteerActivityReqService = inject(VolunteerActivityReqService)
+  projectName!: string ;
   // Map to track the current image index for each product
   private imageIndices = new Map<string, number>();
   products: InkindData[] = [];
   filteredProjects: InkindData[] = [];
   loading = false;
   requestDetails: string = '';
+requestedProjects: Set<string> = new Set();
 
   error: string | null = null;
   userData: any = null;
@@ -96,31 +98,33 @@ export class BeneficiaryComponent implements OnInit {
   }
 
 
-  SubmitVolunteerActivity(projectId: string): void {
+  SubmitVolunteerActivity(projectId: string,projectName:string): void {
     this.selectedProjectId = projectId;
+    this.projectName = projectName;
     this.createVolunteerApplication();
   }
   createVolunteerApplication(): void {
-    this.userData = this.loginService.saveUserAuth();
+  this.userData = this.loginService.saveUserAuth();
 
-    if (!this.userData) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'يجب تسجيل الدخول',
-        text: 'يرجى تسجيل الدخول أولاً لتقديم طلب التطوع.',
-        confirmButtonColor: '#f6a026',
-        confirmButtonText: 'حسنا',
-      })
-      return;
-    }
+  if (!this.userData) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'يجب تسجيل الدخول',
+      text: 'يرجى تسجيل الدخول أولاً لتقديم طلب التطوع.',
+      confirmButtonColor: '#f6a026',
+      confirmButtonText: 'حسنا',
+    });
+    return;
+  }
 
-    const AssistanceRequestBody = {
-      beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
-      requestDetails: 'يرجى توضيح النشاط', // يمكن استبدالها لاحقًا بمدخل من المستخدم
-      inKindDonationId: this.selectedProjectId
-    };
+  const AssistanceRequestBody = {
+    beneficiaryId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
+    requestDetails:this.projectName ,
+    inKindDonationId: this.selectedProjectId
+  };
 
-    this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe(res => {
+  this._VolunteerActivityReqService.createVolunteerApplication(AssistanceRequestBody).subscribe({
+    next: (res) => {
       if (res.isSucceeded) {
         Swal.fire({
           icon: 'success',
@@ -139,9 +143,30 @@ export class BeneficiaryComponent implements OnInit {
         });
         console.error('Error creating volunteer application:', res.message);
       }
-    });
+    },
+    error: (err) => {
+      if (err.status === 422 && err.error?.errors?.includes('already made a request')) {
+        Swal.fire({
+          icon: 'info',
+          title: 'طلب مكرر',
+          text: 'لقد قمت بالفعل بطلب التطوع لهذا العنصر.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الاتصال بالخادم',
+          text: 'يرجى المحاولة لاحقًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+        console.error('Request error:', err);
+      }
+    }
+  });
+}
 
-  }
   get paginatedProjects() {
     return this.filteredProjects;
   }
