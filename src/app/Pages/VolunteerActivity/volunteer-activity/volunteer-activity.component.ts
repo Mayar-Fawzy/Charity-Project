@@ -16,7 +16,7 @@ import { ProjectService } from '../../volunteer/core/Services/project.service';
 export class VolunteerActivityComponent {
   volunteerProjectss:IDataa[] = [];
     filteredProjects: IDataa[] = [];
-    
+    projectName:string = '';
   selectedProjectId: string = '';
     itemsPerPage = 6;
     currentPage = 1;
@@ -65,8 +65,9 @@ export class VolunteerActivityComponent {
     }, 0);
   }
   //CreateVolunteerActivity
-  onJoinVoulnteerActivity(projectId: string): void {
+  onJoinVoulnteerActivity(projectId: string ,projectName:string): void {
     this.selectedProjectId = projectId;
+    this.projectName = projectName;
     console.log('Selected Project ID:', this.selectedProjectId);
     this.goToVolunteerAssest();
   }
@@ -86,30 +87,53 @@ export class VolunteerActivityComponent {
      
        const volunteerAppBody = {
         volunteerId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
-        requestDetails: null, // يمكن استبدالها لاحقًا بمدخل من المستخدم
+        requestDetails: this.projectName , // يمكن استبدالها لاحقًا بمدخل من المستخدم
         volunteerActivityId: this.selectedProjectId,
         projectId: null
        };
      
-       this.projectService.CreateVolunteerApplication(volunteerAppBody).subscribe(res => {
-         if (res.isSucceeded) {
-           Swal.fire({
-             icon: 'success',
-             title: 'تم تقديم طلب التطوع بنجاح!',
-             text: 'سيتم مراجعه طلبك قريبًا',
-             confirmButtonColor: '#f6a026',
-             confirmButtonText: 'حسنا',
-           });
-         } else {
-           Swal.fire({
-             icon: 'error',
-             title: 'فشل تقديم الطلب',
-             text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
-             confirmButtonColor: '#f6a026',
-             confirmButtonText: 'حسنا',
-           });
-           console.error('Error creating volunteer application:', res.message);
-         }
+       this.projectService.CreateVolunteerApplication(volunteerAppBody).subscribe({ 
+         next: (res) => {
+      if (res.isSucceeded) {
+        Swal.fire({
+          icon: 'success',
+          title: 'تم تقديم طلب التطوع بنجاح!',
+          text: 'سيتم مراجعة طلبك قريبًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'فشل تقديم الطلب',
+          text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
+          confirmButtonColor: '#f6a026',
+          confirmButtonText: 'حسنا',
+        });
+        console.error('Error creating volunteer application:', res.message);
+      }
+    },
+   error: (err) => {
+  if (err.status === 422) {
+    Swal.fire({
+      icon: 'info',
+      title: 'طلب مكرر',
+      text: 'لقد قمت بالفعل بطلب التطوع لهذا النشاط.',
+      confirmButtonColor: '#f6a026',
+      confirmButtonText: 'حسنا',
+    });
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'خطأ في الاتصال بالخادم',
+      text: 'يرجى المحاولة لاحقًا.',
+      confirmButtonColor: '#f6a026',
+      confirmButtonText: 'حسنا',
+    });
+    console.error('Request error:', err);
+  }
+}
+
        });
   }
   //Pageination
