@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class LoginService {
  userData: any;
  
-donorId: string | null = null;
+donorId!: string ;
   private readonly _HttpClient = inject(HttpClient);
   private readonly _Router = inject(Router);
 

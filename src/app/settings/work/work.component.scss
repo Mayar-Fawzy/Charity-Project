@@ -1,0 +1,155 @@
+// ========== متغيرات ========== //
+$primary-orange: #f9a825;
+$primary-orange-dark: #b88e2f;
+$primary-orange-light: #7b693f;
+$accent-gold: #d29916;
+$white: #ffffff;
+$dark: #2c3e50;
+$gray-light: #f8f9fa;
+$shadow-color: rgba(0, 0, 0, 0.15);
+
+// ========== Mixins ========== //
+@mixin gradient-bg($color1, $color2, $direction: 135deg) {
+  background: linear-gradient($direction, $color1 0%, $color2 100%);
+}
+
+@mixin text-shadow($color: rgba(0, 0, 0, 0.3)) {
+  text-shadow: 0 2px 4px $color;
+}
+
+@mixin box-shadow($shadow: 0 4px 20px rgba(0, 0, 0, 0.1)) {
+  box-shadow: $shadow;
+}
+.all{
+    @include box-shadow();
+    border-radius: 12px;
+}
+// ========== Header Section ========== //
+.header-modern {
+  @include gradient-bg($primary-orange, $primary-orange-dark);
+  position: relative;
+  padding: 2rem 1rem;
+  overflow: hidden;
+  min-height: 200px;
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+
+      .header-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+
+        i {
+          font-size: 2rem;
+          color: $white;
+        }
+      }
+
+      .header-text {
+        display: flex;
+        flex-direction: column;
+
+        .header-title {
+          font-size: 2.2rem;
+          font-weight: bold;
+          color: $white;
+          margin: 0;
+          @include text-shadow();
+        }
+
+        .header-subtitle {
+          font-size: 1rem;
+          color: rgba(255, 255, 255, 0.9);
+          margin: 0;
+        }
+      }
+    }
+
+      .header-stats {
+    .stat-item {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 1rem 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      
+      .stat-number {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $white;
+        line-height: 1;
+      }
+      
+      .stat-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+  }
+}
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.request-card {
+  flex: 1 1 250px;
+  max-width: 300px;
+  background-color: $white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  @include box-shadow();
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: $dark;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: #444;
+  }
+
+  &.status-accepted {
+    color: #2e7d32; // أخضر
+    font-weight: bold;
+  }
+
+  &.status-rejected {
+    color: #c62828; // أحمر
+    font-weight: bold;
+  }
+
+  &.status-pending {
+    color: $primary-orange; // أصفر برتقالي
+    font-weight: bold;
+  }
+}
