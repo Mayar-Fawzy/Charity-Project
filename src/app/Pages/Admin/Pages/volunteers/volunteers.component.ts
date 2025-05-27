@@ -74,9 +74,9 @@ export class VolunteersComponent implements OnInit {
   isLoading = false;
   errorMessage: string | null = null;
   tabs = [
-    { label: 'معلق', value: 1 },
-    { label: 'مقبول', value: 2 },
-    { label: 'مرفوض', value: 3 }
+    { label: 'معلق', value: 3 },
+    { label: 'مقبول', value: 1 },
+    { label: 'مرفوض', value: 2 }
   ];
   selectedTab = 1;
   filteredVolunteers: Volunteer[] = [];
@@ -196,7 +196,7 @@ loadVolunteers(): void {
       volunteerId: volunteer.volunteerId,
       requestDetails: null,
       volunteerActivityId: volunteer.volunteerActivityId,
-      requestStatus: 2
+      requestStatus: 1
     };
     this.updateVolunteerStatus(updatedVolunteer);
   }
@@ -207,7 +207,7 @@ loadVolunteers(): void {
       volunteerId: volunteer.volunteerId,
       requestDetails: null,
       volunteerActivityId: volunteer.volunteerActivityId,
-      requestStatus: 3
+      requestStatus: 2
     };
     this.updateVolunteerStatus(updatedVolunteer);
   }
