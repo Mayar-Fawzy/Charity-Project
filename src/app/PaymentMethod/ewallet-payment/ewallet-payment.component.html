@@ -24,14 +24,7 @@
         <i class="bi bi-credit-card"></i>
         <span>بطاقة ائتمان/خصم</span>
       </div>
-      <div class="option">
-        <i class="bi bi-wallet2"></i>
-        <span>المحافظ الإلكترونية</span>
-      </div>
-      <div class="option">
-        <i class="bi bi-paypal"></i>
-        <span>باي بال</span>
-      </div>
+      <!-- إزالة الخيارات الأخرى موقتًا للتركيز على بطاقات الائتمان -->
     </div>
 
     <div class="secure-note">
@@ -40,37 +33,19 @@
       </p>
     </div>
 
-    <div class="wallet-options">
-      <button class="wallet">
-        <img src="/Images/fawry.png" alt="Fawry" /> فوري
-      </button>
-      <button class="wallet">
-        <img src="/Images/vodafone.png" alt="Vodafone Cash" /> فودافون كاش
-      </button>
-      <button class="wallet">
-        <img src="/Images/etislat.png" alt="Etisalat Cash" /> اتصالات كاش
-      </button>
-      <button class="wallet">
-        <img src="/Images/we.png" alt="WePay" /> وي باي
-      </button>
-      <button class="wallet">
-        <img src="/Images/orange.png" alt="Orange" /> أورنج
-      </button>
-    </div>
-
-    
     <div class="donation-inputs row g-2 mb-3">
       <input type="text" placeholder="أدخل رقم الهاتف" class="phone-input" />
-
-      <input type="number" id="amount" placeholder="قيمة التبرع (ج.م)" min="0" step="10" class="phone-input"/>
+      <input type="number" id="amount" placeholder="قيمة التبرع (ج.م)" min="0" step="10" class="phone-input" #amountInput />
     </div>
+
+    <div #cardElement class="stripe-card-element"></div> <!-- إضافة عنصر Stripe -->
 
     <div class="secure-labels">
       <span class="ssl"><i class="bi bi-lock"></i> اتصال آمن (SSL)</span>
       <span class="pci"><i class="bi bi-check-circle"></i> متوافق مع PCI DSS</span>
     </div>
 
-    <button class="donate-btn">تبرع الآن</button>
+    <button (click)="createPayment()" class="donate-btn">تبرع الآن</button>
     <p class="terms-text">
       بالضغط على "تبرع الآن"، فإنك توافق على
       <a href="#">الشروط والأحكام</a>
