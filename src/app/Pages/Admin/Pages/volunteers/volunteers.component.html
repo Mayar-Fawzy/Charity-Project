@@ -1,4 +1,26 @@
 <div class="container mt-4">
+   <!-- Main Tabs -->
+  <ul class="nav nav-tabs custom-tabs justify-content-start mb-3">
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="selectedType === 'projects'"
+        (click)="onTypeChange('projects')"
+      >
+        تطوعات المشاريع
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="selectedType === 'activities'"
+        (click)="onTypeChange('activities')"
+      >
+        تطوعات الأنشطة
+      </button>
+    </li>
+  </ul>
+
   <!-- Loading State -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-primary" role="status">
