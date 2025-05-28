@@ -103,7 +103,7 @@ loadVolunteers(): void {
       next: (response: PaginatedResponse) => {
         if (response.isSucceeded) {
           this.volunteers = response.data;
-          this.totalCount = response.data.length; // Replace with response.totalCount if API provides it
+          this.totalCount = response.data.length;
           this.totalPages = Math.ceil(this.totalCount / this.pageSize);
 
           const volunteerDetails$ = this.volunteers.map((volunteer: VolunteerApplication) => {

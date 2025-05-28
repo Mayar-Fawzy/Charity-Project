@@ -70,7 +70,10 @@
 
           <div class="form-group mb-3">
             <label>وصف المشروع:</label>
-            <textarea class="form-control" rows="2" [value]="volunteer.projectDescription || 'غير متوفر'" readonly></textarea>
+            <div class="form-control" style="min-height: 1.5rem; white-space: pre-wrap;">
+  {{ volunteer.projectDescription || 'غير متوفر' }}
+</div>
+
           </div>
 
           <div class="form-group mb-3">
