@@ -72,6 +72,7 @@ interface VolunteerDetails {
 })
 export class VolunteersComponent implements OnInit {
   isLoading = false;
+  selectedType: 'projects' | 'activities' = 'projects';
   errorMessage: string | null = null;
   tabs = [
     { label: 'معلق', value: 3 },
