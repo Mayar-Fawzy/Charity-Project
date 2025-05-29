@@ -21,4 +21,7 @@ export class VolunteerActivityssService {
         UpdateVolunteerStatus(volunteerApplication: { id: string, volunteerId: string, requestDetails: string | null, volunteerActivityId: string, requestStatus: number }): Observable<any> {
     return this._HttpClient.put<any>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerApplication/UpdateVolunteerApplication`, volunteerApplication);
   }
+  GetVolunteerActivityById(volunteerActivityId: string): Observable<any> {
+    return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerActivity/GetVolunteerActivityById?id=${volunteerActivityId}`);
+    }
 }

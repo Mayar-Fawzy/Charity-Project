@@ -42,15 +42,15 @@
 
 // accept button
 .btn-accept {
-    background-color: #28a745;
+    background-color: #f6a026;
     color: #fff;
-    border: 1px solid #28a745;
+    border: 1px solid #f6a026;
     transition: all 0.3s ease-in-out;
 
     &:hover {
         background-color: #fff;
-        color: #28a745;
-        border: 1px solid #28a745;
+        color: #f6a026;
+        border: 1px solid #f6a026;
     }
 }
 
@@ -152,4 +152,88 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* لضمان الترتيب من اليمين إلى اليسار */
+  }
+
+  .page-item {
+    margin: 0 5px;
+
+    &.active {
+      .page-link {
+        background-color: #f6a026; /* لون أخضر جذاب */
+        color: white;
+        border-color: #f6a026;
+        transform: scale(1.1); /* تكبير طفيف للصفحة المختارة */
+      }
+    }
+
+    &.disabled {
+      .page-link {
+        background-color: #f1f3f5;
+        color: #adb5bd;
+        cursor: not-allowed;
+        border-color: #dee2e6;
+      }
+    }
+
+    .page-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px; /* زوايا دائرية */
+      background-color: #ffffff;
+      color: #495057;
+      border: 1px solid #dee2e6;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease; /* انتقال سلس للتأثيرات */
+      cursor: pointer;
+
+      &:hover:not(.disabled) {
+        background-color: #e9ecef;
+        color: #f6a026;
+        border-color: #f6a026;
+        transform: scale(1.05); /* تكبير طفيف عند التمرير */
+      }
+
+      &:active:not(.disabled) {
+        background-color: #f6a026;
+        color: white;
+        border-color: #f6a026;
+      }
+
+      i {
+        font-size: 18px; /* حجم أكبر للأيقونات */
+      }
+    }
+
+    &.dots {
+      .page-link {
+        background: none;
+        border: none;
+        color: #6c757d;
+        font-size: 18px;
+        cursor: default;
+
+        &:hover {
+          background: none;
+          transform: none;
+        }
+      }
+    }
+  }
 }
