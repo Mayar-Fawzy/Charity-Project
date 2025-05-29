@@ -29,4 +29,5 @@ export class EwalletPaymentComponent implements OnInit {
       });
     }
   }
+  
 }
