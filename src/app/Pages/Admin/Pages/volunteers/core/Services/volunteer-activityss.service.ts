@@ -9,6 +9,12 @@ import { Environment } from '../../../../../Auth/core/Environment/Environment';
 export class VolunteerActivityssService {
 
     private readonly _HttpClient = inject(HttpClient);
+    DeleteVolunteerApplication(volunteerApplicationId: string): Observable<any> {
+        return this._HttpClient.delete<any>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerApplication/DeleteVolunteerApplication?id=${volunteerApplicationId}`);
+    }
+     SendEmail(body: any): Observable<any> {
+    return this._HttpClient.post(`${Environment.baseUrl}${Environment.VersionUrl}Email/SendEmail`,body)
+  }
       GetProjectsPaginatedByRequestStatus(requestStatus:number,pageNumber: number, pageSize: number,  orderByDirection: number = 1):Observable<any>{
         return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerApplication/GetProjectsPaginatedByRequestStatus?requestStatus=${requestStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
         } 

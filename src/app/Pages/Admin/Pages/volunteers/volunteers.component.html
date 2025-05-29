@@ -21,7 +21,10 @@
     </li>
   </ul>
 
-  <!-- Error Message -->
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">
+    {{ successMessage }}
+  </div>
   <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
     {{ errorMessage }}
   </div>
@@ -49,46 +52,45 @@
   </div>
 
   <!-- Pagination -->
- 
-    <nav *ngIf="totalPages > 1" class="pagination-container">
-      <ul class="pagination">
-        <li class="page-item" [class.disabled]="currentPage === 1">
-          <button
-            class="page-link"
-            (click)="goToPrevious()"
-            [disabled]="currentPage === 1"
-          >
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </li>
-
-        <li class="page-item dots" *ngIf="showLeftDots">
-          <span class="page-link">...</span>
-        </li>
-
-        <li
-          *ngFor="let page of displayedPages"
-          class="page-item"
-          [class.active]="currentPage === page"
+  <nav *ngIf="totalPages > 1" class="pagination-container">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button
+          class="page-link"
+          (click)="goToPrevious()"
+          [disabled]="currentPage === 1"
         >
-          <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-        </li>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </li>
 
-        <li class="page-item dots" *ngIf="showRightDots">
-          <span class="page-link">...</span>
-        </li>
+      <li class="page-item dots" *ngIf="showLeftDots">
+        <span class="page-link">...</span>
+      </li>
 
-        <li class="page-item" [class.disabled]="currentPage === totalPages">
-          <button
-            class="page-link"
-            (click)="goToNext()"
-            [disabled]="currentPage === totalPages"
-          >
-            <i class="bi bi-chevron-left"></i>
-          </button>
-        </li>
-      </ul>
-    </nav>
+      <li
+        *ngFor="let page of displayedPages"
+        class="page-item"
+        [class.active]="currentPage === page"
+      >
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+
+      <li class="page-item dots" *ngIf="showRightDots">
+        <span class="page-link">...</span>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button
+          class="page-link"
+          (click)="goToNext()"
+          [disabled]="currentPage === totalPages"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
 
   <!-- Volunteers -->
   <div class="row" *ngIf="!isLoading && !errorMessage">
@@ -99,6 +101,7 @@
             [src]="volunteer.imageUrl"
             alt="صورة المتطوع"
             class="rounded-circle avatar-img"
+            style="width: 120px; height: 120px; object-fit: cover;"
             (click)="openImage(volunteer.imageUrl)"
           />
         </div>
@@ -134,7 +137,12 @@
 
           <div class="form-group mb-3">
             <label>{{ selectedType === 'projects' ? 'وصف المشروع' : 'وصف النشاط' }}:</label>
-            <textarea class="form-control" rows="2" [value]="volunteer.projectDescription || 'غير متوفر'" readonly></textarea>
+            <textarea
+              class="form-control dess"
+              rows="2"
+              [ngModel]="getTruncatedDescription(volunteer)"
+              readonly
+            ></textarea>
             <small *ngIf="!volunteer.projectDescription" class="text-warning">لا يوجد وصف متاح</small>
           </div>
 
@@ -145,9 +153,59 @@
         </div>
 
         <div class="card-footer bg-transparent border-0 d-flex justify-content-between gap-2">
-          <button class="btn btn-accept w-100" (click)="acceptVolunteer(volunteer)">إضافة</button>
-          <button class="btn btn-reject w-100" (click)="rejectVolunteer(volunteer)">رفض</button>
-          <button class="btn btn-contact w-100" (click)="contactVolunteer(volunteer)">تواصل</button>
+          <!-- Pending (requestStatus === 3) -->
+          <ng-container *ngIf="volunteer.requestStatus === 3">
+            <button
+              class="btn btn-success w-100"
+              (click)="acceptVolunteer(volunteer)"
+            >
+              قبول
+            </button>
+            <button
+              class="btn btn-reject w-100"
+              (click)="rejectVolunteer(volunteer)"
+            >
+              رفض
+            </button>
+            <button
+              class="btn btn-contact w-100"
+              (click)="contactVolunteer(volunteer)"
+            >
+              تواصل
+            </button>
+          </ng-container>
+
+          <!-- Accepted (requestStatus === 1) -->
+          <ng-container *ngIf="volunteer.requestStatus === 1">
+            <button
+              class="btn btn-reject w-100"
+              (click)="rejectVolunteer(volunteer)"
+            >
+              رفض
+            </button>
+            <button
+              class="btn btn-contact w-100"
+              (click)="contactVolunteer(volunteer)"
+            >
+              تواصل
+            </button>
+          </ng-container>
+
+          <!-- Rejected (requestStatus === 2) -->
+          <ng-container *ngIf="volunteer.requestStatus === 2">
+            <button
+              class="btn btn-contact w-100"
+              (click)="contactVolunteer(volunteer)"
+            >
+              تواصل
+            </button>
+            <button
+              class="btn btn-danger w-100"
+              (click)="deleteVolunteer(volunteer.id)"
+            >
+              حذف
+            </button>
+          </ng-container>
         </div>
       </div>
     </div>
