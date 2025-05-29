@@ -9,7 +9,7 @@ import { Environment } from '../../../../../Auth/core/Environment/Environment';
 export class VolunteerActivityssService {
 
     private readonly _HttpClient = inject(HttpClient);
-      GetPaginatedByRequestStatus(requestStatus:number,pageNumber: number, pageSize: number,  orderByDirection: number = 1):Observable<any>{
+      GetProjectsPaginatedByRequestStatus(requestStatus:number,pageNumber: number, pageSize: number,  orderByDirection: number = 1):Observable<any>{
         return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerApplication/GetPaginatedByRequestStatus?requestStatus=${requestStatus}&pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
         } 
         GetProjectById(projectId: string): Observable<any> {

@@ -1,71 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
 import { VolunteerActivityssService } from './core/Services/volunteer-activityss.service';
-declare var bootstrap: any;
-
-interface PaginatedResponse {
-  statusCode: number;
-  isSucceeded: boolean;
-  message: string;
-  errors: string;
-  data: VolunteerApplication[];
-  totalCount?: number;
-}
-
-interface VolunteerApplication {
-  id: string;
-  volunteerId: string;
-  requestDetails: string | null;
-  volunteerActivityId: string;
-  projectId: string | null;
-  requestStatus: number;
-  createdDate: string;
-  modifiedDate: string;
-}
-
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  age: number;
-  gender: number;
-  imageUrl: string;
-}
-
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-}
-
-interface Activity {
-  id: string;
-  name: string;
-  description: string;
-}
-
-interface Volunteer {
-  id: string;
-  projectId?: string;
-  name: string;
-  email: string;
-  phone: string;
-  gender: number;
-  age: number | null;
-  imageUrl: string;
-  projectAddress: string;
-  projectDescription: string;
-  requestStatus: number;
-  volunteerId: string;
-  volunteerActivityId: string;
-  createdDate: string;
-  type: 'projects' | 'activities';
-}
+import { Observable, forkJoin } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-volunteers',
@@ -75,269 +13,223 @@ interface Volunteer {
   styleUrls: ['./volunteers.component.scss']
 })
 export class VolunteersComponent implements OnInit {
-  isLoading = false;
-  selectedType: 'projects' | 'activities' = 'projects';
-  statusFilter: number = 1;
+  selectedType: string = 'activities'; // Fixed to activities as per request
   tabs = [
-    { label: 'معلق', value: 3 },
-    { label: 'مقبول', value: 1 },
-    { label: 'مرفوض', value: 2 }
+    { label: 'قيد الانتظار', value: 0 }, // Pending
+    { label: 'مقبول', value: 1 }, // Accepted
+    { label: 'مرفوض', value: 2 }, // Rejected
   ];
-  selectedTab = 1;
-  currentPage = 1;
-  pageSize = 3;
-  totalItems = 0;
-  totalPages = 0;
-  volunteers: Volunteer[] = [];
-  filteredVolunteers: Volunteer[] = [];
-  selectedImage: string | null = null;
+  selectedTab: number = 0; // Default to Pending
+  isLoading: boolean = false;
   errorMessage: string | null = null;
+  filteredVolunteers: any[] = [];
+  currentPage: number = 1;
+  pageSize: number = 6; // Adjust as needed
+  totalPages: number = 1;
+  displayedPages: number[] = [];
+  showLeftDots: boolean = false;
+  showRightDots: boolean = false;
+  selectedImage: string | null = null;
 
   constructor(private volunteerService: VolunteerActivityssService) {}
 
   ngOnInit(): void {
-    this.loadVolunteers();
+    this.loadVolunteers(this.selectedTab, this.currentPage);
   }
 
-  loadVolunteers(): void {
+  // Load paginated volunteer applications based on request status
+  loadVolunteers(requestStatus: number, page: number): void {
     this.isLoading = true;
     this.errorMessage = null;
 
     this.volunteerService
-      .GetPaginatedByRequestStatus(this.selectedTab, this.currentPage, this.pageSize)
+      .GetProjectsPaginatedByRequestStatus(requestStatus, page, this.pageSize, 1)
+      .pipe(
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe({
-        next: (response: PaginatedResponse) => {
-          if (response.isSucceeded) {
-            const rawVolunteers = response.data || [];
-            this.totalItems = response.totalCount || rawVolunteers.length;
-            this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-
-            const observables = rawVolunteers.map((volunteer: VolunteerApplication) => {
-              console.log('Raw volunteer data:', volunteer); // تتبع البيانات الخام
-              if (!volunteer.volunteerId || !volunteer.volunteerActivityId) {
-                return of({
-                  ...volunteer,
-                  user: { data: { firstName: 'غير معروف', lastName: '', email: 'غير متوفر', phoneNumber: 'غير متوفر', gender: 0, imageUrl: '' } },
-                  projectOrActivity: null,
-                  type: volunteer.projectId ? 'projects' : 'activities'
-                });
-              }
-
-              const user$ = this.volunteerService.GetUserById(volunteer.volunteerId);
-
-              if (volunteer.projectId) {
-                const project$ = this.volunteerService.GetProjectById(volunteer.projectId).pipe(
-                  catchError(error => {
-                    console.error('Error fetching project:', error, 'for projectId:', volunteer.projectId);
-                    return of({ data: { name: 'غير متوفر', description: 'غير متوفر' } });
-                  })
-                );
-                return forkJoin([user$, project$]).pipe(
-                  map(([user, project]) => {
-                    console.log('Project data for projectId:', volunteer.projectId, project);
-                    return {
-                      ...volunteer,
-                      user: user,
-                      projectOrActivity: project.data,
-                      type: 'projects'
-                    };
-                  })
-                );
-              } else {
-                return this.volunteerService.GetVolunteerActivityById(volunteer.volunteerActivityId).pipe(
-                  switchMap(activity => {
-                    return forkJoin([user$, of(activity)]).pipe(
-                      map(([user, activity]) => {
-                        console.log('Activity data for volunteerActivityId:', volunteer.volunteerActivityId, activity);
-                        return {
-                          ...volunteer,
-                          user: user,
-                          projectOrActivity: activity.data,
-                          type: 'activities'
-                        };
-                      }),
-                      catchError(error => {
-                        console.error('Error fetching activity:', error, 'for volunteerActivityId:', volunteer.volunteerActivityId);
-                        return of({
-                          ...volunteer,
-                          user: user$,
-                          projectOrActivity: { name: 'غير متوفر', description: 'غير متوفر' },
-                          type: 'activities'
-                        });
-                      })
-                    );
-                  })
-                );
-              }
-            });
-
-            forkJoin(observables).subscribe({
-              next: (detailedVolunteers: any[]) => {
-                this.volunteers = detailedVolunteers.map(v => ({
-                  id: v.id,
-                  projectId: v.projectId || undefined,
-                  name: v.user?.data ? `${v.user.data.firstName} ${v.user.data.lastName}` : 'غير معروف',
-                  email: v.user?.data?.email || 'غير متوفر',
-                  phone: v.user?.data?.phoneNumber || 'غير متوفر',
-                  gender: v.user?.data?.gender != null ? Number(v.user.data.gender) : 0,
-                  age: v.user?.data?.age || null,
-                  imageUrl: v.user?.data?.imageUrl || (v.user?.data?.gender === 0 ? '/Images/undraw_male-avatar_zkzx.svg' : '/Images/undraw_female-avatar_7t6k.svg'),
-                  projectAddress: v.type === 'projects' ? (v.projectOrActivity?.name || 'غير متوفر') : 'غير متوفر',
-                  projectDescription: v.type === 'projects' ? (v.projectOrActivity?.description || 'غير متوفر') : 'غير متوفر',
-                  requestStatus: v.requestStatus,
-                  volunteerId: v.volunteerId,
-                  volunteerActivityId: v.volunteerActivityId,
-                  createdDate: v.createdDate || 'غير متوفر',
-                  type: v.type
-                }));
-                console.log('All volunteers after mapping:', this.volunteers); // تتبع المتطوعين بعد الخريطة
-                this.filterVolunteers();
-                this.isLoading = false;
-              },
-              error: (err) => {
-                this.errorMessage = 'فشل تحميل تفاصيل المتطوعين.';
-                this.isLoading = false;
-                console.error('ForkJoin error:', err);
-              }
-            });
+        next: (response: any) => {
+          if (response && response.data && response.data.items) {
+            this.fetchVolunteerDetails(response.data.items);
+            this.updatePagination(response.data.totalPages, page);
           } else {
-            this.errorMessage = response.message || 'فشل تحميل البيانات.';
-            this.isLoading = false;
+            this.filteredVolunteers = [];
+            this.errorMessage = 'لا توجد بيانات متاحة';
           }
         },
         error: (err) => {
-          this.errorMessage = 'حدث خطأ أثناء تحميل المتطوعين.';
-          this.isLoading = false;
-          console.error('API error:', err);
-        }
+          this.errorMessage = 'حدث خطأ أثناء تحميل البيانات';
+          this.filteredVolunteers = [];
+          console.error(err);
+        },
       });
+  }
+
+  // Fetch additional details for each volunteer application (user and activity details)
+  fetchVolunteerDetails(applications: any[]): void {
+    const requests: Observable<any>[] = applications.map((app) =>
+      forkJoin({
+        user: this.volunteerService.GetUserById(app.volunteerId),
+        activity: this.volunteerService.GetVolunteerActivityById(app.volunteerActivityId),
+      })
+    );
+
+    forkJoin(requests).subscribe({
+      next: (results: any[]) => {
+        this.filteredVolunteers = applications.map((app, index) => ({
+          id: app.id,
+          volunteerId: app.volunteerId,
+          volunteerActivityId: app.volunteerActivityId,
+          name: results[index].user?.data?.name || 'غير معروف',
+          email: results[index].user?.data?.email || 'غير متوفر',
+          phone: results[index].user?.data?.phoneNumber || 'غير متوفر',
+          gender: results[index].user?.data?.gender ?? 2, // 2 for unspecified
+          imageUrl: results[index].user?.data?.imageUrl || 'assets/default-avatar.png',
+          projectAddress: results[index].activity?.data?.address || 'غير متوفر', // Assuming activity has address
+          projectDescription: results[index].activity?.data?.description || 'غير متوفر',
+          createdDate: app.createdDate || null,
+          requestStatus: app.requestStatus,
+        }));
+      },
+      error: (err) => {
+        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل المتطوعين';
+        console.error(err);
+      },
+    });
+  }
+
+  // Handle tab change (Pending, Accepted, Rejected)
+  onTabChange(tabValue: number): void {
+    this.selectedTab = tabValue;
+    this.currentPage = 1; // Reset to first page
+    this.loadVolunteers(this.selectedTab, this.currentPage);
+  }
+
+  // Handle tab change for main tabs (activities/projects, currently fixed to activities)
+  changeTab(type: string): void {
+    this.selectedType = type;
+    this.selectedTab = 0; // Reset to Pending
+    this.currentPage = 1;
+    this.loadVolunteers(this.selectedTab, this.currentPage);
+  }
+
+  // Pagination methods
+  updatePagination(totalPages: number, currentPage: number): void {
+    this.totalPages = totalPages;
+    const maxPagesToShow = 5;
+    let startPage: number, endPage: number;
+
+    if (this.totalPages <= maxPagesToShow) {
+      startPage = 1;
+      endPage = this.totalPages;
+    } else {
+      const maxPagesBeforeCurrent = Math.floor(maxPagesToShow / 2);
+      const maxPagesAfterCurrent = Math.ceil(maxPagesToShow / 2) - 1;
+
+      if (currentPage <= maxPagesBeforeCurrent) {
+        startPage = 1;
+        endPage = maxPagesToShow;
+      } else if (currentPage + maxPagesAfterCurrent >= this.totalPages) {
+        startPage = this.totalPages - maxPagesToShow + 1;
+        endPage = this.totalPages;
+      } else {
+        startPage = currentPage - maxPagesBeforeCurrent;
+        endPage = currentPage + maxPagesAfterCurrent;
+      }
+    }
+
+    this.displayedPages = Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
+    this.showLeftDots = startPage > 1;
+    this.showRightDots = endPage < this.totalPages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.loadVolunteers(this.selectedTab, this.currentPage);
+    }
   }
 
   goToPrevious(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.loadVolunteers();
+      this.loadVolunteers(this.selectedTab, this.currentPage);
     }
   }
 
   goToNext(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.loadVolunteers();
+      this.loadVolunteers(this.selectedTab, this.currentPage);
     }
   }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.loadVolunteers();
-    }
-  }
+  // Volunteer actions
+  acceptVolunteer(volunteer: any): void {
+    const volunteerApplication = {
+      id: volunteer.id,
+      volunteerId: volunteer.volunteerId,
+      requestDetails: null,
+      volunteerActivityId: volunteer.volunteerActivityId,
+      requestStatus: 1, // Accepted
+    };
 
-  get displayedPages(): number[] {
-    const pages: number[] = [];
-    const maxPagesToShow = 5;
-    let start = Math.max(1, this.currentPage - 2);
-    let end = Math.min(this.totalPages, start + maxPagesToShow - 1);
-
-    if (end - start < maxPagesToShow - 1) {
-      start = Math.max(1, end - maxPagesToShow + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }
-
-  get showLeftDots(): boolean {
-    return this.displayedPages.length > 0 && this.displayedPages[0] > 1;
-  }
-
-  get showRightDots(): boolean {
-    return this.displayedPages.length > 0 && this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
-  }
-
-  filterVolunteers(): void {
-    console.log('Filtering for type:', this.selectedType, 'with volunteers:', this.volunteers); // تتبع التصفية
-    this.filteredVolunteers = this.volunteers.filter(volunteer => {
-      if (this.selectedType === 'projects') {
-        return volunteer.type === 'projects' && volunteer.projectId !== null && volunteer.projectId !== undefined;
-      } else {
-        return volunteer.type === 'activities' && (volunteer.projectId === null || volunteer.projectId === undefined);
-      }
+    this.volunteerService.UpdateVolunteerStatus(volunteerApplication).subscribe({
+      next: () => {
+        this.loadVolunteers(this.selectedTab, this.currentPage); // Refresh data
+      },
+      error: (err) => {
+        this.errorMessage = 'حدث خطأ أثناء قبول المتطوع';
+        console.error(err);
+      },
     });
-    console.log('Filtered volunteers:', this.filteredVolunteers); // تتبع المتطوعين المصفاة
   }
 
-  changeTab(type: 'projects' | 'activities'): void {
-    this.selectedType = type;
-    this.filterVolunteers();
+  rejectVolunteer(volunteer: any): void {
+    const volunteerApplication = {
+      id: volunteer.id,
+      volunteerId: volunteer.volunteerId,
+      requestDetails: null,
+      volunteerActivityId: volunteer.volunteerActivityId,
+      requestStatus: 2, // Rejected
+    };
+
+    this.volunteerService.UpdateVolunteerStatus(volunteerApplication).subscribe({
+      next: () => {
+        this.loadVolunteers(this.selectedTab, this.currentPage); // Refresh data
+      },
+      error: (err) => {
+        this.errorMessage = 'حدث خطأ أثناء رفض المتطوع';
+        console.error(err);
+      },
+    });
   }
 
-  onTabChange(tabValue: number): void {
-    this.selectedTab = tabValue;
-    this.currentPage = 1;
-    this.loadVolunteers();
+  contactVolunteer(volunteer: any): void {
+    // Placeholder for contact functionality (e.g., open email client or messaging)
+    alert(`تواصل مع ${volunteer.name} على البريد: ${volunteer.email}`);
   }
 
-  openImage(image: string): void {
-    this.selectedImage = image;
-    const modalElement = document.getElementById('imageModal');
-    if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
+  // Image modal handling
+  openImage(imageUrl: string): void {
+    this.selectedImage = imageUrl;
+    // Assuming you're using Bootstrap's modal
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
     }
   }
 
   closeImageModal(): void {
-    const modalElement = document.getElementById('imageModal');
-    if (modalElement) {
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      if (modal) modal.hide();
-    }
     this.selectedImage = null;
-  }
-
-  acceptVolunteer(volunteer: Volunteer): void {
-    const updated = {
-      id: volunteer.id,
-      volunteerId: volunteer.volunteerId,
-      requestDetails: null,
-      volunteerActivityId: volunteer.volunteerActivityId,
-      requestStatus: 1
-    };
-    this.updateVolunteerStatus(updated);
-  }
-
-  rejectVolunteer(volunteer: Volunteer): void {
-    const updated = {
-      id: volunteer.id,
-      volunteerId: volunteer.volunteerId,
-      requestDetails: null,
-      volunteerActivityId: volunteer.volunteerActivityId,
-      requestStatus: 2
-    };
-    this.updateVolunteerStatus(updated);
-  }
-
-  updateVolunteerStatus(volunteer: any): void {
-    this.volunteerService.UpdateVolunteerStatus(volunteer).subscribe({
-      next: (res) => {
-        if (res.isSucceeded) {
-          this.loadVolunteers();
-        } else {
-          this.errorMessage = 'فشل في تحديث الحالة.';
-        }
-      },
-      error: (err) => {
-        this.errorMessage = 'حدث خطأ في تحديث الحالة.';
-        console.error(err);
-      }
-    });
-  }
-
-  contactVolunteer(volunteer: Volunteer): void {
-    window.location.href = `mailto:${volunteer.email}`;
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+    }
   }
 }
