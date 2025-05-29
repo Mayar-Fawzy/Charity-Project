@@ -13,18 +13,18 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./volunteers.component.scss']
 })
 export class VolunteersComponent implements OnInit {
-  selectedType: string = 'activities'; // Fixed to activities as per request
+  selectedType: string = 'projects'; // Default to activities
   tabs = [
-    { label: 'قيد الانتظار', value: 0 }, // Pending
+    { label: 'قيد الانتظار', value: 3 }, // Pending
     { label: 'مقبول', value: 1 }, // Accepted
     { label: 'مرفوض', value: 2 }, // Rejected
   ];
-  selectedTab: number = 0; // Default to Pending
+  selectedTab: number = 3; // Default to Pending
   isLoading: boolean = false;
   errorMessage: string | null = null;
   filteredVolunteers: any[] = [];
   currentPage: number = 1;
-  pageSize: number = 6; // Adjust as needed
+  pageSize: number = 3;
   totalPages: number = 1;
   displayedPages: number[] = [];
   showLeftDots: boolean = false;
@@ -34,24 +34,25 @@ export class VolunteersComponent implements OnInit {
   constructor(private volunteerService: VolunteerActivityssService) {}
 
   ngOnInit(): void {
-    this.loadVolunteers(this.selectedTab, this.currentPage);
+    this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
   }
 
-  // Load paginated volunteer applications based on request status
-  loadVolunteers(requestStatus: number, page: number): void {
+  // Load paginated volunteer applications based on type and request status
+  loadVolunteers(type: string, requestStatus: number, page: number): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.volunteerService
-      .GetProjectsPaginatedByRequestStatus(requestStatus, page, this.pageSize, 1)
-      .pipe(
-        finalize(() => (this.isLoading = false))
-      )
+    const serviceCall = type === 'projects'
+      ? this.volunteerService.GetProjectsPaginatedByRequestStatus(requestStatus, page, this.pageSize, 1)
+      : this.volunteerService.GetActivitiesPaginatedByRequestStatus(requestStatus, page, this.pageSize, 1);
+
+    serviceCall
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: any) => {
-          if (response && response.data && response.data.items) {
-            this.fetchVolunteerDetails(response.data.items);
-            this.updatePagination(response.data.totalPages, page);
+          if (response.isSucceeded) {
+            this.fetchVolunteerDetails(response.data, type);
+            this.updatePagination(response.totalPages, page);
           } else {
             this.filteredVolunteers = [];
             this.errorMessage = 'لا توجد بيانات متاحة';
@@ -65,52 +66,61 @@ export class VolunteersComponent implements OnInit {
       });
   }
 
-  // Fetch additional details for each volunteer application (user and activity details)
-  fetchVolunteerDetails(applications: any[]): void {
+  // Fetch additional details for each volunteer application
+  fetchVolunteerDetails(applications: any[], type: string): void {
     const requests: Observable<any>[] = applications.map((app) =>
       forkJoin({
         user: this.volunteerService.GetUserById(app.volunteerId),
-        activity: this.volunteerService.GetVolunteerActivityById(app.volunteerActivityId),
+        details: type === 'projects'
+          ? this.volunteerService.GetProjectById(app.projectId)
+          : this.volunteerService.GetVolunteerActivityById(app.volunteerActivityId),
       })
     );
 
-    forkJoin(requests).subscribe({
+  forkJoin(requests).subscribe({
       next: (results: any[]) => {
-        this.filteredVolunteers = applications.map((app, index) => ({
-          id: app.id,
-          volunteerId: app.volunteerId,
-          volunteerActivityId: app.volunteerActivityId,
-          name: results[index].user?.data?.name || 'غير معروف',
-          email: results[index].user?.data?.email || 'غير متوفر',
-          phone: results[index].user?.data?.phoneNumber || 'غير متوفر',
-          gender: results[index].user?.data?.gender ?? 2, // 2 for unspecified
-          imageUrl: results[index].user?.data?.imageUrl || 'assets/default-avatar.png',
-          projectAddress: results[index].activity?.data?.address || 'غير متوفر', // Assuming activity has address
-          projectDescription: results[index].activity?.data?.description || 'غير متوفر',
-          createdDate: app.createdDate || null,
-          requestStatus: app.requestStatus,
-        }));
+        this.filteredVolunteers = applications.map((app, index) => {
+          const userData = results[index].user?.data;
+          const gender = userData?.gender ?? 2; // Default to 2 (unspecified) if no gender
+          const imageUrl = userData?.imageUrl || (gender === 0 ? '/Images/undraw_male-avatar_zkzx.svg' : '/Images/undraw_female-avatar_7t6k.svg');
+
+          return {
+            id: app.id,
+            volunteerId: app.volunteerId,
+            volunteerActivityId: app.volunteerActivityId,
+            firstName: userData?.firstName || 'غير معروف',
+            email: userData?.email || 'غير متوفر',
+            phone: userData?.phoneNumber || 'غير متوفر',
+            gender: gender,
+            imageUrl: imageUrl,
+            projectAddress: results[index].details?.data?.name || 'غير متوفر',
+            projectDescription: results[index].details?.data?.description || results[index].details?.data?.activityDescription || 'غير متوفر',
+            createdDate: app.createdDate || null,
+            requestStatus: app.requestStatus,
+          };
+        });
       },
       error: (err) => {
         this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل المتطوعين';
         console.error(err);
       },
     });
+  
   }
 
   // Handle tab change (Pending, Accepted, Rejected)
   onTabChange(tabValue: number): void {
     this.selectedTab = tabValue;
     this.currentPage = 1; // Reset to first page
-    this.loadVolunteers(this.selectedTab, this.currentPage);
+    this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
   }
 
-  // Handle tab change for main tabs (activities/projects, currently fixed to activities)
+  // Handle tab change for main tabs (activities/projects)
   changeTab(type: string): void {
     this.selectedType = type;
-    this.selectedTab = 0; // Reset to Pending
+    this.selectedTab = 3; // Reset to Pending
     this.currentPage = 1;
-    this.loadVolunteers(this.selectedTab, this.currentPage);
+    this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
   }
 
   // Pagination methods
@@ -149,21 +159,21 @@ export class VolunteersComponent implements OnInit {
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
-      this.loadVolunteers(this.selectedTab, this.currentPage);
+      this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
     }
   }
 
   goToPrevious(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.loadVolunteers(this.selectedTab, this.currentPage);
+      this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
     }
   }
 
   goToNext(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.loadVolunteers(this.selectedTab, this.currentPage);
+      this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
     }
   }
 
@@ -173,13 +183,14 @@ export class VolunteersComponent implements OnInit {
       id: volunteer.id,
       volunteerId: volunteer.volunteerId,
       requestDetails: null,
-      volunteerActivityId: volunteer.volunteerActivityId,
+      volunteerActivityId: this.selectedType === 'activities' ? volunteer.volunteerActivityId : null,
+      projectId: this.selectedType === 'projects' ? volunteer.projectId : null,
       requestStatus: 1, // Accepted
     };
 
     this.volunteerService.UpdateVolunteerStatus(volunteerApplication).subscribe({
       next: () => {
-        this.loadVolunteers(this.selectedTab, this.currentPage); // Refresh data
+        this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage); // Refresh data
       },
       error: (err) => {
         this.errorMessage = 'حدث خطأ أثناء قبول المتطوع';
@@ -193,13 +204,14 @@ export class VolunteersComponent implements OnInit {
       id: volunteer.id,
       volunteerId: volunteer.volunteerId,
       requestDetails: null,
-      volunteerActivityId: volunteer.volunteerActivityId,
+      volunteerActivityId: this.selectedType === 'activities' ? volunteer.volunteerActivityId : null,
+      projectId: this.selectedType === 'projects' ? volunteer.projectId : null,
       requestStatus: 2, // Rejected
     };
 
     this.volunteerService.UpdateVolunteerStatus(volunteerApplication).subscribe({
       next: () => {
-        this.loadVolunteers(this.selectedTab, this.currentPage); // Refresh data
+        this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage); // Refresh data
       },
       error: (err) => {
         this.errorMessage = 'حدث خطأ أثناء رفض المتطوع';
@@ -209,14 +221,12 @@ export class VolunteersComponent implements OnInit {
   }
 
   contactVolunteer(volunteer: any): void {
-    // Placeholder for contact functionality (e.g., open email client or messaging)
-    alert(`تواصل مع ${volunteer.name} على البريد: ${volunteer.email}`);
+    alert(`تواصل مع ${volunteer.firstName} على البريد: ${volunteer.email}`);
   }
 
   // Image modal handling
   openImage(imageUrl: string): void {
     this.selectedImage = imageUrl;
-    // Assuming you're using Bootstrap's modal
     const modal = document.getElementById('imageModal');
     if (modal) {
       modal.classList.add('show');
@@ -232,4 +242,5 @@ export class VolunteersComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
+  
 }
