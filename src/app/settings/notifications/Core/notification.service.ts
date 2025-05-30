@@ -1,0 +1,60 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class NotificationService {
+  private baseUrl = 'https://givinghandcharity.runasp.net/api/v1/Notification';
+
+  public countChangedSubject = new Subject<number>();
+
+  countChanged$ = this.countChangedSubject.asObservable();
+
+  constructor(private http: HttpClient) { }
+
+  getNotificationsByReceiver(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/GetAllMessagesByReceiveId?receiveId=${userId}`);
+  }
+
+  markAsRead(notificationId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/MakeMessageIsRead?messageId=${notificationId}`, {}).pipe(
+      tap(() => this.countChangedSubject.next(-1))
+    );
+  }
+
+  getNotificationCount(userId: string): Observable<number> {
+    return this.http.get<any>(`${this.baseUrl}/GetCountMessagesById?receiveId=${userId}`)
+      .pipe(
+        tap(res => console.log(' Count response:', res)),
+        tap(res => {
+          if (typeof res.data !== 'undefined') {
+            const parsed = parseInt(res.data, 10);
+            if (isNaN(parsed)) throw new Error('Invalid count');
+          }
+        }),
+        map(res => parseInt(res.data, 10))
+      );
+  }
+
+  // sendNotificationToUser(
+  //   userId: string,
+  //   title: string,
+  //   message: string,
+  //   type: string
+  // ): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/send-to-user`, {
+  //     userId,
+  //     title,
+  //     message,
+  //     type,
+  //     senderId: '989abfd4-5e3a-4cbd-8f34-6d13613e12ec' // ID ثابت للمشرف
+  //   });
+  // }
+
+
+
+
+} 

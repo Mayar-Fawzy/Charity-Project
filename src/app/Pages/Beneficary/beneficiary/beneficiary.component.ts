@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { InkindData } from '../core/Interface/inkind-pages';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { VolunteerActivityReqService } from '../core/Services/volunteer-activity-req.service';
+declare var bootstrap: any;
 
 
 @Component({
@@ -302,4 +303,15 @@ requestedProjects: Set<string> = new Set();
     console.log(AssistanceRequestBody);
   }
 
+  // popup model 
+  selectedProduct: any = null;
+
+  openProductDescriptionPopup(product: any): void {
+    this.selectedProduct = product;
+    const modalElement = document.getElementById('productDescriptionModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
 }

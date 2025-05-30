@@ -51,26 +51,26 @@ export class LoginComponent {
       (res) => {
         this.isloading = true;
         console.log('resLogin', res);
-   
+
         if (res.isSucceeded) {
-        
+
 
           localStorage.setItem('userToken', res.data.jwtModel.jwt);
           localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
 
-       
-          
 
-           
-// #endregion
+
+
+
+          // #endregion
 
           this._LoginService.saveUserAuth();
-          if(formInfo.value.email == 'GivingHand@gmail.com'&& formInfo.value.password == '1Q2w3e4@'){
+          if (formInfo.value.email == 'GivingHand@gmail.com' && formInfo.value.password == '1Q2w3e4@') {
             this._Router.navigate(['/admin']);
           }
-          else{
+          else {
             this.isloading = true;
-          this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
+            this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
             this._Router.navigate(['/home']);
           }
         }
@@ -83,9 +83,9 @@ export class LoginComponent {
     );
   }
   showPasswordLogin = false;
- 
+
   togglePasswordVisibilityLogin() {
     this.showPasswordLogin = !this.showPasswordLogin;
-   
+
   }
 }

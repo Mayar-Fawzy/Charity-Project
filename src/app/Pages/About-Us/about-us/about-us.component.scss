@@ -37,6 +37,23 @@ $card-bg: #1a1a1a;
         opacity: 0.9;
     }
 
+    .acknowledgement-title {
+        font-size: 2.2rem;
+        color: $gold-color;
+        margin: 3rem 0 1rem;
+        font-weight: 700;
+    }
+
+    .acknowledgement-text {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        line-height: 1.8;
+        opacity: 0.9;
+        color: lighten($white-color, 10%);
+    }
+
+
     // Timeline Section
     .timeline {
         position: relative;

@@ -1,5 +1,5 @@
 <!-- >>>>>>>>>>>> header  -->
-<section class="cta-section">
+<section id="volunteer" class="cta-section">
   <div class="image-container">
     <img src="/Images/volunteer-heager.png" alt="" />
     <div class="overlay"></div>
@@ -14,26 +14,29 @@
     <!-- الأزرار -->
 
     <div class="action-buttons">
-      <button class="btn donate-btn">
+      <button class="btn donate-btn" [routerLink]="['/donor']">
         <i class="bi bi-heart-fill"></i>
         تبرع الآن
       </button>
 
-      <button class="btn volunteer-btn">
+      <button
+        class="btn volunteer-btn"
+        onclick="document.getElementById('volnt-Project').scrollIntoView({behavior: 'smooth'})"
+      >
         <i class="bi bi-search"></i>
         اكتشف المشاريع
       </button>
 
-      <button class="btn help-btn">
+      <!-- <button class="btn help-btn">
         <i class="bi bi-handshake"></i>
-        كن متطوعًا
-      </button>
+        الأنشطة التطوعية
+      </button> -->
     </div>
   </div>
 </section>
 
 <!-- >>>>>>>>>>>>>>>>>>> dashborad -->
- <section class="dashboard" id="dashboard">
+<section class="dashboard" id="dashboard">
   <div class="container">
     <div class="stats">
       <div class="stat-item" onclick="this.classList.toggle('flipped')">
@@ -97,10 +100,10 @@
       </div>
     </div>
   </div>
-</section> 
+</section>
 
 <!-- >>>>>>>>>>>> Gallery -->
- <section class="gallery py-5 bg-white">
+<section class="gallery py-5 bg-white">
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="fw-bold">معرض الصور</h2>
@@ -108,7 +111,6 @@
         تصفّح <span class="text-warning fw-semibold">ألبومنا </span>
       </p>
     </div>
-    
 
     <div class="row g-4">
       <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of galleryItems">
@@ -130,7 +132,7 @@
       </div>
     </div>
   </div>
-</section> 
+</section>
 
 <!-- >>>>>>>>>>>>>>>>>>> success-cards -->
 <section class="success-stories-section position-relative py-5 bg-light">
@@ -245,7 +247,7 @@
 </section>
 
 <!-- >>>>>>>>>>>>>>>>>>> project  -->
-<section class="active-projects-section container py-5">
+<section id="volnt-Project" class="active-projects-section container py-5">
   <h2 class="text-center mb-4 fw-bold">المشاريع النشطة</h2>
 
   <p-carousel
@@ -265,13 +267,17 @@
             class="card-img-top"
             [alt]="project.name"
           />
-           <div class="badge" >{{ project.projectStatus | projectStatusAr }}</div>
+          <div class="badge">{{ project.projectStatus | projectStatusAr }}</div>
           <div class="card-body">
             <h5 class="card-title fw-bold">{{ project.name }}</h5>
             <ul class="list-unstyled text-muted small">
-              <li> 
+              <li>
                 <i class="bi bi-calendar-event text-warning me-1"></i>
-                المدة: {{ getProjectDurationInDays(project.startDate, project.endDate) }} يوم
+                المدة:
+                {{
+                  getProjectDurationInDays(project.startDate, project.endDate)
+                }}
+                يوم
               </li>
               <li>
                 <i class="bi bi-cash-coin text-warning me-1"></i>
@@ -293,8 +299,13 @@
                 ></div>
               </div>
             </div>
-  
-            <button class="btn btn-warning w-100" (click)="onJoinProject(project.id)" >انضم كمتطوع</button>
+
+            <button
+              class="btn btn-warning w-100"
+              (click)="onJoinProject(project.id)"
+            >
+              انضم كمتطوع
+            </button>
           </div>
         </div>
       </div>

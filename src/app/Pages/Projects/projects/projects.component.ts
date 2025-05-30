@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { Data } from '../../../Pages/Donor/core/interface/iproject-donate';
 import { ProjectPagenationService } from '../Core/Services/project-pagenation.service';
 import Swal from 'sweetalert2';
 import { ProjectStatusArPipe } from '../Core/Pipe/project-status-ar.pipe';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-projects',
@@ -143,5 +144,20 @@ export class ProjectsComponent implements OnInit {
       this.getPaginatedProjectsFromAPI();
     }
   }
-  
+
+
+  // pupop model 
+  selectedProject: Data | null = null;
+
+  openDescriptionPopup(project: Data) {
+    this.selectedProject = project;
+
+    const modalElement = document.getElementById('descriptionModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+
 }
