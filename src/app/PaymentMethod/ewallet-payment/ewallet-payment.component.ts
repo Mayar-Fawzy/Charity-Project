@@ -1,25 +1,37 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { HomedonateServiesService } from '../../Pages/Donor/core/Services/homedonate-servies.service';
+import { loadStripe } from '@stripe/stripe-js';
+
 import { ActivatedRoute } from '@angular/router';
 import { Data } from '../../Pages/Donor/core/interface/iproject-donate';
+import { LoginService } from '../../Pages/Auth/core/Services/login.service';
+import { PaymentService } from '../../core/Services/payment.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ewallet-payment',
   standalone: true,
-  imports: [],
   templateUrl: './ewallet-payment.component.html',
-  styleUrls: ['./ewallet-payment.component.scss']
+  styleUrls: ['./ewallet-payment.component.scss'],
+  imports: [FormsModule],
 })
 export class EwalletPaymentComponent implements OnInit {
   private readonly _HomedonateServiesService = inject(HomedonateServiesService);
   private readonly _ActivatedRoute = inject(ActivatedRoute);
+  private readonly _PaymentService = inject(PaymentService);
+  private readonly _LoginService = inject(LoginService);
 
+  donorId = this._LoginService.donorId;
+  projectId: string | null = null;
   projects: Data[] = [];
 
+  amount: number = 0;
+  phone: string = '';
+
   ngOnInit(): void {
-    const projectId = this._ActivatedRoute.snapshot.paramMap.get('id');
-    if (projectId) {
-      this._HomedonateServiesService.getProjectById(projectId).subscribe({
+    this.projectId = this._ActivatedRoute.snapshot.paramMap.get('id');
+    if (this.projectId) {
+      this._HomedonateServiesService.getProjectById(this.projectId).subscribe({
         next: (res) => {
           this.projects = res.data;
         },
@@ -29,5 +41,24 @@ export class EwalletPaymentComponent implements OnInit {
       });
     }
   }
-  
+
+  onDonateNow(): void {
+    if (!this.amount || !this.donorId || !this.projectId) {
+      alert('يرجى إدخال المبلغ والتأكد من تسجيل الدخول.');
+      return;
+    }
+
+    this._PaymentService.createPaymentIntent(this.amount, this.donorId, this.projectId)
+      .subscribe({
+        next: (res) => {
+          console.log('PaymentIntent created:', res);
+          alert('تم إنشاء طلب الدفع بنجاح!');
+          // يمكنك توجيه المستخدم إلى صفحة الدفع الفعلية مثلاً
+        },
+        error: (err) => {
+          console.error('فشل إنشاء PaymentIntent:', err);
+          alert('حدث خطأ أثناء إنشاء الدفع.');
+        }
+      });
+  }
 }

@@ -36,7 +36,7 @@
 
     <div class="secure-note">
       <p>
-        <i class="bi bi-shield-lock"></i> لا نقوم بتخزين بيانات بطاقتك. جميع المعاملات مشفرة وآمنة بالكامل.
+        <i class="bi bi-shield-lock"></i> لا نقوم بتخزين بيانات بطاقتك. جميع المعاملات مشفرة وآمنة بالكامل
       </p>
     </div>
 
@@ -62,7 +62,8 @@
     <div class="donation-inputs row g-2 mb-3">
       <input type="text" placeholder="أدخل رقم الهاتف" class="phone-input" />
 
-      <input type="number" id="amount" placeholder="قيمة التبرع (ج.م)" min="0" step="10" class="phone-input"/>
+      <input type="number" id="amount" placeholder="قيمة التبرع (ج.م)" min="0" step="10" class="phone-input" class="phone-input"
+  [(ngModel)]="amount"/>
     </div>
 
     <div class="secure-labels">
@@ -70,7 +71,7 @@
       <span class="pci"><i class="bi bi-check-circle"></i> متوافق مع PCI DSS</span>
     </div>
 
-    <button class="donate-btn">تبرع الآن</button>
+    <button class="donate-btn" (click)="onDonateNow()">تبرع الآن</button>
     <p class="terms-text">
       بالضغط على "تبرع الآن"، فإنك توافق على
       <a href="#">الشروط والأحكام</a>
