@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { HomedonateServiesService } from '../../Pages/Donor/core/Services/homedonate-servies.service';
 import { loadStripe } from '@stripe/stripe-js';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Data } from '../../Pages/Donor/core/interface/iproject-donate';
 import { LoginService } from '../../Pages/Auth/core/Services/login.service';
 import { PaymentService } from '../../core/Services/payment.service';
@@ -20,7 +20,7 @@ export class EwalletPaymentComponent implements OnInit {
   private readonly _ActivatedRoute = inject(ActivatedRoute);
   private readonly _PaymentService = inject(PaymentService);
   private readonly _LoginService = inject(LoginService);
-
+  private readonly _Router=inject(Router)
   donorId = this._LoginService.donorId;
   projectId: string | null = null;
   projects: Data[] = [];
@@ -54,7 +54,8 @@ export class EwalletPaymentComponent implements OnInit {
           console.log('PaymentIntent created:', res);
           alert('تم إنشاء طلب الدفع بنجاح!');
           // يمكنك توجيه المستخدم إلى صفحة الدفع الفعلية مثلاً
-        },
+          this._Router.navigate(['visa-payment', this.projectId]);
+          this        },
         error: (err) => {
           console.error('فشل إنشاء PaymentIntent:', err);
           alert('حدث خطأ أثناء إنشاء الدفع.');

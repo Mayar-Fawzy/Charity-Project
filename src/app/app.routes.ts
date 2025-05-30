@@ -60,7 +60,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'visa-payment',
+        path: 'visa-payment/:id',
         title: 'Visa Payment',
         component: VisaPaymentComponent
       },
