@@ -234,3 +234,17 @@ $text-light: #fff;
     grid-template-columns: 1fr !important;
   }
 }
+#card-element {
+  background: #fff;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  direction: ltr; // Stripe Elements تحتاج LTR حتى لو باقي الصفحة RTL
+}
+
+button.donate-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+}

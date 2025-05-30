@@ -54,8 +54,10 @@ export class EwalletPaymentComponent implements OnInit {
           console.log('PaymentIntent created:', res);
           alert('تم إنشاء طلب الدفع بنجاح!');
           // يمكنك توجيه المستخدم إلى صفحة الدفع الفعلية مثلاً
-          this._Router.navigate(['visa-payment', this.projectId]);
-          this        },
+         this._Router.navigate(['visa-payment', this.projectId], 
+          {state: { clientSecret: res.data }});
+      
+         },
         error: (err) => {
           console.error('فشل إنشاء PaymentIntent:', err);
           alert('حدث خطأ أثناء إنشاء الدفع.');

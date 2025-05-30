@@ -18,27 +18,12 @@
   <section class="payment-box">
     <h2 class="title">اختر طريقة الدفع</h2>
 
-    <!-- >>>>>>>>>>>>>>>>>>>>.. payment-methods -->
     <div class="payment-methods">
       <div class="method active">
         <i class="bi bi-credit-card-2-front"></i>
         <div>
           <h3>بطاقة ائتمان/خصم</h3>
           <p>أدخل تفاصيل بطاقتك (Visa، MasterCard، أو أي بطاقة دولية)</p>
-        </div>
-      </div>
-      <div class="method">
-        <i class="bi bi-wallet2"></i>
-        <div>
-          <h3>المحافظ الإلكترونية</h3>
-          <p>اختر محفظتك (فوري، فودافون كاش، أورنج موني، الخ...)</p>
-        </div>
-      </div>
-      <div class="method">
-        <i class="bi bi-paypal"></i>
-        <div>
-          <h3>باي بال</h3>
-          <p>للتبرعات الدولية (بالدولار أو اليورو)</p>
         </div>
       </div>
     </div>
@@ -48,20 +33,17 @@
       نحن لا نخزن بيانات بطاقتك. جميع المعاملات مشفرة وآمنة.
     </div>
 
-    <!-- >>>>>>>>>>>>>>>>>>>>>>> input-group -->
-    <div class="input-group">
-      <input type="text" placeholder="رقم البطاقة" />
-      <input type="text" placeholder="اسم حامل البطاقة" value="Ahmed Saad" />
-      <input type="text" placeholder="تاريخ الانتهاء (MM/YY)" />
-      <input type="text" placeholder="رمز التحقق (CVV)" value="123" />
-    </div>
-    <!-- >>>>>>>>>>>>>>>>>>>>>>>> secure-labels -->
+    <!-- Stripe Card Element -->
+    <form id="payment-form">
+      <div id="card-element" class="card-input"></div>
+      <button type="submit" class="donate-btn">تبرع الآن</button>
+    </form>
+
     <div class="secure-labels">
       <span><i class="bi bi-lock-fill"></i> SSL آمن</span>
       <span><i class="bi bi-shield-lock"></i> متوافق مع PCI-DSS</span>
     </div>
 
-    <button class="donate-btn">تبرع الآن</button>
     <p class="terms">
       بالنقر على زر "تبرع الآن" فإنك توافق على <a href="#">الشروط والأحكام</a>
     </p>
