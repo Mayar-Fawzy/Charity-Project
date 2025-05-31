@@ -81,7 +81,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.subscriptions.push(userSub);
 
       const countSub = this._NotificationsService.countChanged$.subscribe(change => {
-        this.notificationCount += change;
+        this.loadNotificationCount();
         this._cdr.detectChanges();
       });
       this.subscriptions.push(countSub);
