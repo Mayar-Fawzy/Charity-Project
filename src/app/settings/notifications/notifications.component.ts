@@ -166,21 +166,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     const minutesInMonth = 43200;
 
     if (diffInMinutes < minutesInHour) {
-      return { value: diffInMinutes, unit: 'د' }; // دقائق
+      return { value: diffInMinutes, unit: 'د' };
     }
 
     if (diffInMinutes < minutesInDay) {
       const hours = Math.floor(diffInMinutes / minutesInHour);
-      return { value: hours, unit: 'س' }; // ساعات
+      return { value: hours, unit: 'س' };
     }
 
     if (diffInMinutes < minutesInMonth) {
       const days = Math.floor(diffInMinutes / minutesInDay);
-      return { value: days, unit: 'ي' }; // أيام
+      return { value: days, unit: 'ي' };
     }
 
     const months = Math.floor(diffInMinutes / minutesInMonth);
-    return { value: months, unit: 'ش' }; // شهور
+    return { value: months, unit: 'ش' };
   }
 
 
