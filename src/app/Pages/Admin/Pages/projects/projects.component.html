@@ -1,16 +1,55 @@
 <section class="container my-4 text-end">
-  <button class="btn btn-warning mb-4" (click)="openAddModal(projectModal)">
-    <i class="bi bi-plus-circle"></i> إضافة مشروع
-  </button>
+  <!-- Header with Add Button and Pagination -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <button class="btn btn-warning" (click)="openAddModal(projectModal)">
+      <i class="bi bi-plus-circle"></i> إضافة مشروع
+    </button>
+
+    <!-- Pagination -->
+    <nav class="pagination-wrapper">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class قبول="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+        
+        <li class="page-item dots" *ngIf="showLeftDots">
+          <span class="page-link">...</span>
+        </li>
+        
+        <li class="page-item" *ngFor="let page of displayedPages" [class.active]="currentPage === page">
+          <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+        </li>
+        
+        <li class="page-item dots" *ngIf="showRightDots">
+          <span class="page-link">...</span>
+        </li>
+        
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
   <div class="row g-3">
-    <div class="col-md-6 col-lg-4" *ngFor="let project of projectss">
+    <div class="col-md-6 col-lg-4" *ngFor="let project of paginatedProjects">
       <div class="card h-100 shadow-sm">
         <img [src]="project.imageUrl" class="card-img-top" alt="Project Image" />
+        <div class="badge">
+  {{
+    project.projectStatus === 1 ? 'جاري التنفيذ' :
+    project.projectStatus === 2 ? 'مكتمل' :
+    project.projectStatus === 3 ? 'قيد التنفيذ' : 'غير معروف'
+  }}
+</div>
         <div class="card-body p-0 text-end">
           <h5 class="card-title pt-3">{{ project.name }}</h5>
-          <p class="card-text">   {{ project.description | slice : 0 : 60 }}...</p>
-         
+          <p class="card-text">{{ project.description | slice:0:60 }}...</p>
+          
           <div class="progress-container my-2">
             <div class="progress-label d-flex justify-content-between">
               <span>نسبة التقدم</span>
@@ -21,18 +60,22 @@
             </div>
           </div>
 
-          <p class="mb-2">الهدف: {{ project.targetAmount| number }}</p>
+          <p class="mb-2">الهدف: {{ project.targetAmount | number }}</p>
+          <div class="date-container mb-2 d-flex justify-content-between">
+            <div class="date-item">
+              <span class="date-label">البداية:</span>
+              <span class="date-value">{{ project.startDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="date-item">
+              <span class="date-label">النهاية:</span>
+              <span class="date-value">{{ project.endDate | date:'dd/MM/yyyy' }}</span> 
+            </div>
+          </div>
           <div class="d-flex justify-content-between">
-            <button
-              class="btn btn-outline-primary btn-sm"
-              (click)="openEditModal(project, projectModal)"
-            >
+            <button class="btn btn-outline-primary btn-sm" (click)="openEditModal(project, projectModal)">
               <i class="bi bi-pencil-square"></i> تحديث
             </button>
-            <button
-              class="btn btn-outline-danger btn-sm"
-              (click)="deleteProject(project.id)"
-            >
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteProject(project.id)">
               <i class="bi bi-trash"></i> حذف
             </button>
           </div>
@@ -47,100 +90,94 @@
       <h5 class="modal-title ms-auto">
         {{ selectedProject ? "تحديث مشروع" : "إضافة مشروع" }}
       </h5>
-
-      <button
-        type="button"
-        class="btn-close me-auto"
-        aria-label="Close"
-        (click)="modal.dismiss()"
-      ></button>
+      <button type="button" class="btn-close me-auto" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <form action="">
+      <form [formGroup]="projectForm" (ngSubmit)="saveProject(modal)">
         <div class="mb-3">
-          <label class="form-label section-title">
-            <i class="bi bi-highlighter"></i> عنوان المشروع
-          </label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="projectForm.name"
-            name="title"
-          />
+          <label class="form-label section-title"><i class="bi bi-highlighter"></i> عنوان المشروع</label>
+          <input type="text" class="form-control" formControlName="name" placeholder="ادخل عنوان المشروع"
+                 [ngClass]="{'is-invalid': projectForm.get('name')?.invalid && projectForm.get('name')?.touched}">
+          <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="invalid-feedback">
+            اسم المشروع مطلوب ويجب أن يكون أكثر من 3 حروف ولا يكون مكرر.
+          </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label section-title">
-            <i class="bi bi-card-text"></i> وصف المشروع
-          </label>
-          <textarea
-            class="form-control"
-            [(ngModel)]="projectForm.description"
-            name="description"
-          ></textarea>
+          <label class="form-label section-title"><i class="bi bi-card-text"></i> وصف المشروع</label>
+          <textarea class="form-control" formControlName="description" placeholder="ادخل وصف المشروع"
+                    [ngClass]="{'is-invalid': projectForm.get('description')?.invalid && projectForm.get('description')?.touched}"></textarea>
+          <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched" class="invalid-feedback">
+            وصف المشروع مطلوب.
+          </div>
+        </div>
+
+        <!-- Show projectStatus only when editing -->
+        <div class="mb-3" *ngIf="selectedProject">
+          <label class="form-label section-title"><i class="bi bi-tag"></i> حالة المشروع</label>
+          <select class="form-control" formControlName="projectStatus"
+                  [ngClass]="{'is-invalid': projectForm.get('projectStatus')?.invalid && projectForm.get('projectStatus')?.touched}">
+            <option value="" disabled>اختر حالة المشروع</option>
+            <option value="1">جاري التنفيذ</option>
+            <option value="2">مكتمل</option>
+            <option value="3">قيد التنفيذ</option>
+          </select>
+          <div *ngIf="projectForm.get('projectStatus')?.invalid && projectForm.get('projectStatus')?.touched" class="invalid-feedback">
+            حالة المشروع مطلوبة.
+          </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label section-title">
-            <i class="bi bi-bullseye"></i> الهدف
-          </label>
-          <input
-            type="number"
-            class="form-control"
-            [(ngModel)]="projectForm.targetAmount"
-            name="goal"
-          />
+          <label class="form-label section-title"><i class="bi bi-bullseye"></i> الهدف</label>
+          <input type="number" class="form-control" formControlName="targetAmount" placeholder="ادخل الهدف"
+                 [ngClass]="{'is-invalid': projectForm.get('targetAmount')?.invalid && projectForm.get('targetAmount')?.touched}">
+          <div *ngIf="projectForm.get('targetAmount')?.invalid && projectForm.get('targetAmount')?.touched" class="invalid-feedback">
+            الهدف مطلوب ويجب أن يكون أكبر من 0.
+          </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label section-title">
-            <i class="bi bi-image"></i> صورة المشروع
-          </label>
-          <input
-            type="file"
-            class="form-control"
-            (change)="onImageSelected($event)"
-          />
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label section-title"><i class="bi bi-calendar"></i> تاريخ البداية</label>
+              <input type="date" class="form-control" formControlName="startDate"
+                     [ngClass]="{'is-invalid': projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched}">
+              <div *ngIf="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched" class="invalid-feedback">
+                تاريخ البداية مطلوب.
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label section-title"><i class="bi bi-calendar-check"></i> تاريخ النهاية</label>
+              <input type="date" class="form-control" formControlName="endDate"
+                     [ngClass]="{'is-invalid': projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched}">
+              <div *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched" class="invalid-feedback">
+                تاريخ النهاية مطلوب.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label section-title"><i class="bi bi-image"></i> صورة المشروع</label>
+          <input type="file" class="form-control" (change)="onImageSelected($event)"
+                 [ngClass]="{'is-invalid': projectForm.get('image')?.invalid && projectForm.get('image')?.touched}">
+          <div *ngIf="projectForm.get('image')?.invalid && projectForm.get('image')?.touched" class="invalid-feedback">
+            صورة المشروع مطلوبة.
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="modal.dismiss()">إلغاء</button>
+          <button type="submit" class="btn btn-success" [disabled]="isLoading || projectForm.invalid">
+            <ng-container *ngIf="!isLoading; else loading">
+              <i class="bi bi-check-circle"></i> حفظ
+            </ng-container>
+            <ng-template #loading>
+              <span>جاري الحفظ...</span>
+            </ng-template>
+          </button>
         </div>
       </form>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="modal.dismiss()">إلغاء</button>
-      <button class="btn btn-success" (click)="saveProject(modal)">
-        <i class="bi bi-check-circle"></i> حفظ
-      </button>
-    </div>
   </ng-template>
-    <!-- Pagination -->
-  <nav class="pagination-wrapper mt-4">
-    <ul class="pagination justify-content-center">
-      <!-- >>> Previous -->
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
-      </li>
-
-      <li class="page-item" *ngIf="showLeftDots">
-        <span class="page-link">...</span>
-      </li>
-
-      <!-- >>> Page numbers -->
-      <li
-        class="page-item"
-        *ngFor="let page of displayedPages"
-        [class.active]="currentPage === page"
-      >
-        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-      </li>
-
-      <li class="page-item" *ngIf="showRightDots">
-        <span class="page-link">...</span>
-      </li>
-
-      <!-- >>> Next -->
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">التالي</button>
-      </li>
-    </ul>
-  </nav>
-
 </section>

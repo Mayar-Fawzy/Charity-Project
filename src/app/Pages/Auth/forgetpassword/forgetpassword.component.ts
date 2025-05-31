@@ -17,7 +17,8 @@ export class ForgetpasswordComponent {
   private readonly _ForgetpasswordService=inject(ForgetpasswordService);
   private readonly _Router=inject(Router);
   codeInvalidLength: boolean = true;
-  step1: boolean = true;
+  step1: boolean = true; 
+  
   step2: boolean = false;
   step3: boolean = false;
   message: string = '';

@@ -1,1 +1,231 @@
-<p>volunteers works!</p>
+<div class="container mt-4">
+  <!-- Main Tabs -->
+  <ul class="nav nav-tabs custom-tabs justify-content-start mb-3">
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="selectedType === 'projects'"
+        (click)="changeTab('projects')"
+      >
+        تطوعات المشاريع
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="selectedType === 'activities'"
+        (click)="changeTab('activities')"
+      >
+        تطوعات الأنشطة
+      </button>
+    </li>
+  </ul>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">جاري التحميل...</span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-content mb-4" *ngIf="!isLoading">
+    <ul class="nav nav-tabs custom-tabs justify-content-center">
+      <li class="nav-item" *ngFor="let tab of tabs">
+        <button
+          class="nav-link"
+          [class.active]="selectedTab === tab.value"
+          (click)="onTabChange(tab.value)"
+        >
+          {{ tab.label }}
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="totalPages > 1" class="pagination-container">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button
+          class="page-link"
+          (click)="goToPrevious()"
+          [disabled]="currentPage === 1"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </li>
+
+      <li class="page-item dots" *ngIf="showLeftDots">
+        <span class="page-link">...</span>
+      </li>
+
+      <li
+        *ngFor="let page of displayedPages"
+        class="page-item"
+        [class.active]="currentPage === page"
+      >
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+
+      <li class="page-item dots" *ngIf="showRightDots">
+        <span class="page-link">...</span>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button
+          class="page-link"
+          (click)="goToNext()"
+          [disabled]="currentPage === totalPages"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Volunteers -->
+  <div class="row" *ngIf="!isLoading && !errorMessage">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let volunteer of filteredVolunteers">
+      <div class="card h-100 shadow-sm custom-volunteer-card">
+        <div class="text-center mt-3">
+          <img
+            [src]="volunteer.imageUrl"
+            alt="صورة المتطوع"
+            class="rounded-circle avatar-img"
+            style="width: 120px; height: 120px; object-fit: cover;"
+            (click)="openImage(volunteer.imageUrl)"
+          />
+        </div>
+
+        <div class="card-body">
+          <h5 class="card-title text-center mb-3">{{ volunteer.firstName || 'غير معروف' }}</h5>
+
+          <div class="form-group mb-2">
+            <label>البريد:</label>
+            <input type="text" class="form-control" [value]="volunteer.email || 'غير متوفر'" readonly />
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>رقم الهاتف:</label>
+              <input type="text" class="form-control" [value]="volunteer.phone || 'غير متوفر'" readonly />
+            </div>
+            <div class="col-6">
+              <label>الجنس:</label>
+              <input
+                type="text"
+                class="form-control"
+                [value]="volunteer.gender === 0 ? 'ذكر' : (volunteer.gender === 1 ? 'أنثى' : 'غير محدد')"
+                readonly
+              />
+            </div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label>{{ selectedType === 'projects' ? 'عنوان المشروع' : 'عنوان النشاط' }}:</label>
+            <input type="text" class="form-control" [value]="volunteer.projectAddress || 'غير متوفر'" readonly />
+          </div>
+
+          <div class="form-group mb-3">
+            <label>{{ selectedType === 'projects' ? 'وصف المشروع' : 'وصف النشاط' }}:</label>
+            <textarea
+              class="form-control dess"
+              rows="2"
+              [ngModel]="getTruncatedDescription(volunteer)"
+              readonly
+            ></textarea>
+            <small *ngIf="!volunteer.projectDescription" class="text-warning">لا يوجد وصف متاح</small>
+          </div>
+
+          <div class="form-group mb-3">
+            <label>تاريخ التقديم:</label>
+            <input type="text" class="form-control" [value]="volunteer.createdDate ? (volunteer.createdDate | date:'yyyy-MM-dd') : 'غير متوفر'" readonly />
+          </div>
+        </div>
+
+        <div class="card-footer bg-transparent border-0 d-flex justify-content-between gap-2">
+          <!-- Pending (requestStatus === 3) -->
+          <ng-container *ngIf="volunteer.requestStatus === 3">
+            <button
+              class="btn btn-success w-100"
+              (click)="acceptVolunteer(volunteer)"
+            >
+              قبول
+            </button>
+            <button
+              class="btn btn-reject w-100"
+              (click)="rejectVolunteer(volunteer)"
+            >
+              رفض
+            </button>
+            <button
+              class="btn btn-contact w-100"
+              (click)="contactVolunteer(volunteer)"
+            >
+              تواصل
+            </button>
+          </ng-container>
+
+          <!-- Accepted (requestStatus === 1) -->
+          <ng-container *ngIf="volunteer.requestStatus === 1">
+            <button
+              class="btn btn-reject w-100"
+              (click)="rejectVolunteer(volunteer)"
+            >
+              رفض
+            </button>
+            <button
+              class="btn btn-contact w-100"
+              (click)="contactVolunteer(volunteer)"
+            >
+              تواصل
+            </button>
+          </ng-container>
+
+          <!-- Rejected (requestStatus === 2) -->
+          <ng-container *ngIf="volunteer.requestStatus === 2">
+            <button
+              class="btn btn-contact w-100"
+              (click)="contactVolunteer(volunteer)"
+            >
+              تواصل
+            </button>
+            <button
+              class="btn btn-danger w-100"
+              (click)="deleteVolunteer(volunteer.id)"
+            >
+              حذف
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center" *ngIf="filteredVolunteers.length === 0 && !isLoading && !errorMessage">
+      <p>لا توجد بيانات لعرضها.</p>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeImageModal()"></button>
+        </div>
+        <div class="modal-body p-0">
+          <img [src]="selectedImage" class="img-fluid rounded" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

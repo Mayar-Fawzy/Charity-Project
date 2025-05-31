@@ -269,8 +269,9 @@
                 type="button"
                 class="btn btn-danger w-100"
                 (click)="onCancel()"
+                [disabled]="!hasFormChanges"
               >
-                إلغاء
+                إلغاء التغييرات
               </button>
             </div>
           </div>

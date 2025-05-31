@@ -1,34 +1,48 @@
-<section class="notifications-container card p-4 shadow-sm rounded-4 pb-4">
+<div class="notifications-container card p-4 shadow-sm rounded-4 pb-4">
   <h2 class="text-center text-warning mb-4 fs-3 fw-bold">الإشعارات</h2>
 
-  <div class="d-flex gap-2 flex-wrap justify-content-center mb-4">
-    <button class="btn btn-warning px-4">الكل</button>
-    <button class="btn btn-outline-warning px-4">مهام جديدة</button>
-    <button class="btn btn-outline-warning px-4">تبرعات جديدة</button>
-    <button class="btn btn-outline-warning px-4">إشعارات هامة</button>
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border text-warning"></div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
   </div>
 
   <div
-  *ngFor="let notification of notifications"
-  class="notification-item"
-  [ngClass]="notification.bgClass"
->
-  <div class="icon-circle" [ngClass]="notification.iconColor">
-    <i [ngClass]="notification.icon"></i>
-  </div>
-
-  <div class="flex-grow-1">
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-1">
-      <div class="fw-semibold d-flex align-items-center gap-2">
-        {{ notification.title }}
-        <span class="badge badge-time">
-          {{ notification.timeValue }}{{ notification.timeUnit }}
-        </span>
+    *ngFor="let notification of notifications; trackBy: trackById"
+    class="notification-item d-flex align-items-start justify-content-between"
+    [ngClass]="{ unread: !notification.isRead, read: notification.isRead }"
+    (click)="onMarkAsRead(notification.id)"
+  >
+    <!-- الجرس و العنوان + النوع -->
+    <div class="right-side d-flex align-items-center">
+      <div class="icon-wrapper position-relative">
+        <i [class]="notification.icon + ' ' + notification.iconColor"></i>
+        <div class="unread-indicator" *ngIf="!notification.isRead"></div>
       </div>
-      <a href="#" class="text-primary small text-decoration-none">عرض التفاصيل</a>
+      <div
+        class="title text-nowrap fw-bold pe-2"
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+      >
+        {{ notification.title }}
+      </div>
     </div>
-    <div class="text-muted">{{ notification.message }}</div>
+
+    <!-- محتوى الرسالة-->
+    <div class="content flex-grow-1">
+      <div class="message text-wrap text-break">
+        {{ notification.message }}
+      </div>
+    </div>
+
+    <!-- أيقونة الحذف -->
+    <span
+      class="delete-btn me-1"
+      (click)="onDeleteNotification(notification.id); $event.stopPropagation()"
+      title="حذف الإشعار"
+    >
+      <i class="bi bi-trash-fill"></i>
+    </span>
   </div>
 </div>
-
-</section>

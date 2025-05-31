@@ -1,1 +1,54 @@
-<p>work works!</p>
+
+    <div class="header-modern all">
+  <div class="header-background">
+    <div class="header-pattern"></div>
+    <div class="header-glow"></div>
+  </div>
+
+  <div class="container">
+<div class="header-content">
+  <div class="header-info">
+    <div class="header-icon">
+      <i class="fas fa-hands-helping"></i>
+    </div>
+    <div class="header-text">
+      <h1 class="header-title">طلبات التطوع</h1>
+      <p class="header-subtitle">إدارة ومتابعة طلبات التطوع والمشاركة المجتمعية</p>
+    </div>
+  </div>
+
+  <div class="header-stats">
+    <div class="stat-item">
+      <span class="stat-number">{{ requests.length }}</span>
+      <span class="stat-label">إجمالي الطلبات</span>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container " *ngIf="requests.length > 0; else noRequests">
+  <div *ngFor="let request of requests" class="request-card">
+    <h3>تفاصيل الطلب</h3>
+    <p>
+      <strong>المحتوى:</strong>
+      {{ request.requestDetails || 'لا توجد تفاصيل' }}
+    </p>
+    <p>
+      <strong>تاريخ الإنشاء:</strong>
+      {{ request.createdDate | date: 'yyyy-MM-dd' }}
+    </p>
+    <p>
+      <strong>الحالة:</strong>
+      <span [ngClass]="getStatusClass(request.requestStatus)">
+        {{ getStatusText(request.requestStatus) }}
+      </span>
+    </p>
+  </div>
+</div>
+
+<ng-template #noRequests>
+  <p style="text-align: center; margin-top: 2rem;">لا توجد طلبات حتى الآن.</p>
+</ng-template>
+
+  </div>
+</div>

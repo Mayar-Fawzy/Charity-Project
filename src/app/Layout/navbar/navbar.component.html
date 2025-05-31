@@ -15,43 +15,77 @@
     <!-- Nav Menu -->
     <ul class="navbar__menu" [class.open]="isMenuOpen">
       <li>
-        <a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">الرئيسية</a>
+        <a routerLink="/home" routerLinkActive="active" (click)="closeMenu()"
+          >الرئيسية</a
+        >
       </li>
       <li>
-        <a routerLink="/volunteer" routerLinkActive="active" (click)="closeMenu()">التطوعات</a>
+        <a
+          routerLink="/volunteer"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          >التطوعات</a
+        >
       </li>
       <li>
-        <a routerLink="/donor" routerLinkActive="active" (click)="closeMenu()">التبرعات</a>
+        <a routerLink="/donor" routerLinkActive="active" (click)="closeMenu()"
+          >التبرعات</a
+        >
       </li>
-      <li>
+      <!-- <li>
         <a routerLink="/projects" routerLinkActive="active" (click)="closeMenu()">المشاريع</a>
+      </li> -->
+      <li>
+        <a
+          routerLink="/beneficiary"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          >المساعدات</a
+        >
       </li>
       <li>
-        <a routerLink="/beneficiary" routerLinkActive="active" (click)="closeMenu()">المساعدات</a>
+        <a
+          routerLink="/volunteer-activity"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          >الأنشطة التطوعية</a
+        >
       </li>
       <li>
-        <a routerLink="/volunteer-activity" routerLinkActive="active" (click)="closeMenu()">الأنشطة التطوعية</a>
-      </li>
-      <li>
-        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">من نحن</a>
+        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()"
+          >من نحن</a
+        >
       </li>
 
       <!-- Mobile User Section -->
-      <li *ngIf="isSmallScreen" class="mobile-user-section" (click)="closeMenu()">
+      <li
+        *ngIf="isSmallScreen"
+        class="mobile-user-section"
+        (click)="closeMenu()"
+      >
         <ng-container *ngIf="!isLogin; else loggedInMobile">
-          <button class="login-btn" (click)="navigateToLogin()">تسجيل الدخول</button>
+          <button class="login-btn" (click)="navigateToLogin()">
+            تسجيل الدخول
+          </button>
         </ng-container>
 
         <ng-template #loggedInMobile>
-          <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
+          <div
+            class="navbar__user"
+            [routerLink]="['/settings/profile', userId]"
+          >
             <img
-              [src]="userImage && userImage !== '' ? userImage : '/Images/Logo.svg'"
+              [src]="
+                userImage && userImage !== '' ? userImage : '/Images/Logo.svg'
+              "
               alt="User"
               class="user-image"
             />
             <span>الملف الشخصي</span>
           </div>
-          <button class="login-btn logout" (click)="handleLogout()">تسجيل الخروج</button>
+          <button class="login-btn logout" (click)="handleLogout()">
+            تسجيل الخروج
+          </button>
         </ng-template>
       </li>
     </ul>
@@ -59,22 +93,32 @@
     <!-- Actions for larger screens -->
     <div class="navbar__actions" *ngIf="!isSmallScreen">
       <ng-container *ngIf="!isLogin; else loggedInDesktop">
-        <button class="login-btn" (click)="navigateToLogin()">تسجيل الدخول</button>
+        <button class="login-btn" (click)="navigateToLogin()">
+          تسجيل الدخول
+        </button>
       </ng-container>
 
       <ng-template #loggedInDesktop>
         <div class="navbar__user" [routerLink]="['/settings/profile', userId]">
           <img
-            [src]="userImage && userImage !== '' ? userImage : '/Images/Logo.svg'"
+            [src]="
+              userImage && userImage !== '' ? userImage : '/Images/Logo.svg'
+            "
             alt="User"
             class="user-image"
           />
           <span>مرحبًا، {{ userName() }}</span>
-          <div class="notification-container">
+          <!-- Number of notification  -->
+          <div class="notification-container" [routerLink]="['/settings/notifications', userId]">
             <i class="bi bi-bell notification"></i>
+            <span *ngIf="notificationCount > 0" class="notification-count">
+              {{ notificationCount }}
+            </span>
           </div>
         </div>
-        <button class="login-btn logout" (click)="handleLogout()">تسجيل الخروج</button>
+        <button class="login-btn logout" (click)="handleLogout()">
+          تسجيل الخروج
+        </button>
       </ng-template>
     </div>
   </div>

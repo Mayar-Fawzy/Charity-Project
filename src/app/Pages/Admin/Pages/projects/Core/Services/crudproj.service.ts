@@ -5,6 +5,10 @@ import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { Observable } from 'rxjs';
 import { Environment } from '../../../../../Auth/core/Environment/Environment';
 import { IGetProj } from '../InterFace/iget-proj';
+import { IAddProj } from '../InterFace/iadd-proj';
+import { IEditProj } from '../InterFace/iedit-proj';
+import { ResCrud } from '../InterFace/res-crud';
+import { ProjId } from '../InterFace/proj-id';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +21,14 @@ export class CRUDProjService {
       } 
       Delete(id:string):Observable<IGetProj>{
         return this._HttpClient.delete<IGetProj>(`${Environment.baseUrl}${Environment.VersionUrl}Project/DeleteProject?id=${id}`)
+      }
+      CreateProject(formData: FormData):Observable<ResCrud>{
+           return this._HttpClient.post<ResCrud>(`${Environment.baseUrl}${Environment.VersionUrl}Project/CreateProject`,formData)
+      }
+      UpdateProject(id:string,formData: FormData):Observable<ResCrud>{
+        return this._HttpClient.put<ResCrud>(`${Environment.baseUrl}${Environment.VersionUrl}Project/UpdateProject?id=${id}`,formData)
+      }
+      GetProjectById(id:string):Observable<ProjId>{
+        return this._HttpClient.get<ProjId>(`${Environment.baseUrl}${Environment.VersionUrl}Project/GetProjectById?id=${id}`)
       }
 }

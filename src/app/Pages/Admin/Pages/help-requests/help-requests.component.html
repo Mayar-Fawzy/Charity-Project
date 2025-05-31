@@ -1,1 +1,141 @@
-<p>help-requests works!</p>
+<section class="container pt-5 my-3">
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">جاري التحميل...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && totalCount === 0" class="text-center">
+    <p class="text-muted">لا توجد طلبات مساعدة متاحة حاليًا</p>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <ul class="nav nav-tabs custom-tabs" id="requestTabs">
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'pending'"
+          (click)="changeTab('pending')"
+        >
+          قيد المراجعة
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'approved'"
+          (click)="changeTab('approved')"
+        >
+          مقبولة
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'rejected'"
+          (click)="changeTab('rejected')"
+        >
+          مرفوضة
+        </button>
+      </li>
+    </ul>
+
+    <nav *ngIf="totalPages > 1" class="pagination-container">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button
+            class="page-link"
+            (click)="goToPrevious()"
+            [disabled]="currentPage === 1"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+
+        <li class="page-item dots" *ngIf="showLeftDots">
+          <span class="page-link">...</span>
+        </li>
+
+        <li
+          *ngFor="let page of displayedPages"
+          class="page-item"
+          [class.active]="currentPage === page"
+        >
+          <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+        </li>
+
+        <li class="page-item dots" *ngIf="showRightDots">
+          <span class="page-link">...</span>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button
+            class="page-link"
+            (click)="goToNext()"
+            [disabled]="currentPage === totalPages"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div *ngIf="filteredProjects.length > 0" class="row g-4 mb-5 fade-container">
+    <div class="col-md-4 fade-in" *ngFor="let request of filteredProjects">
+      <div class="card request-card shadow-sm h-100">
+        <div class="user-email-header">
+          <span class="user-email">{{ userEmails[request.beneficiaryId] || 'جاري التحميل...' }}</span>
+        </div>
+        <div class="card-body d-flex flex-column">
+          <div class="card-content">
+            <p class="card-text mb-3 fw-bold text-end">
+              {{ request.requestDetails || "لا توجد تفاصيل" }}
+            </p>
+            <div
+              class="badge-status mb-4"
+              [ngClass]="{
+                'status-approved': request.requestStatus === 1,
+                'status-rejected': request.requestStatus === 2,
+                'status-pending': request.requestStatus === 3
+              }"
+            >
+              {{ getStatusText(request.requestStatus) }}
+            </div>
+          </div>
+          <div class="mt-auto d-flex gap-2 justify-content-around flex-wrap">
+            <button
+              *ngIf="request.requestStatus === 3"
+              class="btn btn-success btn-sm"
+              (click)="approve(request)"
+            >
+              قبول
+            </button>
+            <button
+              *ngIf="request.requestStatus === 3"
+              class="btn btn-danger btn-sm"
+              (click)="reject(request)"
+            >
+              رفض
+            </button>
+            <button
+              *ngIf="request.requestStatus === 1 || request.requestStatus === 2 || request.requestStatus === 3"
+              class="btn btn-outline-primary btn-sm"
+              (click)="contact(request, request.beneficiaryId)"
+            >
+              تواصل
+            </button>
+            <button
+              *ngIf="request.requestStatus === 1 || request.requestStatus === 2"
+              class="btn btn-outline-danger btn-sm"
+              (click)="deleteRequest(request)"
+              title="حذف الطلب"
+            >
+              حذف
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

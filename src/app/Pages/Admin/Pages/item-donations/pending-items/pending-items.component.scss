@@ -1,0 +1,665 @@
+// Main Variables
+$primary: #ffb902;
+$secondary: #2c3e50;
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #17a2b8;
+$light: #f8f9fa;
+$dark: #343a40;
+$white: #ffffff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$border-radius: 0.5rem;
+$box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$transition-base: all 0.2s ease-in-out;
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background-color: #f5f7fa;
+  color: $gray-800;
+}
+
+// Sidebar styling
+.sidebar {
+  background: linear-gradient(135deg, $secondary 0%, darken($secondary, 10%) 100%);
+  min-height: 100vh;
+  
+  .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: $border-radius;
+    margin: 0.3rem 0;
+    padding: 0.75rem 1rem;
+    transition: $transition-base;
+    
+    &:hover, &.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: $white;
+      transform: translateX(-5px);
+    }
+    
+    i {
+      margin-left: 0.5rem;
+    }
+  }
+  
+  .sidebar-brand {
+    padding: 1.5rem 1rem;
+    
+    img {
+      max-height: 40px;
+    }
+  }
+}
+
+// Header styling
+.main-header {
+  background-color: $white;
+  box-shadow: $box-shadow;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .user-dropdown {
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      color: $gray-700;
+      
+      &:after {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+// Enhanced product card styling
+.product-card {
+  border-radius: $border-radius;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid $gray-200;
+  height: 100%;
+  background-color: $white;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-container {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+    
+    .main-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+    }
+    
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease, background-color 0.3s ease;
+      
+      &:hover {
+        background-color: $white;
+      }
+      
+      &.left {
+        left: 10px;
+      }
+      
+      &.right {
+        right: 10px;
+      }
+    }
+    
+    &:hover {
+      .main-img {
+        transform: scale(1.05);
+      }
+      
+      .nav-btn {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .card-body {
+    padding: 1.25rem;
+    
+    .card-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: $secondary;
+    }
+    
+    .badge {
+      padding: 0.4rem 0.6rem;
+      font-weight: 500;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      
+      &.bg-primary {
+        background-color: $primary !important;
+        color: $secondary !important;
+      }
+      
+      &.bg-warning {
+        background-color: rgba($warning, 0.2) !important;
+        color: darken($warning, 30%) !important;
+        border: 1px solid rgba($warning, 0.3);
+      }
+    }
+    
+    .card-text {
+      color: $gray-600;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+  }
+  
+  .btn {
+    border-radius: 4px;
+    padding: 0.4rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    
+    &.btn-outline-primary {
+      border-color: $primary;
+      color: $secondary;
+      
+      &:hover {
+        background-color: $primary;
+        color: $secondary;
+      }
+    }
+    
+    &.btn-outline-danger {
+      border-color: $danger;
+      color: $danger;
+      
+      &:hover {
+        background-color: $danger;
+        color: $white;
+      }
+    }
+    
+    i {
+      margin-left: 0.3rem;
+    }
+  }
+}
+
+// Enhanced search bar
+
+
+.custom-search-btn {
+  background-color: $primary;
+ 
+  &:hover {
+    background-color: $primary;
+    color: $secondary;
+  }
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Enhanced pagination
+.pagination-wrapper {
+  margin: 2rem 0;
+  
+  .pagination {
+    .page-item {
+      margin: 0 0.2rem;
+      
+      .page-link {
+        border-radius: $border-radius;
+        color: $secondary;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border: 1px solid $gray-300;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: $gray-100;
+          color: $secondary;
+        }
+      }
+      
+      &.active .page-link {
+        background-color: $primary;
+        border-color: $primary;
+        color: $secondary;
+      }
+      
+      &.disabled .page-link {
+        color: $gray-500;
+      }
+    }
+  }
+}
+
+// Enhanced modal styling
+.modal-content {
+  border-radius: $border-radius;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  
+  .modal-header {
+    background-color: $gray-100;
+    border-bottom: 1px solid $gray-200;
+    padding: 1.25rem 1.5rem;
+    
+    .modal-title {
+      font-weight: 700;
+      color: $secondary;
+      font-size: 1.25rem;
+    }
+    
+    .btn-close {
+      background-color: $gray-200;
+      border-radius: 50%;
+      padding: 0.5rem;
+      opacity: 1;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: $gray-300;
+        transform: rotate(90deg);
+      }
+    }
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+    
+    .form-label {
+      font-weight: 600;
+      color: $secondary;
+      margin-bottom: 0.5rem;
+      
+      i {
+        color: $primary;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .form-control {
+      padding: 0.6rem 1rem;
+      border-radius: $border-radius;
+      border: 1px solid $gray-300;
+      transition: all 0.3s ease;
+      
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+      }
+      
+      &.is-invalid {
+        border-color: $danger;
+      }
+    }
+    
+    .invalid-feedback {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+  }
+  
+  .modal-footer {
+    border-top: 1px solid $gray-200;
+    padding: 1.25rem 1.5rem;
+    
+    .btn {
+      padding: 0.5rem 1.5rem;
+      font-weight: 600;
+      border-radius: $border-radius;
+      
+      &.btn-secondary {
+        background-color: $gray-200;
+        border-color: $gray-300;
+        color: $gray-700;
+        
+        &:hover {
+          background-color: $gray-300;
+        }
+      }
+      
+      &.btn-success {
+        background-color: $primary;
+        border-color: $primary;
+        color: $secondary;
+        
+        &:hover {
+          background-color: darken($primary, 5%);
+        }
+        
+        &:disabled {
+          background-color: lighten($primary, 20%);
+          border-color: lighten($primary, 20%);
+        }
+      }
+    }
+  }
+}
+
+// Page title and section headers
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $secondary;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid $primary;
+  display: inline-block;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: $secondary;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  
+  i {
+    color: $primary;
+    margin-left: 0.5rem;
+    font-size: 1.2rem;
+  }
+}
+
+// No items placeholder
+.no-items {
+  text-align: center;
+  padding: 3rem 0;
+  
+  i {
+    font-size: 3rem;
+    color: $gray-400;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: $gray-600;
+    font-weight: 500;
+  }
+}
+
+// Loading spinner
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+  
+  .spinner-border {
+    color: $primary;
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  p {
+    margin-top: 1rem;
+    font-weight: 500;
+    color: $gray-600;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .product-card .image-container {
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.3rem;
+  }
+  
+  .product-card {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-content .modal-body {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-search-input, .custom-search-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .pagination-wrapper .pagination .page-item .page-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .product-card .card-body {
+    padding: 1rem;
+  }
+  
+  .product-card .image-container {
+    height: 160px;
+  }
+}
+
+// RTL specific adjustments
+
+  .modal-header .btn-close {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  
+  .form-label i {
+    margin-right: 0.5rem;
+    margin-left: 0;
+  }
+  
+  .btn i {
+    margin-right: 0.3rem;
+    margin-left: 0;
+  }
+
+
+// Animation effects
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+// Status badges with enhanced styling
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  
+  &.new {
+    background-color: rgba($success, 0.15);
+    color: $success;
+    border: 1px solid rgba($success, 0.3);
+  }
+  
+  &.excellent {
+    background-color: rgba($primary, 0.15);
+    color: darken($primary, 15%);
+    border: 1px solid rgba($primary, 0.3);
+  }
+  
+  &.good {
+    background-color: rgba($info, 0.15);
+    color: $info;
+    border: 1px solid rgba($info, 0.3);
+  }
+  
+  i {
+    margin-left: 0.4rem;
+    font-size: 0.9rem;
+  }
+}
+
+// Quantity badge
+.quantity-badge {
+  background-color: $gray-100;
+  color: $gray-700;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  
+  i {
+    margin-left: 0.3rem;
+    color: $primary;
+  }
+}
+
+// File upload styling
+.file-upload {
+  position: relative;
+  
+  .form-control {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+  }
+  
+  .upload-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $primary;
+    font-size: 1.2rem;
+  }
+  
+  .file-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    
+    .preview-item {
+      width: 80px;
+      height: 80px;
+      border-radius: $border-radius;
+      overflow: hidden;
+      position: relative;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .remove-btn {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        background-color: rgba($white, 0.8);
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: $danger;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: $white;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}
+
+// Save and cancel buttons with enhanced styling
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  
+  .btn-cancel {
+    background-color: $gray-200;
+    color: $gray-700;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: $border-radius;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: $gray-300;
+    }
+  }
+  
+  .btn-save {
+    background-color: $primary;
+    color: $secondary;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: $border-radius;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: darken($primary, 5%);
+    }
+    
+    i {
+      margin-left: 0.4rem;
+    }
+  }
+}

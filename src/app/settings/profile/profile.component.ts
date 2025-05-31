@@ -249,7 +249,8 @@ export class ProfileComponent implements OnInit {
       phoneNumber: this.originalUserData.phoneNumber || '',
       address: this.originalUserData.address || '',
       age: this.originalUserData.age || '',
-      gender: this.originalUserData.gender || '',
+      // gender: this.originalUserData.gender || '',
+      gender: this.originalUserData.gender === 0 ? 'ذكر' : 'أنثى' ,
       dateOfBirth: this.originalUserData.dateOfBirth
         ? this.originalUserData.dateOfBirth.split('T')[0]
         : ''

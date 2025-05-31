@@ -17,6 +17,8 @@ import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ViewportScroller } from '@angular/common';
+
 
 interface CharityCause {
   title: string;
@@ -42,6 +44,27 @@ interface Testimonial {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements AfterViewInit {
+
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private scroller: ViewportScroller,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) { }
+
+  goToHelpRequest() {
+    this.router.navigate(['/beneficiary'], { fragment: 'help-request' },
+    
+    );
+  }
+  goToVolnteer(){
+    this.router.navigate(['/volunteer'], {fragment: 'volunteer'})
+  }
+  goToDonate(){
+    this.router.navigate(['/donor'], {fragment: 'donor'})
+  }
+
   responsiveOptions: CarouselResponsiveOptions[] = [];
   causes: CharityCause[] = [];
   testimonialsList: Testimonial[] = [];
@@ -71,7 +94,7 @@ export class HomeComponent implements AfterViewInit {
     return project.progressPercentage || 0;
   }
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  // constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   ngOnInit() {
     this.responsiveOptions = [
@@ -96,7 +119,7 @@ export class HomeComponent implements AfterViewInit {
     this.initializeTestimonials();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   private initializeCauses() {
     this.causes = [

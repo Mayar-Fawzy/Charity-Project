@@ -12,20 +12,21 @@
     </p>
     <!-- الأزرار -->
     <div class="action-buttons">
-      <button class="btn donate-btn">
+      <button class="btn donate-btn"  [routerLink]="['/donor']" fragment="donate-section">
         <i class="bi bi-heart-fill"></i>
         تبرع الآن
       </button>
 
-      <button class="btn volunteer-btn">
+      <button class="btn volunteer-btn"  [routerLink]="['/volunteer']">
         <i class="bi bi-person-arms-up"></i>
         تطوع معنا
       </button>
 
-      <button class="btn help-btn">
+      <button class="btn help-btn" [routerLink]="['/volunteer-activity']">
         <i class="bi bi-hand-index"></i>
         طلب مساعدة
       </button>
+
     </div>
   </div>
 </section>
@@ -481,9 +482,9 @@
         <p>مصر، المنوفية، شبين الكوم، شبرا خلفون</p>
       </div>
 
-      <div class="contact-item">
+      <div class="contact-item text-wrap">
         <i class="bi bi-envelope-fill icon"></i>
-        <a href="mailto:givinghands.contact@gmail.com"
+        <a class="text-wrap" href="mailto:givinghands.contact@gmail.com"
           >givinghands.contactgmail.com</a
         >
       </div>

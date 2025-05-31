@@ -35,7 +35,7 @@
             <i class="bi bi-calendar-plus"></i>
             تاريخ الإنشاء: {{ project.createdDate | date : "yyyy-MM-dd" }}
           </div>
-          <button class="btn btn-warning w-100 text-white fw-bold mt-2" (click)="onJoinVoulnteerActivity(project.id)">
+          <button class="btn btn-warning w-100 text-white fw-bold mt-2" (click)="onJoinVoulnteerActivity(project.id, project.name)">
             انضم للتطوع
           </button>
         </div>

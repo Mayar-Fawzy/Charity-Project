@@ -25,25 +25,38 @@
     <span class="input-group-text search-icon">
       <i class="bi bi-search text-muted"></i>
     </span>
-
-  
   </div>
 </section>
 
 <!-- >>>>>>>>>>>>> Projects  -->
 <section class="container my-5">
   <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let project of filteredProjects">
+    <div
+      class="col-md-6 col-lg-4 mb-4"
+      *ngFor="let project of filteredProjects"
+    >
       <div class="project-card shadow-sm">
         <div class="image-wrapper">
           <img [src]="project.imageUrl" [alt]="project.name" />
-          <div class="badge">{{ project.projectStatus }}</div>
+          <div class="badge">{{ project.projectStatus | projectStatusAr }}</div>
         </div>
 
         <div class="project-content">
           <h4 class="title">{{ project.name }}</h4>
+
           <p class="description">
-            {{ project.description | slice : 0 : 80 }}...
+            {{
+              project.description.length > 80
+                ? (project.description | slice : 0 : 80) + "..."
+                : project.description
+            }}
+            <span
+              *ngIf="project.description.length > 80"
+              class="more-link text-primary"
+              (click)="openDescriptionPopup(project)"
+              style="cursor: pointer"
+              >عرض المزيد</span
+            >
           </p>
 
           <div class="progress-container my-2">
@@ -52,7 +65,10 @@
               <span>{{ getProgressPercentage(project) }}%</span>
             </div>
             <div class="progress-bar">
-              <div class="progress" [style.width.%]="getProgressPercentage(project)"></div>
+              <div
+                class="progress"
+                [style.width.%]="getProgressPercentage(project)"
+              ></div>
             </div>
           </div>
 
@@ -66,12 +82,43 @@
     </div>
   </div>
 
+  <div
+    class="modal fade"
+    id="descriptionModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content custom-modal">
+        <div class="modal-header border-0 d-flex justify-content-between">
+          <h5 class="modal-title">{{ selectedProject?.name }}</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="إغلاق"
+            style="margin-left: 0;"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ selectedProject?.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Pagination -->
   <nav class="pagination-wrapper mt-4">
     <ul class="pagination justify-content-center">
       <!-- >>> Previous -->
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="goToPrevious()" [disabled]="currentPage === 1">السابق</button>
+        <button
+          class="page-link"
+          (click)="goToPrevious()"
+          [disabled]="currentPage === 1"
+        >
+          السابق
+        </button>
       </li>
 
       <li class="page-item" *ngIf="showLeftDots">
@@ -93,7 +140,13 @@
 
       <!-- >>> Next -->
       <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="goToNext()" [disabled]="currentPage === totalPages">التالي</button>
+        <button
+          class="page-link"
+          (click)="goToNext()"
+          [disabled]="currentPage === totalPages"
+        >
+          التالي
+        </button>
       </li>
     </ul>
   </nav>

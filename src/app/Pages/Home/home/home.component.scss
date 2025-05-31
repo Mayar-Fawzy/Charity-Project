@@ -852,7 +852,7 @@ $light-bg: #f9f9f9;
         font-size: 0.9rem;
         color: #555;
         margin-bottom: 10px;
-        height: 43.2px; // مثلما كان في الكود السابق
+        height: 43.2px;
         overflow: hidden;
       }
 
@@ -1539,6 +1539,8 @@ $light-bg: #f9f9f9;
 
     .contact-item {
       display: flex;
+      flex-wrap: wrap;
+      word-break: break-word;
       align-items: center;
       gap: 15px;
       margin: 15px 0;

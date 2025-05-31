@@ -18,4 +18,7 @@ export class VolunteerActivityReqService {
       data
     );
   }
+  GetAllAssistanceRequestsById(id:string):Observable<any>{
+    return this._HttpClient.get(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/GetAllAssistanceRequestsById?id=${id}`)
+  }
 }

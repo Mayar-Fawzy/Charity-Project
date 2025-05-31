@@ -74,6 +74,7 @@
                 />
               </ng-template>
             </div>
+
             <div
               class="card-body text-end d-flex flex-column justify-content-between"
             >
@@ -100,17 +101,42 @@
                         : "مستعمل - حالة جيدة"
                     }}
                   </span>
-
                   <span>الكمية: {{ product.quantity }}</span>
                 </div>
-                <p class="card-text small">{{ product.description }}</p>
+
+                <p class="card-text small">
+                  {{
+                    product.description.length > 80
+                      ? (product.description | slice : 0 : 80) + "..."
+                      : product.description
+                  }}
+                  <span
+                    *ngIf="product.description.length > 80"
+                    class="text-primary"
+                    style="cursor: pointer"
+                    (click)="openProductDescriptionPopup(product)"
+                  >
+                    عرض المزيد
+                  </span>
+                </p>
               </div>
-              <div class="d-grid mt-3">
-                <!-- <button
+
+              <!-- <div class="d-grid mt-3">
+                <button
                   class="btn btn-warning request-btn"
                   (click)="animateRequest($event)"
-                > -->
-                <button class="btn btn-warning request-btn" (click)="SubmitVolunteerActivity(product.id)">
+                >
+                <button class="btn btn-warning request-btn" (click)="SubmitVolunteerActivity(product.id, product.name)">
+                  (click)="SubmitVolunteerActivity(product.id)"
+                >
+                  طلب العنصر
+                </button>
+              </div> -->
+              <div class="d-grid mt-3">
+                <button
+                  class="btn btn-warning request-btn"
+                  (click)="SubmitVolunteerActivity(product.id, product.name)"
+                >
                   طلب العنصر
                 </button>
               </div>
@@ -119,12 +145,14 @@
         </div>
       </ng-container>
     </ng-container>
+
     <ng-template #loadingOrError>
       <div class="col-12 text-center">
         <p *ngIf="loading" class="text-muted">جاري التحميل...</p>
         <p *ngIf="error" class="text-danger">{{ error }}</p>
       </div>
     </ng-template>
+
     <ng-template #noProducts>
       <div class="col-12 text-center">
         <p class="text-muted">لا توجد عناصر متاحة حاليًا.</p>
@@ -132,7 +160,32 @@
     </ng-template>
   </div>
 
-  <!-- Pagination Controls -->
+  <!-- ✅ Modal لعرض وصف العنصر بالكامل -->
+  <div
+    class="modal fade"
+    id="productDescriptionModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content custom-modal">
+        <div class="modal-header border-0 d-flex justify-content-between">
+          <h5 class="modal-title">{{ selectedProduct?.name }}</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="إغلاق"
+            style="margin-left: 0"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ selectedProduct?.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Pagination -->
   <nav class="pagination-wrapper mt-4">
     <ul class="pagination justify-content-center">
@@ -172,6 +225,7 @@
 
 <!-- Form to Request Help -->
 <section
+  id="help-request"
   class="custom-request my-5 p-4 rounded-4 shadow-sm bg-light text-center"
 >
   <h5 class="fw-bold mb-2">لم تجد ما تبحث عنه؟</h5>
@@ -181,17 +235,17 @@
   </p>
   <form class="mx-auto text-start" style="max-width: 600px">
     <div class="mb-3">
-   
-      <label for="needInput" class="form-label fw-semibold">ما الذي تحتاجه؟</label>
+      <label for="needInput" class="form-label fw-semibold"
+        >ما الذي تحتاجه؟</label
+      >
       <textarea
-  class="form-control"
-  id="needInput"
-  rows="3"
-  placeholder="صف ما تحتاجه..."
-  [(ngModel)]="requestDetails"
-  name="requestDetails">
-</textarea>
-
+        class="form-control"
+        id="needInput"
+        rows="3"
+        placeholder="صف ما تحتاجه..."
+        [(ngModel)]="requestDetails"
+        name="requestDetails"
+      ></textarea>
     </div>
     <div class="form-check mb-4">
       <input
@@ -210,19 +264,22 @@
       </label>
     </div>
     <div class="text-center">
-     
       <button
-      type="submit"
-      [disabled]="loading"
-      class="btn btn-warning submit-btn w-100"
-      (click)="SubmitVolunteerActivity2()">
-      <span *ngIf="!loading">إرسال الطلب</span>
-      <span *ngIf="loading">
-      
-        جاري الإرسال...  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-      </span>
-    </button>
-    
+        type="submit"
+        [disabled]="loading"
+        class="btn btn-warning submit-btn w-100"
+        (click)="SubmitVolunteerActivity2()"
+      >
+        <span *ngIf="!loading">إرسال الطلب</span>
+        <span *ngIf="loading">
+          جاري الإرسال...
+          <span
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        </span>
+      </button>
     </div>
   </form>
 </section>
