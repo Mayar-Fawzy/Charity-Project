@@ -14,7 +14,7 @@ export class SignalrService implements OnDestroy {
   private notificationSubject = new Subject<any>();
   notifications$ = this.notificationSubject.asObservable();
 
-  constructor() {}
+  constructor() { }
 
   async startConnection(userId: string): Promise<void> {
     if (this.isConnected || this.hubConnection?.state === HubConnectionState.Connected) {
