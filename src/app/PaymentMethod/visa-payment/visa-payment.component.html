@@ -34,10 +34,16 @@
     </div>
 
     <!-- Stripe Card Element -->
-   <form id="payment-form" (ngSubmit)="submitPayment()" #paymentForm="ngForm">
-  <div id="card-element" class="card-input"></div>
+  <form id="payment-form" (ngSubmit)="submitPayment()" #paymentForm="ngForm">
+  <div id="card-number-element" class="card-input"></div>
+  <div id="card-expiry-element" class="card-input"></div>
+  <div id="card-cvc-element" class="card-input"></div>
+
+  
+
   <button type="submit" class="donate-btn">تبرع الآن</button>
 </form>
+
 
     <div class="secure-labels">
       <span><i class="bi bi-lock-fill"></i> SSL آمن</span>

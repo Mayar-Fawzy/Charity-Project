@@ -12,41 +12,55 @@ import { loadStripe } from '@stripe/stripe-js';
 })
 export class VisaPaymentComponent implements AfterViewInit {
   clientSecret: string = '';
-  stripePromise = loadStripe('pk_test_51RTUHXPKYzSs7mCoazO7RkxzhimYNekbLYMr9FqC42ZdGbrZ0pFJs8brQaGUQiFoSp0TZqraxSB7xERUGnvYAsYv00BsvlYtP6');
+  postalCode: string = '';
+  stripePromise = loadStripe('pk_test_51Qusj5GghqEuY6PRxD7MnEaGXKKoCwDmrcgr24GCb5XgsGl6Yfzlx2rgaCJTEPWarztiPJP3X7R4BtWGFu4oC2re002PjOUT4D');
 
   constructor(private router: Router) {
-  const navigation = this.router.getCurrentNavigation();
-  const state = navigation?.extras.state as { clientSecret: string };
-  this.clientSecret = state?.clientSecret || '';
-}
-
-async ngAfterViewInit() {
-  const stripe = await this.stripePromise;
-  if (!stripe || !this.clientSecret) {
-    alert('حدث خطأ في إعداد الدفع.');
-    return;
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { clientSecret: string };
+    this.clientSecret = state?.clientSecret || '';
   }
 
-  const elements = stripe.elements();
-  const card = elements.create('card');
-  card.mount('#card-element');
+  async ngAfterViewInit() {
+    const stripe = await this.stripePromise;
+    if (!stripe || !this.clientSecret) {
+      alert('حدث خطأ في إعداد الدفع.');
+      return;
+    }
 
-  (this as any).card = card;
-  (this as any).stripe = stripe;
-}
+    const elements = stripe.elements();
 
-async submitPayment() {
+    const cardNumber = elements.create('cardNumber');
+    const cardExpiry = elements.create('cardExpiry');
+    const cardCvc = elements.create('cardCvc');
+
+    cardNumber.mount('#card-number-element');
+    cardExpiry.mount('#card-expiry-element');
+    cardCvc.mount('#card-cvc-element');
+
+    (this as any).stripe = stripe;
+    (this as any).cardNumber = cardNumber;
+    (this as any).cardExpiry = cardExpiry;
+    (this as any).cardCvc = cardCvc;
+  }
+
+  async submitPayment() {
   const stripe = (this as any).stripe;
-  const card = (this as any).card;
+  const cardNumber = (this as any).cardNumber;
+  const cardExpiry = (this as any).cardExpiry;
+  const cardCvc = (this as any).cardCvc;
 
-  if (!stripe || !card) {
+  if (!stripe || !cardNumber || !cardExpiry || !cardCvc) {
     alert('لم يتم تهيئة عناصر الدفع.');
     return;
   }
 
   const { error, paymentIntent } = await stripe.confirmCardPayment(this.clientSecret, {
     payment_method: {
-      card: card
+      card: cardNumber,
+      billing_details: {
+        // لا ترسل postal_code هنا
+      }
     }
   });
 
@@ -56,4 +70,5 @@ async submitPayment() {
     alert('تم الدفع بنجاح!');
   }
 }
+
 }

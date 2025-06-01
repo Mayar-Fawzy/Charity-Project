@@ -248,3 +248,51 @@ button.donate-btn {
   padding: 12px;
   font-size: 18px;
 }
+/* RTL support */
+:host {
+  direction: rtl;
+}
+
+/* Form Container */
+.stripe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Stripe Input Elements */
+.card-input {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.75rem;
+  background-color: #f9f9f9;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  min-height: 45px;
+}
+
+.card-input.StripeElement--focus {
+  border-color: #f0ad4e;
+  background-color: #fff;
+}
+
+/* Donate Button */
+.donate-btn {
+  padding: 0.75rem 1.25rem;
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.donate-btn:hover {
+  background-color: #ec971f;
+}
