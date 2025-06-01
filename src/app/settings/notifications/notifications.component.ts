@@ -5,6 +5,8 @@ import { NotificationService } from './Core/notification.service';
 import { LoginService } from '../../../app/Pages/Auth/core/Services/login.service';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 interface Notification {
   id: string;
@@ -38,8 +40,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     private signalr: SignalrService,
     private notificationService: NotificationService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
+
+  onRefreshNotifications() {
+    const userId = this.loginService.saveUserAuth()?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid'];
+    if (userId) {
+      this.loadNotifications(userId);
+    }
+  }
+
 
   ngOnInit() {
     const userData = this.loginService.saveUserAuth();
@@ -69,9 +80,22 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           }
           this.isLoading = false;
         },
+        // error: (err) => {
+        //   this.handleError('فشل تحميل الإشعارات', err);
+        // }
         error: (err) => {
+          if (err.status === 404 && err.error?.isSucceeded) {
+            this.notifications = [];
+            this.unreadCount = 0;
+            this.notificationService.countChangedSubject.next(this.unreadCount);
+            this.isLoading = false;
+            this.errorMessage;
+            return;
+          }
+
           this.handleError('فشل تحميل الإشعارات', err);
         }
+
       });
   }
 
@@ -83,13 +107,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (newNotification) => {
-            if (!this.notifications.some(n => n.id === newNotification.id)) {
+            console.log('📥 إشعار جديد وصل من SignalR:', newNotification);
+            const exists = this.notifications.some(n => n.id === newNotification.id);
+            if (!exists) {
               const notification = this.mapNotification(newNotification);
+
+              // 👇 الحل هنا: نعمل نسخة جديدة من المصفوفة
               this.notifications = [notification, ...this.notifications];
+
               if (!notification.isRead) {
                 this.unreadCount++;
                 this.notificationService.countChangedSubject.next(this.unreadCount);
               }
+
+              // 👇 ضمان تحديث واجهة المستخدم
+              this.cdr.markForCheck();
             }
           },
           error: (err) => console.error('SignalR notification error:', err)
@@ -98,6 +130,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       this.handleError('فشل الاتصال بـ SignalR', err);
     });
   }
+
 
   onMarkAsRead(id: string) {
     const notification = this.notifications.find(n => n.id === id);
@@ -121,9 +154,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onDeleteNotification(id: number | string) {
-    this.notifications = this.notifications.filter(n => n.id !== id);
+  onDeleteNotification(id: string) {
+    this.notificationService.deleteNotification(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.notifications = this.notifications.filter(n => n.id !== id);
+          this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+          this.notificationService.countChangedSubject.next(this.unreadCount);
+        },
+        error: (err) => {
+          console.error('فشل حذف الإشعار:', err);
+        }
+      });
   }
+
 
   private handleUnauthenticated() {
     this.notifications = [];

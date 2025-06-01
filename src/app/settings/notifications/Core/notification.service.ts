@@ -39,22 +39,8 @@ export class NotificationService {
       );
   }
 
-  // sendNotificationToUser(
-  //   userId: string,
-  //   title: string,
-  //   message: string,
-  //   type: string
-  // ): Observable<any> {
-  //   return this.http.post(`${this.baseUrl}/send-to-user`, {
-  //     userId,
-  //     title,
-  //     message,
-  //     type,
-  //     senderId: '989abfd4-5e3a-4cbd-8f34-6d13613e12ec' // ID ثابت للمشرف
-  //   });
-  // }
-
-
-
+  deleteNotification(messageId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/DeleteMessage?messageId=${messageId}`);
+  }
 
 }
