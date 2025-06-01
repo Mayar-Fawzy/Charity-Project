@@ -74,6 +74,7 @@ export const routes: Routes = [
     children: [
       {path:'',redirectTo:'overview',pathMatch: 'full'},
       { path: 'overview', loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component').then(m => m.OverviewComponent) },
+      { path: 'users', loadComponent: () => import('./Pages/Admin/Pages/users/users.component').then(m => m.UsersComponent) },
       { path: 'projects', loadComponent: () => import('./Pages/Admin/Pages/projects/projects.component').then(m => m.ProjectsComponent) },
       { path: 'volunteers', loadComponent: () => import('./Pages/Admin/Pages/volunteers/volunteers.component').then(m => m.VolunteersComponent) },
       { path: 'volunteer-activities', loadComponent: () => import('./Pages/Admin/Pages/volunteer-activities/volunteer-activities.component').then(m => m.VolunteerActivitiesComponent) },

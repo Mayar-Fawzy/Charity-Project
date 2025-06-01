@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, NgZone } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 
@@ -14,7 +14,7 @@ export class SignalrService implements OnDestroy {
   private notificationSubject = new Subject<any>();
   notifications$ = this.notificationSubject.asObservable();
 
-  constructor() { }
+
 
   async startConnection(userId: string): Promise<void> {
     if (this.isConnected || this.hubConnection?.state === HubConnectionState.Connected) {
@@ -47,7 +47,7 @@ export class SignalrService implements OnDestroy {
 
     this.registerEvents();
   }
-
+  constructor(private ngZone: NgZone) { }
   private registerEvents() {
     this.hubConnection.onreconnecting(() => {
       this.isConnected = false;
@@ -59,9 +59,20 @@ export class SignalrService implements OnDestroy {
       console.log('✅ تم إعادة الاتصال بنجاح');
     });
 
+    // this.hubConnection.on('ReceiveNotification', (notification) => {
+    //   this.ngZone.run(() => {
+    //     this.notificationSubject.next(notification);
+    //   });
+
+    // });
+
     this.hubConnection.on('ReceiveNotification', (notification) => {
-      this.notificationSubject.next(notification);
+      console.log('📥 إشعار تم استقباله من SignalR:', notification); // ← مهم جدًا
+      this.ngZone.run(() => {
+        this.notificationSubject.next(notification);
+      });
     });
+
 
     this.hubConnection.onclose(error => {
       this.isConnected = false;

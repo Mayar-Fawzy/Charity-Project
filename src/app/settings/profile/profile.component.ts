@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
         this.userData = data;
         this.originalUserData = { ...data };
         this.userImageUrl = data.imageUrl || null;
-  
+
         this.profileForm.patchValue({
           firstName: data.firstName || '',
           lastName: data.lastName || '',
@@ -73,14 +73,14 @@ export class ProfileComponent implements OnInit {
           gender: this.getGenderName(data.gender),
           dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : ''
         });
-  
+
         if (data.dateOfBirth) {
           const [year, month, day] = data.dateOfBirth.split('T')[0].split('-').map(Number);
           this.year = year;
           this.month = month;
           this.day = day;
         }
-  
+
         this.checkFormChanges();
       },
       error: (error: any) => {
@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
     }
 
     const currentValues = this.profileForm.getRawValue();
-    this.hasFormChanges = 
+    this.hasFormChanges =
       currentValues.firstName !== (this.originalUserData.firstName || '') ||
       currentValues.lastName !== (this.originalUserData.lastName || '') ||
       currentValues.email !== (this.originalUserData.email || '') ||
@@ -202,7 +202,7 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
-  
+
   getRandomColor(fullName: string): string {
     const hash = Array.from(fullName).reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const randomColor = (hash % 16777215).toString(16);
@@ -250,7 +250,7 @@ export class ProfileComponent implements OnInit {
       address: this.originalUserData.address || '',
       age: this.originalUserData.age || '',
       // gender: this.originalUserData.gender || '',
-      gender: this.originalUserData.gender === 0 ? 'ذكر' : 'أنثى' ,
+      gender: this.originalUserData.gender === 0 ? 'ذكر' : 'أنثى',
       dateOfBirth: this.originalUserData.dateOfBirth
         ? this.originalUserData.dateOfBirth.split('T')[0]
         : ''
@@ -289,11 +289,11 @@ export class ProfileComponent implements OnInit {
       this._Toastr.warning('لا توجد بيانات مستخدم للحذف');
       return;
     }
-  
+
     console.log('removeImage: Removing image for user', this.userData.id);
-  
+
     this.isLoading = true;
-  
+
     const formData = new FormData();
     formData.append('id', this.userData.id ?? '');
     formData.append('firstName', this.profileForm.get('firstName')?.value ?? '');
@@ -305,7 +305,7 @@ export class ProfileComponent implements OnInit {
     formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
     formData.append('age', this.profileForm.get('age')?.value ?? '');
     formData.append('image', '');
-  
+
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
       timeout(30000),
       finalize(() => {
@@ -338,4 +338,17 @@ export class ProfileComponent implements OnInit {
   getGenderName(gender: number): string {
     return gender === 0 ? 'ذكر' : 'أنثى';
   }
+
+
+  // جزء فتح الصورة 
+  showImageModal = false;
+
+  openImageModal() {
+    this.showImageModal = true;
+  }
+
+  closeImageModal() {
+    this.showImageModal = false;
+  }
+
 }

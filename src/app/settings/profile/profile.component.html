@@ -9,6 +9,8 @@
               [src]="userImageUrl"
               alt="صورة المستخدم"
               class="rounded-circle user-img"
+              (click)="openImageModal()"
+              style="cursor: zoom-in"
             />
           </ng-container>
 
@@ -60,13 +62,13 @@
       </div>
     </div>
 
-    <!-- بيانات المستخدم -->
+    <!-- عمود الفورم -->
     <div class="col-md-6">
-      <div class="bg-white shadow-sm rounded p-3">
+      <div class="bg-white shadow-sm rounded p-4">
         <h4 class="text-center mb-4 text-warning">تعديل المستخدم</h4>
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
           <div class="row g-3">
-            <!-- البيانات الشخصية -->
+            <!-- الاسم الأول -->
             <div class="col-md-6">
               <label class="form-label d-block text-end">الاسم الأول</label>
               <input
@@ -77,7 +79,7 @@
               <div
                 class="error-message"
                 *ngIf="
-                  profileForm.get('firstName')?.errors &&
+                  profileForm.get('firstName')?.invalid &&
                   (profileForm.get('firstName')?.touched ||
                     profileForm.get('firstName')?.dirty)
                 "
@@ -86,12 +88,13 @@
                   >الاسم مطلوب</span
                 >
                 <span
-                  *ngIf="profileForm.get('firstName')?.errors?.['minlength']"
+                  *ngIf="profileForm.get('firstName')?.getError('minlength')"
                   >يجب أن يكون أكثر من 3 حروف</span
                 >
               </div>
             </div>
 
+            <!-- اسم العائلة -->
             <div class="col-md-6">
               <label class="form-label d-block text-end">اسم العائلة</label>
               <input
@@ -102,7 +105,7 @@
               <div
                 class="error-message"
                 *ngIf="
-                  profileForm.get('lastName')?.errors &&
+                  profileForm.get('lastName')?.invalid &&
                   (profileForm.get('lastName')?.touched ||
                     profileForm.get('lastName')?.dirty)
                 "
@@ -110,12 +113,13 @@
                 <span *ngIf="profileForm.get('lastName')?.getError('required')"
                   >الاسم مطلوب</span
                 >
-                <span *ngIf="profileForm.get('lastName')?.errors?.['minlength']"
+                <span *ngIf="profileForm.get('lastName')?.getError('minlength')"
                   >يجب أن يكون أكثر من 3 حروف</span
                 >
               </div>
             </div>
 
+            <!-- البريد الإلكتروني -->
             <div class="col-md-6">
               <label class="form-label d-block text-end"
                 >البريد الإلكتروني</label
@@ -128,7 +132,7 @@
               <div
                 class="error-message"
                 *ngIf="
-                  profileForm.get('email')?.errors &&
+                  profileForm.get('email')?.invalid &&
                   (profileForm.get('email')?.touched ||
                     profileForm.get('email')?.dirty)
                 "
@@ -136,12 +140,13 @@
                 <span *ngIf="profileForm.get('email')?.getError('required')"
                   >البريد الإلكتروني مطلوب</span
                 >
-                <span *ngIf="profileForm.get('email')?.errors?.['email']"
+                <span *ngIf="profileForm.get('email')?.getError('email')"
                   >البريد الإلكتروني غير صحيح</span
                 >
               </div>
             </div>
 
+            <!-- رقم الهاتف -->
             <div class="col-md-6">
               <label class="form-label d-block text-end">رقم الهاتف</label>
               <input
@@ -152,7 +157,7 @@
               <div
                 class="error-message"
                 *ngIf="
-                  profileForm.get('phoneNumber')?.errors &&
+                  profileForm.get('phoneNumber')?.invalid &&
                   (profileForm.get('phoneNumber')?.touched ||
                     profileForm.get('phoneNumber')?.dirty)
                 "
@@ -162,13 +167,13 @@
                   >الرقم مطلوب</span
                 >
                 <span
-                  *ngIf="profileForm.get('phoneNumber')?.errors?.['pattern']"
+                  *ngIf="profileForm.get('phoneNumber')?.getError('pattern')"
                   >يجب أن يكون 11 رقم</span
                 >
               </div>
             </div>
 
-            <!-- العنوان والنوع -->
+            <!-- العنوان -->
             <div class="col-md-6">
               <label class="form-label d-block text-end">العنوان</label>
               <input
@@ -179,7 +184,7 @@
               <div
                 class="error-message"
                 *ngIf="
-                  profileForm.get('address')?.errors &&
+                  profileForm.get('address')?.invalid &&
                   (profileForm.get('address')?.touched ||
                     profileForm.get('address')?.dirty)
                 "
@@ -193,17 +198,17 @@
               </div>
             </div>
 
+            <!-- النوع -->
             <div class="col-md-2">
               <label class="form-label d-block text-end">النوع</label>
               <input
                 type="text"
                 formControlName="gender"
                 class="form-control text-center"
-                
               />
             </div>
 
-            <!-- العمر وتاريخ الميلاد -->
+            <!-- العمر -->
             <div class="col-md-2">
               <label class="form-label d-block text-end">العمر</label>
               <input
@@ -214,6 +219,7 @@
               />
             </div>
 
+            <!-- تاريخ الميلاد -->
             <div class="col-md-6">
               <label class="form-label d-block text-end">تاريخ الميلاد</label>
               <div
@@ -250,6 +256,7 @@
             </div>
           </div>
 
+          <!-- أزرار الإجراءات -->
           <div class="row mt-4">
             <div class="col">
               <button
@@ -280,3 +287,8 @@
     </div>
   </div>
 </section>
+
+<!-- مودال الصورة -->
+<div class="image-modal" *ngIf="showImageModal" (click)="closeImageModal()">
+  <img [src]="userImageUrl" alt="الصورة الشخصية بحجم كامل" />
+</div>
