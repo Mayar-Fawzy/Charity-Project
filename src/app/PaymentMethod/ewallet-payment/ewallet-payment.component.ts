@@ -42,26 +42,24 @@ export class EwalletPaymentComponent implements OnInit {
     }
   }
 
-  onDonateNow(): void {
-    if (!this.amount || !this.donorId || !this.projectId) {
-      alert('يرجى إدخال المبلغ والتأكد من تسجيل الدخول.');
-      return;
-    }
-
-    this._PaymentService.createPaymentIntent(this.amount, this.donorId, this.projectId)
-      .subscribe({
-        next: (res) => {
-          console.log('PaymentIntent created:', res);
-          alert('تم إنشاء طلب الدفع بنجاح!');
-          // يمكنك توجيه المستخدم إلى صفحة الدفع الفعلية مثلاً
-         this._Router.navigate(['visa-payment', this.projectId], 
-          {state: { clientSecret: res.data }});
-      
-         },
-        error: (err) => {
-          console.error('فشل إنشاء PaymentIntent:', err);
-          alert('حدث خطأ أثناء إنشاء الدفع.');
-        }
-      });
+ onDonateNow(): void {
+  if (!this.amount || !this.donorId || !this.projectId) {
+    alert('يرجى إدخال المبلغ والتأكد من تسجيل الدخول.');
+    return;
   }
+
+  this._PaymentService.createPaymentIntent(this.amount, this.donorId, this.projectId)
+    .subscribe({
+      next: (res) => {
+        console.log('PaymentIntent created:', res);
+        alert('تم إنشاء طلب الدفع بنجاح!');
+        this._Router.navigate(['visa-payment', this.projectId], 
+          { state: { clientSecret: res.data } });
+      },
+      error: (err) => {
+        console.error('فشل إنشاء PaymentIntent:', err);
+        alert('حدث خطأ أثناء إنشاء الدفع.');
+      }
+    });
+}
 }
