@@ -23,8 +23,8 @@ export class EwalletPaymentComponent implements OnInit {
   private readonly _Router=inject(Router)
   donorId = this._LoginService.donorId;
   projectId: string | null = null;
-  projects: Data[] = [];
-
+  project: any | null = null;
+name: string = '';
   amount: number = 0;
   phone: string = '';
 
@@ -33,7 +33,12 @@ export class EwalletPaymentComponent implements OnInit {
     if (this.projectId) {
       this._HomedonateServiesService.getProjectById(this.projectId).subscribe({
         next: (res) => {
-          this.projects = res.data;
+       if (res.isSucceeded && res.data) {
+            this.project = res.data; // res.data هو كائن وليس مصفوفة
+            this.name = this.project?.name ?? 'غير متوفر';
+          } else {
+            this.name = 'لا يوجد اسم متاح';
+          }
         },
         error: (err) => {
           console.error('فشل في تحميل بيانات المشروع', err);

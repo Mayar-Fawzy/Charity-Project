@@ -3,7 +3,7 @@
   <img src="/Images/Image.png" alt="خلفية" class="hero-img" />
   <div class="hero-overlay"></div>
 
-  <div class="container position-relative" style="    padding-top: 51px;">
+  <div class="container position-relative" style="padding-top: 51px;">
     <h1>
       <span class="text-warning">سهل الاستخدام</span> عند إنشاء حساب معنا، يجب
       عليك تزويدنا بمعلوماتك
@@ -17,22 +17,7 @@
 <!-- payment-container -->
 <main class="payment-container">
   <div class="payment-box">
-    <h2>اختر وسيلة الدفع</h2>
-
-    <div class="payment-options">
-      <div class="option active">
-        <i class="bi bi-credit-card"></i>
-        <span>بطاقة ائتمان/خصم</span>
-      </div>
-      <div class="option">
-        <i class="bi bi-wallet2"></i>
-        <span>المحافظ الإلكترونية</span>
-      </div>
-      <div class="option">
-        <i class="bi bi-paypal"></i>
-        <span>باي بال</span>
-      </div>
-    </div>
+    <h2>تبرع لمشروع <span class="font-bold">{{ name }}</span></h2>
 
     <div class="secure-note">
       <p>
@@ -40,30 +25,9 @@
       </p>
     </div>
 
-    <div class="wallet-options">
-      <button class="wallet">
-        <img src="/Images/fawry.png" alt="Fawry" /> فوري
-      </button>
-      <button class="wallet">
-        <img src="/Images/vodafone.png" alt="Vodafone Cash" /> فودافون كاش
-      </button>
-      <button class="wallet">
-        <img src="/Images/etislat.png" alt="Etisalat Cash" /> اتصالات كاش
-      </button>
-      <button class="wallet">
-        <img src="/Images/we.png" alt="WePay" /> وي باي
-      </button>
-      <button class="wallet">
-        <img src="/Images/orange.png" alt="Orange" /> أورنج
-      </button>
-    </div>
-
-    
     <div class="donation-inputs row g-2 mb-3">
-      <!-- <input type="text" placeholder="أدخل رقم الهاتف" class="phone-input" /> -->
-
-      <input type="number" id="amount" placeholder="قيمة التبرع (ج.م)" min="0" step="10" class="phone-input" class="phone-input"
-  [(ngModel)]="amount"/>
+      <input type="number" id="amount" placeholder="قيمة التبرع (ج.م)" min="0" step="10" class="phone-input"
+             [(ngModel)]="amount" aria-label="Donation Amount" />
     </div>
 
     <div class="secure-labels">
@@ -71,26 +35,10 @@
       <span class="pci"><i class="bi bi-check-circle"></i> متوافق مع PCI DSS</span>
     </div>
 
-    <button class="donate-btn" (click)="onDonateNow()">تبرع الآن</button>
+    <button class="donate-btn" [disabled]="amount <= 0" (click)="onDonateNow()">تبرع الآن</button>
     <p class="terms-text">
       بالضغط على "تبرع الآن"، فإنك توافق على
       <a href="#">الشروط والأحكام</a>
     </p>
   </div>
 </main>
-
-<!-- 
-<section class="section-footer" >
-  <h3>شركاء الدفع الموثوق بهم</h3>
-  <div class="partner-logos">
-    <img src="/Images/visa.png" alt="Visa" class="partner-logo" />
-    <img src="/Images/master-card.png" alt="MasterCard" class="partner-logo" />
-    <img src="/Images/paypal.png" alt="PayPal" class="partner-logo" />
-    <img src="/Images/fawry.png" alt="Fawry" class="partner-logo" />
-    <img src="/Images/vodafone.png" alt="Vodafone Cash" class="partner-logo" />
-    <img src="/Images/we.png" alt="WePay" class="partner-logo" />
-    <img src="/Images/etislat.png" alt="Etisalat Cash" class="partner-logo" />
-    <img src="/Images/orange.png" alt="Orange " class="partner-logo" />
-  </div>
-</section> -->
-
