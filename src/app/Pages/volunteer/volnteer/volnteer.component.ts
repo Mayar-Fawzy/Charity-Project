@@ -22,7 +22,7 @@ export class VolnteerComponent implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly router = inject(Router);
   private readonly loginService = inject(LoginService);
-
+  ProjectName!: string;
   responsiveOptions: CarouselResponsiveOptions[] = [];
   Projects: Data[] = [];
   selectedProjectId: string  = '';
@@ -65,8 +65,9 @@ export class VolnteerComponent implements OnInit {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
-  onJoinProject(projectId: string): void {
+  onJoinProject(projectId: string,name:string): void {
     this.selectedProjectId = projectId;
+    this.ProjectName = name;
     this.createVolunteerApplication();
   }
 
@@ -86,31 +87,61 @@ export class VolnteerComponent implements OnInit {
   
     const volunteerAppBody = {
       volunteerId: this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"],
-      requestDetails: 'يرجى توضيح النشاط', // يمكن استبدالها لاحقًا بمدخل من المستخدم
+      requestDetails: this.ProjectName, // يمكن استبدالها لاحقًا بمدخل من المستخدم
       volunteerActivityId: null,
       projectId: this.selectedProjectId
     };
   
-    this.projectService.CreateVolunteerApplication(volunteerAppBody).subscribe(res => {
-      if (res.isSucceeded) {
-        Swal.fire({
-          icon: 'success',
-          title: 'تم تقديم طلب التطوع بنجاح!',
-          text: 'شكرًا لمساهمتك في العمل التطوعي!',
-          confirmButtonColor: '#f6a026',
-          confirmButtonText: 'حسنا',
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'فشل تقديم الطلب',
-          text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
-          confirmButtonColor: '#f6a026',
-          confirmButtonText: 'حسنا',
-        });
-        console.error('Error creating volunteer application:', res.message);
-      }
-    });
+   this.projectService.CreateVolunteerApplication(volunteerAppBody).subscribe({
+  next: (res) => {
+    if (res.isSucceeded) {
+      Swal.fire({
+        icon: 'success',
+        title: 'تم تقديم طلب التطوع بنجاح!',
+        text: 'شكرًا لمساهمتك في العمل التطوعي!',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'فشل تقديم الطلب',
+        text: res.message || 'حدث خطأ أثناء تقديم الطلب. يرجى المحاولة لاحقًا.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      console.error('Error creating volunteer application:', res.message);
+    }
+  },
+  error: (err: any) => {
+    const errorMessage = err?.error?.errors;
+
+    if (
+      err.status === 422 &&
+      typeof errorMessage === 'string' &&
+      errorMessage.includes('already applied')
+    ) {
+      Swal.fire({
+        icon: 'info',
+        title: 'طلب مكرر',
+        text: 'لقد قمت بالفعل بطلب التطوع لهذا العنصر.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ في الاتصال بالخادم',
+        text: 'يرجى المحاولة لاحقًا.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      console.error('Request error:', err);
+    }
+  }
+});
+
+
   }
 
   galleryItems = [
