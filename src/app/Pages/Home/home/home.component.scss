@@ -718,7 +718,7 @@ $light-bg: #f9f9f9;
 
       @for $i from 1 through 10 {
         &:nth-child(#{$i}) {
-          transition-delay: #{($i * 0.1)}s;
+          transition-delay: #{($i * 0.1)};
         }
       }
 
@@ -1363,11 +1363,11 @@ $light-bg: #f9f9f9;
 // >>>>>>>>>>>>>>>> Make a Donation
 .donation-section {
   background-color: #f9f9f9;
-  padding: 2rem;
+  
 
   .donat {
     background: white;
-    padding: 2rem;
+   
     border-radius: 16px;
     max-width: 80%;
     margin: 2rem auto;
@@ -1592,4 +1592,140 @@ $light-bg: #f9f9f9;
       height: 300px;
     }
   }
+}
+$primary-color: #f6a026;
+$border-color: #ddd;
+$error-color: #e74c3c;
+$success-color: #4caf50;
+
+
+     
+.secure-note {
+      background: lighten($primary-color, 40%) !important;
+      padding: 10px ;
+      margin: auto;
+      border-radius: 8px;
+      margin-bottom: 15px; 
+      color: darken($primary-color, 20%) !important;
+      i {
+        margin-right: 6px;
+        color: $primary-color !important;
+      }
+    }
+
+
+.donation-section {
+ 
+ 
+    .payment-container {
+      padding: 0;
+
+      .payment-box {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+
+        .title {
+          font-size: 1.75rem;
+          margin-bottom: 2rem;
+          font-weight: 700;
+          color: #333;
+        }
+
+        .secure-labels {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          margin: 1.5rem 0;
+          flex-wrap: wrap;
+
+          span {
+            background: #eef6ee;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: $success-color;
+            font-weight: 500;
+          }
+        }
+
+        .donate-btn {
+          background-color: $primary-color;
+          color: white;
+          padding: 0.9rem 2rem;
+          font-size: 1.15rem;
+          font-weight: 600;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+            transform: translateY(-2px);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+          }
+        }
+
+        .terms-text {
+          text-align: center;
+          font-size: 0.875rem;
+          margin-top: 1.5rem;
+          color: #666;
+
+          a {
+            color: $primary-color;
+            text-decoration: none;
+            font-weight: 500;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+@media (max-width: 600px) {
+  .donation-section {
+    padding: 1rem;
+  }
+
+  .payment-box {
+    padding: 1.5rem;
+  }
+
+  .amount-buttons {
+    grid-template-columns: 1fr; // Stack buttons vertically on mobile
+    gap: 0.5rem;
+  }
+
+  .donate-btn {
+    font-size: 1.1rem;
+    padding: 0.8rem;
+  }
+}
+
+:host {
+  direction: rtl;
 }
