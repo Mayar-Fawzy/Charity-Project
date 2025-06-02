@@ -23,11 +23,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentService } from '../../../core/Services/payment.service';
 import { LoginService } from '../../Auth/core/Services/login.service';
 
-=======
-import { LoginService } from '../../Auth/core/Services/login.service';
-import { PaymentService } from '../../../core/Services/payment.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
->>>>>>> PEdit
 
 interface CharityCause {
   title: string;
