@@ -1,7 +1,9 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { loadStripe } from '@stripe/stripe-js';
+import Swal from 'sweetalert2';
+import { HomedonateServiesService } from '../../Pages/Donor/core/Services/homedonate-servies.service';
 
 @Component({
   selector: 'app-visa-payment',
@@ -11,8 +13,14 @@ import { loadStripe } from '@stripe/stripe-js';
   styleUrls: ['./visa-payment.component.scss']
 })
 export class VisaPaymentComponent implements AfterViewInit {
+  private readonly _router=inject(Router);
+    private readonly _HomedonateServiesService = inject(HomedonateServiesService);
+    private readonly _ActivatedRoute = inject(ActivatedRoute);
   clientSecret: string = '';
   postalCode: string = '';
+  project: any | null = null;
+  projectId: string | null = null;
+  name: string = '';
   stripePromise = loadStripe('pk_test_51Qusj5GghqEuY6PRxD7MnEaGXKKoCwDmrcgr24GCb5XgsGl6Yfzlx2rgaCJTEPWarztiPJP3X7R4BtWGFu4oC2re002PjOUT4D');
 
   constructor(private router: Router) {
@@ -20,11 +28,36 @@ export class VisaPaymentComponent implements AfterViewInit {
     const state = navigation?.extras.state as { clientSecret: string };
     this.clientSecret = state?.clientSecret || '';
   }
-
+ ngOnInit(): void {
+ 
+    this.projectId = this._ActivatedRoute.snapshot.paramMap.get('id');
+     if (this.projectId) {
+      this._HomedonateServiesService.getProjectById(this.projectId).subscribe({
+        next: (res) => {
+       if (res.isSucceeded && res.data) {
+            this.project = res.data; // res.data هو كائن وليس مصفوفة
+            this.name = this.project?.name ?? 'غير متوفر';
+          } else {
+            this.name = 'لا يوجد اسم متاح';
+          }
+        },
+        error: (err) => {
+          console.error('فشل في تحميل بيانات المشروع', err);
+        }
+      });
+    }
+ }
   async ngAfterViewInit() {
     const stripe = await this.stripePromise;
-    if (!stripe || !this.clientSecret) {
-      alert('حدث خطأ في إعداد الدفع.');
+    if (!stripe || !this.clientSecret) { 
+      Swal.fire({
+                  icon: "error",
+                  title: "حدث خطأ",
+                  text: 'فشل الدفع ',
+                  confirmButtonColor: "#f6a026",
+                  confirmButtonText: "حسنا",
+                }).then(() => {
+                  this._router.navigate(['/ewallet-payment', this.projectId]);});
       return;
     }
 
@@ -65,9 +98,25 @@ export class VisaPaymentComponent implements AfterViewInit {
   });
 
   if (error) {
-    alert('فشل الدفع: ' + error.message);
+       Swal.fire({
+                  icon: "error",
+                  title: "حدث خطأ",
+                  text: 'فشل الدفع '+error.message,
+                  confirmButtonColor: "#f6a026",
+                  confirmButtonText: "حسنا",
+                }).then(() => {
+                  this._router.navigate(['/ewallet-payment', this.projectId]);});
+    
   } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-    alert('تم الدفع بنجاح!');
+      Swal.fire({
+                  icon: "success",
+                  title: " تم التبرع بنجاح لمشروع"+" "+ this.name,
+                  confirmButtonColor: "#f6a026",
+                  confirmButtonText: "حسنا",
+                }).then(() => {
+           this._router.navigate(['projects']);
+        
+        });
   }
 }
 

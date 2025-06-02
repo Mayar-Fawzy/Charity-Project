@@ -1,11 +1,13 @@
 $primary-color: #f6a026;
 $text-light: #fff;
+$border-color: #ddd;
+$error-color: #e74c3c;
+$success-color: #4caf50;
 
 // Header
 .hero {
   position: relative;
-  min-height: 300px;
-  height: 300px;
+  min-height: 350px; // Slightly taller for better visual impact
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,130 +34,202 @@ $text-light: #fff;
     z-index: 1;
   }
 
-  .container,
-  .overlay {
+  .container {
     position: relative;
     z-index: 2;
     color: $text-light;
-    padding: 20px;
+    padding: 30px;
     width: 100%;
-  }
+    max-width: 800px;
 
-  h1 {
-    font-size: 2rem;
+    h1 {
+      font-size: 2.5rem;
+      line-height: 1.4;
+      font-weight: 700;
 
-    .text-warning,
-    .highlight {
-      color: $primary-color;
-      font-weight: bold;
+      .text-warning {
+        color: $primary-color;
+        font-weight: bold;
+      }
     }
-  }
 
-  p {
-    font-size: 1.2rem;
-    margin-top: 1rem;
+    p {
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      opacity: 0.9;
+    }
   }
 }
 
-// >>>>>>>>>>> main
+// Main Payment Section
 .payment-container {
-  padding: 2rem;
+  padding: 1rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: #f8f9fa; // Light background for contrast
 
-  // >>>>>>>>>>>>>>>>>>>>>>>>>>> payment
   .payment-box {
     background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
     width: 100%;
+    position: relative;
 
     .title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      font-weight: bold;
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      text-align: center;
+      color: #333;
     }
-
-    // >>>>>>>>>>>>>>>>>>>>>>>>>> payment-methods
-    .payment-methods {
+.payment-methods {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
 
       .method {
-        flex: 1 1 30%;
-        background: #f1f1f1;
+        flex: 1 1 100%;
+        background: #f5f5f5;
         border: 2px solid transparent;
-        padding: 1rem;
-        border-radius: 10px;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
 
         &.active {
           border-color: $primary-color;
-          background: lighten($primary-color, 40%);
+          background: #fff0d1;
         }
 
         i {
-          font-size: 1.5rem;
+          font-size: 1.75rem;
           color: $primary-color;
-          margin-left: 0.5rem;
         }
 
         h3 {
           margin: 0;
-          font-size: 1rem;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #333;
         }
 
         p {
           font-size: 0.875rem;
-          color: #777;
+          color: #666;
+          margin: 0;
         }
       }
     }
 
     .note {
       background: #e6f0ff;
-      padding: 0.75rem;
-      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
       font-size: 0.9rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #333;
 
       i {
-        margin-left: 0.5rem;
         color: #4a90e2;
       }
     }
 
-    // >>>>>>>>>>>>>>>>>>>>>> input-group
-    .input-group {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    
-      input {
-        padding: 0.75rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
+    // Form Styling
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .input-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: #444;
+        }
+
+        .card-input {
+          padding: 0.85rem 1rem;
+          border: 1px solid $border-color;
+          border-radius: 10px;
+          background-color: #f9f9f9;
+          font-size: 1rem;
+          transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+          min-height: 48px;
+          direction: ltr;
+          width: 100%;
+          box-sizing: border-box;
+
+          &.StripeElement--focus {
+            border-color: $primary-color;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba($primary-color, 0.2);
+          }
+
+          &.StripeElement--invalid {
+            border-color: $error-color;
+            background-color: #fff5f5;
+          }
+        }
       }
-    
-      @media (min-width: 768px) {
-        grid-template-columns: repeat(2, 1fr);
+
+      .input-row {
+        display: flex;
+        gap: 1rem;
+
+        .input-wrapper {
+          flex: 1;
+
+          .card-input {
+            width: 100%;
+          }
+        }
+      }
+
+      .donate-btn {
+        background-color: $primary-color;
+        color: white;
+        padding: 0.9rem;
+        font-size: 1.15rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
       }
     }
-    
 
-    // >>>>>>>>>>>>>>>>>>>>. secure-labels
     .secure-labels {
       display: flex;
+      justify-content: center;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin: 1.5rem 0;
 
       span {
         background: #eef6ee;
@@ -165,134 +239,65 @@ $text-light: #fff;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: #4caf50;
-      }
-    }
-
-    .donate-btn {
-      background-color: $primary-color;
-      margin: auto;
-      width: 80%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      padding: 0.75rem 2rem;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-
-      &:hover {
-        background-color: darken($primary-color, 10%);
+        color: $success-color;
+        font-weight: 500;
       }
     }
 
     .terms {
       text-align: center;
       font-size: 0.875rem;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+      color: #666;
 
       a {
         color: $primary-color;
         text-decoration: none;
-      }
-    }
-  }
+        font-weight: 500;
 
-  .partners {
-    margin-top: 2rem;
-    text-align: center;
-
-    h3 {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-
-    .partner-logos {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-
-      img {
-        width: 60px;
-        height: auto;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
 }
 
-// Responsive
+// Responsive Adjustments
 @media (max-width: 600px) {
-  .payment-box .payment-methods {
+  .payment-container {
+    padding: 2rem 0.5rem;
+  }
+
+  .payment-box {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .hero .container h1 {
+    font-size: 1.75rem;
+  }
+
+  .hero .container p {
+    font-size: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .input-row {
     flex-direction: column;
+    gap: 1rem;
   }
 
-  .input-group {
-    grid-template-columns: 1fr !important;
+  .donate-btn {
+    font-size: 1.1rem;
+    padding: 0.8rem;
   }
 }
-#card-element {
-  background: #fff;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  direction: ltr; // Stripe Elements تحتاج LTR حتى لو باقي الصفحة RTL
-}
 
-button.donate-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 18px;
-}
-/* RTL support */
+// RTL Support
 :host {
   direction: rtl;
-}
-
-/* Form Container */
-.stripe-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Stripe Input Elements */
-.card-input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.75rem;
-  background-color: #f9f9f9;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-  min-height: 45px;
-}
-
-.card-input.StripeElement--focus {
-  border-color: #f0ad4e;
-  background-color: #fff;
-}
-
-/* Donate Button */
-.donate-btn {
-  padding: 0.75rem 1.25rem;
-  background-color: #f0ad4e;
-  color: white;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.donate-btn:hover {
-  background-color: #ec971f;
 }

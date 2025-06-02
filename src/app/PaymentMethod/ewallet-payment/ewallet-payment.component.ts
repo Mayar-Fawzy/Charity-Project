@@ -58,15 +58,15 @@ name: string = '';
     .subscribe({
       next: (res) => {
         console.log('PaymentIntent created:', res);
-        Swal.fire({
-                  icon: "success",
-                  title: "تم إنشاء طلب الدفع بنجاح!",
-                  confirmButtonColor: "#f6a026",
-                  confirmButtonText: "حسنا",
-                }).then(() => {
+        // Swal.fire({
+        //           icon: "success",
+        //           title: "تم إنشاء طلب الدفع بنجاح!",
+        //           confirmButtonColor: "#f6a026",
+        //           confirmButtonText: "حسنا",
+        //         }).then(() => {
            this._Router.navigate(['visa-payment', this.projectId], 
           { state: { clientSecret: res.data } });
-        });
+        // });
        
       },
       error: (err) => {
