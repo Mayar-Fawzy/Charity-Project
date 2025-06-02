@@ -300,12 +300,16 @@
               </div>
             </div>
 
+
             <button
               class="btn btn-warning w-100"
-              (click)="onJoinProject(project.id)"
+              (click)="onJoinProject(project.id,project.name)"
             >
               انضم كمتطوع
             </button>
+
+            <button class="btn btn-warning w-100" (click)="onJoinProject(project.id,project.name)" >انضم كمتطوع</button>
+
           </div>
         </div>
       </div>

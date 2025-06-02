@@ -17,8 +17,17 @@ import { TagModule } from 'primeng/tag';
 import { RoutingModule } from '../../../core/Shared/Models/routing/routing.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { ViewportScroller } from '@angular/common';
 
+import { ViewportScroller } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaymentService } from '../../../core/Services/payment.service';
+import { LoginService } from '../../Auth/core/Services/login.service';
+
+=======
+import { LoginService } from '../../Auth/core/Services/login.service';
+import { PaymentService } from '../../../core/Services/payment.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+>>>>>>> PEdit
 
 interface CharityCause {
   title: string;
@@ -39,7 +48,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule, CarouselModule],
+  imports: [CommonModule, TagModule, RoutingModule,FormsModule,ReactiveFormsModule, CarouselModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -287,5 +296,66 @@ export class HomeComponent implements AfterViewInit {
         });
       });
     }
+  }
+  //General Payment
+private readonly _PaymentService = inject(PaymentService);
+  private readonly _LoginService = inject(LoginService);
+ 
+  donorId = this._LoginService.donorId;
+  amount: number = 0;
+
+  
+
+  setAmount(value: number): void {
+    this.amount = value;
+    this.validateAmount();
+  }
+
+  validateAmount(): void {
+    if (this.amount < 25) {
+      this.amount = 25; // Enforce minimum amount
+    }
+  }
+
+  onDonateNow(): void {
+    if (!this.donorId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'تسجيل الدخول مطلوب',
+        text: 'يرجى تسجيل الدخول لإتمام عملية التبرع.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      return;
+    }
+
+    if (!this.amount || this.amount < 25) {
+      Swal.fire({
+        icon: 'error',
+        title: 'مبلغ غير صالح',
+        text: 'يرجى إدخال مبلغ لا يقل عن 25 جنيهًا.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
+      });
+      return;
+    }
+
+    this._PaymentService.createPaymentIntent(this.amount, this.donorId, " ")
+      .subscribe({
+        next: (res) => {
+          console.log('PaymentIntent created:', res);
+          this._Router.navigate(['GenralVisa', this.donorId], { state: { clientSecret: res.data } });
+        },
+        error: (err) => {
+          console.error('فشل إنشاء PaymentIntent:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'حدث خطأ',
+            text: 'فشل إنشاء PaymentIntent: ' + err.message,
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا',
+          });
+        },
+      });
   }
 }
