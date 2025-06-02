@@ -7,6 +7,7 @@ import { Data } from '../../Pages/Donor/core/interface/iproject-donate';
 import { LoginService } from '../../Pages/Auth/core/Services/login.service';
 import { PaymentService } from '../../core/Services/payment.service';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-ewallet-payment',
@@ -57,13 +58,27 @@ name: string = '';
     .subscribe({
       next: (res) => {
         console.log('PaymentIntent created:', res);
-        alert('تم إنشاء طلب الدفع بنجاح!');
-        this._Router.navigate(['visa-payment', this.projectId], 
+        Swal.fire({
+                  icon: "success",
+                  title: "تم إنشاء طلب الدفع بنجاح!",
+                  confirmButtonColor: "#f6a026",
+                  confirmButtonText: "حسنا",
+                }).then(() => {
+           this._Router.navigate(['visa-payment', this.projectId], 
           { state: { clientSecret: res.data } });
+        });
+       
       },
       error: (err) => {
         console.error('فشل إنشاء PaymentIntent:', err);
         alert('حدث خطأ أثناء إنشاء الدفع.');
+        Swal.fire({
+                  icon: "error",
+                  title: "حدث خطأ",
+                  text: 'فشل إنشاء PaymentIntent'+err,
+                  confirmButtonColor: "#f6a026",
+                  confirmButtonText: "حسنا",
+                })
       }
     });
 }

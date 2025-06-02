@@ -101,16 +101,11 @@ main {
 
     .secure-note {
       background: lighten($primary-color, 40%);
-      padding: 10px; // تقليل التباعد الداخلي
+      padding: 10px ;
+      margin: auto;
       border-radius: $border-radius;
-      margin-bottom: 15px; // تقليل التباعد أسفل الملاحظة
-      font-size: 0.85rem; // تقليل حجم النص
+      margin-bottom: 15px; 
       color: darken($primary-color, 20%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-
       i {
         margin-right: 6px;
         color: $primary-color;
@@ -144,7 +139,7 @@ main {
     .secure-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem; // تقليل حجم النص
+      font-size: 0.8rem; // تقليل حجم الن
       margin-bottom: 15px; // تقليل التباعد أسفل الملصقات
       color: $primary-dark;
 
