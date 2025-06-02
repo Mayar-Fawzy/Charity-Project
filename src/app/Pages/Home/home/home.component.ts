@@ -310,16 +310,20 @@ private readonly _PaymentService = inject(PaymentService);
   }
 
   onDonateNow(): void {
-    if (!this.donorId) {
+   const token = localStorage.getItem('userToken');
+
+    if (!token) {
       Swal.fire({
         icon: 'warning',
-        title: 'تسجيل الدخول مطلوب',
-        text: 'يرجى تسجيل الدخول لإتمام عملية التبرع.',
-        confirmButtonColor: '#f6a026',
-        confirmButtonText: 'حسنا',
+        title: "خطأ",
+        text: "يجب عليك التسجيل أولًا قبل التبرع",
+        confirmButtonColor: "#f6a026",
+        confirmButtonText: "حسنا",
       });
       return;
-    }
+    } else {
+     
+    
 
     if (!this.amount || this.amount < 25) {
       Swal.fire({
@@ -350,4 +354,5 @@ private readonly _PaymentService = inject(PaymentService);
         },
       });
   }
+}
 }
