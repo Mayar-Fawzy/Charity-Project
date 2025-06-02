@@ -27,6 +27,7 @@ import { PaymentMethodComponent } from './settings/payment-method/payment-method
 import { NotificationsComponent } from './settings/notifications/notifications.component';
 import { WorkComponent } from './settings/work/work.component';
 import { AuthGuard } from './core/Guards/auth.guard';
+import { GeneralVisaComponent } from './PaymentMethod/general-visa/general-visa.component';
 // import { BeneficaryComponent } from './Pages/beneficiary/beneficary/beneficary.component';
 export const routes: Routes = [
   // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
@@ -53,6 +54,7 @@ export const routes: Routes = [
       { path: 'projects', title: 'Projects', component: ProjectsComponent },
       { path: 'volunteer-activity', title: 'volunteer-activity', component: VolunteerActivityComponent },
       { path: 'about', title: 'About', component: AboutUsComponent },
+      { path: 'GenralVisa/:id', title: 'GenralVisa', component: GeneralVisaComponent },
       {
         path: 'ewallet-payment/:id',
         title: 'E-Wallet Payment',
@@ -60,7 +62,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'visa-payment',
+        path: 'visa-payment/:id',
         title: 'Visa Payment',
         component: VisaPaymentComponent
       },
