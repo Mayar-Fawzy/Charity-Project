@@ -43,4 +43,16 @@ export class NotificationService {
     return this.http.delete(`${this.baseUrl}/DeleteMessage?messageId=${messageId}`);
   }
 
+  // notification.service.ts
+  sendMessageToUser(senderId: string, receiverId: string, message: string) {
+    const url = 'https://givinghandcharity.runasp.net/api/v1/Notification/send-to-user';
+    const body = {
+      senderId,
+      receiverId,
+      message
+    };
+
+    return this.http.post(url, body);
+  }
+
 }
