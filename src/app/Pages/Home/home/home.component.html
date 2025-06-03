@@ -419,56 +419,10 @@
 </section>
 
 <!-- >>>>>>>>>>>> Make a Donation -->
- <!-- <app-payment-method></app-payment-method> -->
-<section class="donation-section">
-  <div class="donat">
-    <main class="payment-container">
-      <section class="payment-box">
-        <h2 class="title">حدد قيمة التبرع</h2>
+ <section>
 
-        <div class="amount-selector">
-          <div class="amount-buttons">
-            <button class="amount-option" (click)="setAmount(100)">100 ج.م</button>
-            <button class="amount-option" (click)="setAmount(250)">250 ج.م</button>
-            <button class="amount-option" (click)="setAmount(500)">500 ج.م</button>
-            <button class="amount-option" (click)="setAmount(1000)">1000 ج.م</button>
-          </div>
-
-          <div class="custom-amount">
-            <input
-              type="number"
-              [(ngModel)]="amount"
-              (ngModelChange)="validateAmount()"
-              placeholder="مبلغ آخر"
-           step="10"
-              class="custom-input"
-              aria-label="Custom Donation Amount"
-            />
-           
-          </div>
-
-          <div class="secure-note">
-            <i class="bi bi-shield-lock"></i> يجب أن يكون المبلغ لا يقل عن 25 جنيهًا
-          </div>
-        </div>
-
-        <div class="secure-labels">
-          <span class="ssl"><i class="bi bi-lock"></i> اتصال آمن (SSL)</span>
-          <span class="pci"><i class="bi bi-check-circle"></i> متوافق مع PCI DSS</span>
-        </div>
-
-        <button class="donate-btn" [disabled]="amount < 25" (click)="onDonateNow()">
-          تبرع الآن
-        </button>
-
-        <p class="terms-text">
-          بالضغط على "تبرع الآن"، فإنك توافق على
-          <a href="#">الشروط والأحكام</a>
-        </p>
-      </section>
-    </main>
-  </div>
-</section>
+ <app-payment-method></app-payment-method>
+ </section>
 
 <!-- >>>>>>>>>>>>>>>>> Find Us -->
 <section class="contact-section" id="contact">

@@ -59,13 +59,6 @@ export class PaymentMethodComponent implements AfterViewInit {
       error: (err) => {
         console.error('فشل في تحميل بيانات المستخدم', err);
         this.paymentStatus = 'فشل في تحميل بيانات المستخدم.';
-        Swal.fire({
-          icon: 'error',
-          title: 'حدث خطأ',
-          text: this.paymentStatus,
-          confirmButtonColor: '#f6a026',
-          confirmButtonText: 'حسنا',
-        });
       }
     });
   }
