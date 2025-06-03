@@ -296,47 +296,37 @@ private readonly _PaymentService = inject(PaymentService);
   donorId = this._LoginService.donorId;
   amount: number = 0;
 
-  
-
   setAmount(value: number): void {
     this.amount = value;
     this.validateAmount();
   }
 
   validateAmount(): void {
-    if (this.amount < 25) {
-      this.amount = 25; // Enforce minimum amount
+    if (this.amount < 25 && this.amount !== 0) {
+      
+      return;
+    }
+    if (this.amount === 0) {
+      this.amount = 0;
     }
   }
 
   onDonateNow(): void {
-   const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken');
 
     if (!token) {
       Swal.fire({
         icon: 'warning',
-        title: "خطأ",
-        text: "يجب عليك التسجيل أولًا قبل التبرع",
-        confirmButtonColor: "#f6a026",
-        confirmButtonText: "حسنا",
-      });
-      return;
-    } else {
-     
-    
-
-    if (!this.amount || this.amount < 25) {
-      Swal.fire({
-        icon: 'error',
-        title: 'مبلغ غير صالح',
-        text: 'يرجى إدخال مبلغ لا يقل عن 25 جنيهًا.',
+        title: 'خطأ',
+        text: 'يجب عليك التسجيل أولًا قبل التبرع',
         confirmButtonColor: '#f6a026',
         confirmButtonText: 'حسنا',
       });
       return;
     }
 
-    this._PaymentService.createPaymentIntent(this.amount, this.donorId, " ")
+    // التحقق من المبلغ غير ضروري هنا لأن الزر معطل إذا كان المبلغ أقل من 25
+    this._PaymentService.createPaymentIntent(this.amount, this.donorId, ' ')
       .subscribe({
         next: (res) => {
           console.log('PaymentIntent created:', res);
@@ -354,5 +344,4 @@ private readonly _PaymentService = inject(PaymentService);
         },
       });
   }
-}
 }

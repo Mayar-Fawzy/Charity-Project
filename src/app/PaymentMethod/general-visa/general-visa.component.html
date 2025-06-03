@@ -1,1 +1,62 @@
-<p>general-visa works!</p>
+<header class="hero text-white text-center py-5 position-relative">
+  <img src="/Images/Image.png" alt="خلفية" class="hero-img" />
+  <div class="hero-overlay"></div>
+
+  <div class="container position-relative">
+    <h1>
+      <span class="text-warning">سهل الاستخدام</span> عند إنشاء حساب معنا، يجب عليك تزويدنا بمعلوماتك
+    </h1>
+    <p class="lead">
+      تبرع الآن باستخدام بطاقتك الائتمانية أو المحفظة الإلكترونية المفضلة لديك.
+    </p>
+  </div>
+</header>
+
+<main class="payment-container">
+  <section class="payment-box">
+    <h2 class="title">اختر طريقة الدفع</h2>
+<div class="payment-methods">
+      <div class="method active">
+        <i class="bi bi-credit-card-2-front"></i>
+        <div>
+          <h3>بطاقة ائتمان/خصم</h3>
+          <p>أدخل تفاصيل بطاقتك (Visa، MasterCard، أو أي بطاقة دولية)</p>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <i class="bi bi-shield-check"></i>
+      نحن لا نخزن بيانات بطاقتك. جميع المعاملات مشفرة وآمنة.
+    </div>
+
+    <!-- Stripe Card Element -->
+    <form id="payment-form" (ngSubmit)="submitPayment()" #paymentForm="ngForm">
+      <div class="input-wrapper">
+        <label for="card-number-element">رقم البطاقة</label>
+        <div id="card-number-element" class="card-input"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-wrapper">
+          <!-- <label for="card-expiry-element">تاريخ الانتهاء(MM/YY)</label> -->
+           <label for="card-expiry-element">MM/YY</label>
+          <div id="card-expiry-element" class="card-input"></div>
+        </div>
+        <div class="input-wrapper">
+          <label for="card-cvc-element">CVC</label>
+          <div id="card-cvc-element" class="card-input"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="donate-btn">تبرع الآن</button>
+    </form>
+
+    <div class="secure-labels">
+      <span><i class="bi bi-lock-fill"></i> SSL آمن</span>
+      <span><i class="bi bi-shield-lock"></i> متوافق مع PCI-DSS</span>
+    </div>
+
+    <p class="terms">
+      بالنقر على زر "تبرع الآن" فإنك توافق على <a href="#">الشروط والأحكام</a>
+    </p>
+  </section>
+</main>
