@@ -4,6 +4,7 @@ import { HomedonateServiesService } from '../../Pages/Donor/core/Services/homedo
 import { ActivatedRoute, Router } from '@angular/router';
 import { loadStripe } from '@stripe/stripe-js';
 import { FormsModule } from '@angular/forms';
+import { Environment } from '../../Pages/Auth/core/Environment/Environment';
 
 @Component({
   selector: 'app-general-visa',
@@ -16,7 +17,7 @@ export class GeneralVisaComponent {
  private readonly _router=inject(Router);
   clientSecret: string = '';
   postalCode: string = '';
-  stripePromise = loadStripe('pk_test_51Qusj5GghqEuY6PRxD7MnEaGXKKoCwDmrcgr24GCb5XgsGl6Yfzlx2rgaCJTEPWarztiPJP3X7R4BtWGFu4oC2re002PjOUT4D');
+  stripePromise = loadStripe(Environment.puplishKey);
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();

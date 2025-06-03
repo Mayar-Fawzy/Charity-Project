@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { PaymentService } from '../../../core/Services/payment.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaymentMethodComponent } from "../../../settings/payment-method/payment-method.component";
 
 interface CharityCause {
   title: string;
@@ -40,7 +41,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule,FormsModule,ReactiveFormsModule, CarouselModule],
+  imports: [CommonModule, TagModule, RoutingModule, FormsModule, ReactiveFormsModule, CarouselModule, PaymentMethodComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -326,7 +327,7 @@ private readonly _PaymentService = inject(PaymentService);
     }
 
     // التحقق من المبلغ غير ضروري هنا لأن الزر معطل إذا كان المبلغ أقل من 25
-    this._PaymentService.createPaymentIntent(this.amount, this.donorId, ' ')
+    this._PaymentService.createPaymentIntent(this.amount, this.donorId, null)
       .subscribe({
         next: (res) => {
           console.log('PaymentIntent created:', res);

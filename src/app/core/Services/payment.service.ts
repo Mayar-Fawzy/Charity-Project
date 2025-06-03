@@ -11,11 +11,11 @@ private apiUrl = 'https://givinghandcharity.runasp.net/api/v1/Payment/CreatePaym
   constructor(private http: HttpClient) {}
 
 
-  createPaymentIntent(amount: number, donorId: string, projectId: string): Observable<any> {
+  createPaymentIntent(amount: number, donorId: string, projectId: string|null): Observable<any> {
     let params = new HttpParams()
       .set('amount', amount.toString())
       .set('donorId', donorId)
-      .set('projectId', projectId);
+      .set('projectId', projectId? projectId : 'null'); // إذا كان project
 
     // إرسال الطلب
     return this.http.post(this.apiUrl, {}, {  params });

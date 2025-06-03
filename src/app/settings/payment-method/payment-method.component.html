@@ -1,5 +1,4 @@
-<!-- >>>>>>>>>>>>>>>>>>>>> Header -->
-<header class="hero text-white text-center py-5 position-relative">
+<!-- <header class="hero text-white text-center py-5 position-relative">
   <img src="/Images/Image.png" alt="خلفية" class="hero-img" />
   <div class="hero-overlay"></div>
 
@@ -12,53 +11,88 @@
       تبرع الآن باستخدام بطاقتك الائتمانية أو المحفظة الإلكترونية المفضلة لديك.
     </p>
   </div>
-</header>
-<section class="donation-section">
-  <div class="donat">
-    <main class="payment-container">
-      <section class="payment-box">
-        <h2 class="title">حدد قيمة التبرع</h2>
+</header> -->
+<main class="payment-container">
+  <section class="payment-box">
+    <div class="payment-methods">
+      <div class="method active">
+        <i class="bi bi-credit-card-2-front"></i>
+        <div>
+          <h3>بطاقة ائتمان/خصم</h3>
+          <p>أدخل تفاصيل بطاقتك (Visa، MasterCard، أو أي بطاقة دولية)</p>
+        </div>
+      </div>
+    </div>
+    <h2 class="title">حدد قيمة التبرع</h2>
 
-        <div class="amount-selector">
-          <div class="amount-buttons">
-            <button class="amount-option" (click)="setAmount(100)">100 ج.م</button>
-            <button class="amount-option" (click)="setAmount(250)">250 ج.م</button>
-            <button class="amount-option" (click)="setAmount(500)">500 ج.م</button>
-            <button class="amount-option" (click)="setAmount(1000)">1000 ج.م</button>
+    <div class="custom-amount">
+      <input
+        type="number"
+        [(ngModel)]="amount"
+        placeholder="مبلغ آخر"
+        min="0"
+        step="10"
+        class="custom-input"
+      />
+    </div>
+
+    <div class="secure-note">
+      <i class="bi bi-shield-lock"></i> يجب أن يكون المبلغ لا يقل عن 25 جنيهًا
+    </div>
+
+    <form #paymentForm="ngForm" (ngSubmit)="submitPayment()">
+      <div class="input-group">
+        <div class="input-wrapper w-25">
+          <label for="card-number-element">رقم البطاقة</label>
+          <div id="card-number-element" class="form-control"></div>
+        </div>
+          <div class="input-row">
+          <div class="input-wrapper w-25">
+            <label for="card-expiry-element">تاريخ الانتهاء (MM/YY)</label>
+            <div id="card-expiry-element" class="form-control"></div>
           </div>
-
-          <div class="custom-amount">
-            <input
-              type="number"
-              [(ngModel)]="amount"
-              (ngModelChange)="validateAmount()"
-              placeholder="مبلغ آخر"
-           step="10"
-              class="custom-input"
-              aria-label="Custom Donation Amount"
-            />
-           
-          </div>
-
-          <div class="secure-note">
-            <i class="bi bi-shield-lock"></i> يجب أن يكون المبلغ لا يقل عن 25 جنيهًا
+          <div class="input-wrapper w-25">
+            <label for="card-cvc-element">رمز التحقق (CVV)</label>
+            <div id="card-cvc-element" class="form-control"></div>
           </div>
         </div>
-
-        <div class="secure-labels">
-          <span class="ssl"><i class="bi bi-lock"></i> اتصال آمن (SSL)</span>
-          <span class="pci"><i class="bi bi-check-circle"></i> متوافق مع PCI DSS</span>
+        <div class="input-wrapper">
+          <label for="card-holder">اسم حامل البطاقة</label>
+          <input
+            id="card-holder"
+            type="text"
+            name="cardHolder"
+            
+             disabled
+            class="form-control"
+            [value]="cardHolder"
+          />
+        
         </div>
+      
+      </div>
 
-        <button class="donate-btn" [disabled]="amount < 25" (click)="onDonateNow()">
-          تبرع الآن
-        </button>
+      <div class="secure-labels">
+        <span><i class="bi bi-lock-fill"></i> SSL آمن</span>
+        <span><i class="bi bi-shield-lock"></i> متوافق مع PCI-DSS</span>
+      </div>
 
-        <p class="terms-text">
-          بالضغط على "تبرع الآن"، فإنك توافق على
-          <a href="#">الشروط والأحكام</a>
-        </p>
-      </section>
-    </main>
-  </div>
-</section>
+      <button
+        type="submit"
+        class="donate-btn"
+        [disabled]="!isFormValid() || isLoading"
+      >
+        <span *ngIf="!isLoading">تبرع الآن</span>
+        <span *ngIf="isLoading">جاري الدفع...</span>
+      </button>
+    </form>
+
+    <p class="terms">
+      بالنقر على زر "تبرع الآن" فإنك توافق على <a href="#">الشروط والأحكام</a>
+    </p>
+
+    <div class="payment-status" *ngIf="paymentStatus">
+      {{ paymentStatus }}
+    </div>
+  </section>
+</main>

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { loadStripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
 import { HomedonateServiesService } from '../../Pages/Donor/core/Services/homedonate-servies.service';
+import { Environment } from '../../Pages/Auth/core/Environment/Environment';
 
 @Component({
   selector: 'app-visa-payment',
@@ -21,7 +22,7 @@ export class VisaPaymentComponent implements AfterViewInit {
   project: any | null = null;
   projectId: string | null = null;
   name: string = '';
-  stripePromise = loadStripe('pk_test_51Qusj5GghqEuY6PRxD7MnEaGXKKoCwDmrcgr24GCb5XgsGl6Yfzlx2rgaCJTEPWarztiPJP3X7R4BtWGFu4oC2re002PjOUT4D');
+  stripePromise = loadStripe(Environment.puplishKey);
 
   constructor(private router: Router) {
     const navigation = this.router.getCurrentNavigation();
@@ -29,7 +30,6 @@ export class VisaPaymentComponent implements AfterViewInit {
     this.clientSecret = state?.clientSecret || '';
   }
  ngOnInit(): void {
- 
     this.projectId = this._ActivatedRoute.snapshot.paramMap.get('id');
      if (this.projectId) {
       this._HomedonateServiesService.getProjectById(this.projectId).subscribe({
