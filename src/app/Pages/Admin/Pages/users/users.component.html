@@ -1,107 +1,158 @@
 <section class="dashboard-container">
-  <div class="container d-flex justify-content-between align-items-center">
+  <div class="container d-flex justify-content-between align-items-center pb-3">
     <h2 class="title">إدارة المستخدمين</h2>
     <div class="d-flex gap-2">
-      <!-- <button class="btn add" (click)="addUser()">
-        <i class="bi bi-person-plus-fill border-0 rounded-1 ps-2"></i> إضافة
-        مستخدم
-      </button> -->
       <button class="btn export" (click)="exportToExcel()">
         <i class="bi bi-download border-0 rounded-1 ps-2"></i> تصدير Excel
       </button>
     </div>
   </div>
 
-  <table class="users-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>#</th>
-        <th>الصورة</th>
-        <th>الاسم</th>
-        <th>البريد الإلكتروني</th>
-        <th>الجنس</th>
-        <th>العنوان</th>
-        <th>رقم الهاتف</th>
-        <th>العمر</th>
-        <th>الإجراءات</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor="let user of users; let i = index"
-        [class.selected]="selectedUserId === user.id"
-        (click)="selectRow(user.id)"
-      >
-        <td>
-          <i
-            *ngIf="selectedUserId === user.id"
-            class="bi bi-box-arrow-left"
-            style="color: #f39c12; font-size: 1.2rem"
-          ></i>
-        </td>
-        <td>{{ i + 1 }}</td>
-        <td>
-          <img
-            [src]="user.imageUrl"
-            alt="User Image"
-            class="user-image"
-            style="cursor: pointer"
-            (click)="openImageModal(user.imageUrl)"
-            data-bs-toggle="modal"
-            data-bs-target="#userImageModal"
-          />
-        </td>
-        <td>{{ user.firstName }} {{ user.lastName }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ getGenderText(user.gender) }}</td>
-        <td>{{ user.address }}</td>
-        <td>{{ user.phoneNumber }}</td>
-        <td>{{ user.age }}</td>
-        <td class="actions" (click)="$event.stopPropagation()">
-          <button class="btn danger" (click)="deleteUser(user)">حذف</button>
-          <button class="btn success" (click)="contactUser(user)">تواصل</button>
-          <button
-            class="btn"
-            [ngClass]="user.isActive ? 'warning' : 'success'"
-            (click)="toggleStatus(user)"
-          >
-            {{ user.isActive ? "قفل الحساب" : "فتح الحساب" }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+  <div class="table-wrapper">
+    <p-table
+      [value]="users"
+      selectionMode="single"
+      [(selection)]="selectedUserId"
+      dataKey="id"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [responsiveLayout]="'scroll'"
+      [resizableColumns]="true"
+      class="p-datatable-striped"
+      [filters]="filters"
+      (onFilter)="onFilter($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
+          <th>#</th>
+          <th>الصورة</th>
+          <th pSortableColumn="firstName">
+            الاسم
+            <p-columnFilter
+              type="text"
+              field="firstName"
+              display="menu"
+              placeholder="ابحث بالاسم"
+            ></p-columnFilter>
+          </th>
+          <th pSortableColumn="email">
+            البريد الإلكتروني
+            <p-columnFilter
+              type="text"
+              field="email"
+              display="menu"
+              placeholder="ابحث بالبريد"
+            ></p-columnFilter>
+          </th>
+          <th pSortableColumn="gender">
+            الجنس
+            <p-columnFilter
+              type="dropdown"
+              field="gender"
+              display="menu"
+              placeholder="اختر الجنس"
+            ></p-columnFilter>
+          </th>
+          <th pSortableColumn="address">
+            العنوان
+            <p-columnFilter
+              type="text"
+              field="address"
+              display="menu"
+              placeholder="ابحث بالعناوين"
+            ></p-columnFilter>
+          </th>
+          <th pSortableColumn="phoneNumber">
+            رقم الهاتف
+            <p-columnFilter
+              type="text"
+              field="phoneNumber"
+              display="menu"
+              placeholder="ابحث برقم الهاتف"
+            ></p-columnFilter>
+          </th>
+          <th>الإجراءات</th>
+        </tr>
+      </ng-template>
 
-<!-- Modal -->
-<section
-  class="modal fade"
-  id="userImageModal"
-  tabindex="-1"
-  aria-labelledby="userImageModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content p-3">
-      <div
-        class="modal-header border-bottom-1 d-flex justify-content-around p-0"
-      >
-        <h5 class="modal-title" id="userImageModalLabel">صورة المستخدم</h5>
-        <button
-          type="button"
-          class="btn-close me-auto m-0"
-          data-bs-dismiss="modal"
-          aria-label="إغلاق"
-        ></button>
-      </div>
-      <div class="modal-body text-center">
-        <img
-          [src]="selectedImageUrl"
-          class="img-fluid rounded shadow"
-          style="max-height: 500px"
-        />
-      </div>
-    </div>
+      <ng-template pTemplate="body" let-user let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="user" (click)="selectRow(user.id)">
+          <td>
+            <i
+              *ngIf="selectedUserId === user.id"
+              class="bi bi-box-arrow-left selected-icon"
+            ></i>
+          </td>
+          <td>{{ rowIndex + 1 }}</td>
+          <td>
+            <img
+              [src]="user.imageUrl"
+              alt="User Image"
+              class="user-thumbnail"
+              (click)="openImage(user.imageUrl)"
+            />
+          </td>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ getGenderText(user.gender) }}</td>
+          <td>{{ user.address }}</td>
+          <td>{{ user.phoneNumber }}</td>
+          <td class="actions">
+            <button
+              pButton
+              type="button"
+              icon="bi bi-trash"
+              class="btn btn-danger btn-sm me-1"
+              pTooltip="حذف المستخدم"
+              (click)="deleteUser(user); $event.stopPropagation()"
+            ></button>
+
+            <button
+              *ngIf="!user.isLocked"
+              pButton
+              type="button"
+              icon="bi bi-lock"
+              class="btn btn-warning btn-sm me-1"
+              pTooltip="قفل الحساب"
+              (click)="lockAccount(user); $event.stopPropagation()"
+            ></button>
+
+            <button
+              *ngIf="user.isLocked"
+              pButton
+              type="button"
+              icon="bi bi-unlock"
+              class="btn btn-success btn-sm me-1"
+              pTooltip="فتح الحساب"
+              (click)="unlockAccount(user); $event.stopPropagation()"
+            ></button>
+
+            <button
+              pButton
+              type="button"
+              icon="bi bi-chat-left-text"
+              class="btn btn-info btn-sm"
+              pTooltip="التواصل مع المستخدم"
+              (click)="contactUser(user); $event.stopPropagation()"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
+
+  <p-dialog
+    [(visible)]="imageDialogVisible"
+    [modal]="true"
+    header="صورة المستخدم"
+    [dismissableMask]="true"
+    class="custom-dialog"
+  >
+    <img
+      [src]="selectedImageUrl"
+      class="img-fluid rounded shadow image-dialog"
+    />
+  </p-dialog>
 </section>

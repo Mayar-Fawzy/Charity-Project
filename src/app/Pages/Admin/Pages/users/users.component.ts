@@ -1,86 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { ImageModule } from 'primeng/image';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-
-
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  address: string;
-  imageUrl: string;
-  phoneNumber: string;
-  dateOfBirth: string;
-  age: number;
-  gender: number;
-  isActive: boolean;
-}
+import { UserService, User } from './core/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    TableModule,
+    DialogModule,
+    ButtonModule,
+    ImageModule,
+    InputTextModule,
+    DropdownModule],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
-export class UsersComponent {
-  users: User[] = [
-    {
-      id: 'user-1',
-      firstName: 'Ahmed',
-      lastName: 'Saad',
-      email: 'ahmed.lab505@gmail.com',
-      address: 'shaben',
-      imageUrl: 'https://givinghandcharity.runasp.net/UsersImages/62a5f2b8f0774a22b17408290200a840.jpeg',
-      phoneNumber: '01153008952',
-      dateOfBirth: '2005-05-05T00:00:00',
-      age: 20,
-      gender: 0,
-      isActive: true,
-    },
-    {
-      id: 'user-2',
-      firstName: 'Ahmed',
-      lastName: 'Saad',
-      email: 'ahmed.lab505@gmail.com',
-      address: 'shaben',
-      imageUrl: 'https://givinghandcharity.runasp.net/UsersImages/62a5f2b8f0774a22b17408290200a840.jpeg',
-      phoneNumber: '01153008952',
-      dateOfBirth: '2005-05-05T00:00:00',
-      age: 20,
-      gender: 0,
-      isActive: true,
-    },
-    {
-      id: 'user-3',
-      firstName: 'Ahmed',
-      lastName: 'Saad',
-      email: 'ahmed.lab505@gmail.com',
-      address: 'shaben',
-      imageUrl: 'https://givinghandcharity.runasp.net/UsersImages/62a5f2b8f0774a22b17408290200a840.jpeg',
-      phoneNumber: '01153008952',
-      dateOfBirth: '2005-05-05T00:00:00',
-      age: 20,
-      gender: 0,
-      isActive: true,
-    },
+export class UsersComponent implements OnInit {
+  users: User[] = [];
+  selectedUserId: string | null = null;
+
+  filters: { [key: string]: any } = {};
+
+  genderFilterOptions = [
+    { label: 'ذكر', value: 0 },
+    { label: 'أنثى', value: 1 },
   ];
 
-  addUser(): void {
-    alert('تم الضغط على زر إضافة مستخدم — يمكنك هنا فتح مودال أو التنقل لصفحة الإضافة');
+  imageDialogVisible = false;
+  selectedImageUrl: string = '';
+
+  constructor(private userService: UserService) { }
+
+  ngOnInit(): void {
+    this.loadUsers();
   }
 
-
-  selectedImageUrl: string | null = null;
-
-  openImageModal(imageUrl: string): void {
-    this.selectedImageUrl = imageUrl;
+  loadUsers(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (data) => (this.users = data),
+      error: (err) => {
+        console.error('فشل تحميل المستخدمين', err);
+        alert('حدث خطأ أثناء تحميل المستخدمين');
+      },
+    });
   }
-
-
-  selectedUserId: string | null = null;
 
   selectRow(userId: string): void {
     this.selectedUserId = userId;
@@ -91,43 +64,156 @@ export class UsersComponent {
   }
 
   deleteUser(user: User): void {
-    if (confirm(`هل أنت متأكد من حذف المستخدم ${user.firstName}؟`)) {
-      this.users = this.users.filter((u) => u.id !== user.id);
-      if (this.selectedUserId === user.id) {
-        this.selectedUserId = null;
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success me-2',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+
+    swalWithBootstrapButtons
+      .fire({
+        title: 'هل أنت متأكد؟',
+        text: `سيتم حذف المستخدم ${user.firstName} نهائيًا!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'نعم، احذفه!',
+        cancelButtonText: 'لا، إلغاء',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.userService.deleteUser(user.id).subscribe({
+            next: () => {
+              this.users = this.users.filter((u) => u.id !== user.id);
+              if (this.selectedUserId === user.id) {
+                this.selectedUserId = null;
+              }
+              swalWithBootstrapButtons.fire({
+                title: 'تم الحذف!',
+                text: `تم حذف المستخدم ${user.firstName} بنجاح.`,
+                icon: 'success',
+              });
+            },
+            error: (err) => {
+              console.error('خطأ أثناء حذف المستخدم', err);
+              Swal.fire({
+                title: 'خطأ!',
+                text: 'حدث خطأ أثناء محاولة حذف المستخدم.',
+                icon: 'error',
+              });
+            },
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: 'تم الإلغاء',
+            text: 'المستخدم لم يُحذف.',
+            icon: 'error',
+          });
+        }
+      });
+  }
+
+  lockAccount(user: User): void {
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: `سيتم قفل الحساب للمستخدم ${user.firstName}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'نعم، قفل',
+      cancelButtonText: 'إلغاء',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.lockAccount(user.email).subscribe({
+          next: () => {
+            user.isLocked = true;
+            Swal.fire(
+              'تم التنفيذ!',
+              `تم قفل حساب المستخدم ${user.firstName}.`,
+              'success'
+            );
+          },
+          error: (err) => {
+            console.error('خطأ أثناء قفل الحساب', err);
+            Swal.fire('خطأ!', 'حدث خطأ أثناء قفل الحساب.', 'error');
+          },
+        });
       }
-    }
+    });
+  }
+
+  unlockAccount(user: User): void {
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: `سيتم فتح الحساب للمستخدم ${user.firstName}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'نعم، فتح',
+      cancelButtonText: 'إلغاء',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.unlockAccount(user.email).subscribe({
+          next: () => {
+            user.isLocked = false;
+            Swal.fire(
+              'تم التنفيذ!',
+              `تم فتح حساب المستخدم ${user.firstName}.`,
+              'success'
+            );
+          },
+          error: (err) => {
+            console.error('خطأ أثناء فتح الحساب', err);
+            Swal.fire('خطأ!', 'حدث خطأ أثناء فتح الحساب.', 'error');
+          },
+        });
+      }
+    });
   }
 
   contactUser(user: User): void {
     alert(`التواصل مع المستخدم: ${user.firstName} - ${user.email}`);
   }
 
-  toggleStatus(user: User): void {
-    user.isActive = !user.isActive;
+  openImage(imageUrl: string) {
+    this.selectedImageUrl = imageUrl;
+    this.imageDialogVisible = true;
+  }
+
+  addUser(): void {
+    alert(
+      'تم الضغط على زر إضافة مستخدم — يمكنك هنا فتح مودال أو التنقل لصفحة الإضافة'
+    );
   }
 
   exportToExcel(): void {
-    const exportData = this.users.map(user => ({
-      'الاسم': `${user.firstName} ${user.lastName}`,
+    const exportData = this.users.map((user) => ({
+      الاسم: `${user.firstName} ${user.lastName}`,
       'البريد الإلكتروني': user.email,
-      'الجنس': user.gender === 0 ? 'ذكر' : 'أنثى',
-      'العنوان': user.address,
+      الجنس: this.getGenderText(user.gender),
+      العنوان: user.address,
       'رقم الهاتف': user.phoneNumber,
-      'العمر': user.age,
-      'الحالة': user.isActive ? 'مفعل' : 'مغلق'
+      الحالة: user.isLocked ? 'مغلق' : 'مفعل',
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'المستخدمين');
 
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
     });
-
+    const blob = new Blob([excelBuffer], {
+      type:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
     saveAs(blob, 'users.xlsx');
   }
 
+  onFilter(event: any): void {
+    this.filters = event.filters;
+  }
 }

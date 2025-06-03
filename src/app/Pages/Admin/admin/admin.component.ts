@@ -12,7 +12,7 @@ import { LoginService } from '../../Auth/core/Services/login.service';
 })
 export class AdminComponent {
   private readonly _LoginService=inject(LoginService)
-  sidebarOpen = true;
+  sidebarOpen = false;
   userData:any
   userName!:string
   toggleSidebar() {
