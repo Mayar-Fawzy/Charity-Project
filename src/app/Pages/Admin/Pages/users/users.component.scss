@@ -33,18 +33,81 @@
     }
 }
 
-/* ✅ نغلف الجدول داخل هذا العنصر */
+// Actino button
+.custom-danger-button {
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: white;
+
+    &:hover {
+        background-color: white !important;
+        color: #dc3545 !important;
+        border-color: #dc3545 !important;
+
+        i {
+            color: #dc3545 !important;
+        }
+    }
+}
+
+.custom-warning-button {
+    background-color: #f0ad4e;
+    border: 1px solid #f0ad4e;
+    color: white;
+
+    &:hover {
+        background-color: white !important;
+        color: #f0ad4e !important;
+        border-color: #f0ad4e !important;
+
+        i {
+            color: #f0ad4e !important;
+        }
+    }
+}
+
+.custom-success-button {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: white;
+
+    &:hover {
+        background-color: white !important;
+        color: #28a745 !important;
+        border-color: #28a745 !important;
+
+        i {
+            color: #28a745 !important;
+        }
+    }
+}
+
+.custom-info-button {
+    background-color: #17a2b8;
+    border: 1px solid #17a2b8;
+    color: white;
+
+    &:hover {
+        background-color: white !important;
+        color: #17a2b8 !important;
+        border-color: #17a2b8 !important;
+
+        i {
+            color: #17a2b8 !important;
+        }
+    }
+}
+
+
 .table-wrapper {
     overflow-x: auto;
     width: 100%;
 }
 
-/* ✅ نحدد العرض الأدنى للجدول عشان يفعل السكروول */
 ::ng-deep .p-datatable-wrapper {
     min-width: 1200px;
 }
 
-/* ✅ تنسيقات الجدول */
 ::ng-deep .p-table {
     border: 1px solid #eee;
     border-radius: 8px;
@@ -98,56 +161,11 @@
         }
     }
 
-    .action-buttons {
-        display: flex;
-        gap: 0.25rem;
-        flex-wrap: wrap;
-
-        button {
-            border: none;
-            padding: 0.4rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            font-weight: bold;
-
-            &.edit {
-                background-color: #3498db;
-                color: white;
-            }
-
-            &.delete {
-                background-color: #e74c3c;
-                color: white;
-            }
-
-            &.toggle {
-                background-color: #2ecc71;
-                color: white;
-            }
-
-            &.contact {
-                background-color: #9b59b6;
-                color: white;
-            }
-
-            &.image {
-                background-color: #34495e;
-                color: white;
-            }
-
-            &:hover {
-                opacity: 0.85;
-            }
-        }
-    }
-
     .p-column-title {
         font-weight: bold;
     }
 }
 
-/* ✅ تخصيص نافذة عرض الصورة */
 ::ng-deep .p-dialog .p-dialog-content {
     text-align: center;
     overflow: hidden;

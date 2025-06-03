@@ -8,8 +8,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { UserService, User } from './core/user.service';
 import Swal from 'sweetalert2';
+
+import { UserService, User } from './core/user.service';
+import { NotificationService } from '../../../../settings/notifications/Core/notification.service';
+import { SignalrService } from '../../../../settings/notifications/Core/signalr.service';
 
 @Component({
   selector: 'app-users',
@@ -21,25 +24,36 @@ import Swal from 'sweetalert2';
     ButtonModule,
     ImageModule,
     InputTextModule,
-    DropdownModule],
+    DropdownModule,
+  ],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
   selectedUserId: string | null = null;
-
   filters: { [key: string]: any } = {};
+  imageDialogVisible = false;
+  selectedImageUrl: string = '';
 
   genderFilterOptions = [
     { label: 'ذكر', value: 0 },
     { label: 'أنثى', value: 1 },
   ];
+  getGenderText(value: number): string {
+    switch (value) {
+      case 0: return 'ذكر';
+      case 1: return 'أنثى';
+      default: return '';
+    }
+  }
 
-  imageDialogVisible = false;
-  selectedImageUrl: string = '';
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private notificationService: NotificationService,
+    private signalrService: SignalrService
+  ) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -59,8 +73,41 @@ export class UsersComponent implements OnInit {
     this.selectedUserId = userId;
   }
 
-  getGenderText(gender: number): string {
-    return gender === 0 ? 'ذكر' : 'أنثى';
+  openImage(imageUrl: string): void {
+    this.selectedImageUrl = imageUrl;
+    this.imageDialogVisible = true;
+  }
+
+  addUser(): void {
+    alert('تم الضغط على زر إضافة مستخدم — يمكنك هنا فتح مودال أو التنقل لصفحة الإضافة');
+  }
+
+  exportToExcel(): void {
+    const exportData = this.users.map((user) => ({
+      الاسم: `${user.firstName} ${user.lastName}`,
+      'البريد الإلكتروني': user.email,
+      الجنس: this.getGenderText(user.gender),
+      العنوان: user.address,
+      'رقم الهاتف': user.phoneNumber,
+      ' حالة الحساب': user.isLocked ? 'مغلق' : 'مفعل',
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'المستخدمين');
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, 'users.xlsx');
+  }
+
+  onFilter(event: any): void {
+    this.filters = event.filters;
   }
 
   deleteUser(user: User): void {
@@ -129,11 +176,7 @@ export class UsersComponent implements OnInit {
         this.userService.lockAccount(user.email).subscribe({
           next: () => {
             user.isLocked = true;
-            Swal.fire(
-              'تم التنفيذ!',
-              `تم قفل حساب المستخدم ${user.firstName}.`,
-              'success'
-            );
+            Swal.fire('تم التنفيذ!', `تم قفل حساب المستخدم ${user.firstName}.`, 'success');
           },
           error: (err) => {
             console.error('خطأ أثناء قفل الحساب', err);
@@ -158,11 +201,7 @@ export class UsersComponent implements OnInit {
         this.userService.unlockAccount(user.email).subscribe({
           next: () => {
             user.isLocked = false;
-            Swal.fire(
-              'تم التنفيذ!',
-              `تم فتح حساب المستخدم ${user.firstName}.`,
-              'success'
-            );
+            Swal.fire('تم التنفيذ!', `تم فتح حساب المستخدم ${user.firstName}.`, 'success');
           },
           error: (err) => {
             console.error('خطأ أثناء فتح الحساب', err);
@@ -174,46 +213,47 @@ export class UsersComponent implements OnInit {
   }
 
   contactUser(user: User): void {
-    alert(`التواصل مع المستخدم: ${user.firstName} - ${user.email}`);
-  }
+    const receiverId = user.id;
+    const senderId = '5b61620b-d5d9-477d-bff0-bc278c44a8e3';
 
-  openImage(imageUrl: string) {
-    this.selectedImageUrl = imageUrl;
-    this.imageDialogVisible = true;
-  }
+    if (!senderId) {
+      Swal.fire('خطأ', 'تعذر تحديد هوية المرسل. يرجى تسجيل الدخول أولاً.', 'error');
+      return;
+    }
 
-  addUser(): void {
-    alert(
-      'تم الضغط على زر إضافة مستخدم — يمكنك هنا فتح مودال أو التنقل لصفحة الإضافة'
-    );
-  }
+    Swal.fire({
+      title: 'أدخل رسالتك',
+      input: 'textarea',
+      inputLabel: 'محتوى الرسالة',
+      inputPlaceholder: 'اكتب رسالتك هنا...',
+      showCancelButton: true,
+      confirmButtonText: 'إرسال',
+      cancelButtonText: 'إلغاء',
+      inputAttributes: {
+        dir: 'rtl',
+        rows: '4',
+      },
+      preConfirm: async (message) => {
+        if (!message) {
+          Swal.showValidationMessage('الرسالة لا يمكن أن تكون فارغة');
+          return false;
+        }
 
-  exportToExcel(): void {
-    const exportData = this.users.map((user) => ({
-      الاسم: `${user.firstName} ${user.lastName}`,
-      'البريد الإلكتروني': user.email,
-      الجنس: this.getGenderText(user.gender),
-      العنوان: user.address,
-      'رقم الهاتف': user.phoneNumber,
-      الحالة: user.isLocked ? 'مغلق' : 'مفعل',
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'المستخدمين');
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: 'xlsx',
-      type: 'array',
+        try {
+          await this.notificationService
+            .sendMessageToUser(senderId, receiverId, message)
+            .toPromise();
+          return true;
+        } catch (error) {
+          Swal.showValidationMessage('فشل إرسال الرسالة. حاول مرة أخرى.');
+          return false;
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('تم الإرسال', 'تم إرسال الرسالة بنجاح', 'success');
+      }
     });
-    const blob = new Blob([excelBuffer], {
-      type:
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    saveAs(blob, 'users.xlsx');
-  }
 
-  onFilter(event: any): void {
-    this.filters = event.filters;
   }
 }

@@ -10,6 +10,8 @@
 
   <div class="table-wrapper">
     <p-table
+      showGridlines
+      [size]="'small'"
       [value]="users"
       selectionMode="single"
       [(selection)]="selectedUserId"
@@ -49,12 +51,25 @@
           <th pSortableColumn="gender">
             الجنس
             <p-columnFilter
-              type="dropdown"
               field="gender"
+              matchMode="equals"
               display="menu"
-              placeholder="اختر الجنس"
-            ></p-columnFilter>
+              [showOperator]="false"
+              [showMenu]="true"
+            >
+              <ng-template pTemplate="filter" let-filter="filterCallback">
+                <p-dropdown
+                  [options]="genderFilterOptions"
+                  (onChange)="filter($event.value)"
+                  placeholder="اختر الجنس"
+                  [style]="{ width: '100%' }"
+                  optionLabel="label"
+                  optionValue="value"
+                ></p-dropdown>
+              </ng-template>
+            </p-columnFilter>
           </th>
+
           <th pSortableColumn="address">
             العنوان
             <p-columnFilter
@@ -100,40 +115,44 @@
           <td>{{ user.address }}</td>
           <td>{{ user.phoneNumber }}</td>
           <td class="actions">
+            <!-- زر الحذف -->
             <button
               pButton
               type="button"
               icon="bi bi-trash"
-              class="btn btn-danger btn-sm me-1"
+              class="custom-danger-button p-button-sm me-1"
               pTooltip="حذف المستخدم"
               (click)="deleteUser(user); $event.stopPropagation()"
             ></button>
 
+            <!-- Close -->
             <button
               *ngIf="!user.isLocked"
               pButton
               type="button"
               icon="bi bi-lock"
-              class="btn btn-warning btn-sm me-1"
+              class="custom-warning-button p-button-sm me-1"
               pTooltip="قفل الحساب"
               (click)="lockAccount(user); $event.stopPropagation()"
             ></button>
 
+            <!-- Open-->
             <button
               *ngIf="user.isLocked"
               pButton
               type="button"
               icon="bi bi-unlock"
-              class="btn btn-success btn-sm me-1"
+              class="custom-success-button p-button-sm me-1"
               pTooltip="فتح الحساب"
               (click)="unlockAccount(user); $event.stopPropagation()"
             ></button>
 
+            <!-- contact -->
             <button
               pButton
               type="button"
               icon="bi bi-chat-left-text"
-              class="btn btn-info btn-sm"
+              class="custom-info-button p-button-sm"
               pTooltip="التواصل مع المستخدم"
               (click)="contactUser(user); $event.stopPropagation()"
             ></button>
