@@ -1,236 +1,616 @@
+// Variables
 $primary-color: #f6a026;
-$text-light: #fff;
+$primary-light: lighten($primary-color, 40%);
+$primary-dark: darken($primary-color, 10%);
+$secondary-color: #2c3e50;
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$text-muted: #95a5a6;
+$white: #ffffff;
+$error-color: #e74c3c;
+$success-color: #27ae60;
+$info-color: #3498db;
+$warning-color: #f39c12;
+$border-color: #e1e8ed;
+$shadow-light: rgba(0, 0, 0, 0.08);
+$shadow-medium: rgba(0, 0, 0, 0.12);
+$shadow-dark: rgba(0, 0, 0, 0.16);
+$border-radius: 12px;
+$border-radius-lg: 16px;
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-// Header
-.hero {
-  position: relative;
-  min-height: 300px;
-  height: 300px;
+// Mixins
+@mixin flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  overflow: hidden;
+}
 
+@mixin card-shadow($level: 1) {
+  @if $level == 1 {
+    box-shadow: 0 2px 8px $shadow-light, 0 1px 3px $shadow-light;
+  } @else if $level == 2 {
+    box-shadow: 0 4px 16px $shadow-medium, 0 2px 6px $shadow-light;
+  } @else if $level == 3 {
+    box-shadow: 0 8px 32px $shadow-dark, 0 4px 12px $shadow-medium;
+  }
+}
+
+@mixin hover-lift {
+  transition: $transition;
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    @include card-shadow(2);
+  }
+}
+
+// Hero Section
+.hero {
+  position: relative;
+  height: 350px;
+  @include flex-center;
+  overflow: hidden;
+  
   .hero-img {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     z-index: 0;
   }
-
+  
   .hero-overlay {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(15, 13, 0, 0.7));
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.6));
     z-index: 1;
   }
-
-  .container,
-  .overlay {
+  
+  .container {
     position: relative;
     z-index: 2;
-    color: $text-light;
-    padding: 20px;
-    width: 100%;
-  }
-
-  h1 {
-    font-size: 2rem;
-
-    .text-warning,
-    .highlight {
-      color: $primary-color;
-      font-weight: bold;
+    text-align: center;
+    color: $white;
+    max-width: 800px;
+    padding: 0 2rem;
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      
+      .text-warning {
+        color: $primary-color;
+        text-shadow: 0 2px 4px rgba($primary-color, 0.3);
+      }
     }
-  }
-
-  p {
-    font-size: 1.2rem;
-    margin-top: 1rem;
+    
+    .lead {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      line-height: 1.6;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
   }
 }
 
-// >>>>>>>>>>> main
+// Payment Container
 .payment-container {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  // >>>>>>>>>>>>>>>>>>>>>>>>>>> payment
+  min-height: calc(100vh - 350px);
+ 
+  padding: 4rem 1rem;
+  @include flex-center;
+  
   .payment-box {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
+    background: $white;
+    border-radius: $border-radius-lg;
     width: 100%;
-
-    .title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      font-weight: bold;
+    max-width: 1000px;
+    padding: 3rem;
+    overflow: hidden;
+    @include card-shadow(3);
+    position: relative;
+    
+    // Decorative elements
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, $primary-color, $primary-dark, $primary-color);
     }
-
-    // >>>>>>>>>>>>>>>>>>>>>>>>>> payment-methods
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba($primary-color, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    // Payment Methods Section
     .payment-methods {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-
+      margin-bottom: 3rem;
+      
       .method {
-        flex: 1 1 30%;
-        background: #f1f1f1;
-        border: 2px solid transparent;
-        padding: 1rem;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &.active {
-          border-color: $primary-color;
-          background: lighten($primary-color, 40%);
-        }
-
-        i {
-          font-size: 1.5rem;
-          color: $primary-color;
-          margin-left: 0.5rem;
-        }
-
-        h3 {
-          margin: 0;
-          font-size: 1rem;
-        }
-
-        p {
-          font-size: 0.875rem;
-          color: #777;
-        }
-      }
-    }
-
-    .note {
-      background: #e6f0ff;
-      padding: 0.75rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-
-      i {
-        margin-left: 0.5rem;
-        color: #4a90e2;
-      }
-    }
-
-    // >>>>>>>>>>>>>>>>>>>>>> input-group
-    .input-group {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    
-      input {
-        padding: 0.75rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-      }
-    
-      @media (min-width: 768px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-
-    // >>>>>>>>>>>>>>>>>>>>. secure-labels
-    .secure-labels {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-
-      span {
-        background: #eef6ee;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        color: #4caf50;
+        gap: 1.25rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, $primary-light, rgba($primary-color, 0.1));
+        border: 2px solid $primary-color;
+        border-radius: $border-radius;
+        @include hover-lift;
+        
+        i {
+          @include flex-center;
+          width: 60px;
+          height: 60px;
+          background: $primary-color;
+          border-radius: 50%;
+          color: $white;
+          font-size: 1.75rem;
+          @include card-shadow(1);
+          flex-shrink: 0;
+        }
+        
+        div {
+          flex: 1;
+          
+          h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: $text-dark;
+            margin: 0 0 0.5rem 0;
+          }
+          
+          p {
+            font-size: 0.95rem;
+            color: $text-light;
+            margin: 0;
+            line-height: 1.4;
+          }
+        }
       }
     }
-
-    .donate-btn {
-      background-color: $primary-color;
-      margin: auto;
-      width: 80%;
+    
+    // Title
+    .title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: $text-dark;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background-color: $primary-color;
+        border-radius: 3px;
+      }
+    }
+    
+    // Custom Amount
+    .custom-amount {
+      margin-bottom: 2rem;
+      
+      .custom-input {
+        width: 100%;
+        height: 60px;
+        padding: 1rem 1.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $text-dark;
+        background: $white;
+        border: 2px solid $border-color;
+        border-radius: $border-radius;
+        text-align: center;
+        transition: $transition;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+        }
+        
+        &.error {
+          border-color: $error-color;
+          background: rgba($error-color, 0.05);
+        }
+        
+        &::placeholder {
+          color: $text-muted;
+          font-weight: 400;
+        }
+      }
+    }
+    
+    // Secure Note
+    .secure-note {
       display: flex;
-      justify-content: center;
       align-items: center;
-      color: white;
-      padding: 0.75rem 2rem;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-
-      &:hover {
-        background-color: darken($primary-color, 10%);
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 3rem;
+      background: rgba($info-color, 0.1);
+      border: 1px solid rgba($info-color, 0.2);
+      border-radius: $border-radius;
+      color: darken($info-color, 15%);
+      font-size: 0.95rem;
+      
+      &.error {
+        background: rgba($error-color, 0.1);
+        border-color: rgba($error-color, 0.2);
+        color: $error-color;
+      }
+      
+      i {
+        font-size: 1.1rem;
+        flex-shrink: 0;
       }
     }
-
+    
+    // Form
+    form {
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        
+        .input-wrapper {
+          position: relative;
+          
+          &.w-25 {
+            width: 100%;
+          }
+          
+          label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: $text-dark;
+            
+            &::before {
+              content: '💳';
+              margin-left: 0.5rem;
+            }
+          }
+          
+          label[for="card-expiry-element"]::before {
+            content: '📅';
+          }
+          
+          label[for="card-cvc-element"]::before {
+            content: '🔒';
+          }
+          
+          label[for="card-holder"]::before {
+            content: '👤';
+          }
+          
+          .form-control {
+            width: 100%;
+            height: 56px;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            color: $text-dark;
+            background: $white;
+            border: 2px solid $border-color;
+            border-radius: $border-radius;
+            transition: $transition;
+            direction: ltr;
+            
+            &:focus {
+              outline: none;
+              border-color: $primary-color;
+              box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+            }
+            
+            &.error {
+              border-color: $error-color;
+              background: rgba($error-color, 0.05);
+            }
+            
+            &::placeholder {
+              color: $text-muted;
+            }
+          }
+          
+          .error-message {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            color: $error-color;
+            font-size: 0.875rem;
+            
+            &::before {
+              content: '⚠️';
+            }
+          }
+        }
+        
+        .input-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.5rem;
+          
+          @media (max-width: 576px) {
+            grid-template-columns: 1fr;
+          }
+        }
+      }
+      
+      .secure-labels {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        
+        span {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.25rem;
+          background: rgba($success-color, 0.1);
+          border: 1px solid rgba($success-color, 0.2);
+          border-radius: 25px;
+          color: darken($success-color, 15%);
+          font-size: 0.9rem;
+          font-weight: 500;
+          
+          i {
+            color: $success-color;
+            font-size: 1rem;
+          }
+        }
+      }
+      
+      .donate-btn {
+        width: 100%;
+        height: 60px;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: $white;
+        background: linear-gradient(135deg, $primary-color, $primary-dark);
+        border: none;
+        border-radius: $border-radius;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        @include card-shadow(2);
+        transition: $transition;
+        margin-bottom: 2rem;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.6s ease;
+        }
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-3px);
+          @include card-shadow(3);
+          
+          &::before {
+            left: 100%;
+          }
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+        
+        span {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          position: relative;
+          z-index: 1;
+          
+          // &::before {
+          //   content: '❤️';
+          //   font-size: 1.1rem;
+          // }
+        }
+        
+        // span:last-child::before {
+        //   content: '⏳';
+        //   animation: spin 1s linear infinite;
+        // }
+      }
+    }
+    
     .terms {
       text-align: center;
-      font-size: 0.875rem;
-      margin-top: 1rem;
-
+      font-size: 0.9rem;
+      color: $text-light;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      
       a {
         color: $primary-color;
         text-decoration: none;
+        font-weight: 500;
+        transition: $transition;
+        
+        &:hover {
+          color: $primary-dark;
+          text-decoration: underline;
+        }
       }
     }
-  }
-
-  .partners {
-    margin-top: 2rem;
-    text-align: center;
-
-    h3 {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-
-    .partner-logos {
+    
+    .payment-status {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
-      gap: 1.5rem;
-
-      img {
-        width: 60px;
-        height: auto;
+      gap: 0.75rem;
+      padding: 1.25rem;
+      border-radius: $border-radius;
+      font-weight: 500;
+      text-align: center;
+      
+      &.success {
+        background: rgba($success-color, 0.1);
+        border: 1px solid rgba($success-color, 0.2);
+        color: $success-color;
+        
+        &::before {
+          content: '✅';
+          font-size: 1.2rem;
+        }
+      }
+      
+      &.error {
+        background: rgba($error-color, 0.1);
+        border: 1px solid rgba($error-color, 0.2);
+        color: $error-color;
+        
+        &::before {
+          content: '❌';
+          font-size: 1.2rem;
+        }
       }
     }
   }
 }
 
-// Responsive
-@media (max-width: 600px) {
-  .payment-box .payment-methods {
-    flex-direction: column;
-  }
+// Animations
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-  .input-group {
-    grid-template-columns: 1fr !important;
+// Responsive Design
+@media (max-width: 768px) {
+  .hero {
+    height: 280px;
+    
+    .container {
+      padding: 0 1.5rem;
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .lead {
+        font-size: 1.1rem;
+      }
+    }
   }
+  
+  .payment-container {
+    padding: 2rem 1rem;
+    
+    .payment-box {
+      padding: 2rem 1.5rem;
+      
+      .title {
+        font-size: 1.5rem;
+      }
+      
+      .payment-methods .method {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 250px;
+    
+    .container {
+      padding: 0 1rem;
+      
+      h1 {
+        font-size: 1.75rem;
+      }
+      
+      .lead {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .payment-container {
+    padding: 1.5rem 0.5rem;
+    
+    .payment-box {
+      padding: 1.5rem 1rem;
+      
+      .title {
+        font-size: 1.35rem;
+      }
+      
+      .secure-labels {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .donate-btn {
+        font-size: 1.1rem;
+        height: 56px;
+      }
+    }
+  }
+}
+
+// Additional Bootstrap-like utilities
+.text-white {
+  color: $white !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+.position-relative {
+  position: relative !important;
+}
+
+.w-25 {
+  width: 100% !important;
 }

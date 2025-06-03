@@ -1,5 +1,4 @@
-<!-- >>>>>>>>>>>>>>>>>>>>> Header -->
-<header class="hero text-white text-center py-5 position-relative">
+<!-- <header class="hero text-white text-center py-5 position-relative">
   <img src="/Images/Image.png" alt="خلفية" class="hero-img" />
   <div class="hero-overlay"></div>
 
@@ -12,13 +11,9 @@
       تبرع الآن باستخدام بطاقتك الائتمانية أو المحفظة الإلكترونية المفضلة لديك.
     </p>
   </div>
-</header>
-
+</header> -->
 <main class="payment-container">
   <section class="payment-box">
-    <h2 class="title"> طريقة الدفع</h2>
-
-    <!-- >>>>>>>>>>>>>>>>>>>>.. payment-methods -->
     <div class="payment-methods">
       <div class="method active">
         <i class="bi bi-credit-card-2-front"></i>
@@ -27,30 +22,77 @@
           <p>أدخل تفاصيل بطاقتك (Visa، MasterCard، أو أي بطاقة دولية)</p>
         </div>
       </div>
+    </div>
+    <h2 class="title">حدد قيمة التبرع</h2>
+
+    <div class="custom-amount">
+      <input
+        type="number"
+        [(ngModel)]="amount"
+        placeholder="مبلغ آخر"
+        min="0"
+        step="10"
+        class="custom-input"
+      />
+    </div>
+
+    <div class="secure-note">
+      <i class="bi bi-shield-lock"></i> يجب أن يكون المبلغ لا يقل عن 25 جنيهًا
+    </div>
+
+    <form #paymentForm="ngForm" (ngSubmit)="submitPayment()">
+      <div class="input-group">
+        <div class="input-wrapper w-25">
+          <label for="card-number-element">رقم البطاقة</label>
+          <div id="card-number-element" class="form-control"></div>
+        </div>
+          <div class="input-row">
+          <div class="input-wrapper w-25">
+            <label for="card-expiry-element">تاريخ الانتهاء (MM/YY)</label>
+            <div id="card-expiry-element" class="form-control"></div>
+          </div>
+          <div class="input-wrapper w-25">
+            <label for="card-cvc-element">رمز التحقق (CVV)</label>
+            <div id="card-cvc-element" class="form-control"></div>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <label for="card-holder">اسم حامل البطاقة</label>
+          <input
+            id="card-holder"
+            type="text"
+            name="cardHolder"
+            
+             disabled
+            class="form-control"
+            [value]="cardHolder"
+          />
+        
+        </div>
       
-    </div>
+      </div>
 
-    <div class="note">
-      <i class="bi bi-shield-check"></i>
-      نحن لا نخزن بيانات بطاقتك. جميع المعاملات مشفرة وآمنة.
-    </div>
+      <div class="secure-labels">
+        <span><i class="bi bi-lock-fill"></i> SSL آمن</span>
+        <span><i class="bi bi-shield-lock"></i> متوافق مع PCI-DSS</span>
+      </div>
 
-    <!-- >>>>>>>>>>>>>>>>>>>>>>> input-group -->
-    <div class="input-group">
-      <input type="text" placeholder="رقم البطاقة" />
-      <input type="text" placeholder="اسم حامل البطاقة" value="Ahmed Saad" />
-      <input type="text" placeholder="تاريخ الانتهاء (MM/YY)" />
-      <input type="text" placeholder="رمز التحقق (CVV)" value="123" />
-    </div>
-    <!-- >>>>>>>>>>>>>>>>>>>>>>>> secure-labels -->
-    <div class="secure-labels">
-      <span><i class="bi bi-lock-fill"></i> SSL آمن</span>
-      <span><i class="bi bi-shield-lock"></i> متوافق مع PCI-DSS</span>
-    </div>
+      <button
+        type="submit"
+        class="donate-btn"
+        [disabled]="!isFormValid() || isLoading"
+      >
+        <span *ngIf="!isLoading">تبرع الآن</span>
+        <span *ngIf="isLoading">جاري الدفع...</span>
+      </button>
+    </form>
 
-    <button class="donate-btn">تبرع الآن</button>
     <p class="terms">
       بالنقر على زر "تبرع الآن" فإنك توافق على <a href="#">الشروط والأحكام</a>
     </p>
+
+    <div class="payment-status" *ngIf="paymentStatus">
+      {{ paymentStatus }}
+    </div>
   </section>
 </main>

@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import { LoginService } from '../../Auth/core/Services/login.service';
 import { PaymentService } from '../../../core/Services/payment.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaymentMethodComponent } from "../../../settings/payment-method/payment-method.component";
 
 interface CharityCause {
   title: string;
@@ -40,7 +41,7 @@ interface Testimonial {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, TagModule, RoutingModule,FormsModule,ReactiveFormsModule, CarouselModule],
+  imports: [CommonModule, TagModule, RoutingModule, FormsModule, ReactiveFormsModule, CarouselModule, PaymentMethodComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -296,43 +297,37 @@ private readonly _PaymentService = inject(PaymentService);
   donorId = this._LoginService.donorId;
   amount: number = 0;
 
-  
-
   setAmount(value: number): void {
     this.amount = value;
     this.validateAmount();
   }
 
   validateAmount(): void {
-    if (this.amount < 25) {
-      this.amount = 25; // Enforce minimum amount
+    if (this.amount < 25 && this.amount !== 0) {
+      
+      return;
+    }
+    if (this.amount === 0) {
+      this.amount = 0;
     }
   }
 
   onDonateNow(): void {
-    if (!this.donorId) {
+    const token = localStorage.getItem('userToken');
+
+    if (!token) {
       Swal.fire({
         icon: 'warning',
-        title: 'تسجيل الدخول مطلوب',
-        text: 'يرجى تسجيل الدخول لإتمام عملية التبرع.',
+        title: 'خطأ',
+        text: 'يجب عليك التسجيل أولًا قبل التبرع',
         confirmButtonColor: '#f6a026',
         confirmButtonText: 'حسنا',
       });
       return;
     }
 
-    if (!this.amount || this.amount < 25) {
-      Swal.fire({
-        icon: 'error',
-        title: 'مبلغ غير صالح',
-        text: 'يرجى إدخال مبلغ لا يقل عن 25 جنيهًا.',
-        confirmButtonColor: '#f6a026',
-        confirmButtonText: 'حسنا',
-      });
-      return;
-    }
-
-    this._PaymentService.createPaymentIntent(this.amount, this.donorId, " ")
+    // التحقق من المبلغ غير ضروري هنا لأن الزر معطل إذا كان المبلغ أقل من 25
+    this._PaymentService.createPaymentIntent(this.amount, this.donorId, null)
       .subscribe({
         next: (res) => {
           console.log('PaymentIntent created:', res);
