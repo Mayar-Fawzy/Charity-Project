@@ -34,4 +34,17 @@ export class VolunteerActivityssService {
   GetVolunteerActivityById(volunteerActivityId: string): Observable<any> {
     return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}VolunteerActivity/GetVolunteerActivityById?id=${volunteerActivityId}`);
     }
+    AddVolunteerToActivity(userId: string, volunteerActivityId: string): Observable<any> {
+    return this._HttpClient.post<any>(`${Environment.baseUrl}${Environment.VersionUrl}UserVolunteerActivity/AddVolunteerToActivity`, {userId,volunteerActivityId}); 
+    }
+    RemoveVolunteerFromActivity(userId: string, volunteerActivityId: string): Observable<any> {
+    return this._HttpClient.post<any>(`${Environment.baseUrl}${Environment.VersionUrl}UserVolunteerActivity/RemoveVolunteerFromActivity`, {userId,volunteerActivityId}); 
+    }
+    AddVolunteerToProject(projectId: string, volunteerId: string): Observable<any> {
+      return this._HttpClient.post<any>(`${Environment.baseUrl}${Environment.VersionUrl}ProjectVolunteer/AddVolunteerToProject`, {projectId,volunteerId});
+    }
+    RemoveVolunteerFromProject(projectId: string, volunteerId: string): Observable<any> {
+      return this._HttpClient.post<any>(`${Environment.baseUrl}${Environment.VersionUrl}ProjectVolunteer/RemoveVolunteerFromProject`, {projectId,volunteerId});
+    }
+
 }
