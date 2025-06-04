@@ -20,6 +20,7 @@
             <i class="fa fa-envelope"></i>
           </div>
         </div>
+
         <div
           class="error-message"
           *ngIf="
@@ -27,14 +28,15 @@
             (siginForm.get('email')?.touched || siginForm.get('email')?.dirty)
           "
         >
-          <span *ngIf="siginForm.get('email')?.getError('required')"
-            >البريد الاكتروني مطلوب</span
-          >
-          <span *ngIf="siginForm.get('email')?.errors?.['email']"
-            >البريد الاكتروني غير صحيح</span
-          >
+          <span *ngIf="siginForm.get('email')?.getError('required')">
+            البريد الإلكتروني مطلوب
+          </span>
+          <span *ngIf="siginForm.get('email')?.getError('pattern')">
+            صيغة البريد الإلكتروني غير صحيحة
+          </span>
         </div>
       </div>
+
       <div class="form-group">
         <div class="input-group position-relative">
           <input

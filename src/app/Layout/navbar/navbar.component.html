@@ -109,7 +109,10 @@
           />
           <span>مرحبًا، {{ userName() }}</span>
           <!-- Number of notification  -->
-          <div class="notification-container" [routerLink]="['/settings/notifications', userId]">
+          <div
+            class="notification-container"
+            [routerLink]="['/settings/notifications', userId]"
+          >
             <i class="bi bi-bell notification"></i>
             <span *ngIf="notificationCount > 0" class="notification-count">
               {{ notificationCount }}

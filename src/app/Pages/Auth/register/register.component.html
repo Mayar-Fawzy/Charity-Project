@@ -138,33 +138,71 @@
       </div>
 
       <!-- Date of Birth -->
-      <div class="form-group">
-        <div class="input-group">
+      <div class="form-group mb-3">
+        <label for="dateOfBirth" class="form-label">تاريخ الميلاد</label>
+        <div class="d-flex align-items-center gap-2">
+          <!-- يوم -->
           <input
             type="text"
-            class="form-control"
-            id="dateOfBirth"
-            formControlName="dateOfBirth"
-            placeholder="تاريخ الميلاد"
+            maxlength="2"
+            class="form-control text-center"
+            placeholder="يوم"
+            [value]="birthDay ?? ''"
+            (input)="onDateInputChange('day', $any($event.target).value)"
           />
-          <div class="input-icon">
-            <i class="fa fa-calendar"></i>
+
+          <!-- شهر -->
+          <input
+            #monthInput
+            type="text"
+            maxlength="2"
+            class="form-control text-center"
+            placeholder="شهر"
+            [value]="birthMonth ?? ''"
+            (input)="onDateInputChange('month', $any($event.target).value)"
+          />
+
+          <!-- سنة -->
+          <input
+            #yearInput
+            type="text"
+            maxlength="4"
+            class="form-control text-center"
+            placeholder="سنة"
+            [(ngModel)]="birthYear"
+            (ngModelChange)="updateDateOfBirth()"
+            name="birthYear"
+          />
+
+          <!-- أيقونة اختيار التاريخ -->
+          <div class="position-relative">
+            <input
+              type="date"
+              class="form-control"
+              (change)="onDatePicked($event)"
+              style="
+                opacity: 0;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+              "
+            />
           </div>
         </div>
+
+        <!-- حقل مخفي لتخزين التاريخ النهائي بصيغة yyyy-mm-dd -->
+        <input type="hidden" formControlName="dateOfBirth" />
         <div
-          class="error-message"
           *ngIf="
-            registerForm.get('dateOfBirth')?.errors &&
-            (registerForm.get('dateOfBirth')?.touched ||
-              registerForm.get('dateOfBirth')?.dirty)
+            registerForm.get('dateOfBirth')?.invalid &&
+            registerForm.get('dateOfBirth')?.touched
           "
+          class="text-danger"
         >
-          <span *ngIf="registerForm.get('dateOfBirth')?.getError('required')"
-            >تاريخ الميلاد مطلوب</span
-          >
-          <span *ngIf="registerForm.get('dateOfBirth')?.errors?.['pattern']"
-            >مثال (28-07-2003)</span
-          >
+          الرجاء إدخال تاريخ صالح
         </div>
       </div>
 
@@ -200,6 +238,8 @@
             <i class="fa fa-envelope"></i>
           </div>
         </div>
+
+        <!-- عرض رسالة الخطأ -->
         <div
           class="error-message"
           *ngIf="
@@ -208,12 +248,12 @@
               registerForm.get('email')?.dirty)
           "
         >
-          <span *ngIf="registerForm.get('email')?.getError('required')"
-            >البريد الاكتروني مطلوب</span
-          >
-          <span *ngIf="registerForm.get('email')?.errors?.['email']"
-            >البريد الاكتروني غير صحيح</span
-          >
+          <span *ngIf="registerForm.get('email')?.getError('required')">
+            البريد الإلكتروني مطلوب
+          </span>
+          <span *ngIf="registerForm.get('email')?.getError('pattern')">
+            صيغة البريد الإلكتروني غير صحيحة
+          </span>
         </div>
       </div>
 
@@ -318,7 +358,6 @@
         </div>
       </div>
 
-    
       <!-- Submit Button -->
       <button
         type="submit"

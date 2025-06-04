@@ -1,32 +1,13 @@
-
 .modal-header {
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
- 
-.containerRegister {
-  width: 100%;
-   height: 100%;;
-  background-image: url("/Images/Loginn.png");
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.login-modal{
-  margin-top: 100px;
-  margin-bottom: 100px;
-  max-width: 500px;
-}
-
-.modal-header h2 {
-  font-size: 1.5rem;
-  margin: 0; 
-  padding: 0px;
-  padding-bottom: 10px;
+  h2 {
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    padding: 0;
+  }
 }
 
 .close-btn {
@@ -38,26 +19,58 @@
   cursor: pointer;
 }
 
+.containerRegister {
+  width: 100%;
+  height: 100%;
+  background-image: url("/Images/Loginn.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-modal {
+  margin: 100px 0;
+  max-width: 500px;
+}
 
 .role-selection {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-   
-    padding: 10px 20px;
-    border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  color: white;
+  font-weight: 400;
+}
+
+input[type="radio"] {
+  accent-color: #B88E2F;
+  margin: 10px;
+}
+
+.custom-select-wrapper {
+  position: relative;
+
+  &::after {
+    content: "\25BC";
+    /* سهم ▼ */
+    font-size: 20px;
+    color: #555;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
-  .role-option {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-    color: white; /* Text color */
-    font-weight: 400;
-  }
-  input[type="radio"] {
-    accent-color: #B88E2F;
-    margin: 10px;
-  }/* جعل الـ input شفافًا */
+
   .custom-select {
     width: 100%;
     padding: 12px;
@@ -65,60 +78,68 @@
     border-radius: 8px;
     border: 2px solid #ccc;
     background-color: #fff;
-    appearance: none; /* يخفي السهم الافتراضي */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    position: relative;
     cursor: pointer;
   }
-  
-  /* إضافة سهم مخصص */
-  .custom-select-wrapper {
-    position: relative;
-  }
-  
-  .custom-select-wrapper::after {
-    content: "\25BC"; /* سهم ▼ */
-    font-size: 20px;
-    color: #555;
-    position: absolute;
-    left: 15px;
-    top: 77%;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .gendeer{
-    padding: 10px 15px;
-    outline: none !important;
-    border: none;
-    background: #9F9F9F26;
-    border-radius: 10px;
-    color: white;
-    font-weight: 400;
-    font-size: 18px;
-    
-  }
-  option{
-    color: black !important;
+}
+
+.gendeer {
+  padding: 10px 15px;
+  outline: none !important;
+  border: none;
+  background: #9F9F9F26;
+  border-radius: 10px;
+  color: white;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+option {
+  color: black !important;
+}
+
+/* spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.spinner {
+  border: 5px solid #eee;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
 
-  // >>>>>> spinner
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
-  .spinner-container {
-    display: flex;
-    justify-content: center;
-    margin: 1rem 0;
-  }
-  .spinner {
-    border: 5px solid #eee;
-    border-top: 5px solid #3498db;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
+/* autofill input fix */
+input:-webkit-autofill {
+  background-color: #514F4E !important;
+  -webkit-box-shadow: 0 0 0px 1000px #514F4E inset !important;
+  color: #000 !important;
+}
+
+/* Birth date number input spin buttons removal */
+.birth-inputs-wrapper input::-webkit-outer-spin-button,
+.birth-inputs-wrapper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.birth-inputs-wrapper input[type='number'] {
+  -moz-appearance: textfield;
+}

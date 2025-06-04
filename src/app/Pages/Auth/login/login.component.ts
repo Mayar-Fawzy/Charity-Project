@@ -27,7 +27,10 @@ export class LoginComponent {
   passwordFieldType: boolean = true;
 
   siginForm: FormGroup = new FormGroup({
-    email: new FormControl(null, [Validators.required, Validators.email]),
+    email: new FormControl(null, [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ]),
     password: new FormControl(null, [
       Validators.required,
       Validators.minLength(8),

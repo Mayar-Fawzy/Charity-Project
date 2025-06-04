@@ -12,5 +12,5 @@ export class UserStateService {
     this.userImageSource.next(newImage);
   }
 
-  
+
 }
