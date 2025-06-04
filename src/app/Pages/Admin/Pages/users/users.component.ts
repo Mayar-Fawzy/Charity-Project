@@ -256,4 +256,48 @@ export class UsersComponent implements OnInit {
     });
 
   }
+  
+  contactAllUser(): void {
+    const senderId = '5b61620b-d5d9-477d-bff0-bc278c44a8e3';
+
+    if (!senderId) {
+      Swal.fire('خطأ', 'تعذر تحديد هوية المرسل. يرجى تسجيل الدخول أولاً.', 'error');
+      return;
+    }
+
+    Swal.fire({
+      title: 'أدخل رسالتك',
+      input: 'textarea',
+      inputLabel: 'محتوى الرسالة',
+      inputPlaceholder: 'اكتب رسالتك هنا...',
+      showCancelButton: true,
+      confirmButtonText: 'إرسال',
+      cancelButtonText: 'إلغاء',
+      inputAttributes: {
+        dir: 'rtl',
+        rows: '4',
+      },
+      preConfirm: async (message) => {
+        if (!message) {
+          Swal.showValidationMessage('الرسالة لا يمكن أن تكون فارغة');
+          return false;
+        }
+
+        try {
+          await this.notificationService
+            .sendMessageToAllUsers(senderId, message)
+            .toPromise();
+          return true;
+        } catch (error) {
+          Swal.showValidationMessage('فشل إرسال الرسالة. حاول مرة أخرى.');
+          return false;
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('تم الإرسال', 'تم إرسال الرسالة بنجاح', 'success');
+      }
+    });
+
+  }
 }

@@ -55,4 +55,13 @@ export class NotificationService {
     return this.http.post(url, body);
   }
 
+  sendMessageToAllUsers(senderId: string, message: string): Observable<any> {
+    const url = 'https://givinghandcharity.runasp.net/api/v1/Notification/send-to-all';
+    const body = {
+      senderId,
+      message
+    };
+
+    return this.http.post(url, body);
+  }
 }
