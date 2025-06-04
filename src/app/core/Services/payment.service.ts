@@ -15,7 +15,9 @@ private apiUrl = 'https://givinghandcharity.runasp.net/api/v1/Payment/CreatePaym
     let params = new HttpParams()
       .set('amount', amount.toString())
       .set('donorId', donorId)
-      .set('projectId', projectId? projectId : 'null'); // إذا كان project
+      if (projectId) {
+      params = params.set('projectId', projectId);
+    }
 
     // إرسال الطلب
     return this.http.post(this.apiUrl, {}, {  params });
