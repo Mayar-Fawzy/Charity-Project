@@ -1,11 +1,11 @@
-import { IupdateData } from './../Core/Interface/iupdate-data';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileservicesService } from '../Core/Services/profileservices.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize, timeout } from 'rxjs/operators';
+import { UserStateService } from '../Core/Services/user-state.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   private readonly _ActivatedRoute = inject(ActivatedRoute);
   private readonly _Router = inject(Router);
   private readonly _Toastr = inject(ToastrService);
+  private readonly _UserStateService = inject(UserStateService);
+
 
   userImageUrl: string | null = null;
   selectedImage: File | null = null;
@@ -30,14 +32,35 @@ export class ProfileComponent implements OnInit {
   day: number | null = null;
   month: number | null = null;
   year: number | null = null;
+  hasCustomImage: boolean = false;
+
+  emailDomainValidator(): ValidatorFn {
+    const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'example.com'];
+    return (control: AbstractControl): ValidationErrors | null => {
+      const email = control.value;
+      if (!email) return null;
+      const domain = email.substring(email.lastIndexOf('@') + 1).toLowerCase();
+      if (allowedDomains.includes(domain)) {
+        return null;
+      } else {
+        return { invalidDomain: true };
+      }
+    };
+  }
+
+
   profileForm = new FormGroup({
     firstName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
     lastName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-    email: new FormControl(null, [Validators.required, Validators.email]),
+    email: new FormControl(null, [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+      this.emailDomainValidator()
+    ]),
     phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]{11}$/)]),
     address: new FormControl(null, [Validators.required, Validators.minLength(5)]),
-    age: new FormControl({ value: '', disabled: true }), // يبقى معطل
-    gender: new FormControl({ value: '', disabled: true }), // إزالة disabled ليصبح قابل للتعديل
+    age: new FormControl({ value: '', disabled: true }),
+    gender: new FormControl({ value: '', disabled: true }),
     dateOfBirth: new FormControl({ value: '', disabled: true }, [
       Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)
     ])
@@ -56,12 +79,22 @@ export class ProfileComponent implements OnInit {
       this.checkFormChanges();
     });
   }
+
   GetUserData(id: string): void {
     this._ProfileservicesService.GetUserById(id).subscribe({
       next: ({ data }: any) => {
         this.userData = data;
         this.originalUserData = { ...data };
-        this.userImageUrl = data.imageUrl || null;
+
+        // ✅ تحديد الصورة وحالة التخصيص
+        this.userImageUrl = data.imageUrl
+          ? data.imageUrl
+          : data.gender === 0
+            ? '/Images/undraw_male-avatar_zkzx.svg'
+            : '/Images/undraw_female-avatar_7t6k.svg';
+
+        this.hasCustomImage = !!data.imageUrl && this.userImageUrl != null && !this.userImageUrl.includes('undraw');
+
 
         this.profileForm.patchValue({
           firstName: data.firstName || '',
@@ -89,6 +122,9 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
+
+
 
   checkFormChanges(): void {
     if (!this.originalUserData) {
@@ -140,7 +176,11 @@ export class ProfileComponent implements OnInit {
           next: (response: any) => {
             if (response?.isSucceeded) {
               this._Toastr.success('تم تحديث البيانات بنجاح');
-              window.location.reload();
+
+              const newImageUrl = response.data?.imageUrl || null;
+              this._UserStateService.updateUserImage(newImageUrl);
+
+              // ممنوع reload الصفحة
             } else {
               this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
             }
@@ -151,9 +191,10 @@ export class ProfileComponent implements OnInit {
         });
       }
     } else {
-      this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
+      this._Toastr.warning('⚠ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
+
 
   onSubmit(): void {
     if (this.profileForm.valid) {
@@ -199,15 +240,15 @@ export class ProfileComponent implements OnInit {
         });
       }
     } else {
-      this._Toastr.warning('⚠️ الرجاء ملء جميع الحقول بشكل صحيح');
+      this._Toastr.warning('⚠ الرجاء ملء جميع الحقول بشكل صحيح');
     }
   }
 
-  getRandomColor(fullName: string): string {
-    const hash = Array.from(fullName).reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const randomColor = (hash % 16777215).toString(16);
-    return `#${randomColor.padStart(6, '0')}`;
-  }
+  // getRandomColor(fullName: string): string {
+  //   const hash = Array.from(fullName).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  //   const randomColor = (hash % 16777215).toString(16);
+  //   return #${randomColor.padStart(6, '0')};
+  // }
 
   getFirstLetter(): string {
     if (this.userData && this.userData.firstName && this.userData.lastName) {
@@ -217,8 +258,9 @@ export class ProfileComponent implements OnInit {
   }
 
   get userFullName(): string {
-    return `${this.userData?.firstName} ${this.userData?.lastName}`;
+    return `${this.userData?.firstName || ''} ${this.userData?.lastName || ''}`;
   }
+
   onImageSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -283,14 +325,13 @@ export class ProfileComponent implements OnInit {
     this._Toastr.info('تم إعادة البيانات إلى حالتها السابقة');
     console.log('onCancel: Form reset complete, hasFormChanges:', this.hasFormChanges);
   }
+
   removeImage(): void {
     if (!this.userData) {
       console.warn('removeImage: userData is null');
-      this._Toastr.warning('لا توجد بيانات مستخدم للحذف');
+      this._Toastr.warning('لا توجد بيانات مستخدم لحذف الصورة');
       return;
     }
-
-    console.log('removeImage: Removing image for user', this.userData.id);
 
     this.isLoading = true;
 
@@ -301,9 +342,10 @@ export class ProfileComponent implements OnInit {
     formData.append('email', this.profileForm.get('email')?.value ?? '');
     formData.append('phoneNumber', this.profileForm.get('phoneNumber')?.value ?? '');
     formData.append('address', this.profileForm.get('address')?.value ?? '');
-    formData.append('gender', this.userData.gender?.toString() ?? ''); // استخدام القيمة الأصلية (0 أو 1)
+    formData.append('gender', this.userData.gender?.toString() ?? '');
     formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
     formData.append('age', this.profileForm.get('age')?.value ?? '');
+
     formData.append('image', '');
 
     this._ProfileservicesService.UpdateUser(this.userData.id, formData).pipe(
@@ -314,23 +356,28 @@ export class ProfileComponent implements OnInit {
     ).subscribe({
       next: (response: any) => {
         if (response?.isSucceeded) {
-          this.userImageUrl = null;
-          this.selectedImage = null;
+          this._Toastr.success('✅ تم حذف الصورة بنجاح');
+
           this.userData.imageUrl = null;
           this.originalUserData.imageUrl = null;
+          this.selectedImage = null;
+
+          this.userImageUrl = this.userData.gender === 0
+            ? '/Images/undraw_male-avatar_zkzx.svg'
+            : '/Images/undraw_female-avatar_7t6k.svg';
+
+          this.hasCustomImage = false;
+
           this.profileForm.markAsPristine();
           this.profileForm.markAsUntouched();
           this.checkFormChanges();
-          this._Toastr.success('تم حذف الصورة بنجاح');
-          console.log('removeImage: Image removed, hasFormChanges:', this.hasFormChanges, 'formPristine:', this.profileForm.pristine);
-          window.location.reload();
         } else {
           this._Toastr.warning(response?.message || 'فشل حذف الصورة');
         }
       },
       error: (error: any) => {
         this._Toastr.error('حدث خطأ أثناء حذف الصورة');
-        console.error('خطأ أثناء حذف الصورة', error);
+        console.error('removeImage: error', error);
       }
     });
   }

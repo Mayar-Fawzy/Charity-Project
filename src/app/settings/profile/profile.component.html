@@ -18,7 +18,6 @@
             <div
               class="letter-avatar rounded-circle d-flex justify-content-center align-items-center text-white"
               [ngStyle]="{
-                'background-color': getRandomColor(userFullName),
                 width: '100px',
                 height: '100px',
                 fontSize: '36px'
@@ -44,10 +43,8 @@
           (click)="fileInput.click()"
           [disabled]="isLoading2"
         >
-          <span *ngIf="!isLoading2">
-            <i class="bi bi-upload"></i> رفع صورة</span
-          >
-          <span *ngIf="isLoading2"> جاري الرفع... </span>
+          <span *ngIf="!isLoading2"><i class="bi bi-upload"></i> رفع صورة</span>
+          <span *ngIf="isLoading2">جاري الرفع...</span>
         </button>
 
         <!-- زر حذف الصورة -->
@@ -62,7 +59,7 @@
       </div>
     </div>
 
-    <!-- عمود الفورم -->
+    <!-- الفورم -->
     <div class="col-md-6">
       <div class="bg-white shadow-sm rounded p-4">
         <h4 class="text-center mb-4 text-warning">تعديل المستخدم</h4>
@@ -142,6 +139,14 @@
                 >
                 <span *ngIf="profileForm.get('email')?.getError('email')"
                   >البريد الإلكتروني غير صحيح</span
+                >
+                <span
+                  *ngIf="profileForm.get('email')?.getError('invalidDomain')"
+                  >يرجى استخدام بريد من النطاقات المعروفة مثل: gmail.com أو
+                  yahoo.com</span
+                >
+                <span *ngIf="profileForm.get('email')?.getError('domainTypo')"
+                  >تحقق من كتابة النطاق، يبدو أن فيه خطأ إملائي</span
                 >
               </div>
             </div>

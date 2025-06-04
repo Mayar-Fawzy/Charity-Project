@@ -26,6 +26,20 @@ export class LoginComponent {
   isloading = false;
   passwordFieldType: boolean = true;
 
+
+  emailDomainTypoValidator(): Validators {
+    const commonTypos = ['gmai.com', 'gnail.com', 'yahho.com', 'hotnail.com', 'outlok.com'];
+    return (control: FormControl): { [key: string]: boolean } | null => {
+      const email = control.value;
+      if (!email) return null;
+      const domain = email.substring(email.lastIndexOf('@') + 1).toLowerCase();
+      if (commonTypos.includes(domain)) {
+        return { domainTypo: true };
+      }
+      return null;
+    };
+  }
+
   siginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [
       Validators.required,
