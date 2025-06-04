@@ -65,9 +65,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
       const userSub = this._ProfileservicesService.GetUserById(this.userId).subscribe({
         next: (res) => {
           this.userName.set(res.data.firstName);
-          this.userImage = res.data.imageUrl && res.data.imageUrl !== ''
-            ? res.data.imageUrl
-            : '/Images/Logo.svg';
+          this.userImage = res.data.imageUrl || (res.data.gender==0?'/Images/undraw_male-avatar_zkzx.svg':'/Images/undraw_female-avatar_7t6k.svg')
+           
 
           console.log('User ID:', this.userId);
           this.loadNotificationCount();

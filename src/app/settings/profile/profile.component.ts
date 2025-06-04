@@ -179,8 +179,7 @@ export class ProfileComponent implements OnInit {
 
               const newImageUrl = response.data?.imageUrl || null;
               this._UserStateService.updateUserImage(newImageUrl);
-
-              // ممنوع reload الصفحة
+               window.location.reload(); 
             } else {
               this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
             }
@@ -371,6 +370,7 @@ export class ProfileComponent implements OnInit {
           this.profileForm.markAsPristine();
           this.profileForm.markAsUntouched();
           this.checkFormChanges();
+           window.location.reload();
         } else {
           this._Toastr.warning(response?.message || 'فشل حذف الصورة');
         }
