@@ -164,14 +164,12 @@
 
           <!-- سنة -->
           <input
-            #yearInput
             type="text"
             maxlength="4"
             class="form-control text-center"
             placeholder="سنة"
-            [(ngModel)]="birthYear"
-            (ngModelChange)="updateDateOfBirth()"
-            name="birthYear"
+            [value]="birthYear ?? ''"
+            (input)="onDateInputChange('year', $any($event.target).value)"
           />
 
           <!-- أيقونة اختيار التاريخ -->
@@ -208,16 +206,12 @@
 
       <!-- Gender -->
       <div class="input-group mb-3">
-        <select
-          class="form-control gender-select"
-          id="gender"
-          formControlName="gender"
-          required
-        >
-          <option [value]="" disabled selected hidden>اختر النوع</option>
-          <option [value]="0">ذكر</option>
-          <option [value]="1">أنثى</option>
+        <select formControlName="gender" class="form-control">
+          <option value="" disabled hidden>اختر النوع</option>
+          <option value="0">ذكر</option>
+          <option value="1">أنثى</option>
         </select>
+
         <div class="input-icon">
           <i class="fa fa-venus-mars"></i>
         </div>

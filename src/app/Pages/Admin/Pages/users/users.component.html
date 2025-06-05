@@ -3,10 +3,14 @@
     <h2 class="title">إدارة المستخدمين</h2>
     <div class="d-flex gap-6">
       <button class="btn btn-success" (click)="contactAllUser()">
-        <span class="p-button-icon bi bi-chat-left-text" aria-hidden="true"></span> &nbsp; &nbsp;رساله للجميع 
+        <span
+          class="p-button-icon bi bi-chat-left-text"
+          aria-hidden="true"
+        ></span>
+        &nbsp; &nbsp;رساله للجميع
       </button>
     </div>
-     <div class="d-flex gap-4">
+    <div class="d-flex gap-4">
       <button class="btn export" (click)="exportToExcel()">
         <i class="bi bi-download border-0 rounded-1 ps-2"></i> تصدير Excel
       </button>
@@ -108,10 +112,10 @@
           <td>{{ rowIndex + 1 }}</td>
           <td>
             <img
-              [src]="user.imageUrl"
+              [src]="getUserImage(user)"
               alt="User Image"
               class="user-thumbnail"
-              (click)="openImage(user.imageUrl)"
+              (click)="openImage(getUserImage(user))"
             />
           </td>
           <td>{{ user.firstName }} {{ user.lastName }}</td>

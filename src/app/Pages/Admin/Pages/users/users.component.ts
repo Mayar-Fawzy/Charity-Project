@@ -1,3 +1,4 @@
+// users.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -40,14 +41,6 @@ export class UsersComponent implements OnInit {
     { label: 'ذكر', value: 0 },
     { label: 'أنثى', value: 1 },
   ];
-  getGenderText(value: number): string {
-    switch (value) {
-      case 0: return 'ذكر';
-      case 1: return 'أنثى';
-      default: return '';
-    }
-  }
-
 
   constructor(
     private userService: UserService,
@@ -68,6 +61,29 @@ export class UsersComponent implements OnInit {
       },
     });
   }
+
+  getGenderText(value: number): string {
+    switch (value) {
+      case 0: return 'ذكر';
+      case 1: return 'أنثى';
+      default: return '';
+    }
+  }
+
+  getUserImage(user: User): string {
+    if (user.imageUrl) {
+      return user.imageUrl;
+    }
+
+    if (user.gender === 0) {
+      return '/Images/undraw_male-avatar_zkzx.svg';
+    } else if (user.gender === 1) {
+      return '/Images/undraw_female-avatar_7t6k.svg';
+    }
+
+    return '/Images/undraw_male-avatar_zkzx.svg';
+  }
+
 
   selectRow(userId: string): void {
     this.selectedUserId = userId;
@@ -254,9 +270,8 @@ export class UsersComponent implements OnInit {
         Swal.fire('تم الإرسال', 'تم إرسال الرسالة بنجاح', 'success');
       }
     });
-
   }
-  
+
   contactAllUser(): void {
     const senderId = '5b61620b-d5d9-477d-bff0-bc278c44a8e3';
 
@@ -298,6 +313,5 @@ export class UsersComponent implements OnInit {
         Swal.fire('تم الإرسال', 'تم إرسال الرسالة بنجاح', 'success');
       }
     });
-
   }
 }

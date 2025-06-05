@@ -55,16 +55,26 @@ export class RegisterComponent {
         Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/)
       ]),
 
-      gender: new FormControl('اختر النوع', [Validators.required]),
+      gender: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.[A-Za-z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%*?&]{8,}$/),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
       ]),
+
       confirmPassword: new FormControl(null, [Validators.required]),
     },
     { validators: RegisterComponent.confirmPassword }
   );
+
+  ngOnInit() {
+    this.registerForm.statusChanges.subscribe(() => {
+      console.log('Form Status:', this.registerForm.status);
+      console.log('Form Errors:', this.registerForm.errors);
+      console.log('Form Value:', this.registerForm.value);
+    });
+  }
+
 
   static confirmPassword(group: AbstractControl) {
     const password = group.get('password')?.value;
@@ -85,18 +95,20 @@ export class RegisterComponent {
     }
   }
 
-  onDateInputChange(field: 'day' | 'month', value: string) {
+  onDateInputChange(field: 'day' | 'month' | 'year', value: string) {
     const num = Number(value);
     if (field === 'day') {
       this.birthDay = num;
       if (value.length === 2) this.monthInput?.nativeElement.focus();
-    }
-    if (field === 'month') {
+    } else if (field === 'month') {
       this.birthMonth = num;
       if (value.length === 2) this.yearInput?.nativeElement.focus();
+    } else if (field === 'year') {
+      this.birthYear = num;
     }
     this.updateDateOfBirth();
   }
+
 
   updateDateOfBirth() {
     if (

@@ -6,7 +6,6 @@ import { ProfileservicesService } from '../Core/Services/profileservices.service
 import { ToastrService } from 'ngx-toastr';
 import { finalize, timeout } from 'rxjs/operators';
 import { UserStateService } from '../Core/Services/user-state.service';
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -22,8 +21,10 @@ export class ProfileComponent implements OnInit {
   private readonly _UserStateService = inject(UserStateService);
 
 
-  userImageUrl: string | null = null;
+  imageChangedEvent: any = '';
+  croppedImage: string | null = null;
   selectedImage: File | null = null;
+  userImageUrl: string | null = null;
   userData: any = null;
   originalUserData: any = null;
   isLoading: boolean = false;
@@ -86,7 +87,6 @@ export class ProfileComponent implements OnInit {
         this.userData = data;
         this.originalUserData = { ...data };
 
-        // ✅ تحديد الصورة وحالة التخصيص
         this.userImageUrl = data.imageUrl
           ? data.imageUrl
           : data.gender === 0
@@ -143,7 +143,7 @@ export class ProfileComponent implements OnInit {
 
 
 
-  uploadImage(file: File): void {
+  uploadImage(file?: File): void {
     if (this.profileForm.valid) {
       this.isLoading2 = true;
       const id = this._ActivatedRoute.snapshot.paramMap.get('id');
@@ -159,7 +159,9 @@ export class ProfileComponent implements OnInit {
         formData.append('dateOfBirth', this.profileForm.get('dateOfBirth')?.value ?? '');
         formData.append('age', this.profileForm.get('age')?.value ?? '');
 
-        if (this.selectedImage) {
+        if (file) {
+          formData.append('image', file);
+        } else if (this.selectedImage) {
           formData.append('image', this.selectedImage);
         } else if (this.userData.imageUrl) {
           formData.append('imageUrl', this.userData.imageUrl);
@@ -179,7 +181,7 @@ export class ProfileComponent implements OnInit {
 
               const newImageUrl = response.data?.imageUrl || null;
               this._UserStateService.updateUserImage(newImageUrl);
-               window.location.reload(); 
+              window.location.reload();
             } else {
               this._Toastr.warning(response?.message || 'تم التحديث لكن بدون بيانات جديدة');
             }
@@ -194,6 +196,46 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  uploadCroppedImage(): void {
+    if (this.selectedImage) {
+      this.uploadImage(this.selectedImage);
+    } else {
+      this._Toastr.warning('لم يتم اختيار صورة للرفع');
+    }
+  }
+
+  cancelCrop(): void {
+    this.imageChangedEvent = null;
+    this.croppedImage = null;
+    this.selectedImage = null;
+  }
+
+
+  onFileChange(event: any): void {
+    this.imageChangedEvent = event;
+  }
+
+  base64ToFile(dataurl: string, filename: string): File {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)![1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  // removeImage(): void {
+  //   this.selectedImage = null;
+  //   this.croppedImage = null;
+  //   this.imageChangedEvent = '';
+  //   this.userImageUrl = this.userData.gender === 0
+  //     ? '/Images/undraw_male-avatar_zkzx.svg'
+  //     : '/Images/undraw_female-avatar_7t6k.svg';
+  //   this.hasCustomImage = false;
+  // }
 
   onSubmit(): void {
     if (this.profileForm.valid) {
@@ -259,6 +301,8 @@ export class ProfileComponent implements OnInit {
   get userFullName(): string {
     return `${this.userData?.firstName || ''} ${this.userData?.lastName || ''}`;
   }
+
+
 
   onImageSelected(event: any): void {
     const file = event.target.files[0];
@@ -370,7 +414,7 @@ export class ProfileComponent implements OnInit {
           this.profileForm.markAsPristine();
           this.profileForm.markAsUntouched();
           this.checkFormChanges();
-           window.location.reload();
+          window.location.reload();
         } else {
           this._Toastr.warning(response?.message || 'فشل حذف الصورة');
         }
