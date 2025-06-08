@@ -262,7 +262,9 @@ export class ProjectsComponent {
       });
     }
   }
-
+cancelModal(modal: any) {
+  modal.dismiss(); // فقط إغلاق النموذج بدون رسائل
+}
   deleteProject(projectId: string) {
     Swal.fire({
       title: 'هل أنت متأكد؟',

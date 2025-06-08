@@ -15,12 +15,7 @@ export class LoginService {
   userData: any;
   donorId!: string;
 
-  // userData: any;
-
-  // donorId!: string;
-  // userData: any;
-
-  // donorId: string | null = null;
+role!: any;
   private readonly _HttpClient = inject(HttpClient);
   private readonly _Router = inject(Router);
 
@@ -48,6 +43,7 @@ export class LoginService {
       this.userData = jwtDecode(token);
       // استخدام نفس مفتاح الـ claim المستخدم في المكون
       this.donorId = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
+      this.role = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       return this.userData;
     }
     return null;

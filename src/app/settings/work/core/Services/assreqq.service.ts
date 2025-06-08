@@ -9,7 +9,7 @@ import { Environment } from '../../../../Pages/Auth/core/Environment/Environment
 export class AssreqqService {
  private readonly _HttpClient = inject(HttpClient);
 
-  GetAllAssistanceRequestsById(id: string):Observable<any> {
-    return this._HttpClient.get(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/GetAllAssistanceRequestsById?id=${id}`);
+  GetAllAssistanceRequestsById(beneficiaryId: string):Observable<any> {
+    return this._HttpClient.get(`${Environment.baseUrl}${Environment.VersionUrl}AssistanceRequest/GetAllAssistanceRequestsById?beneficiaryId=${beneficiaryId}`);
   }
 }

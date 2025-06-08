@@ -91,9 +91,10 @@
         {{ selectedProject ? "تحديث مشروع" : "إضافة مشروع" }}
       </h5>
       <button type="button" class="btn-close me-auto" aria-label="Close" (click)="modal.dismiss()"></button>
+
     </div>
     <div class="modal-body">
-      <form [formGroup]="projectForm" (ngSubmit)="saveProject(modal)">
+      <form [formGroup]="projectForm">
         <div class="mb-3">
           <label class="form-label section-title"><i class="bi bi-highlighter"></i> عنوان المشروع</label>
           <input type="text" class="form-control" formControlName="name" placeholder="ادخل عنوان المشروع"
@@ -167,8 +168,10 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" (click)="modal.dismiss()">إلغاء</button>
-          <button type="submit" class="btn btn-success" [disabled]="isLoading || projectForm.invalid">
+          <button class="btn btn-secondary" (click)="cancelModal(modal)">إلغاء</button>
+
+          <button type="submit" class="btn btn-success" [disabled]="isLoading || projectForm.invalid" 
+                  (click)="saveProject(modal)">
             <ng-container *ngIf="!isLoading; else loading">
               <i class="bi bi-check-circle"></i> حفظ
             </ng-container>

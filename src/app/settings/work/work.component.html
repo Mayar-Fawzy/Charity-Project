@@ -33,10 +33,10 @@
       <strong>المحتوى:</strong>
       {{ request.requestDetails || 'لا توجد تفاصيل' }}
     </p>
-    <p>
+    <!-- <p>
       <strong>تاريخ الإنشاء:</strong>
       {{ request.createdDate | date: 'yyyy-MM-dd' }}
-    </p>
+    </p> -->
     <p>
       <strong>الحالة:</strong>
       <span [ngClass]="getStatusClass(request.requestStatus)">
