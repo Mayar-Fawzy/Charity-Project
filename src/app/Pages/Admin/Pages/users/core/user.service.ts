@@ -50,4 +50,13 @@ export class UserService {
       headers: { 'Content-Type': 'application/json' }
     });
   }
+
+  getUserById(id: string): Observable<User> {
+    const url = `https://givinghandcharity.runasp.net/api/v1/User/GetUserById?id=${id}`;
+    return this.http.get<{ data: User }>(url)
+      .pipe(
+        map(response => response.data)
+      );
+  }
+
 }

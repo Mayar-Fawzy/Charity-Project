@@ -139,7 +139,9 @@
 
       <!-- Date of Birth -->
       <div class="form-group mb-3">
-        <label for="dateOfBirth" class="form-label">تاريخ الميلاد</label>
+        <label for="dateOfBirth" class="form-label text-white"
+          >تاريخ الميلاد</label
+        >
         <div class="d-flex align-items-center gap-2">
           <!-- يوم -->
           <input
@@ -164,6 +166,7 @@
 
           <!-- سنة -->
           <input
+            #yearInput
             type="text"
             maxlength="4"
             class="form-control text-center"
@@ -171,24 +174,6 @@
             [value]="birthYear ?? ''"
             (input)="onDateInputChange('year', $any($event.target).value)"
           />
-
-          <!-- أيقونة اختيار التاريخ -->
-          <div class="position-relative">
-            <input
-              type="date"
-              class="form-control"
-              (change)="onDatePicked($event)"
-              style="
-                opacity: 0;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                cursor: pointer;
-              "
-            />
-          </div>
         </div>
 
         <!-- حقل مخفي لتخزين التاريخ النهائي بصيغة yyyy-mm-dd -->

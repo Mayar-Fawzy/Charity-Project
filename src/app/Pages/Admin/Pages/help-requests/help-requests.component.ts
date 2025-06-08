@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { Daum } from './Core/Interface/iassistance-request';
 import { ProfileservicesService } from '../../../../settings/Core/Services/profileservices.service';
 import { lastValueFrom } from 'rxjs';
-
+import { UserService, User } from '../users/core/user.service';
 @Component({
   selector: 'app-help-requests',
   standalone: true,
@@ -17,11 +17,14 @@ export class HelpRequestsComponent {
   private readonly _AssistanceRequestService = inject(AssistanceRequestService);
   private readonly _profile = inject(ProfileservicesService);
 
+  constructor(private userService: UserService) { }
+
   otherHelpRequests: Daum[] = [];
   filteredProjects: Daum[] = [];
   userEmails: { [key: string]: string } = {}; // Map to store beneficiaryId -> email
   isLoading = false;
   email!: string;
+  userId!: string;
   activeTab: 'pending' | 'approved' | 'rejected' = 'pending';
 
   itemsPerPage = 6;
@@ -32,6 +35,45 @@ export class HelpRequestsComponent {
   ngOnInit() {
     this.loadRequests();
   }
+
+  showUserInfo(userId: string) {
+    this.userService.getUserById(userId).subscribe({
+      next: (user: User) => {
+        let imageSrc = user.imageUrl;
+        if (!imageSrc) {
+          imageSrc = user.gender === 0
+            ? '/Images/undraw_male-avatar_zkzx.svg'
+            : '/Images/undraw_female-avatar_7t6k.svg';
+        }
+
+        Swal.fire({
+          title: '',
+          html: `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="${imageSrc}" alt="الصورة الشخصية" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <h3 style="margin: 0;">${user.firstName} ${user.lastName}</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" value="${user.email || 'غير متوفر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="البريد">
+            <input type="text" value="${user.phoneNumber || 'غير متوفر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="رقم الهاتف">
+            <input type="text" value="${user.gender === 1 ? 'أنثى' : 'ذكر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="الجنس">
+          </div>
+        `,
+          showCloseButton: true,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'swal2-popup-arabic'
+          }
+        });
+      },
+      error: () => {
+        Swal.fire('حدث خطأ', 'تعذر تحميل بيانات المستخدم', 'error');
+      }
+    });
+  }
+
+
+
 
   loadRequests() {
     this.isLoading = true;
@@ -45,45 +87,54 @@ export class HelpRequestsComponent {
       statusFilter = 1; // approved
     }
 
-    this._AssistanceRequestService.GetPaginatedAssistanceRequests(statusFilter, this.currentPage, this.itemsPerPage).subscribe({
-      next: (response) => {
-        this.otherHelpRequests = response?.data || [];
-        this.filteredProjects = this.otherHelpRequests;
-        this.totalCount = response?.totalCount || 0;
-        this.totalPages = response?.totalPages || 1;
-        this.currentPage = response?.currentPage || 1;
+    this._AssistanceRequestService
+      .GetPaginatedAssistanceRequests(statusFilter, this.currentPage, this.itemsPerPage)
+      .subscribe({
+        next: (response) => {
+          this.otherHelpRequests = response?.data || [];
+          this.filteredProjects = this.otherHelpRequests;
+          this.totalCount = response?.totalCount || 0;
+          this.totalPages = response?.totalPages || 1;
+          this.currentPage = response?.currentPage || 1;
 
-        // Fetch user names and emails for each request
-        this.otherHelpRequests.forEach(request => {
-          if (request.beneficiaryId && !this.userEmails[request.beneficiaryId]) {
-            this._profile.GetUserById(request.beneficiaryId).subscribe({
-              next: (userResponse) => {
-                
-                this.userEmails[request.beneficiaryId] = userResponse?.data?.email || 'غير متوفر';
-              },
-              error: (err) => {
-                console.error(`Error fetching user for beneficiaryId ${request.beneficiaryId}:`, err);
-               
-                this.userEmails[request.beneficiaryId] = 'غير متوفر';
-              }
+          // تحميل إيميلات المستفيدين
+          this.otherHelpRequests.forEach(request => {
+            if (request.beneficiaryId && !this.userEmails[request.beneficiaryId]) {
+              this._profile.GetUserById(request.beneficiaryId).subscribe({
+                next: (userResponse) => {
+                  this.userEmails[request.beneficiaryId] = userResponse?.data?.email || 'غير متوفر';
+                },
+                error: () => {
+                  this.userEmails[request.beneficiaryId] = 'غير متوفر';
+                }
+              });
+            }
+          });
+        },
+        error: (err) => {
+          if (err.status === 404 && err.error?.message === 'Assistance requests not found.') {
+            // لا يوجد بيانات، لكن لا تعرض خطأ
+            this.otherHelpRequests = [];
+            this.filteredProjects = [];
+            this.totalCount = 0;
+            this.totalPages = 1;
+            this.currentPage = 1;
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'خطأ',
+              text: err.message || 'حدث خطأ أثناء جلب الطلبات',
+              confirmButtonColor: '#f6a026',
+              confirmButtonText: 'حسنا'
             });
+            console.error(err);
           }
-        });
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'خطأ',
-          text: (err as any).message || 'حدث خطأ أثناء جلب الطلبات',
-          confirmButtonColor: '#f6a026',
-          confirmButtonText: 'حسنا'
-        });
-        console.log(err);
-      }
-    }).add(() => {
-      this.isLoading = false;
-    });
+        }
+      }).add(() => {
+        this.isLoading = false;
+      });
   }
+
 
   changeTab(tab: 'approved' | 'pending' | 'rejected') {
     this.activeTab = tab;
