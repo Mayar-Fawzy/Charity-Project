@@ -23,5 +23,7 @@ export class AdminComponent {
   
 this.userName=this.userData?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]+" " + this.userData?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]
  }
-  
+  signOut() {
+    this._LoginService.signOut();
+  }
 }
