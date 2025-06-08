@@ -298,7 +298,7 @@ export class ProfileComponent implements OnInit {
     });
 
     // Reset image state
-    this.userImageUrl = this.originalUserData.imageUrl || null;
+    this.userImageUrl = this.originalUserData.imageUrl;
     this.selectedImage = null;
 
     // Reset birth date display
