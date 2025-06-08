@@ -73,6 +73,7 @@ export class LoginComponent {
 
 
           localStorage.setItem('userToken', res.data.jwtModel.jwt);
+
           localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
 
 
@@ -82,9 +83,10 @@ export class LoginComponent {
           // #endregion
 
           this._LoginService.saveUserAuth();
-          if (formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@') {
+          if (this._LoginService.role.includes('Admin')) {
             this._Router.navigate(['/admin']);
           }
+          
           else {
             this.isloading = true;
             this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
@@ -100,7 +102,10 @@ export class LoginComponent {
     );
   }
   showPasswordLogin = false;
-
+  closeLoginModal() {
+    this._LoginService.signOut();
+    this._Router.navigate(['/home']);
+  }
   togglePasswordVisibilityLogin() {
     this.showPasswordLogin = !this.showPasswordLogin;
 
