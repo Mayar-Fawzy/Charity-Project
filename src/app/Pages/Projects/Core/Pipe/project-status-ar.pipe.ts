@@ -14,7 +14,7 @@ export class ProjectStatusArPipe implements PipeTransform {
       case 'Completed':
         return 'مكتمل';
      default:
-        return 'بانتظار التنفيذ';
+        return 'قيد الانتظار';
      
     
     }

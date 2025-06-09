@@ -43,7 +43,7 @@
   {{
     project.projectStatus === 1 ? 'جاري التنفيذ' :
     project.projectStatus === 2 ? 'مكتمل' :
-    project.projectStatus === 3 ? 'قيد التنفيذ' : 'غير معروف'
+    project.projectStatus === 3 ? 'قيد الانتظار' : 'غير معروف'
   }}
 </div>
         <div class="card-body p-0 text-end">
@@ -121,7 +121,7 @@
             <option value="" disabled>اختر حالة المشروع</option>
             <option value="1">جاري التنفيذ</option>
             <option value="2">مكتمل</option>
-            <option value="3">قيد التنفيذ</option>
+            <option value="3">قيد الانتظار</option>
           </select>
           <div *ngIf="projectForm.get('projectStatus')?.invalid && projectForm.get('projectStatus')?.touched" class="invalid-feedback">
             حالة المشروع مطلوبة.
