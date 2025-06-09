@@ -83,7 +83,7 @@ export class LoginComponent {
           // #endregion
 
           this._LoginService.saveUserAuth();
-          if (this._LoginService.role.includes('Admin')) {
+          if (this._LoginService.role.includes('Admin') && formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@' ) {
             this._Router.navigate(['/admin']);
           }
           
