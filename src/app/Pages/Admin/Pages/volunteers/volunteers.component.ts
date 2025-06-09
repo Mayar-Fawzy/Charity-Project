@@ -36,7 +36,7 @@ export class VolunteersComponent implements OnInit {
   email: string = ''; // Declare email property
 
   private readonly _profile = inject(ProfileservicesService);
-  constructor(private volunteerService: VolunteerActivityssService) { }
+  constructor(private volunteerService: VolunteerActivityssService) {}
 
   ngOnInit(): void {
     this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
@@ -50,8 +50,18 @@ export class VolunteersComponent implements OnInit {
 
     const serviceCall =
       type === 'projects'
-        ? this.volunteerService.GetProjectsPaginatedByRequestStatus(requestStatus, page, this.pageSize, 1)
-        : this.volunteerService.GetActivitiesPaginatedByRequestStatus(requestStatus, page, this.pageSize, 1);
+        ? this.volunteerService.GetProjectsPaginatedByRequestStatus(
+            requestStatus,
+            page,
+            this.pageSize,
+            1
+          )
+        : this.volunteerService.GetActivitiesPaginatedByRequestStatus(
+            requestStatus,
+            page,
+            this.pageSize,
+            1
+          );
 
     serviceCall.pipe(finalize(() => (this.isLoading = false))).subscribe({
       next: (response: any) => {
@@ -61,9 +71,8 @@ export class VolunteersComponent implements OnInit {
           this.successMessage = 'تم تحميل البيانات بنجاح';
           this.errorMessage = null;
           setTimeout(() => {
-          this.successMessage = null;
-        }, 1000);
-
+            this.successMessage = null;
+          }, 1000);
         } else {
           this.filteredVolunteers = [];
           this.errorMessage = response.message || 'لا توجد طلبات تطوع حالياً';
@@ -104,8 +113,8 @@ export class VolunteersComponent implements OnInit {
           type === 'projects'
             ? this.volunteerService.GetProjectById(app.projectId)
             : this.volunteerService.GetVolunteerActivityById(
-              app.volunteerActivityId
-            ),
+                app.volunteerActivityId
+              ),
       })
     );
 
@@ -247,30 +256,31 @@ export class VolunteersComponent implements OnInit {
           volunteerId: volunteer.volunteerId,
           requestDetails: null,
           volunteerActivityId:
-            this.selectedType === 'activities' ? volunteer.volunteerActivityId : null,
-          projectId: this.selectedType === 'projects' ? volunteer.projectId : null,
+            this.selectedType === 'activities'
+              ? volunteer.volunteerActivityId
+              : null,
+          projectId:
+            this.selectedType === 'projects' ? volunteer.projectId : null,
           requestStatus: 1, // Accepted
         };
 
         // First, update the volunteer status
         this.volunteerService
           .UpdateVolunteerStatus(volunteerApplication)
-          .pipe(
-            finalize(() => (this.isLoading = false))
-          )
+          .pipe(finalize(() => (this.isLoading = false)))
           .subscribe({
             next: () => {
               // After successful status update, add the volunteer to the activity or project
               const addObservable =
                 this.selectedType === 'activities'
                   ? this.volunteerService.AddVolunteerToActivity(
-                    volunteer.volunteerId,
-                    volunteer.volunteerActivityId
-                  )
+                      volunteer.volunteerId,
+                      volunteer.volunteerActivityId
+                    )
                   : this.volunteerService.AddVolunteerToProject(
-                    volunteer.projectId,
-                    volunteer.volunteerId
-                  );
+                      volunteer.projectId,
+                      volunteer.volunteerId
+                    );
 
               addObservable.subscribe({
                 next: () => {
@@ -295,8 +305,50 @@ export class VolunteersComponent implements OnInit {
       }
     });
   }
+ rejectByUpdateVolunteer(volunteer: any): void {
+  Swal.fire({
+    title: 'هل أنت متأكد؟',
+    text: 'هل تريد رفض هذا المتطوع؟',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#f6a026',
+    confirmButtonText: 'رفض',
+    cancelButtonText: 'إلغاء',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
 
-  rejectVolunteer(volunteer: any): void {
+      const volunteerApplication = {
+        id: volunteer.id,
+        volunteerId: volunteer.volunteerId,
+        requestDetails: null,
+        volunteerActivityId: this.selectedType === 'activities' ? volunteer.volunteerActivityId : null,
+        projectId: this.selectedType === 'projects' ? volunteer.projectId : null,
+        requestStatus: 2, // 2 = Rejected
+      };
+
+      this.volunteerService.UpdateVolunteerStatus(volunteerApplication).subscribe({
+        next: () => {
+          this.isLoading = false;
+       this.loadVolunteers(
+                    this.selectedType,
+                    this.selectedTab,
+                    this.currentPage
+                  );// تحديث القائمة
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = 'حدث خطأ أثناء رفض المتطوع';
+          console.error(err);
+          Swal.fire('خطأ', this.errorMessage, 'error');
+        },
+      });
+    }
+  });
+}
+
+  DeleteAndRemoveVolunteer(volunteer: any): void {
     Swal.fire({
       title: 'هل أنت متأكد؟',
       text: 'هل تريد رفض هذا المتطوع؟',
@@ -314,30 +366,33 @@ export class VolunteersComponent implements OnInit {
           volunteerId: volunteer.volunteerId,
           requestDetails: null,
           volunteerActivityId:
-            this.selectedType === 'activities' ? volunteer.volunteerActivityId : null,
-          projectId: this.selectedType === 'projects' ? volunteer.projectId : null,
+            this.selectedType === 'activities'
+              ? volunteer.volunteerActivityId
+              : null,
+          projectId:
+            this.selectedType === 'projects' ? volunteer.projectId : null,
           requestStatus: 2, // Rejected
         };
 
         // First, update the volunteer status
         this.volunteerService
           .UpdateVolunteerStatus(volunteerApplication)
-          .pipe(
-            finalize(() => (this.isLoading = false))
-          )
+          .pipe(finalize(() => (this.isLoading = false)))
           .subscribe({
             next: () => {
               // After successful status update, remove the volunteer from the activity or project
               const removeObservable =
                 this.selectedType === 'activities'
                   ? this.volunteerService.RemoveVolunteerFromActivity(
-                    volunteer.volunteerId,
-                    volunteer.volunteerActivityId
-                  )
+                      volunteer.volunteerId,
+                      volunteer.volunteerActivityId
+                    )
                   : this.volunteerService.RemoveVolunteerFromProject(
-                    volunteer.projectId,
-                    volunteer.volunteerId
-                  );
+                      volunteer.projectId,
+                      volunteer.volunteerId
+                    );
+                    
+    this.deleteVolunteer(volunteer);
 
               removeObservable.subscribe({
                 next: () => {
@@ -362,56 +417,53 @@ export class VolunteersComponent implements OnInit {
       }
     });
   }
-
   contactVolunteer(volunteer: any): void {
     this.contact(volunteer, volunteer.volunteerId);
   }
 
-  deleteVolunteer(volunteer: any): void {
-    Swal.fire({
-      title: 'هل أنت متأكد؟',
-      text: 'لن تتمكن من التراجع عن هذا!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#f6a026',
-      confirmButtonText: 'حذف',
-      cancelButtonText: 'إلغاء',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true; // Show loading state during the API call
-        this.volunteerService.DeleteVolunteerApplication(volunteer).subscribe({
-          next: (response) => {
-            this.isLoading = false;
-            if (response.isSucceeded) {
-              if (
-                this.filteredVolunteers.length === 1 &&
-                this.currentPage > 1
-              ) {
-                this.currentPage--;
-              }
-              Swal.fire('تم الحذف!', 'تم حذف المتطوع بنجاح.', 'success');
-              this.loadVolunteers(
-                this.selectedType,
-                this.selectedTab,
-                this.currentPage
-              );
-            } else {
-              Swal.fire('خطأ!', response.errors || 'فشل الحذف', 'error');
-            }
-          },
-          error: (err) => {
-            this.isLoading = false;
-            Swal.fire(
-              'خطأ!',
-              err.error?.errors || 'حدث خطأ أثناء الحذف',
-              'error'
-            );
-          },
-        });
-      }
-    });
-  }
+deleteVolunteer(volunteer: any): void {
+  Swal.fire({
+    title: 'هل أنت متأكد؟',
+    text: 'هل تريد حذف هذا المتطوع نهائيًا؟',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'حذف',
+    cancelButtonText: 'إلغاء',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.volunteerService.DeleteVolunteerApplication(volunteer.id).subscribe({
+        next: () => {
+          this.successMessage = 'تم حذف المتطوع بنجاح';
+          this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
+
+          Swal.fire({
+            title: 'تم الحذف',
+            text: this.successMessage,
+            icon: 'success',
+            confirmButtonColor: '#28a745',
+            confirmButtonText: 'حسناً',
+          });
+        },
+        error: (error) => {
+          this.errorMessage = 'حدث خطأ أثناء حذف المتطوع';
+          console.error('DeleteVolunteerApplication Error:', error);
+
+          Swal.fire({
+            title: 'خطأ',
+            text: this.errorMessage,
+            icon: 'error',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسناً',
+          });
+        }
+      });
+    }
+  });
+}
+
+
 
   contact(request: any, beneficiaryId: string) {
     this._profile.GetUserById(beneficiaryId).subscribe({

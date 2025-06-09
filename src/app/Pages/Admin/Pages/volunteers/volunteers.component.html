@@ -193,6 +193,7 @@
         >
           <!-- الحالات المختلفة -->
           <ng-container [ngSwitch]="volunteer.requestStatus">
+            <!-- طلبات المعلقه -->
             <ng-container *ngSwitchCase="3">
               <button
                 class="btn btn-success w-100"
@@ -202,7 +203,7 @@
               </button>
               <button
                 class="btn btn-reject w-100"
-                (click)="rejectVolunteer(volunteer)"
+                (click)="rejectByUpdateVolunteer(volunteer)"
               >
                 رفض
               </button>
@@ -213,13 +214,13 @@
                 تواصل
               </button>
             </ng-container>
-
+   <!-- المقبولين -->
             <ng-container *ngSwitchCase="1">
               <button
                 class="btn btn-reject w-100"
-                (click)="rejectVolunteer(volunteer)"
+                (click)="DeleteAndRemoveVolunteer(volunteer)"
               >
-                رفض
+                حذف
               </button>
               <button
                 class="btn btn-contact w-100"
@@ -228,7 +229,7 @@
                 تواصل
               </button>
             </ng-container>
-
+     <!-- المرفوضين -->
             <ng-container *ngSwitchCase="2">
               <button
                 class="btn btn-contact w-100"
@@ -238,7 +239,7 @@
               </button>
               <button
                 class="btn btn-danger w-100"
-                (click)="deleteVolunteer(volunteer.id)"
+                (click)="deleteVolunteer(volunteer)"
               >
                 حذف
               </button>
