@@ -83,7 +83,7 @@ export class LoginComponent {
           // #endregion
 
           this._LoginService.saveUserAuth();
-          if (this._LoginService.role.includes('Admin') && formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@') {
+          if (this._LoginService.role.includes('Admin') && formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@' ) {
             this._Router.navigate(['/admin']);
           }
           
@@ -97,7 +97,15 @@ export class LoginComponent {
       (error) => {
         this.isloading = false;
         console.log('error', error);
-        this._ToastService.error(error.error.errors, 'error');
+        if( error.error.statusCode == 403) {
+          this._ToastService.error('يجب عليك تاكيد البريد الالكتروني قبل تسجيل الدخول', 'خطأ');  
+        }
+        else if (error.error.statusCode == 400) {
+          this._ToastService.error('البريد الالكتروني او كلمة المرور غير صحيحة', 'خطأ');
+        }
+        else {
+        this._ToastService.error(error.error.errors, 'خطأ');
+      }
       }
     );
   }
