@@ -348,75 +348,83 @@ export class VolunteersComponent implements OnInit {
   });
 }
 
-  DeleteAndRemoveVolunteer(volunteer: any): void {
-    Swal.fire({
-      title: 'هل أنت متأكد؟',
-      text: 'هل تريد رفض هذا المتطوع؟',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#f6a026',
-      confirmButtonText: 'رفض',
-      cancelButtonText: 'إلغاء',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        const volunteerApplication = {
-          id: volunteer.id,
-          volunteerId: volunteer.volunteerId,
-          requestDetails: null,
-          volunteerActivityId:
-            this.selectedType === 'activities'
-              ? volunteer.volunteerActivityId
-              : null,
-          projectId:
-            this.selectedType === 'projects' ? volunteer.projectId : null,
-          requestStatus: 2, // Rejected
-        };
+ DeleteAndRemoveVolunteer(volunteer: any): void {
+  Swal.fire({
+    title: 'هل أنت متأكد؟',
+    text: 'هل تريد رفض هذا المتطوع؟',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#f6a026',
+    confirmButtonText: 'رفض',
+    cancelButtonText: 'إلغاء',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
 
-        // First, update the volunteer status
-        this.volunteerService
-          .UpdateVolunteerStatus(volunteerApplication)
-          .pipe(finalize(() => (this.isLoading = false)))
-          .subscribe({
+      const volunteerApplication = {
+        id: volunteer.id,
+        volunteerId: volunteer.volunteerId,
+        requestDetails: null,
+        volunteerActivityId: this.selectedType === 'activities' ? volunteer.volunteerActivityId : null,
+        projectId: this.selectedType === 'projects' ? volunteer.projectId : null,
+        requestStatus: 2, // Rejected
+      };
+
+      this.volunteerService.UpdateVolunteerStatus(volunteerApplication).subscribe({
+        next: () => {
+          const removeObservable = this.selectedType === 'activities'
+            ? this.volunteerService.RemoveVolunteerFromActivity(volunteer.volunteerId, volunteer.volunteerActivityId)
+            : this.volunteerService.RemoveVolunteerFromProject(volunteer.projectId, volunteer.volunteerId);
+
+          removeObservable.subscribe({
             next: () => {
-              // After successful status update, remove the volunteer from the activity or project
-              const removeObservable =
-                this.selectedType === 'activities'
-                  ? this.volunteerService.RemoveVolunteerFromActivity(
-                      volunteer.volunteerId,
-                      volunteer.volunteerActivityId
-                    )
-                  : this.volunteerService.RemoveVolunteerFromProject(
-                      volunteer.projectId,
-                      volunteer.volunteerId
-                    );
-                    
-    this.deleteVolunteer(volunteer);
-
-              removeObservable.subscribe({
+              this.volunteerService.DeleteVolunteerApplication(volunteer.id).pipe(
+                finalize(() => this.isLoading = false)
+              ).subscribe({
                 next: () => {
                   this.successMessage = 'تم رفض المتطوع وإزالته بنجاح';
-                  this.loadVolunteers(
-                    this.selectedType,
-                    this.selectedTab,
-                    this.currentPage
-                  ); // Refresh data
+                  this.loadVolunteers(this.selectedType, this.selectedTab, this.currentPage);
+
+                  Swal.fire({
+                    title: 'تم الحذف',
+                    text: this.successMessage,
+                    icon: 'success',
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'حسناً',
+                  });
                 },
-                error: (err) => {
-                  this.errorMessage = 'حدث خطأ أثناء إزالة المتطوع';
-                  console.error(err);
-                },
+                error: (error) => {
+                  this.errorMessage = 'حدث خطأ أثناء حذف المتطوع';
+                  console.error('DeleteVolunteerApplication Error:', error);
+
+                  Swal.fire({
+                    title: 'خطأ',
+                    text: this.errorMessage,
+                    icon: 'error',
+                    confirmButtonColor: '#f6a026',
+                    confirmButtonText: 'حسناً',
+                  });
+                }
               });
             },
             error: (err) => {
-              this.errorMessage = 'حدث خطأ أثناء رفض المتطوع';
+              this.isLoading = false;
+              this.errorMessage = 'حدث خطأ أثناء إزالة المتطوع';
               console.error(err);
-            },
+            }
           });
-      }
-    });
-  }
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = 'حدث خطأ أثناء رفض المتطوع';
+          console.error(err);
+        }
+      });
+    }
+  });
+}
+
   contactVolunteer(volunteer: any): void {
     this.contact(volunteer, volunteer.volunteerId);
   }
