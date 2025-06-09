@@ -6,7 +6,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 @Component({
   selector: 'app-work',
   standalone: true,
-  imports: [CommonModule,DatePipe],
+  imports: [CommonModule],
   templateUrl: './work.component.html',
   styleUrl: './work.component.scss'
 })
