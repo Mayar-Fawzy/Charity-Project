@@ -85,20 +85,15 @@ export class LoginComponent {
       (error) => {
         this.isloading = false;
         console.log('error', error);
-        if( error.error.statusCode == 403) {
-          this._ToastService.error('يجب عليك تاكيد البريد الالكتروني قبل تسجيل الدخول', 'خطأ');  
-        }
-        else if (error.error.statusCode == 400) {
+      
+
+        if (error.error.statusCode === 403 && error.error.message === 'This email has not been confirmed.') {
+          this._ToastService.warning('يرجى تأكيد بريدك الإلكتروني أولاً', '', { timeOut: 4000 });
+          this._Router.navigate(['/verify-email']);
+        } else if (error.error.statusCode == 400) {
           this._ToastService.error('البريد الالكتروني او كلمة المرور غير صحيحة', 'خطأ');
         }
         else {
-        this._ToastService.error(error.error.errors, 'خطأ');
-      }
-
-        if (error.status === 403 && error.error.message === 'This email has not been confirmed.') {
-          this._ToastService.warning('يرجى تأكيد بريدك الإلكتروني أولاً', '', { timeOut: 4000 });
-          this._Router.navigate(['/verify-email']);
-        } else {
           this._ToastService.error(error.error.errors || 'حدث خطأ أثناء تسجيل الدخول', 'خطأ');
         }
       }
