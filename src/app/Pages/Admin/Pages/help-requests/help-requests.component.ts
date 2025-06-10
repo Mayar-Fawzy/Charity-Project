@@ -50,7 +50,12 @@ export class HelpRequestsComponent {
           title: '',
           html: `
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${imageSrc}" alt="الصورة الشخصية" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+            <img 
+              id="userImage" 
+              src="${imageSrc}" 
+              alt="الصورة الشخصية" 
+              style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; cursor: pointer;"
+            >
             <h3 style="margin: 0;">${user.firstName} ${user.lastName}</h3>
           </div>
           <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -63,6 +68,25 @@ export class HelpRequestsComponent {
           showConfirmButton: false,
           customClass: {
             popup: 'swal2-popup-arabic'
+          },
+          didOpen: () => {
+            const popup = Swal.getPopup();
+            if (popup) {
+              const img = popup.querySelector('#userImage');
+              if (img) {
+                img.addEventListener('click', () => {
+                  Swal.fire({
+                    imageUrl: imageSrc,
+                    imageAlt: 'الصورة الشخصية',
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    customClass: {
+                      popup: 'swal2-popup-arabic'
+                    }
+                  });
+                });
+              }
+            }
           }
         });
       },
@@ -71,9 +95,6 @@ export class HelpRequestsComponent {
       }
     });
   }
-
-
-
 
   loadRequests() {
     this.isLoading = true;

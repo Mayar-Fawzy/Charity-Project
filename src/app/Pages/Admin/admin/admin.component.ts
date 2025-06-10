@@ -11,19 +11,40 @@ import { LoginService } from '../../Auth/core/Services/login.service';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
-  private readonly _LoginService=inject(LoginService)
+  private readonly _LoginService = inject(LoginService);
   sidebarOpen = false;
-  userData:any
-  userName!:string
+  userData: any;
+  userName!: string;
+  hovering = false;
+
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
   }
- ngOnInit(): void {
-   this.userData = this._LoginService.saveUserAuth();
-  
-this.userName=this.userData?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]+" " + this.userData?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]
- }
+
+  openSidebar() {
+    this.hovering = true;
+    this.sidebarOpen = true;
+  }
+
+  closeSidebar() {
+    this.hovering = false;
+    setTimeout(() => {
+      if (!this.hovering) {
+        this.sidebarOpen = false;
+      }
+    }, 300);
+  }
+
+  ngOnInit(): void {
+    this.userData = this._LoginService.saveUserAuth();
+    this.userName =
+      this.userData?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"] +
+      " " +
+      this.userData?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"];
+  }
+
   signOut() {
     this._LoginService.signOut();
   }
 }
+

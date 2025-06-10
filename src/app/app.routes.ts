@@ -5,6 +5,7 @@ import { AdminComponent } from './Pages/Admin/admin/admin.component';
 import { ForgetpasswordComponent } from './Pages/Auth/forgetpassword/forgetpassword.component';
 import { LoginComponent } from './Pages/Auth/login/login.component';
 import { RegisterComponent } from './Pages/Auth/register/register.component';
+import { VerifyEmailComponent } from './Pages/Auth/verify-email/verify-email.component';
 
 import { DonorComponent } from './Pages/Donor/donor/donor.component';
 import { VolnteerComponent } from './Pages/volunteer/volnteer/volnteer.component';
@@ -39,7 +40,8 @@ export const routes: Routes = [
   { path: 'login', title: 'Login', component: LoginComponent },
   { path: 'register', title: 'Register', component: RegisterComponent },
   { path: 'forget-password', title: 'Forget Password', component: ForgetpasswordComponent },
-
+  { path: 'verify-email', title: 'Verify Email', component: VerifyEmailComponent },
+  
   // ✅ باقي الصفحات داخل Layout يحتوي على Navbar & Footer
   {
     path: '',

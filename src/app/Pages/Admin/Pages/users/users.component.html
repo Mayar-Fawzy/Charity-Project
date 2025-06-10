@@ -124,7 +124,7 @@
           <td>{{ user.address }}</td>
           <td>{{ user.phoneNumber }}</td>
           <td class="actions">
-            <!-- زر الحذف -->
+            <!-- Delete -->
             <button
               pButton
               type="button"
@@ -154,6 +154,16 @@
               class="custom-success-button p-button-sm me-1"
               pTooltip="فتح الحساب"
               (click)="unlockAccount(user); $event.stopPropagation()"
+            ></button>
+
+            <!-- notifications -->
+            <button
+              pButton
+              type="button"
+              icon="bi bi-bell"
+              class="custom-notification-button p-button-sm me-1"
+              pTooltip="عرض رسائل المستخدم"
+              (click)="showUserMessages(user)"
             ></button>
 
             <!-- contact -->

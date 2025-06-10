@@ -1,6 +1,6 @@
 <div class="admin-layout d-flex">
   <!-- Sidebar -->
-  <aside class="sidebar p-3" [class.closed]="!sidebarOpen">
+  <aside class="sidebar p-3" [class.closed]="!sidebarOpen" (mouseenter)="openSidebar()"(mouseleave)="closeSidebar()">
     <div class="toggle-btn mb-3 text-end">
       <button class="btn btn-outline-light" (click)="toggleSidebar()">
         <i

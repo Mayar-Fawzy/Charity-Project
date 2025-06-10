@@ -9,17 +9,28 @@ import { Environment } from '../../../../../Auth/core/Environment/Environment';
 export class InkindDonationAdminService {
 
   constructor() { }
-    private readonly _HttpClient = inject(HttpClient);
-  
-  
-    GetPaginatedinKindDonations(pageNumber:number,pageSize:number,orderByDirection:number=1):Observable<any>{
-      return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/GetPaginatedinKindDonations?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
-    }
-    UpdateInKindDonation(formdata:FormData):Observable<any>{
-      return this._HttpClient.put(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/UpdateInKindDonation`,formdata)
+  private readonly _HttpClient = inject(HttpClient);
+
+
+  GetPaginatedinKindDonations(pageNumber: number, pageSize: number, orderByDirection: number = 1): Observable<any> {
+    return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/GetPaginatedinKindDonations?pageNumber=${pageNumber}&pageSize=${pageSize}&orderByDirection=${orderByDirection}`)
   }
-  DeleteInKindDonation(id:string):Observable<any>{
+  UpdateInKindDonation(formdata: FormData): Observable<any> {
+    return this._HttpClient.put(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/UpdateInKindDonation`, formdata)
+  }
+  DeleteInKindDonation(id: string): Observable<any> {
     return this._HttpClient.delete(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/DeleteInKindDonation?id=${id}`)
   }
+
+  GetAllInKindDonations(): Observable<any> {
+    return this._HttpClient.get<any>(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/GetAllInKindDonations`);
+  }
+
+  GetUserById(userId: string): Observable<any> {
+    return this._HttpClient.get<any>(
+      `${Environment.baseUrl}${Environment.VersionUrl}User/GetUserById?id=${userId}`
+    );
+  }
+
 }
 

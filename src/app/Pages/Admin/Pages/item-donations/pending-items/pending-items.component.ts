@@ -1,5 +1,5 @@
 import { error } from 'console';
-import { Component, inject, TemplateRef, ChangeDetectorRef } from '@angular/core'; // Add ChangeDetectorRef
+import { Component, inject, TemplateRef, ChangeDetectorRef, OnInit } from '@angular/core'; // Add ChangeDetectorRef
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -84,6 +84,81 @@ export class PendingItemsComponent {
       }
     });
   }
+
+  showDonorInfo(product: InkindData): void {
+    if (!product.donorId) {
+      Swal.fire('لا يوجد متبرع', 'هذا العنصر ليس مرتبطًا بمتبرع.', 'info');
+      return;
+    }
+
+    Swal.fire({
+      title: 'جاري تحميل بيانات المتبرع...',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      allowOutsideClick: false,
+      showConfirmButton: false,
+    });
+
+    this._inkind.GetUserById(product.donorId).subscribe({
+      next: (res) => {
+        Swal.close();
+        const donor = res.data;
+
+        let imageSrc = donor.imageUrl;
+        if (!imageSrc || imageSrc.trim() === '') {
+          imageSrc = donor.gender === 2
+            ? '/Images/undraw_female-avatar_7t6k.svg'
+            : '/Images/undraw_male-avatar_zkzx.svg';
+        }
+
+        Swal.fire({
+          title: '',
+          html: `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img id="donorImage" src="${imageSrc}" alt="الصورة الشخصية" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; cursor: pointer;">
+            <h3 style="margin: 0;">${donor.firstName || ''} ${donor.lastName || ''}</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" value="${donor.email || 'غير متوفر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="البريد">
+            <input type="text" value="${donor.phoneNumber || 'غير متوفر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="رقم الهاتف">
+            <input type="text" value="${donor.gender === 2 ? 'أنثى' : 'ذكر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="الجنس">
+          </div>
+        `,
+          showCloseButton: true,
+          showConfirmButton: false,
+          didOpen: () => {
+            const img = document.getElementById('donorImage');
+            if (img) {
+              img.addEventListener('click', () => {
+                Swal.fire({
+                  imageUrl: imageSrc,
+                  imageAlt: 'الصورة الشخصية',
+                  showCloseButton: true,
+                  showConfirmButton: false,
+                  width: 'auto',
+                  didOpen: () => {
+                    const img = Swal.getImage();
+                    if (img) {
+                      img.style.maxWidth = '70vw';
+                      img.style.maxHeight = '60vh';
+                      img.style.objectFit = 'contain';
+                    }
+                  }
+                });
+
+              });
+            }
+          }
+        });
+      },
+      error: () => {
+        Swal.close();
+        Swal.fire('خطأ', 'فشل في جلب بيانات المتبرع.', 'error');
+      }
+    });
+  }
+
 
   openEditModal(item: InkindData | null, modal: TemplateRef<any>): void {
     this.selectedItem = item;
@@ -273,6 +348,8 @@ export class PendingItemsComponent {
 
     return pages;
   }
+
+
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {

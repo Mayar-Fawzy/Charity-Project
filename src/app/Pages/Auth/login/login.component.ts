@@ -66,29 +66,17 @@ export class LoginComponent {
     this.isloading = true;
     this._LoginService.login(formInfo.value).subscribe(
       (res) => {
-        this.isloading = true;
+        this.isloading = false;
         console.log('resLogin', res);
 
         if (res.isSucceeded) {
-
-
           localStorage.setItem('userToken', res.data.jwtModel.jwt);
-
           localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
-
-
-
-
-
-          // #endregion
-
           this._LoginService.saveUserAuth();
-          if (this._LoginService.role.includes('Admin') && formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@' ) {
+
+          if (this._LoginService.role.includes('Admin') && formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@') {
             this._Router.navigate(['/admin']);
-          }
-          
-          else {
-            this.isloading = true;
+          } else {
             this._ToastService.success('تم تسجيل الدخول بنجاح', '', { timeOut: 3000 });
             this._Router.navigate(['/home']);
           }
@@ -106,9 +94,18 @@ export class LoginComponent {
         else {
         this._ToastService.error(error.error.errors, 'خطأ');
       }
+
+        if (error.status === 403 && error.error.message === 'This email has not been confirmed.') {
+          this._ToastService.warning('يرجى تأكيد بريدك الإلكتروني أولاً', '', { timeOut: 4000 });
+          this._Router.navigate(['/verify-email']);
+        } else {
+          this._ToastService.error(error.error.errors || 'حدث خطأ أثناء تسجيل الدخول', 'خطأ');
+        }
       }
     );
   }
+
+
   showPasswordLogin = false;
   closeLoginModal() {
     this._LoginService.signOut();

@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
 
 import { UserService, User } from './core/user.service';
 import { NotificationService } from '../../../../settings/notifications/Core/notification.service';
@@ -37,6 +38,7 @@ export class UsersComponent implements OnInit {
   imageDialogVisible = false;
   selectedImageUrl: string = '';
 
+
   genderFilterOptions = [
     { label: 'ذكر', value: 0 },
     { label: 'أنثى', value: 1 },
@@ -45,7 +47,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private notificationService: NotificationService,
-    private signalrService: SignalrService
+    private signalrService: SignalrService,
+    private http: HttpClient,
   ) { }
 
   ngOnInit(): void {
@@ -227,6 +230,81 @@ export class UsersComponent implements OnInit {
       }
     });
   }
+
+  showUserMessages(user: User): void {
+    const adminId = '5b61620b-d5d9-477d-bff0-bc278c44a8e3';
+    const apiUrl = `https://givinghandcharity.runasp.net/api/v1/Notification/GetAllMessagesBySendId?SendId=${adminId}`;
+
+    this.http.get<{ data: any[] }>(apiUrl).subscribe({
+      next: (response) => {
+        const allMessages = response.data || [];
+
+        const userMessages = allMessages.filter(
+          (msg) => !msg.receiverId || msg.receiverId.trim() === user.id.trim()
+        );
+
+        if (!userMessages.length) {
+          Swal.fire('لا توجد رسائل', `لم يتم إرسال رسائل لهذا المستخدم.`, 'info');
+          return;
+        }
+
+        const html = userMessages
+          .map(
+            (msg: any) => `
+          <div id="msg-${msg.id}" style="position: relative; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+            <button class="btn btn-sm btn-danger" style="position: absolute; top: 5px; left: 5px;" onclick="deleteMessage('${msg.id}')">
+              <i class="bi bi-trash"></i>
+            </button>
+            <p style="margin: 0 0 5px 0; text-align: right;">
+              <strong>الرسالة:</strong> ${msg.message}
+            </p>
+          </div>`
+          )
+          .join('');
+
+        Swal.fire({
+          title: `رسائل ${user.firstName}`,
+          html: html,
+          width: 600,
+          showCloseButton: true,
+          showConfirmButton: false,
+          didOpen: () => {
+            (window as any).deleteMessage = (messageId: string) => {
+              Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: 'سيتم حذف هذه الرسالة نهائيًا.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'نعم، احذفها',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#6c757d'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  const deleteUrl = `https://givinghandcharity.runasp.net/api/v1/Notification/DeleteMessage?messageId=${messageId}`;
+                  this.http.delete(deleteUrl).subscribe({
+                    next: () => {
+                      const el = document.getElementById(`msg-${messageId}`);
+                      if (el) el.remove();
+                      Swal.fire('تم الحذف!', 'تم حذف الرسالة بنجاح.', 'success');
+                    },
+                    error: () => {
+                      Swal.fire('خطأ', 'فشل في حذف الرسالة.', 'error');
+                    },
+                  });
+                }
+              });
+            };
+          },
+        });
+      },
+      error: (err) => {
+        console.error('فشل في جلب الرسائل:', err);
+        Swal.fire('خطأ', 'حدث خطأ أثناء جلب الرسائل.', 'error');
+      },
+    });
+  }
+
 
   contactUser(user: User): void {
     const receiverId = user.id;

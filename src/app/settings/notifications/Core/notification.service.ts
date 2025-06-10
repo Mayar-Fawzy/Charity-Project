@@ -40,10 +40,9 @@ export class NotificationService {
   }
 
   deleteNotification(messageId: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/DeleteMessage?messageId=${messageId}`);
+    return this.http.delete(`${this.baseUrl}/SoftDeleteMessage?messageId=${messageId}`);
   }
 
-  // notification.service.ts
   sendMessageToUser(senderId: string, receiverId: string, message: string) {
     const url = 'https://givinghandcharity.runasp.net/api/v1/Notification/send-to-user';
     const body = {
@@ -64,4 +63,19 @@ export class NotificationService {
 
     return this.http.post(url, body);
   }
+
+  getMessagesSentByAdminToUser(adminId: string, userId: string): Observable<any> {
+    const url = `${this.baseUrl}/GetAllMessagesBySendId?SendId=${adminId}`;
+    return this.http.get<any>(url).pipe(
+      map(res => {
+        const filtered = res.data?.filter((msg: any) => msg.receiveId?.trim() === userId.trim());
+        return {
+          ...res,
+          data: filtered
+        };
+      })
+    );
+  }
+
+
 }

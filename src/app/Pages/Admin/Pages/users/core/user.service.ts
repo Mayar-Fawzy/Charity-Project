@@ -28,7 +28,7 @@ export class UserService {
   getAllUsers(): Observable<User[]> {
     return this.http.get<{ data: User[] }>(this.apiUrl)
       .pipe(
-        map(response => response.data)  // فقط استخرج مصفوفة المستخدمين من الخاصية data
+        map(response => response.data)
       );
   }
 

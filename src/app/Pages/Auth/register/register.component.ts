@@ -141,6 +141,37 @@ export class RegisterComponent {
   }
 
 
+  // SubmitRegister(forminfo: FormGroup) {
+  //   if (forminfo.invalid) return;
+
+  //   this.isloading = true;
+  //   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  //   let formData = { ...forminfo.value };
+  //   formData.gender = Number(formData.gender);
+
+  //   this._RegisterService.Register(formData).subscribe(
+  //     (res) => {
+  //       this.isloading = false;
+
+  //       if (res.isSucceeded) {
+  //         this._ToastService.success('Please verify your email', '', { timeOut: 3000 });
+  //         this._router.navigate(['/login']);
+  //       } else {
+  //         this._ToastService.error('حدث خطأ أثناء التسجيل', 'خطأ', { timeOut: 3000 });
+  //       }
+  //     },
+  //     (error) => {
+  //       this.isloading = false;
+  //       const errorMessage = error?.error?.errors
+  //         ? Object.values(error.error.errors).join('')
+  //         : 'حدث خطأ غير متوقع';
+
+  //       this._ToastService.error(errorMessage, 'خطأ', { timeOut: 3000 });
+  //     }
+  //   );
+  // }
+
   SubmitRegister(forminfo: FormGroup) {
     if (forminfo.invalid) return;
 
@@ -155,8 +186,15 @@ export class RegisterComponent {
         this.isloading = false;
 
         if (res.isSucceeded) {
-          this._ToastService.success('Please verify your email', '', { timeOut: 3000 });
-          this._router.navigate(['/login']);
+          if (String(res.data) === "False") {
+            // الحساب لم يؤكد بعد
+            this._ToastService.info('يرجى تأكيد بريدك الإلكتروني', '', { timeOut: 4000 });
+            this._router.navigate(['/verify-email']);  // نوجهه لصفحة تأكيد البريد
+          } else {
+            // حساب مؤكد أو حالة أخرى، توجه لتسجيل الدخول مباشرة
+            this._ToastService.success('تم التسجيل بنجاح', '', { timeOut: 3000 });
+            this._router.navigate(['/login']);
+          }
         } else {
           this._ToastService.error('حدث خطأ أثناء التسجيل', 'خطأ', { timeOut: 3000 });
         }
@@ -171,6 +209,7 @@ export class RegisterComponent {
       }
     );
   }
+
 
   showPassword = false;
   togglePasswordVisibility() {
