@@ -61,7 +61,6 @@ input[type="radio"] {
 
   &::after {
     content: "\25BC";
-    /* سهم ▼ */
     font-size: 20px;
     color: #555;
     position: absolute;
@@ -126,20 +125,13 @@ option {
   }
 }
 
-/* autofill input fix */
-input:-webkit-autofill {
+input,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   background-color: #514F4E !important;
-  -webkit-box-shadow: 0 0 0px 1000px #514F4E inset !important;
-  color: #000 !important;
-}
-
-/* Birth date number input spin buttons removal */
-.birth-inputs-wrapper input::-webkit-outer-spin-button,
-.birth-inputs-wrapper input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.birth-inputs-wrapper input[type='number'] {
-  -moz-appearance: textfield;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+  caret-color: white;
 }
