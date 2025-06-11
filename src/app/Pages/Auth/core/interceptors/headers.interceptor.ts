@@ -10,7 +10,7 @@ export const headersInterceptor: HttpInterceptorFn = (req, next) => {
   let token: string | null = null;
 
   if (isBrowser) {
-    token = localStorage.getItem('userToken'); // استخدام localStorage فقط في المتصفح
+    token = sessionStorage.getItem('userToken'); // استخدام sessionStorage فقط في المتصفح
   }
 
   // إضافة الهيدر إذا كان الرمز (token) موجودًا والطلب يتعلق بـ cart أو wishlist أو orders

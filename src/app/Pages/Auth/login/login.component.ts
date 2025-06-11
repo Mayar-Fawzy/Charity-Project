@@ -70,8 +70,8 @@ export class LoginComponent {
         console.log('resLogin', res);
 
         if (res.isSucceeded) {
-          localStorage.setItem('userToken', res.data.jwtModel.jwt);
-          localStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
+          sessionStorage.setItem('userToken', res.data.jwtModel.jwt);
+          sessionStorage.setItem('expdate', JSON.stringify(res.data.jwtModel.jwtExpireDate));
           this._LoginService.saveUserAuth();
 
           if (this._LoginService.role.includes('Admin') && formInfo.value.email == 'givinghands.contact@gmail.com' && formInfo.value.password == '1Q2w3e4@') {

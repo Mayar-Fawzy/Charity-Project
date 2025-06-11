@@ -52,7 +52,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit(): void {
-    if (localStorage.getItem('userToken')) {
+    if (sessionStorage.getItem('userToken')) {
       this.isLogin = true;
     }
 

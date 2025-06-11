@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('userToken');
+    const token = sessionStorage.getItem('userToken');
 
     // إضافة التوكين إلى كل الطلبات
     let authReq = req;

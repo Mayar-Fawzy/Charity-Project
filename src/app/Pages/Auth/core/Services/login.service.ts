@@ -28,7 +28,7 @@ role!: any;
 
 
   // saveUserAuth(): Decode | null {
-  //   const token = localStorage.getItem('userToken');
+  //   const token = sessionStorage.getItem('userToken');
   //   if (token) {
   //     this.userData = jwtDecode(token);
   //     this.donorId = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
@@ -38,7 +38,7 @@ role!: any;
   // }
 
   saveUserAuth(): Decode | null {
-    const token = localStorage.getItem('userToken');
+    const token = sessionStorage.getItem('userToken');
     if (token) {
       this.userData = jwtDecode(token);
       // استخدام نفس مفتاح الـ claim المستخدم في المكون
@@ -50,8 +50,8 @@ role!: any;
   }
 
   signOut(): void {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userRefreshToken');
+    sessionStorage.removeItem('userToken');
+    sessionStorage.removeItem('userRefreshToken');
     this.userData = null;
     this._Router.navigate(['/login'])
   }
