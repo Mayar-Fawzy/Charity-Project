@@ -125,13 +125,9 @@ option {
   }
 }
 
-input,
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  background-color: #514F4E !important;
-  -webkit-text-fill-color: white !important;
-  transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
-  caret-color: white;
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.2) inset !important;
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 9999s ease-in-out 0s;
+  caret-color: #fff;
 }

@@ -85,7 +85,7 @@ export class LoginComponent {
       (error) => {
         this.isloading = false;
         console.log('error', error);
-      
+
 
         if (error.error.statusCode === 403 && error.error.message === 'This email has not been confirmed.') {
           this._ToastService.warning('يرجى تأكيد بريدك الإلكتروني أولاً', '', { timeOut: 4000 });

@@ -1,15 +1,29 @@
-<section id="vanta-bg" class="verify-section">
-  <div class="verify-container">
-    <div class="navbar__brand">
-      <span>يـــــــد</span>
-      <img src="/Images/Logo.svg" alt="Logo" class="navbar__logo" />
-      <span>العطاء</span>
+<section class="px-5">
+  <div class="right-section">
+    <div class="content">
+      <img src="/Images/email.png" alt="Mail" class="email-image" />
+      <h1>🎉 تم إنشاء حسابك</h1>
+      <p class="verify-message">
+        تم إرسال رابط التفعيل إلى بريدك الإلكتروني:
+        <span class="text-warning fw-bold">{{ email }}</span>
+      </p>
+      <a
+        *ngIf="email"
+        [href]="'https://mail.google.com/mail/u/0/#search/' + email"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="confirm-btn"
+      >
+        اذهب لتأكيد الحساب
+      </a>
     </div>
-    <h2>تم إنشاء حسابك بنجاح!</h2>
-    <p>
-      من فضلك قم بتأكيد بريدك الإلكتروني عبر الرابط المرسل إليك قبل تسجيل
-      الدخول.
-    </p>
+  </div>
+
+  <div class="left-section">
+    <img
+      src="/Images/mail-success.png"
+      alt="Mail Sent Icon"
+      class="img-fluid"
+    />
   </div>
 </section>
- 

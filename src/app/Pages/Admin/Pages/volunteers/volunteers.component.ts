@@ -68,7 +68,6 @@ export class VolunteersComponent implements OnInit {
         if (response.isSucceeded && response.data && response.data.length > 0) {
           this.fetchVolunteerDetails(response.data, type);
           this.updatePagination(response.totalPages, page);
-          this.successMessage = 'تم تحميل البيانات بنجاح';
           this.errorMessage = null;
           setTimeout(() => {
             this.successMessage = null;
