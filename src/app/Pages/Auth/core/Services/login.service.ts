@@ -41,7 +41,6 @@ role!: any;
     const token = sessionStorage.getItem('userToken');
     if (token) {
       this.userData = jwtDecode(token);
-      // استخدام نفس مفتاح الـ claim المستخدم في المكون
       this.donorId = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
       this.role = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       return this.userData;

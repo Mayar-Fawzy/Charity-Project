@@ -8,17 +8,17 @@ import { InputOtpModule } from 'primeng/inputotp';
 @Component({
   selector: 'app-forgetpassword',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule , RouterLink,InputOtpModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, InputOtpModule],
   templateUrl: './forgetpassword.component.html',
-  styleUrls:['../../../core/Shared/Css/ToastDesign.scss','../core/Shared/Shared.scss', './forgetpassword.component.scss']
+  styleUrls: ['../../../core/Shared/Css/ToastDesign.scss', '../core/Shared/Shared.scss', './forgetpassword.component.scss']
 })
 export class ForgetpasswordComponent {
-  private readonly _ToastrService=inject(ToastrService);
-  private readonly _ForgetpasswordService=inject(ForgetpasswordService);
-  private readonly _Router=inject(Router);
+  private readonly _ToastrService = inject(ToastrService);
+  private readonly _ForgetpasswordService = inject(ForgetpasswordService);
+  private readonly _Router = inject(Router);
   codeInvalidLength: boolean = true;
-  step1: boolean = true; 
-  
+  step1: boolean = true;
+
   step2: boolean = false;
   step3: boolean = false;
   message: string = '';
@@ -31,17 +31,17 @@ export class ForgetpasswordComponent {
   ResetCodeform: FormGroup = new FormGroup({
     code: new FormControl('', [Validators.required]),
   });
-//newPass 
+  //newPass 
   newPasswordform: FormGroup = new FormGroup({
-   
+
     password: new FormControl(null, [
       Validators.required,
       Validators.minLength(8),
       Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
-   
+
     email: new FormControl('', [Validators.required, Validators.email]),
-     
+
     confirmPassword: new FormControl(null, [Validators.required])
   }, { validators: this.confirmPassword });
 
@@ -73,14 +73,14 @@ export class ForgetpasswordComponent {
     let code = this.ResetCodeform.value.code;
     let email = this.forgetpasswordform.value.email;
 
-    this._ForgetpasswordService.verifyRestCode(email,code).subscribe({
+    this._ForgetpasswordService.verifyRestCode(email, code).subscribe({
       next: (response) => {
         console.log(response);
         this.isloading = false;
-        this._ToastrService.success('success', 'تم التحقق من الكود');
-         this.step2 = false;
-         this.step3 = true;
-       
+        this._ToastrService.success('', 'تم التحقق من الكود');
+        this.step2 = false;
+        this.step3 = true;
+
       },
       error: (err) => {
         console.log(err);
@@ -91,18 +91,43 @@ export class ForgetpasswordComponent {
     });
   }
 
+  resendCode(): void {
+    const email = this.forgetpasswordform.value.email;
+
+    if (!email) {
+      this.message = 'يرجى إدخال البريد الإلكتروني أولاً';
+      this._ToastrService.warning('تنبيه', this.message);
+      return;
+    }
+
+    this.isloading = true;
+    this._ForgetpasswordService.forgetPassword(email).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.isloading = false;
+        this._ToastrService.success('تم إرسال الكود مرة أخرى إلى بريدك الإلكتروني');
+      },
+      error: (err) => {
+        console.log(err);
+        this.isloading = false;
+        this._ToastrService.error('خطأ', err.error.message || 'حدث خطأ أثناء إرسال الكود');
+      }
+    });
+  }
+
+
   handelnewPassword() {
     this.isloading = true;
     let email = this.newPasswordform.value.email;
     let password = this.newPasswordform.value.password;
     let confirmPassword = this.newPasswordform.value.confirmPassword;
-    this._ForgetpasswordService.resetPassword(email,password,confirmPassword).subscribe({
+    this._ForgetpasswordService.resetPassword(email, password, confirmPassword).subscribe({
       next: (response) => {
         console.log(response);
         this.isloading = false;
-          this._ToastrService.success('success', 'تم تغيير كلمة المرور');
-          this.step3 = false;
-          this._Router.navigate(['/login']);
+        this._ToastrService.success('success', 'تم تغيير كلمة المرور');
+        this.step3 = false;
+        this._Router.navigate(['/login']);
         // }
       },
       error: (err) => {
@@ -113,21 +138,21 @@ export class ForgetpasswordComponent {
       },
     });
   }
-   confirmPassword(group: AbstractControl) {
-        const password = group.get('password')?.value;
-        const confirmPassword = group.get('confirmPassword')?.value;
-        return password === confirmPassword ? null : { mismatch: true };
-      }
-      ngOnInit(): void {
-        this.ResetCodeform.get('code')?.valueChanges.subscribe(value => {
-          this.codeInvalidLength = value?.toString().length !== 6;
-        });
-      }
-      showPasswordLogin = false;
- 
+  confirmPassword(group: AbstractControl) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { mismatch: true };
+  }
+  ngOnInit(): void {
+    this.ResetCodeform.get('code')?.valueChanges.subscribe(value => {
+      this.codeInvalidLength = value?.toString().length !== 6;
+    });
+  }
+  showPasswordLogin = false;
+
   togglePasswordVisibilityLogin() {
     this.showPasswordLogin = !this.showPasswordLogin;
-   
+
   }
   showPassword = false;
   togglePasswordVisibility() {

@@ -132,8 +132,8 @@ export class UsersComponent implements OnInit {
   deleteUser(user: User): void {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
-        confirmButton: 'btn btn-success me-2',
-        cancelButton: 'btn btn-danger',
+        confirmButton: 'btn btn-danger me-2',
+        cancelButton:  'btn btn-success',
       },
       buttonsStyling: false,
     });

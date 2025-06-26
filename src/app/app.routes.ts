@@ -22,14 +22,12 @@ import { AboutUsComponent } from './Pages/About-Us/about-us/about-us.component';
 import { SettingsLayoutComponent } from './Layout/settings-layout/settings-layout.component';
 
 import { ProfileComponent } from './settings/profile/profile.component';
-// import { AccountSecurityComponent } from './settings/account-security/account-security.component';
 import { PasswordSettingsComponent } from './settings/account-security/account-security.component'
 import { PaymentMethodComponent } from './settings/payment-method/payment-method.component';
 import { NotificationsComponent } from './settings/notifications/notifications.component';
 import { WorkComponent } from './settings/work/work.component';
 import { AuthGuard } from './core/Guards/auth.guard';
 import { GeneralVisaComponent } from './PaymentMethod/general-visa/general-visa.component';
-// import { BeneficaryComponent } from './Pages/beneficiary/beneficary/beneficary.component';
 export const routes: Routes = [
   // ✅ عند فتح الموقع، يتم توجيه المستخدم إلى صفحة تسجيل الدخول تلقائيًا
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -57,25 +55,12 @@ export const routes: Routes = [
       { path: 'volunteer-activity', title: 'volunteer-activity', component: VolunteerActivityComponent },
       { path: 'about', title: 'About', component: AboutUsComponent },
       { path: 'GenralVisa/:id', title: 'GenralVisa', component: GeneralVisaComponent },
-      {
-        path: 'ewallet-payment/:id',
-        title: 'E-Wallet Payment',
-        component: EwalletPaymentComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'visa-payment/:id',
-        title: 'Visa Payment',
-        component: VisaPaymentComponent
-      },
-
+      { path: 'ewallet-payment/:id', title: 'E-Wallet Payment', component: EwalletPaymentComponent, canActivate: [AuthGuard]},
+      { path: 'visa-payment/:id', title: 'Visa Payment', component: VisaPaymentComponent},
     ]
 
   },
-  {
-    path: 'admin',
-    component: AdminComponent,canActivate: [AuthGuard],
-    children: [
+  { path: 'admin', component: AdminComponent,canActivate: [AuthGuard], children: [
       {path:'',redirectTo:'overview',pathMatch: 'full'},
       { path: 'overview', loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component').then(m => m.OverviewComponent) },
       { path: 'users', loadComponent: () => import('./Pages/Admin/Pages/users/users.component').then(m => m.UsersComponent) },
@@ -84,19 +69,15 @@ export const routes: Routes = [
       { path: 'volunteer-activities', loadComponent: () => import('./Pages/Admin/Pages/volunteer-activities/volunteer-activities.component').then(m => m.VolunteerActivitiesComponent) },
       { path: 'help-requests', loadComponent: () => import('./Pages/Admin/Pages/help-requests/help-requests.component').then(m => m.HelpRequestsComponent) },
       { path: 'item-donations', loadComponent: () => import('./Pages/Admin/Pages/item-donations/pending-items/pending-items.component').then(m => m.PendingItemsComponent)},
-
     ]
   },
   {
-    path: 'settings',
-    component: SettingsLayoutComponent,
-    children: [
+    path: 'settings', component: SettingsLayoutComponent, children: [
       { path: 'profile/:id', component: ProfileComponent },
       { path: 'account-security/:id', component: PasswordSettingsComponent },
       { path: 'payment-method/:id', component: PaymentMethodComponent },
       { path: 'notifications/:id', component: NotificationsComponent },
       { path: 'work/:id', component: WorkComponent },
-
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
   },

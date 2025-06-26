@@ -187,11 +187,13 @@ export class RegisterComponent {
 
         if (res.isSucceeded) {
           if (String(res.data) === "False") {
-            // الحساب لم يؤكد بعد
             this._ToastService.info('يرجى تأكيد بريدك الإلكتروني', '', { timeOut: 4000 });
-            this._router.navigate(['/verify-email']);  // نوجهه لصفحة تأكيد البريد
+            sessionStorage.setItem('registeredEmail', formData.email);
+            this._router.navigate(['/verify-email'], {
+              state: { email: formData.email }
+            });
+
           } else {
-            // حساب مؤكد أو حالة أخرى، توجه لتسجيل الدخول مباشرة
             this._ToastService.success('تم التسجيل بنجاح', '', { timeOut: 3000 });
             this._router.navigate(['/login']);
           }
