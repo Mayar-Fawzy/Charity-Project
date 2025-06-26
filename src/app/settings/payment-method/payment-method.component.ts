@@ -104,7 +104,7 @@ export class PaymentMethodComponent implements AfterViewInit {
   
 
  isFormValid(): boolean {
-  return this.paymentForm?.valid && this.amount >= 25;
+  return this.paymentForm?.valid && this.amount >= 26;
 }
 
 
@@ -134,7 +134,7 @@ export class PaymentMethodComponent implements AfterViewInit {
       Swal.fire({
         icon: 'error',
         title: 'بيانات غير صحيحة',
-        text: 'يرجى التأكد من تعبئة جميع الحقول بشكل صحيح وأن المبلغ لا يقل عن 25 جنيهًا.',
+        text: 'يرجى التأكد من تعبئة جميع الحقول بشكل صحيح وأن المبلغ لا يقل عن 26 جنيهًا.',
         confirmButtonColor: '#f6a026',
         confirmButtonText: 'حسنا',
       });
