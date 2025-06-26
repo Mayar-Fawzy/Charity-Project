@@ -4,11 +4,19 @@ body {
 }
 
 section {
-    background: radial-gradient(circle at center, #0a3a3a, #001010);
+    // background: radial-gradient(circle at center, #0a3a3a, #001010);
+    // background: radial-gradient(circle at center, #F89B29 0%, #d87e1d 60%, #a85f16 100%);
+    // background: radial-gradient(circle at center, #F89B29 30%, rgba(248, 155, 41, 0.7) 85%, rgba(248, 155, 41, 0.3) 100%);
+    // background-image: url('/Images/Loginn.png');
+    // background-repeat: no-repeat;
+    // background-position: center;
+    // object-fit: fill;
+    // background-color: aliceblue;
+    background-color: azure;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff;
+    color: #000000;
     min-height: 100vh;
     gap: 1rem;
     padding: 1rem;
@@ -63,7 +71,7 @@ section {
             display: inline-block;
             margin-top: 1.5rem;
             padding: 0.75rem 2rem;
-            background-color: #00c9a7;
+            background-color: #F89B29;
             color: #fff;
             border-radius: 2rem;
             text-decoration: none;
