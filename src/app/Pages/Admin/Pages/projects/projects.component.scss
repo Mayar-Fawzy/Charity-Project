@@ -40,8 +40,7 @@ $light-bg: #f9f9f9;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-         align-items: center;
-      justify-content: center !important;
+      padding: 0 !important;
     }
     .close-btn {
       background: none;
