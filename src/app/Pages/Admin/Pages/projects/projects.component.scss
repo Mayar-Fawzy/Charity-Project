@@ -9,181 +9,118 @@ $light-bg: #f9f9f9;
   font-family: 'Cairo', sans-serif;
 }
 
-.card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.card-img-top {
-  height: 200px;
-  object-fit: cover;
-}
-
-.badge {
-  font-size: 0.9rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 5px;
-}
-
-.progress-container {
-  .progress-label {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-  .progress-bar {
-    height: 8px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-    overflow: hidden;
-    .progress {
-      height: 100%;
-      transition: width 0.3s ease;
-      &.bg-success { background-color: #28a745; }
-      &.bg-warning { background-color: #ffc107; }
-      &.bg-danger { background-color: #dc3545; }
-    }
-  }
-}
-
-.date-container {
-  .date-item {
-    display: flex;
-    gap: 0.5rem;
-    .date-label { font-weight: bold; }
-    .date-value { color: #6c757d; }
-  }
-}
-
-.pagination-custom {
-  .page-link {
-    color: #fff;
-    background-color: #f6a026;
-    border-color: #f6a026;
-    &:hover, &.active {
-      background-color: #e08e1c;
-      border-color: #e08e1c;
-    }
-    &.disabled {
-      background-color: #dee2e6;
-      border-color: #dee2e6;
-      cursor: not-allowed;
-    }
-  }
-  .dots {
-    .page-link {
-      background: none;
-      border: none;
-      color: #6c757d;
-    }
-  }
-}
-
 .custom-dialog {
-  ::ng-deep .p-dialog-header {
-    background-color: #f6a026;
-    color: white;
-    font-weight: bold;
-    text-align: right;
-    padding: 0.75rem;
-    border-bottom: none;
+  ::ng-deep .p-dialog {
+    border-radius: 8px;
+    background-color: transparent;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   ::ng-deep .p-dialog-content {
-    padding: 1.5rem;
-    text-align: right;
+    padding: 0; background-color: #fff !important;
   }
-  ::ng-deep .p-table {
-    border: 1px solid #eee;
-    border-radius: 8px;
-    .p-datatable-header {
-      background-color: #f6a026;
-      color: white;
-      font-weight: bold;
-      text-align: right;
-      padding: 0.75rem;
+ ::ng-deep .p-dialog-header {
+ 
+  background-color: #fff !important;
+ }
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    background-color: #fff !important;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    .dialog-title {
+      margin: 0;
+       padding-bottom: 6px !important;
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #f39c12, #e67e22);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+         align-items: center;
+      justify-content: center !important;
     }
-    .p-datatable-thead > tr > th {
-      background-color: #f39c12;
-      color: white;
-      text-align: right;
-      font-weight: bold;
-      border-bottom: 2px solid #dee2e6;
-    }
-    .p-datatable-tbody > tr {
-      transition: background-color 0.2s ease;
+    .close-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.25rem;
       &:hover {
-        background-color: #fdf3e0;
+        color: #f39c12;
       }
-      &.selected-row {
-        background-color: #f6a02633 !important;
-      }
-    }
-    .p-datatable-tbody > tr > td {
-      text-align: right;
-      vertical-align: middle;
-      padding: 0.75rem;
-    }
-    .p-column-title {
-      font-weight: bold;
     }
   }
-  ::ng-deep .p-paginator {
-    background-color: #f8f9fa;
-    border-top: 1px solid #eee;
-    padding: 0.5rem;
-    text-align: center;
-    .p-paginator-pages .p-paginator-page {
-      background-color: #fff;
-      color: #6c757d;
+  .table-wrapper {
+    overflow-x: hidden; /* إزالة التمرير الأفقي إذا كان العرض كافيًا */
+    width: 100%;
+    max-width: 100%;
+    padding: 0 1rem 1rem;
+  }
+  .p-datatable-striped {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    ::ng-deep .p-datatable-thead > tr {
+      background-color: #f8f9fa;
+      th {
+        padding: 0.75rem;
+        text-align: right;
+        font-weight: 500;
+        color: #333;
+        border-bottom: 2px solid #e0e0e0;
+      }
+    }
+    ::ng-deep .p-datatable-tbody > tr {
       &:hover {
-        background-color: #f6a026;
-        color: white;
+        background-color: #f5f5f5;
       }
-      &.p-highlight {
-        background-color: #f6a026;
-        color: white;
-        border-color: #f6a026;
+      td {
+        padding: 0.75rem;
+        text-align: right;
+        vertical-align: middle;
+        color: #555;
+      }
+    }
+    ::ng-deep .p-paginator {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e0e0e0;
+      padding: 0.5rem;
+      .p-paginator-pages .p-paginator-page {
+        background-color: #fff;
+        color: #666;
+        &:hover {
+          background-color: #f39c12;
+          color: white;
+        }
+        &.p-highlight {
+          background-color: #f39c12;
+          color: white;
+          border-color: #f39c12;
+        }
       }
     }
   }
-  ::ng-deep .p-button {
-    margin-left: 0.5rem;
-    padding: 0.5rem 1rem;
+  .dialog-footer {
+    padding: 1rem;
+    text-align: left;
+    ::ng-deep .p-button {
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
   }
 }
 
-.modal-body {
-  .form-label { color: #333; }
-  .form-control {
-    border-radius: 5px;
-    &:focus { border-color: #f6a026; box-shadow: 0 0 5px rgba(246, 160, 38, 0.5); }
-  }
-  .invalid-feedback { font-size: 0.875rem; }
-}
-
-.modal-footer {
-  justify-content: flex-start;
-  .btn {
-    padding: 0.5rem 1.5rem;
-    border-radius: 5px;
-    &:hover { opacity: 0.9; }
-  }
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  width: 100%;
-}
-
-::ng-deep .p-datatable-wrapper {
-  min-width: 1200px;
-}
-
-.selected-icon {
-  color: #f39c12;
-  font-size: 1.2rem;
+.user-thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
 }
 .card {
   cursor: pointer;

@@ -185,8 +185,14 @@
   </ng-template>
 
  <!-- Donation Dialog -->
-<p-dialog [(visible)]="donationDialogVisible" [modal]="true" header="التبرعات" [dismissableMask]="true" 
-          [style]="{width: '90vw', maxWidth: '1200px'}" class="custom-dialog">
+<p-dialog [(visible)]="donationDialogVisible" [modal]="true" [dismissableMask]="true" 
+          [style]="{width: '80vw', maxWidth: '1000px'}" class="custom-dialog">
+  <ng-template pTemplate="header">
+    <div class="dialog-header">
+      <h2 class="dialog-title">تبرعات مشروع {{ selectedProject?.name || 'غير محدد' }}</h2>
+  
+    </div>
+  </ng-template>
   <div class="table-wrapper">
     <p-table
       showGridlines
@@ -198,7 +204,6 @@
       [paginator]="true"
       [rows]="5"
       [rowsPerPageOptions]="[5, 10, 20]"
-      [responsiveLayout]="'scroll'"
       [resizableColumns]="true"
       class="p-datatable-striped"
       [filters]="donationFilters"
@@ -208,17 +213,10 @@
         <tr>
           <th></th>
           <th>#</th>
-          <th pSortableColumn="donorId">
-            معرف المتبرع
-            <p-columnFilter type="text" field="donorId" display="menu" placeholder="ابحث بمعرف المتبرع"></p-columnFilter>
-          </th>
+          <th>الصورة</th>
           <th pSortableColumn="firstName">
-            الاسم الأول
-            <p-columnFilter type="text" field="firstName" display="menu" placeholder="ابحث بالاسم الأول"></p-columnFilter>
-          </th>
-          <th pSortableColumn="lastName">
-            الاسم الأخير
-            <p-columnFilter type="text" field="lastName" display="menu" placeholder="ابحث بالاسم الأخير"></p-columnFilter>
+            الاسم
+            <p-columnFilter type="text" field="firstName" display="menu" placeholder="ابحث بالاسم"></p-columnFilter>
           </th>
           <th pSortableColumn="email">
             البريد الإلكتروني
@@ -228,14 +226,10 @@
             المبلغ
             <p-columnFilter type="text" field="amount" display="menu" placeholder="ابحث بالمبلغ"></p-columnFilter>
           </th>
-          <th pSortableColumn="paymentMethod">
+          <!-- <th pSortableColumn="paymentMethod">
             طريقة الدفع
             <p-columnFilter type="text" field="paymentMethod" display="menu" placeholder="ابحث بطريقة الدفع"></p-columnFilter>
-          </th>
-          <th pSortableColumn="paymentIntentId">
-            معرف الدفع
-            <p-columnFilter type="text" field="paymentIntentId" display="menu" placeholder="ابحث بمعرف الدفع"></p-columnFilter>
-          </th>
+          </th> -->
         </tr>
       </ng-template>
 
@@ -245,25 +239,26 @@
             <i *ngIf="selectedDonation === donation" class="bi bi-box-arrow-left selected-icon"></i>
           </td>
           <td>{{ rowIndex + 1 }}</td>
-          <td>{{ donation.donorId }}</td>
-          <td>{{ users[donation.donorId]?.firstName || 'غير محدد' }}</td>
-          <td>{{ users[donation.donorId]?.lastName || 'غير محدد' }}</td>
+          <td>
+            <img
+              [src]="users[donation.donorId]?.imageUrl || (users[donation.donorId]?.gender === 0 ? '/Images/undraw_male-avatar_zkzx.svg' : '/Images/undraw_female-avatar_7t6k.svg')"
+              alt="Donor Image"
+              class="user-thumbnail"
+            />
+          </td>
+          <td>{{ (users[donation.donorId]?.firstName || '') + ' ' + (users[donation.donorId]?.lastName || '') || 'غير محدد' }}</td>
           <td>{{ users[donation.donorId]?.email || 'غير محدد' }}</td>
-          <td>{{ donation.amount || 0 }} ريال</td>
-          <td>{{ donation.paymentMethod || 'غير محدد' }}</td>
-          <td>{{ donation.paymentIntentId || 'غير محدد' }}</td>
+          <td>{{ donation.amount || 0 }} جنيها</td>
+          <!-- <td>{{ donation.paymentMethod || 'غير محدد' }}</td> -->
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="9" class="text-center py-3 text-muted">لا توجد تبرعات لهذا المشروع.</td>
+          <td colspan="7" class="text-center py-3 text-muted">لا توجد تبرعات لهذا المشروع.</td>
         </tr>
       </ng-template>
     </p-table>
   </div>
-  <ng-template pTemplate="footer">
-    <button type="button" pButton label="إغلاق" class="p-button-secondary" (click)="donationDialogVisible = false"></button>
-  </ng-template>
 </p-dialog>
 </section>

@@ -1,6 +1,17 @@
-import { ChangeDetectorRef, Component, inject, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  TemplateRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GetProjj, IGetProj } from './Core/InterFace/iget-proj';
 import Swal from 'sweetalert2';
@@ -21,6 +32,8 @@ interface User {
   lastName: string;
   email: string;
   phoneNumber: string;
+  imageUrl: any;
+  gender: number;
 }
 
 interface Donation {
@@ -38,9 +51,20 @@ interface Donation {
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, TableModule, DialogModule, ButtonModule, ImageModule, InputTextModule, DropdownModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule,
+    TableModule,
+    DialogModule,
+    ButtonModule,
+    ImageModule,
+    InputTextModule,
+    DropdownModule,
+  ],
   templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.scss']
+  styleUrls: ['./projects.component.scss'],
 })
 export class ProjectsComponent {
   private readonly crudProjService = inject(CRUDProjService);
@@ -67,30 +91,43 @@ export class ProjectsComponent {
   donationFilters: { [key: string]: any } = {};
 
   projectForm: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(40)]),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(40),
+    ]),
     image: new FormControl(null, [Validators.required]),
     targetAmount: new FormControl(0, [Validators.required, Validators.min(1)]),
     projectStatus: new FormControl(null),
-    description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    description: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(500),
+    ]),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
-    managerId: new FormControl('')
+    managerId: new FormControl(''),
   });
 
   ngOnInit() {
     this.userData = this.loginService.saveUserAuth();
     if (this.userData) {
-      this.projectForm.get('managerId')?.setValue(this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"]);
+      this.projectForm
+        .get('managerId')
+        ?.setValue(
+          this.userData[
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid'
+          ]
+        );
       this.getPaginatedProjects();
       this.getAllDonations();
       this.loadAllUsers();
     } else {
       Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "لم يتم جلب بيانات المستخدم. يرجى تسجيل الدخول مرة أخرى.",
-        confirmButtonColor: "#f6a026",
-        confirmButtonText: "حسنا"
+        icon: 'error',
+        title: 'خطأ',
+        text: 'لم يتم جلب بيانات المستخدم. يرجى تسجيل الدخول مرة أخرى.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسنا',
       }).then(() => {
         this.router.navigate(['/login']);
       });
@@ -99,31 +136,38 @@ export class ProjectsComponent {
 
   getPaginatedProjects() {
     this.isLoading = true;
-    this.crudProjService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
-      next: (response: IGetProj) => {
-        this.projects = response.data.map((project: GetProjj, index: number) => ({
-          ...project,
-          projectStatus: Number(project.projectStatus),
-          progressPercentage: this.progressPercentages[index % this.progressPercentages.length]
-        }));
-        this.filteredProjects = [...this.projects];
-        this.totalCount = response.totalCount;
-        this.currentPage = response.currentPage;
-        this.totalPages = response.totalPages;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: "error",
-          title: "خطأ",
-          text: "حدث خطأ أثناء جلب المشاريع",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا"
-        });
-        console.error('Error fetching projects:', err);
-      }
-    });
+    this.crudProjService
+      .GetPaginatedProjects(this.currentPage, this.itemsPerPage)
+      .subscribe({
+        next: (response: IGetProj) => {
+          this.projects = response.data.map(
+            (project: GetProjj, index: number) => ({
+              ...project,
+              projectStatus: Number(project.projectStatus),
+              progressPercentage:
+                this.progressPercentages[
+                  index % this.progressPercentages.length
+                ],
+            })
+          );
+          this.filteredProjects = [...this.projects];
+          this.totalCount = response.totalCount;
+          this.currentPage = response.currentPage;
+          this.totalPages = response.totalPages;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'خطأ',
+            text: 'حدث خطأ أثناء جلب المشاريع',
+            confirmButtonColor: '#f6a026',
+            confirmButtonText: 'حسنا',
+          });
+          console.error('Error fetching projects:', err);
+        },
+      });
   }
 
   getAllDonations() {
@@ -134,14 +178,14 @@ export class ProjectsComponent {
           ...d,
           firstName: this.users[d.donorId]?.firstName,
           lastName: this.users[d.donorId]?.lastName,
-          email: this.users[d.donorId]?.email
+          email: this.users[d.donorId]?.email,
         }));
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
         console.error('Error fetching donations:', err);
-      }
+      },
     });
   }
 
@@ -159,7 +203,7 @@ export class ProjectsComponent {
       error: (err) => {
         this.isLoading = false;
         console.error('Error fetching users:', err);
-      }
+      },
     });
   }
 
@@ -195,7 +239,9 @@ export class ProjectsComponent {
   }
 
   get showRightDots(): boolean {
-    return this.displayedPages[this.displayedPages.length - 1] < this.totalPages;
+    return (
+      this.displayedPages[this.displayedPages.length - 1] < this.totalPages
+    );
   }
 
   goToPage(page: number) {
@@ -222,7 +268,10 @@ export class ProjectsComponent {
   openAddModal(modal: TemplateRef<any>) {
     this.selectedProject = null;
     this.projectForm.reset({
-      managerId: this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] || ''
+      managerId:
+        this.userData?.[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid'
+        ] || '',
     });
     this.projectForm.get('image')?.setValidators([Validators.required]);
     this.projectForm.get('projectStatus')?.clearValidators();
@@ -240,7 +289,10 @@ export class ProjectsComponent {
       projectStatus: project.projectStatus,
       startDate: project.startDate.split('T')[0],
       endDate: project.endDate.split('T')[0],
-      managerId: this.userData?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"] || ''
+      managerId:
+        this.userData?.[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid'
+        ] || '',
     });
     this.projectForm.get('image')?.clearValidators();
     this.projectForm.get('projectStatus')?.setValidators([Validators.required]);
@@ -281,24 +333,33 @@ export class ProjectsComponent {
       formData.append('projectStatus', Number(values.projectStatus).toString());
       formData.append('id', this.selectedProject.id);
       formData.append('imageUrl', this.selectedProject.imageUrl || '');
-      formData.append('createdDate', this.selectedProject.createdDate || new Date().toISOString());
+      formData.append(
+        'createdDate',
+        this.selectedProject.createdDate || new Date().toISOString()
+      );
 
-      this.crudProjService.UpdateProject(this.selectedProject.id, formData).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          if (response.isSucceeded) {
-            Swal.fire('نجاح', 'تم تحديث المشروع بنجاح', 'success');
-            modal.close();
-            this.getPaginatedProjects();
-          } else {
-            Swal.fire('خطأ', response.errors || 'فشل التحديث', 'error');
-          }
-        },
-        error: (err) => {
-          this.isLoading = false;
-          Swal.fire('خطأ', err.error?.errors || 'حدث خطأ أثناء التحديث', 'error');
-        }
-      });
+      this.crudProjService
+        .UpdateProject(this.selectedProject.id, formData)
+        .subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            if (response.isSucceeded) {
+              Swal.fire('نجاح', 'تم تحديث المشروع بنجاح', 'success');
+              modal.close();
+              this.getPaginatedProjects();
+            } else {
+              Swal.fire('خطأ', response.errors || 'فشل التحديث', 'error');
+            }
+          },
+          error: (err) => {
+            this.isLoading = false;
+            Swal.fire(
+              'خطأ',
+              err.error?.errors || 'حدث خطأ أثناء التحديث',
+              'error'
+            );
+          },
+        });
     } else {
       this.crudProjService.CreateProject(formData).subscribe({
         next: (response) => {
@@ -310,7 +371,7 @@ export class ProjectsComponent {
               title: 'نجاح',
               text: 'تم إضافة المشروع بنجاح',
               confirmButtonColor: '#f6a026',
-              confirmButtonText: 'حسناً'
+              confirmButtonText: 'حسناً',
             }).then(() => {
               modal.close();
               this.getPaginatedProjects();
@@ -321,8 +382,12 @@ export class ProjectsComponent {
         },
         error: (err) => {
           this.isLoading = false;
-          Swal.fire('خطأ', err.error?.errors || 'حدث خطأ أثناء الإضافة', 'error');
-        }
+          Swal.fire(
+            'خطأ',
+            err.error?.errors || 'حدث خطأ أثناء الإضافة',
+            'error'
+          );
+        },
       });
     }
   }
@@ -340,7 +405,7 @@ export class ProjectsComponent {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#f6a026',
       confirmButtonText: 'حذف',
-      cancelButtonText: 'إلغاء'
+      cancelButtonText: 'إلغاء',
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -359,27 +424,31 @@ export class ProjectsComponent {
           },
           error: (err) => {
             this.isLoading = false;
-            Swal.fire('خطأ!', err.error?.errors || 'حدث خطأ أثناء الحذف', 'error');
-          }
+            Swal.fire(
+              'خطأ!',
+              err.error?.errors || 'حدث خطأ أثناء الحذف',
+              'error'
+            );
+          },
         });
       }
     });
   }
 
-  showDonations(projectId: string) {
-    this.selectedProjectDonations = this.donations.filter(donation => donation.projectId === projectId);
-    if (this.selectedProjectDonations.length === 0) {
-      Swal.fire({
-        title: 'لا توجد تبرعات',
-        text: 'لا يوجد تبرعات مرتبطة بهذا المشروع.',
-        confirmButtonColor: '#f6a026',
-        confirmButtonText: 'حسناً'
-      });
-    } else {
-      this.donationDialogVisible = true;
-    }
+ showDonations(projectId: string) {
+  this.selectedProject = this.projects.find(p => p.id === projectId) || null;
+  this.selectedProjectDonations = this.donations.filter(donation => donation.projectId === projectId);
+  if (this.selectedProjectDonations.length === 0) {
+    Swal.fire({
+      title: 'لا توجد تبرعات',
+      text: 'لا يوجد تبرعات مرتبطة بهذا المشروع.',
+      confirmButtonColor: '#f6a026',
+      confirmButtonText: 'حسناً'
+    });
+  } else {
+    this.donationDialogVisible = true;
   }
-
+}
   onDonationFilter(event: any) {
     this.donationFilters = event.filters;
   }
