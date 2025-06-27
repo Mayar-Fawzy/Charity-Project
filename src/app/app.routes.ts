@@ -69,6 +69,7 @@ export const routes: Routes = [
       { path: 'volunteer-activities', loadComponent: () => import('./Pages/Admin/Pages/volunteer-activities/volunteer-activities.component').then(m => m.VolunteerActivitiesComponent) },
       { path: 'help-requests', loadComponent: () => import('./Pages/Admin/Pages/help-requests/help-requests.component').then(m => m.HelpRequestsComponent) },
       { path: 'item-donations', loadComponent: () => import('./Pages/Admin/Pages/item-donations/pending-items/pending-items.component').then(m => m.PendingItemsComponent)},
+      { path: 'aid-distribution', loadComponent: () => import('./Pages/Admin/Pages/aid-distribution/aid-distribution.component').then(m => m.AidDistributionComponent)},
     ]
   },
   {

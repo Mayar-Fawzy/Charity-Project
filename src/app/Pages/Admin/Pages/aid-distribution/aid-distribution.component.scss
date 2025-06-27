@@ -1,0 +1,50 @@
+:host ::ng-deep {
+    .p-card {
+        direction: rtl;
+        text-align: right;
+        border-top: 4px solid #f69f24;
+    }
+
+    .p-input-icon-left {
+        margin-left: auto;
+    }
+
+    .badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+    }
+
+    .p-button {
+        margin-inline-end: 5px;
+    }
+
+    .p-datatable .p-column-title {
+        font-weight: bold;
+    }
+
+    .table-caption-bar {
+        background-color: #fff7f0;
+        border-bottom: 1px solid #eee;
+        color: #333;
+    }
+
+    h5 {
+        color: #f69f24;
+        font-weight: 700;
+    }
+
+    .p-datatable-wrapper {
+        overflow-x: auto;
+    }
+
+    .p-datatable .p-datatable-thead>tr>th,
+    .p-datatable .p-datatable-tbody>tr>td {
+        white-space: nowrap;
+    }
+
+    .selected-row {
+        background-color: #fff3e0 !important;
+        transition: background-color 0.3s ease;
+    }
+}
