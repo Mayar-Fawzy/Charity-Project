@@ -2,7 +2,125 @@ $primary-color: #2c3e50;
 $secondary-color: #f6a026;
 $text-color: #333;
 $light-bg: #f9f9f9;
+:host {
+  display: block;
+  padding: 1rem;
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+}
 
+.custom-dialog {
+  ::ng-deep .p-dialog {
+    border-radius: 8px;
+    background-color: transparent;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  ::ng-deep .p-dialog-content {
+    padding: 0; background-color: #fff !important;
+  }
+ ::ng-deep .p-dialog-header {
+ 
+  background-color: #fff !important;
+ }
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    background-color: #fff !important;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    .dialog-title {
+      margin: 0;
+       padding-bottom: 6px !important;
+      font-size: 28.5px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #f39c12, #e67e22);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding: 6 !important;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      &:hover {
+        color: #f39c12;
+      }
+    }
+  }
+  .table-wrapper {
+    overflow-x: hidden; /* إزالة التمرير الأفقي إذا كان العرض كافيًا */
+    width: 100%;
+    max-width: 100%;
+    padding: 0 1rem 1rem;
+  }
+  .p-datatable-striped {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    ::ng-deep .p-datatable-thead > tr {
+      background-color: #f8f9fa;
+      th {
+        padding: 0.75rem;
+        text-align: right;
+        font-weight: 500;
+        color: #333;
+        border-bottom: 2px solid #e0e0e0;
+      }
+    }
+    ::ng-deep .p-datatable-tbody > tr {
+      &:hover {
+        background-color: #f5f5f5;
+      }
+      td {
+        padding: 0.75rem;
+        text-align: right;
+        vertical-align: middle;
+        color: #555;
+      }
+    }
+    ::ng-deep .p-paginator {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e0e0e0;
+      padding: 0.5rem;
+      .p-paginator-pages .p-paginator-page {
+        background-color: #fff;
+        color: #666;
+        &:hover {
+          background-color: #f39c12;
+          color: white;
+        }
+        &.p-highlight {
+          background-color: #f39c12;
+          color: white;
+          border-color: #f39c12;
+        }
+      }
+    }
+  }
+  .dialog-footer {
+    padding: 1rem;
+    text-align: left;
+    ::ng-deep .p-button {
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+  }
+}
+
+.user-thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+}
 .card {
   cursor: pointer;
   background: #fff;
