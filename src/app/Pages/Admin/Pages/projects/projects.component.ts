@@ -7,11 +7,38 @@ import Swal from 'sweetalert2';
 import { CRUDProjService } from './Core/Services/crudproj.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Auth/core/Services/login.service';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { ImageModule } from 'primeng/image';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { UserService } from '../users/core/user.service';
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}
+
+interface Donation {
+  id: string;
+  donorId: string;
+  projectId: string | null;
+  amount: number;
+  paymentMethod: string;
+  paymentIntentId: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgbModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgbModule, TableModule, DialogModule, ButtonModule, ImageModule, InputTextModule, DropdownModule],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss']
 })
@@ -20,7 +47,7 @@ export class ProjectsComponent {
   private readonly router = inject(Router);
   private readonly modalService = inject(NgbModal);
   private readonly loginService = inject(LoginService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly profilesService = inject(UserService);
 
   userData: any = null;
   isLoading: boolean = false;
@@ -32,16 +59,18 @@ export class ProjectsComponent {
   progressPercentages: number[] = [20, 50, 75, 30, 60, 90];
   totalCount = 0;
   selectedProject: GetProjj | null = null;
+  donations: Donation[] = [];
+  selectedProjectDonations: Donation[] = [];
+  users: { [key: string]: User } = {};
+  donationDialogVisible: boolean = false;
+  selectedDonation: Donation | null = null;
+  donationFilters: { [key: string]: any } = {};
 
   projectForm: FormGroup = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(40)
-    ]),
+    name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(40)]),
     image: new FormControl(null, [Validators.required]),
     targetAmount: new FormControl(0, [Validators.required, Validators.min(1)]),
-    projectStatus: new FormControl(null), // No validators for add
+    projectStatus: new FormControl(null),
     description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
@@ -53,6 +82,8 @@ export class ProjectsComponent {
     if (this.userData) {
       this.projectForm.get('managerId')?.setValue(this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"]);
       this.getPaginatedProjects();
+      this.getAllDonations();
+      this.loadAllUsers();
     } else {
       Swal.fire({
         icon: "error",
@@ -70,14 +101,11 @@ export class ProjectsComponent {
     this.isLoading = true;
     this.crudProjService.GetPaginatedProjects(this.currentPage, this.itemsPerPage).subscribe({
       next: (response: IGetProj) => {
-        this.projects = response.data.map((project: GetProjj, index: number) => {
-          const status = Number(project.projectStatus);
-          return {
-            ...project,
-            projectStatus: status,
-            progressPercentage: this.progressPercentages[index % this.progressPercentages.length]
-          };
-        });
+        this.projects = response.data.map((project: GetProjj, index: number) => ({
+          ...project,
+          projectStatus: Number(project.projectStatus),
+          progressPercentage: this.progressPercentages[index % this.progressPercentages.length]
+        }));
         this.filteredProjects = [...this.projects];
         this.totalCount = response.totalCount;
         this.currentPage = response.currentPage;
@@ -94,6 +122,43 @@ export class ProjectsComponent {
           confirmButtonText: "حسنا"
         });
         console.error('Error fetching projects:', err);
+      }
+    });
+  }
+
+  getAllDonations() {
+    this.isLoading = true;
+    this.crudProjService.GetPaginatedMonetaryDonations(1, 50).subscribe({
+      next: (response: any) => {
+        this.donations = response.data.map((d: any) => ({
+          ...d,
+          firstName: this.users[d.donorId]?.firstName,
+          lastName: this.users[d.donorId]?.lastName,
+          email: this.users[d.donorId]?.email
+        }));
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error fetching donations:', err);
+      }
+    });
+  }
+
+  loadAllUsers() {
+    this.isLoading = true;
+    this.profilesService.getAllUsers().subscribe({
+      next: (response: User[]) => {
+        this.users = response.reduce((acc, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {} as { [key: string]: User });
+        this.getAllDonations(); // Reload donations with user data
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error fetching users:', err);
       }
     });
   }
@@ -213,7 +278,6 @@ export class ProjectsComponent {
     }
 
     if (this.selectedProject) {
-      // Include projectStatus only when editing
       formData.append('projectStatus', Number(values.projectStatus).toString());
       formData.append('id', this.selectedProject.id);
       formData.append('imageUrl', this.selectedProject.imageUrl || '');
@@ -240,7 +304,7 @@ export class ProjectsComponent {
         next: (response) => {
           this.isLoading = false;
           if (response.isSucceeded) {
-            this.currentPage = 1; // Go to the first page to show the new project
+            this.currentPage = 1;
             Swal.fire({
               icon: 'success',
               title: 'نجاح',
@@ -262,9 +326,11 @@ export class ProjectsComponent {
       });
     }
   }
-cancelModal(modal: any) {
-  modal.dismiss(); // فقط إغلاق النموذج بدون رسائل
-}
+
+  cancelModal(modal: any) {
+    modal.dismiss();
+  }
+
   deleteProject(projectId: string) {
     Swal.fire({
       title: 'هل أنت متأكد؟',
@@ -298,5 +364,23 @@ cancelModal(modal: any) {
         });
       }
     });
+  }
+
+  showDonations(projectId: string) {
+    this.selectedProjectDonations = this.donations.filter(donation => donation.projectId === projectId);
+    if (this.selectedProjectDonations.length === 0) {
+      Swal.fire({
+        title: 'لا توجد تبرعات',
+        text: 'لا يوجد تبرعات مرتبطة بهذا المشروع.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسناً'
+      });
+    } else {
+      this.donationDialogVisible = true;
+    }
+  }
+
+  onDonationFilter(event: any) {
+    this.donationFilters = event.filters;
   }
 }
