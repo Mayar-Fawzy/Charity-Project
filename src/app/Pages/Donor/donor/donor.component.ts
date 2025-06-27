@@ -30,7 +30,7 @@ import { ProjectStatusArPipe } from "../../Projects/Core/Pipe/project-status-ar.
   styleUrl: './donor.component.scss',
 })
 export class DonorComponent {
-  private readonly _Router = inject(Router);
+private readonly _Router = inject(Router);
   private readonly _LoginService = inject(LoginService);
   private readonly toastr = inject(ToastrService);
   private readonly _HomedonateServiesService = inject(HomedonateServiesService);
@@ -46,78 +46,27 @@ export class DonorComponent {
   projects: Data[] = [];
   searchTerm: string = '';
   filteredProjects: Data[] = [];
+  uploadedImages: string[] = [];
+  readonly maxImageSizeMB = 10;
 
-  GetDonation() {
-    this._HomedonateServiesService.GetDonation().subscribe({
-      next: (response: any) => {
-        // تعيين progressPercentage لكل مشروع
-        this.projects = response.data.map((project: Data, index: number) => {
-          return {
-            ...project,
-            progressPercentage: this.progressPercentages[index % this.progressPercentages.length], // تعيين نسبة تقدم ثابتة
-          };
-        });
+  @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('uploadBox', { read: ElementRef }) uploadBox!: ElementRef;
+  @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
 
-        // تحديث filteredProjects بناءً على projects المحدثة
-        this.filteredProjects = [...this.projects];
-        this.onSearch();
-        console.log(this.projects);
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: "error",
-          title: "خطأ",
-          text: "حدث خطأ أثناء جلب المشاريع",
-          confirmButtonColor: "#f6a026",
-          confirmButtonText: "حسنا",
-        });
-        console.error('حدث خطأ أثناء جلب المشاريع:', err);
-      }
-    });
-  }
+  donationStatuses = [
+    { value: 1, label: 'جديد' },
+    { value: 2, label: 'مستعمل - حالة ممتازة' },
+    { value: 3, label: 'مستعمل - حالة جيدة' }
+  ];
 
-  getProgressPercentage(project: any): number {
-    // إذا كان progressPercentage موجودًا (من القيم الثابتة)
-    if (project.progressPercentage) {
-      return project.progressPercentage;
-    }
-
-    // إذا لم يكن progressPercentage متاحًا، قم بمحاكاة التقدم بناءً على الوقت
-    if (project.startDate && project.endDate && project.targetAmount) {
-      const startDate = new Date(project.startDate);
-      const endDate = new Date(project.endDate);
-      const currentDate = new Date();
-
-      // حساب الوقت المنقضي والوقت الكلي
-      const totalDuration = endDate.getTime() - startDate.getTime();
-      const elapsedDuration = currentDate.getTime() - startDate.getTime();
-
-      // حساب نسبة الوقت المنقضي
-      const timeProgress = elapsedDuration / totalDuration;
-
-      // التأكد من أن النسبة بين 0 و1
-      const timeProgressClamped = Math.min(Math.max(timeProgress, 0), 1);
-
-      // محاكاة التقدم بناءً على الوقت
-      const fakeCurrentAmount = project.targetAmount * timeProgressClamped;
-
-      // حساب النسبة المئوية وتقريبها
-      const percentage = Math.round((fakeCurrentAmount / project.targetAmount) * 100);
-
-      return Math.min(percentage, 100);
-    }
-
-    // إذا لم تكن التواريخ متاحة، استخدم قيمة عشوائية
-    const randomPercentage = Math.random() * (0.9 - 0.1) + 0.1; // نسبة بين 10% و90%
-    return Math.round(randomPercentage * 100);
-  }
-
-  onSearch() {
-    const term = this.searchTerm.toLowerCase();
-    this.filteredProjects = this.projects.filter(project =>
-      project.name.toLowerCase().includes(term)
-    );
-  }
+  donationForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    itemType: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    donationStatus: new FormControl('', [Validators.required]),
+    quantity: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
+    images: new FormControl<File[]>([], [Validators.required])
+  });
 
   ngOnInit(): void {
     this.responsiveOptions = [
@@ -129,9 +78,82 @@ export class DonorComponent {
     this.GetDonation();
   }
 
+  ngAfterViewInit() {
+    const uploadBox = this.uploadBox.nativeElement;
+
+    uploadBox.addEventListener('dragover', (e: DragEvent) => {
+      e.preventDefault();
+      uploadBox.classList.add('dragover');
+    });
+
+    uploadBox.addEventListener('dragleave', () => {
+      uploadBox.classList.remove('dragover');
+    });
+
+    uploadBox.addEventListener('drop', (e: DragEvent) => {
+      e.preventDefault();
+      uploadBox.classList.remove('dragover');
+      const files = e.dataTransfer?.files;
+      if (files) {
+        this.handleImageSelection({ target: { files } } as any);
+      }
+    });
+  }
+
+  GetDonation() {
+    this._HomedonateServiesService.GetDonation().subscribe({
+      next: (response: any) => {
+        this.projects = response.data.map((project: Data, index: number) => {
+          return {
+            ...project,
+            progressPercentage: this.progressPercentages[index % this.progressPercentages.length],
+          };
+        });
+        this.filteredProjects = [...this.projects];
+        this.onSearch();
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "حدث خطأ أثناء جلب المشاريع",
+          confirmButtonColor: "#f6a026",
+          confirmButtonText: "حسنا",
+        });
+      }
+    });
+  }
+
+  getProgressPercentage(project: any): number {
+    if (project.progressPercentage) {
+      return project.progressPercentage;
+    }
+
+    if (project.startDate && project.endDate && project.targetAmount) {
+      const startDate = new Date(project.startDate);
+      const endDate = new Date(project.endDate);
+      const currentDate = new Date();
+      const totalDuration = endDate.getTime() - startDate.getTime();
+      const elapsedDuration = currentDate.getTime() - startDate.getTime();
+      const timeProgress = Math.min(Math.max(elapsedDuration / totalDuration, 0), 1);
+      const fakeCurrentAmount = project.targetAmount * timeProgress;
+      const percentage = Math.round((fakeCurrentAmount / project.targetAmount) * 100);
+      return Math.min(percentage, 100);
+    }
+
+    const randomPercentage = Math.random() * (0.9 - 0.1) + 0.1;
+    return Math.round(randomPercentage * 100);
+  }
+
+  onSearch() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredProjects = this.projects.filter(project =>
+      project.name.toLowerCase().includes(term)
+    );
+  }
+
   goToPayment(projectId: string) {
     const token = localStorage.getItem('userToken');
-
     if (!token) {
       Swal.fire({
         icon: 'warning',
@@ -142,62 +164,56 @@ export class DonorComponent {
       });
     } else {
       this._Router.navigate(['/ewallet-payment', projectId]);
-      // التمرير إلى أعلى الصفحة بسلاسة
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
+
+  goToProjects() {
+    this._Router.navigate(['/projects']);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  openImageUploader(): void {
+    this.imageInput.nativeElement.click();
+  }
+
   handleImageSelection(event: Event): void {
     const input = event.target as HTMLInputElement;
-  
+    const validFiles: File[] = [];
+
     if (input.files) {
-      this.uploadedImages = []; // إعادة تعيين المصفوفة لتخزين الصور الجديدة فقط
-  
       Array.from(input.files).forEach(file => {
         const isValidType = file.type === 'image/png' || file.type === 'image/jpeg';
         const isValidSize = file.size <= this.maxImageSizeMB * 1024 * 1024;
-  
+
         if (isValidType && isValidSize) {
+          validFiles.push(file);
           const reader = new FileReader();
           reader.onload = () => {
             if (reader.result) {
-              this.uploadedImages.push(reader.result as string); // إضافة الصورة إلى المصفوفة
+              this.uploadedImages.push(reader.result as string);
             }
           };
-          reader.readAsDataURL(file); // قراءة الصورة كـ base64
+          reader.readAsDataURL(file);
         } else {
-          console.warn(`الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح.`);
+          this.toastr.error(
+            `الملف ${file.name} غير مسموح به أو يتجاوز الحجم المسموح (10 ميجا بايت).`,
+            'خطأ في رفع الصورة'
+          );
         }
       });
+
+      this.donationForm.patchValue({ images: validFiles });
+      this.donationForm.get('images')?.markAsTouched();
     }
   }
-  
-  goToProjects() {
-    this._Router.navigate(['/projects']);
-    // التمرير إلى أعلى الصفحة بسلاسة
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
 
-  donationForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    itemType: new FormControl('', Validators.required),
-    description: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    donationStatus: new FormControl('', Validators.required),
-    quantity: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
-    images: new FormControl<File[]>([])
-  });
   submitDonation() {
     if (this.donationForm.invalid) return;
-  
+
     this.isSubmitting = true;
     this.userData = this._LoginService.saveUserAuth();
-  
-    // التحقق من تسجيل الدخول
+
     if (!this.userData) {
       this.isSubmitting = false;
       Swal.fire({
@@ -208,11 +224,12 @@ export class DonorComponent {
         confirmButtonText: "حسنا",
       }).then(() => {
         this.donationForm.reset();
-        this.uploadedImages = []; // إعادة تعيين الصور المرفوعة بعد الخطأ
+        this.uploadedImages = [];
+        this.imageInput.nativeElement.value = '';
       });
-      return; // إيقاف التنفيذ إذا لم يكن المستخدم مسجلاً
+      return;
     }
-  
+
     const donorIdValue = this.userData["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
     if (!donorIdValue) {
       this.isSubmitting = false;
@@ -224,27 +241,26 @@ export class DonorComponent {
         confirmButtonText: "حسنا",
       }).then(() => {
         this.donationForm.reset();
-        this.uploadedImages = []; // إعادة تعيين الصور المرفوعة بعد الخطأ
+        this.uploadedImages = [];
+        this.imageInput.nativeElement.value = '';
       });
-      return; // إيقاف التنفيذ إذا لم يتم التحقق من هوية المستخدم
+      return;
     }
-  
-    // بناء البيانات المرسلة
+
     const formValue = this.donationForm.value;
     const formData = new FormData();
-  
+
     formData.append('name', formValue.name ?? '');
     formData.append('itemType', String(formValue.itemType));
     formData.append('donationStatus', formValue.donationStatus ?? '');
     formData.append('description', formValue.description ?? '');
     formData.append('quantity', formValue.quantity ?? '');
     formData.append('donorId', donorIdValue);
-  
+
     formValue.images?.forEach((file: File) => {
       formData.append('images', file);
     });
-  
-    // إرسال الطلب
+
     this._DonateNowService.CreateInKindDonation(formData).subscribe({
       next: (res) => {
         this.isSubmitting = false;
@@ -255,9 +271,9 @@ export class DonorComponent {
           confirmButtonText: "حسنا",
         }).then(() => {
           this.donationForm.reset();
-          this.uploadedImages = []; // إعادة تعيين الصور المرفوعة بعد الإرسال الناجح
+          this.uploadedImages = [];
+          this.imageInput.nativeElement.value = '';
         });
-        return; // إيقاف التنفيذ بعد إتمام التبرع بنجاح
       },
       error: (error) => {
         this.isSubmitting = false;
@@ -269,67 +285,36 @@ export class DonorComponent {
           confirmButtonText: "حسنا",
         }).then(() => {
           this.donationForm.reset();
-          this.uploadedImages = []; // إعادة تعيين الصور المرفوعة عند حدوث خطأ
+          this.uploadedImages = [];
+          this.imageInput.nativeElement.value = '';
         });
-        return; // إيقاف التنفيذ في حالة حدوث خطأ
       }
     });
   }
-  
-  showNameInput = false;
+
   isFormEmpty(): boolean {
     const formValue = this.donationForm.value;
-    const isEmpty = !formValue.name &&
-                    !formValue.itemType &&
-                    !formValue.donationStatus &&
-                    !formValue.description &&
-                    !formValue.quantity &&
-                    (!formValue.images || formValue.images.length === 0);
-    return isEmpty;
+    return !formValue.name &&
+           !formValue.itemType &&
+           !formValue.donationStatus &&
+           !formValue.description &&
+           !formValue.quantity &&
+           (!formValue.images || formValue.images.length === 0);
   }
-  
+
   onItemTypeChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
-
     const typeNameMap: { [key: string]: string } = {
       '1': 'ملابس',
       '2': 'طعام',
       '3': 'مستلزمات طبية',
+      '4': ''
     };
-
-    if (typeNameMap[selectedValue]) {
-      this.donationForm.get('name')?.setValue(typeNameMap[selectedValue]);
-    } else {
-      this.donationForm.get('name')?.setValue('');
-    }
+    this.donationForm.get('name')?.setValue(typeNameMap[selectedValue] || '');
   }
-
-  onFileSelected(event: any) {
-    const files = Array.from(event.target.files) as File[];
-    this.donationForm.patchValue({ images: files });
-  }
-
-  triggerFileUpload() {
-    const input = document.getElementById('photos');
-    if (input) {
-      input.click();
-    }
-  }
-
-  @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
-  uploadedImages: string[] = [];
-  readonly maxImageSizeMB = 10;
-
-  openImageUploader(): void {
-    this.imageInput.nativeElement.click();
-  }
-
-
-  @ViewChild('formWrapper', { read: ElementRef }) formWrapper!: ElementRef;
 
   showCenteredToast(type: 'success' | 'error', message: string, title: string) {
     this.toastr[type](message, title);
-
     setTimeout(() => {
       const toastContainer = document.querySelector('.toast-container');
       if (toastContainer && this.formWrapper?.nativeElement) {
@@ -338,12 +323,6 @@ export class DonorComponent {
       }
     }, 0);
   }
-
-  donationStatuses = [
-    { value: 1, label: 'جديد' },
-    { value: 2, label: 'مستعمل - حالة ممتازة' },
-    { value: 3, label: 'مستعمل - حالة جيدة' }
-  ];
 
   DonateNow() {}
 }
