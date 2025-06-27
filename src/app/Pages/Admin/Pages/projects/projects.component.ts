@@ -189,6 +189,9 @@ export class ProjectsComponent {
     });
   }
 
+
+// reduce(...) بتحول المصفوفة إلى object (قاموس) بحيث:
+
   loadAllUsers() {
     this.isLoading = true;
     this.profilesService.getAllUsers().subscribe({
