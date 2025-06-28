@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  inject,
-  TemplateRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -89,6 +84,7 @@ export class ProjectsComponent {
   donationDialogVisible: boolean = false;
   selectedDonation: Donation | null = null;
   donationFilters: { [key: string]: any } = {};
+  totalDonationAmount: number = 0; // إجمالي التبرعات
 
   projectForm: FormGroup = new FormGroup({
     name: new FormControl('', [
@@ -188,9 +184,6 @@ export class ProjectsComponent {
       },
     });
   }
-
-
-// reduce(...) بتحول المصفوفة إلى object (قاموس) بحيث:
 
   loadAllUsers() {
     this.isLoading = true;
@@ -438,21 +431,38 @@ export class ProjectsComponent {
     });
   }
 
- showDonations(projectId: string) {
-  this.selectedProject = this.projects.find(p => p.id === projectId) || null;
-  this.selectedProjectDonations = this.donations.filter(donation => donation.projectId === projectId);
-  if (this.selectedProjectDonations.length === 0) {
-    Swal.fire({
-      title: 'لا توجد تبرعات',
-      text: 'لا يوجد تبرعات مرتبطة بهذا المشروع.',
-      confirmButtonColor: '#f6a026',
-      confirmButtonText: 'حسناً'
-    });
-  } else {
-    this.donationDialogVisible = true;
+  showDonations(projectId: string) {
+    this.selectedProject = this.projects.find(p => p.id === projectId) || null;
+    this.selectedProjectDonations = this.donations.filter(donation => donation.projectId === projectId);
+    // حساب المجموع عند فتح نافذة التبرعات
+    this.calculateTotalDonationAmount();
+    if (this.selectedProjectDonations.length === 0) {
+      Swal.fire({
+        title: 'لا توجد تبرعات',
+        text: 'لا يوجد تبرعات مرتبطة بهذا المشروع.',
+        confirmButtonColor: '#f6a026',
+        confirmButtonText: 'حسناً'
+      });
+    } else {
+      this.donationDialogVisible = true;
+    }
   }
-}
+
   onDonationFilter(event: any) {
     this.donationFilters = event.filters;
+    this.calculateTotalDonationAmount(); // إعادة حساب المجموع عند التصفية
+  }
+
+  // دالة لحساب المجموع الإجمالي للتبرعات
+  calculateTotalDonationAmount() {
+    this.totalDonationAmount = this.selectedProjectDonations.reduce((sum, donation) => sum + (donation.amount || 0), 0);
+  }
+
+  // دالة لحساب النسبة المئوية
+  getDonationPercentage(): number {
+    if (this.selectedProject?.targetAmount && this.totalDonationAmount > 0) {
+      return Math.round((this.totalDonationAmount / this.selectedProject.targetAmount) * 100);
+    }
+    return 0;
   }
 }

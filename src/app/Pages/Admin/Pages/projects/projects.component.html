@@ -345,116 +345,120 @@
   </ng-template>
 
   <!-- Donation Dialog -->
-  <p-dialog
+<p-dialog
     [(visible)]="donationDialogVisible"
     [modal]="true"
     [dismissableMask]="true"
     [style]="{ width: '80vw', maxWidth: '1000px' }"
     class="custom-dialog"
-  >
+>
     <ng-template pTemplate="header">
-      <div class="dialog-header">
-        <h2 class="dialog-title">
-          تبرعات مشروع {{ selectedProject?.name || "غير محدد" }}
-        </h2>
-      </div>
+        <div class="dialog-header">
+            <h2 class="dialog-title">
+                تبرعات مشروع {{ selectedProject?.name || "غير محدد" }}
+            </h2>
+        </div>
     </ng-template>
     <div class="table-wrapper">
-      <p-table
-        showGridlines
-        [size]="'small'"
-        [value]="selectedProjectDonations"
-        selectionMode="single"
-        [(selection)]="selectedDonation"
-        dataKey="id"
-        [paginator]="true"
-        [rows]="5"
-        [resizableColumns]="true"
-        class="p-datatable-striped"
-        [filters]="donationFilters"
-        (onFilter)="onDonationFilter($event)"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th></th>
-            <th>#</th>
-            <th>الصورة</th>
-            <th pSortableColumn="firstName">
-              الاسم
-              <p-columnFilter
-                type="text"
-                field="firstName"
-                display="menu"
-                placeholder="ابحث بالاسم"
-              ></p-columnFilter>
-            </th>
-            <th pSortableColumn="email">
-              البريد الإلكتروني
-              <p-columnFilter
-                type="text"
-                field="email"
-                display="menu"
-                placeholder="ابحث بالبريد"
-              ></p-columnFilter>
-            </th>
-            <th pSortableColumn="amount">
-              المبلغ
-              <p-columnFilter
-                type="text"
-                field="amount"
-                display="menu"
-                placeholder="ابحث بالمبلغ"
-              ></p-columnFilter>
-            </th>
-            <!-- <th pSortableColumn="paymentMethod">
-            طريقة الدفع
-            <p-columnFilter type="text" field="paymentMethod" display="menu" placeholder="ابحث بطريقة الدفع"></p-columnFilter>
-          </th> -->
-          </tr>
-        </ng-template>
+        <p-table
+            showGridlines
+            [size]="'small'"
+            [value]="selectedProjectDonations"
+            selectionMode="single"
+            [(selection)]="selectedDonation"
+            dataKey="id"
+            [paginator]="true"
+            [rows]="5"
+            [resizableColumns]="true"
+            class="p-datatable-striped"
+            [filters]="donationFilters"
+            (onFilter)="onDonationFilter($event)"
+            (onValueChange)="calculateTotalDonationAmount()"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th></th>
+                    <th>#</th>
+                    <th>الصورة</th>
+                    <th pSortableColumn="firstName">
+                        الاسم
+                        <p-columnFilter
+                            type="text"
+                            field="firstName"
+                            display="menu"
+                            placeholder="ابحث بالاسم"
+                        ></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="email">
+                        البريد الإلكتروني
+                        <p-columnFilter
+                            type="text"
+                            field="email"
+                            display="menu"
+                            placeholder="ابحث بالبريد"
+                        ></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="amount">
+                        المبلغ
+                        <p-columnFilter
+                            type="text"
+                            field="amount"
+                            display="menu"
+                            placeholder="ابحث بالمبلغ"
+                        ></p-columnFilter>
+                    </th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-donation let-rowIndex="rowIndex">
-          <tr [pSelectableRow]="donation">
-            <td>
-              <i
-                *ngIf="selectedDonation === donation"
-                class="bi bi-box-arrow-left selected-icon"
-              ></i>
-            </td>
-            <td>{{ rowIndex + 1 }}</td>
-            <td>
-              <img
-                [src]="
-                  users[donation.donorId].imageUrl ||
-                  (users[donation.donorId].gender === 0
-                    ? '/Images/undraw_male-avatar_zkzx.svg'
-                    : '/Images/undraw_female-avatar_7t6k.svg')
-                "
-                alt="Donor Image"
-                class="user-thumbnail"
-              />
-            </td>
-            <td>
-              {{
-                (users[donation.donorId].firstName || "") +
-                  " " +
-                  (users[donation.donorId].lastName || "") || "غير محدد"
-              }}
-            </td>
-            <td>{{ users[donation.donorId].email || "غير محدد" }}</td>
-            <td>{{ donation.amount || 0 }} جنيهاً</td>
-            <!-- <td>{{ donation.paymentMethod || 'غير محدد' }}</td> -->
-          </tr>
-        </ng-template>
+            <ng-template pTemplate="body" let-donation let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="donation">
+                    <td>
+                        <i
+                            *ngIf="selectedDonation === donation"
+                            class="bi bi-box-arrow-left selected-icon"
+                        ></i>
+                    </td>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>
+                        <img
+                            [src]="
+                                users[donation.donorId].imageUrl ||
+                                (users[donation.donorId].gender === 0
+                                    ? '/Images/undraw_male-avatar_zkzx.svg'
+                                    : '/Images/undraw_female-avatar_7t6k.svg')
+                            "
+                            alt="Donor Image"
+                            class="user-thumbnail"
+                        />
+                    </td>
+                    <td>
+                        {{
+                            (users[donation.donorId].firstName || "") +
+                            " " +
+                            (users[donation.donorId].lastName || "") || "غير محدد"
+                        }}
+                    </td>
+                    <td>{{ users[donation.donorId].email || "غير محدد" }}</td>
+                    <td>{{ donation.amount || 0 }} جنيهاً</td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="7" class="text-center py-3 text-muted">
-              لا توجد تبرعات لهذا المشروع
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="6" style="text-align: right; font-weight: bold; padding: 0.75rem;">
+                        مجموع التبرعات: {{ totalDonationAmount }} جنيهاً
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center py-3 text-muted">
+                        لا توجد تبرعات لهذا المشروع
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
-  </p-dialog>
+</p-dialog>
 </section>

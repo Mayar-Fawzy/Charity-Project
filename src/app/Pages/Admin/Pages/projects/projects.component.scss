@@ -2,13 +2,43 @@ $primary-color: #2c3e50;
 $secondary-color: #f6a026;
 $text-color: #333;
 $light-bg: #f9f9f9;
+
 :host {
   display: block;
   padding: 1rem;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
+  .custom-dialog[_ngcontent-ng-c4293787413] .p-datatable-striped[_ngcontent-ng-c4293787413] {
+     border: 0px; 
+    border-radius: 6px;
+}
+}
+.user-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
+.donation-summary {
+  font-size: 0.9em;
+  color: #555;
+  margin-right: 150px;
+  span {
+    margin-left: 120px;
+    color: #007bff;
+  }
+}
+
+.custom-dialog {
+  .p-datatable {
+    .p-datatable-tbody {
+      td {
+        vertical-align: middle;
+      }
+    }
+  }
+}
 .custom-dialog {
   ::ng-deep .p-dialog {
     border-radius: 8px;
