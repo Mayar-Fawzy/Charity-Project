@@ -83,13 +83,14 @@ export class AidDistributionListComponent implements OnInit {
           forkJoin(donationRequests)
         ]).subscribe({
           next: ([users, donations]) => {
-            const userMap = new Map<string, string>();
+            const userMap = new Map<string, any>();
             const donationMap = new Map<string, string>();
 
             users.forEach(u => {
               if (u?.data) {
                 const fullName = `${u.data.firstName} ${u.data.lastName}`.trim();
-                userMap.set(u.data.id, fullName);
+                u.data.fullName = fullName;
+                userMap.set(u.data.id, u.data);
               }
             });
 
@@ -97,37 +98,45 @@ export class AidDistributionListComponent implements OnInit {
               if (d?.data) donationMap.set(d.data.id, d.data.name);
             });
 
-            this.distributions = data.map(d => ({
-              id: d.id,
-              beneficiaryId: d.beneficiaryId,
-              inKindDonationId: d.inKindDonationId,
-              monetaryDonationId: d.monetaryDonationId,
-              volunteerId: d.volunteerId,
-              amount: d.amount,
-              status: d.status,
-              donationName: d.inKindDonationId
-                ? donationMap.get(d.inKindDonationId) || 'تبرع عيني'
-                : 'تبرع مالي',
-              beneficiaryName: userMap.get(d.beneficiaryId) || 'غير معروف',
-              volunteerName: userMap.get(d.volunteerId) || 'غير معروف',
-              quantity: d.quantity,
-              description: d.description || 'لا يوجد وصف'
-            }));
+            this.distributions = data.map(d => {
+              const beneficiary = userMap.get(d.beneficiaryId);
+              const volunteer = userMap.get(d.volunteerId);
+
+              return {
+                id: d.id,
+                beneficiaryId: d.beneficiaryId,
+                inKindDonationId: d.inKindDonationId,
+                monetaryDonationId: d.monetaryDonationId,
+                volunteerId: d.volunteerId,
+                amount: d.amount,
+                status: d.status,
+                donationName: d.inKindDonationId
+                  ? donationMap.get(d.inKindDonationId) || 'تبرع عيني'
+                  : 'تبرع مالي',
+                beneficiaryName: beneficiary?.fullName || 'غير معروف',
+                volunteerName: volunteer?.fullName || 'غير معروف',
+                quantity: d.quantity,
+                description: d.description || 'لا يوجد وصف',
+                beneficiary,
+                volunteer
+              };
+            });
 
             this.isLoading = false;
           },
           error: () => {
-            console.error('خطأ في تحميل بيانات المستخدمين أو التبرعات');
+            console.error(' خطأ في تحميل بيانات المستخدمين أو التبرعات');
             this.isLoading = false;
           }
         });
       },
       error: (err: any) => {
-        console.error('خطأ في جلب التوزيعات', err);
+        console.error(' خطأ في جلب التوزيعات', err);
         this.isLoading = false;
       }
     });
   }
+
 
   deleteDistribution(dist: any): void {
     Swal.fire({
@@ -230,6 +239,35 @@ export class AidDistributionListComponent implements OnInit {
               Swal.fire('خطأ', 'حدث خطأ أثناء التعديل', 'error');
             }
           });
+      }
+    });
+  }
+
+  viewUserDetails(user: any) {
+    if (!user) return;
+
+    const fullName = `${user.firstName} ${user.lastName}`;
+    const defaultImage =
+      user.gender === 0
+        ? '/Images/undraw_male-avatar_zkzx.svg'
+        : '/Images/undraw_female-avatar_7t6k.svg';
+
+    const imageUrl = user.imageUrl || defaultImage;
+
+    Swal.fire({
+      html: `
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+        <img src="${imageUrl}" alt="User Image" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: 15px;">
+        <div class="mb-2" style="font-size: 1.5rem; margin-top: 10px">${fullName}</div>
+        <input type="text" class="form-control mb-2" value="${user.email || ''}" readonly />
+        <input type="text" class="form-control mb-2" value="${user.phoneNumber || ''}" readonly />
+        <input type="text" class="form-control" value="${user.gender === 0 ? 'ذكر' : 'أنثى'}" readonly />
+      </div>
+    `,
+      showCloseButton: true,
+      showConfirmButton: false,
+      customClass: {
+        popup: 'p-3 rounded shadow'
       }
     });
   }

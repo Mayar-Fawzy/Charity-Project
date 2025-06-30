@@ -23,4 +23,7 @@ export interface DistributionDisplay {
     volunteerName: string;
     quantity: number;
     description: string;
+
+    beneficiary: any;
+    volunteer: any;
 }

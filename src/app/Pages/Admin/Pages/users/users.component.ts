@@ -247,7 +247,7 @@ export class UsersComponent implements OnInit {
 
         const html = userMessages
           .map(
-  (msg: any) => `
+            (msg: any) => `
     <div id="msg-${msg.id}" style="position: relative; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
       <button class="btn btn-sm btn-danger" style="position: absolute; top: 15px; left: 10px;"  onclick="deleteMessage('${msg.id}')">
         <i class="bi bi-trash"></i>
@@ -262,7 +262,7 @@ export class UsersComponent implements OnInit {
         ${msg.createdDate ? new Date(msg.createdDate).toLocaleDateString('ar-EG') : 'غير محدد'}
       </p>
     </div>`
-)
+          )
           .join('');
 
         Swal.fire({

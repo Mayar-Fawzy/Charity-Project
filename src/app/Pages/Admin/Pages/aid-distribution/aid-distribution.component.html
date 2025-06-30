@@ -23,8 +23,25 @@
       <tr>
         <td>{{ i + 1 }}</td>
         <td>{{ dist.donationName }}</td>
-        <td>{{ dist.beneficiaryName }}</td>
-        <td>{{ dist.volunteerName }}</td>
+
+        <td>
+          <button
+            class="btn btn-link p-0 text-primary"
+            (click)="viewUserDetails(dist.beneficiary)"
+          >
+            {{ dist.beneficiaryName }}
+          </button>
+        </td>
+
+        <td>
+          <button
+            class="btn btn-link p-0 text-primary"
+            (click)="viewUserDetails(dist.volunteer)"
+          >
+            {{ dist.volunteerName }}
+          </button>
+        </td>
+
         <td>{{ dist.quantity }}</td>
         <td>{{ dist.description }}</td>
         <td>

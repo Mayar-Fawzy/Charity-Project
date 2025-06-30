@@ -352,11 +352,11 @@ export class HelpRequestsComponent {
       html: `
       <div style="text-align:right">
         <label class="form-label">اختر المتطوع</label>
-        <select id="volunteerSelect" class="form-control mt-3"">
+        <select id="volunteerSelect" class="form-control mt-3">
           ${this.volunteers.map(v => `<option value="${v.id}">${v.firstName} ${v.lastName}</option>`).join('')}
         </select>
         <label class="form-label mt-3">الوصف</label>
-        <textarea id="description" class="form-control" placeholder="الوصف(مطلوب)"></textarea>
+        <textarea id="description" class="form-control" placeholder="الوصف (مطلوب)"></textarea>
         <label class="form-label mt-3">الكمية</label>
         <input id="quantity" type="number" class="form-control" value="${donation.quantity || 1}" min="1">
       </div>
@@ -368,21 +368,21 @@ export class HelpRequestsComponent {
       confirmButtonColor: '#28a745',
       cancelButtonColor: '#6c757d',
       preConfirm: () => {
-        const email = (document.getElementById('volunteerEmail') as HTMLInputElement).value;
+        const volunteerId = (document.getElementById('volunteerSelect') as HTMLSelectElement).value;
         const description = (document.getElementById('description') as HTMLTextAreaElement).value;
         const quantityStr = (document.getElementById('quantity') as HTMLInputElement).value;
         const quantity = Number(quantityStr);
 
-        if (!email || !description || quantity <= 0) {
-          Swal.showValidationMessage('يرجى إدخال بريد إلكتروني، موقع، وكمية أكبر من 0');
+        if (!volunteerId || !description || quantity <= 0) {
+          Swal.showValidationMessage('يرجى اختيار متطوع، وإدخال وصف، وكمية أكبر من 0');
           return;
         }
 
-        return { email, description, quantity };
+        return { volunteerId, description, quantity };
       }
     }).then(result => {
       if (result.isConfirmed && result.value) {
-        const { email, description, quantity } = result.value;
+        const { volunteerId, description, quantity } = result.value;
         const originalQuantity = donation.quantity ?? 0;
 
         if (quantity > originalQuantity) {
@@ -390,84 +390,70 @@ export class HelpRequestsComponent {
           return;
         }
 
-        this._AssistanceRequestService.getUserByEmail(email).subscribe({
-          next: (user) => {
-            if (!user?.id) {
-              Swal.fire('خطأ', 'لا يوجد متطوع بهذا البريد الإلكتروني', 'error');
-              return;
-            }
+        const distributionBody = {
+          beneficiaryId: donation.beneficiaryId,
+          inKindDonationId: donation.id,
+          monetaryDonationId: null,
+          volunteerId: volunteerId,
+          description,
+          quantity,
+          amount: 0
+        };
 
-            const distributionBody = {
-              beneficiaryId: donation.beneficiaryId,
-              inKindDonationId: donation.id,
-              monetaryDonationId: null,
-              volunteerId: user.id,
-              description,
-              quantity,
-              amount: 0
-            };
+        this._AssistanceRequestService.createAidDistribution(distributionBody).subscribe({
+          next: () => {
+            const remainingQuantity = originalQuantity - quantity;
 
-            this._AssistanceRequestService.createAidDistribution(distributionBody).subscribe({
-              next: () => {
-                const remainingQuantity = originalQuantity - quantity;
+            if (remainingQuantity > 0) {
+              const formData = new FormData();
+              formData.append('id', donation.id);
+              formData.append('name', donation.name || '');
+              formData.append('description', donation.description || '');
+              formData.append('itemType', (donation.itemType ?? 0).toString());
+              formData.append('donationStatus', (donation.donationStatus ?? 0).toString());
+              formData.append('quantity', remainingQuantity.toString());
+              formData.append('isAllocated', (donation.isAllocated ?? false).toString());
+              formData.append('donorId', donation.donorId || '');
+              formData.append('projectId', donation.projectId || '');
 
-                if (remainingQuantity > 0) {
-                  const formData = new FormData();
-                  formData.append('id', donation.id);
-                  formData.append('name', donation.name || '');
-                  formData.append('description', donation.description || '');
-                  formData.append('itemType', (donation.itemType ?? 0).toString());
-                  formData.append('donationStatus', (donation.donationStatus ?? 0).toString());
-                  formData.append('quantity', remainingQuantity.toString());
-                  formData.append('isAllocated', (donation.isAllocated ?? false).toString());
-                  formData.append('donorId', donation.donorId || '');
-                  formData.append('projectId', donation.projectId || '');
-
-                  if (donation.imageUrls && donation.imageUrls.length > 0) {
-                    donation.imageUrls.forEach((url: string) => {
-                      formData.append('imageUrls', url);
-                    });
-                  }
-
-                  this._AssistanceRequestService.updateInKindDonation(formData).subscribe({
-                    next: () => {
-                      Swal.fire('تم التوزيع', 'تم تحديث كمية التبرع بنجاح', 'success');
-                      this._reloadService.triggerReload();
-                      this.loadRequests();
-                    },
-                    error: () => {
-                      Swal.fire('تم التوزيع', 'لكن فشل تحديث الكمية', 'warning');
-                      this.loadRequests();
-                    }
-                  });
-                } else {
-                  this._AssistanceRequestService.deleteInKindDonation(donation.id).subscribe({
-                    next: () => {
-                      Swal.fire('تم التوزيع', 'تم حذف التبرع لان الكمية أصبحت 0', 'success');
-                      this._reloadService.triggerReload();
-                      this.loadRequests();
-                    },
-                    error: () => {
-                      Swal.fire('تم التوزيع', 'لكن فشل حذف التبرع', 'warning');
-                      this.loadRequests();
-                    }
-                  });
-                }
-              },
-              error: (err) => {
-                Swal.fire('خطأ', err.message || 'حدث خطأ أثناء توزيع التبرع', 'error');
+              if (donation.imageUrls && donation.imageUrls.length > 0) {
+                donation.imageUrls.forEach((url: string) => {
+                  formData.append('imageUrls', url);
+                });
               }
-            });
+
+              this._AssistanceRequestService.updateInKindDonation(formData).subscribe({
+                next: () => {
+                  Swal.fire('تم التوزيع', 'تم تحديث كمية التبرع بنجاح', 'success');
+                  this._reloadService.triggerReload();
+                  this.loadRequests();
+                },
+                error: () => {
+                  Swal.fire('تم التوزيع', 'لكن فشل تحديث الكمية', 'warning');
+                  this.loadRequests();
+                }
+              });
+            } else {
+              this._AssistanceRequestService.deleteInKindDonation(donation.id).subscribe({
+                next: () => {
+                  Swal.fire('تم التوزيع', 'تم حذف التبرع لان الكمية أصبحت 0', 'success');
+                  this._reloadService.triggerReload();
+                  this.loadRequests();
+                },
+                error: () => {
+                  Swal.fire('تم التوزيع', 'لكن فشل حذف التبرع', 'warning');
+                  this.loadRequests();
+                }
+              });
+            }
           },
           error: (err) => {
-            Swal.fire('خطأ', err.message || 'فشل في جلب بيانات المتطوع', 'error');
+            Swal.fire('خطأ', err.message || 'حدث خطأ أثناء توزيع التبرع', 'error');
           }
         });
       }
     });
   }
-
-
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
