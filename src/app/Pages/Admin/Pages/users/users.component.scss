@@ -4,6 +4,12 @@
     direction: rtl;
     font-family: 'Cairo', sans-serif;
 }
+.message-date {
+  margin: 0;
+  text-align: right;
+  font-size: 0.8em;
+  color: #666;
+}
 
 .table-header {
     display: flex;

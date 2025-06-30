@@ -247,19 +247,22 @@ export class UsersComponent implements OnInit {
 
         const html = userMessages
           .map(
-            (msg: any) => `
-              <div id="msg-${msg.id}" style="position: relative; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-                <button class="btn btn-sm btn-danger" style="position: absolute; top: 5px; left: 5px;" onclick="deleteMessage('${msg.id}')">
-                  <i class="bi bi-trash"></i>
-                </button>
-                <button class="btn btn-sm btn-warning" style="position: absolute; top: 5px; left: 40px;" onclick="editMessage('${msg.id}')">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <p style="margin: 0 0 5px 0; text-align: right;">
-                  <strong>الرسالة:</strong> <span id="msg-content-${msg.id}">${msg.message}</span>
-                </p>
-              </div>`
-          )
+  (msg: any) => `
+    <div id="msg-${msg.id}" style="position: relative; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      <button class="btn btn-sm btn-danger" style="position: absolute; top: 15px; left: 10px;"  onclick="deleteMessage('${msg.id}')">
+        <i class="bi bi-trash"></i>
+      </button>
+      <button  class="btn btn-sm btn-warning" style="position: absolute; top: 15px; left: 50px;" onclick="editMessage('${msg.id}')">
+        <i class="bi bi-pencil"></i>
+      </button>
+      <p style="margin: 0 0 5px 0; text-align: right;">
+        <strong>الرسالة:</strong> <span id="msg-content-${msg.id}">${msg.message}</span>
+      </p>
+      <p style="margin: 0; text-align: right; font-size: 0.8em; color: #666;">
+        ${msg.createdDate ? new Date(msg.createdDate).toLocaleDateString('ar-EG') : 'غير محدد'}
+      </p>
+    </div>`
+)
           .join('');
 
         Swal.fire({
