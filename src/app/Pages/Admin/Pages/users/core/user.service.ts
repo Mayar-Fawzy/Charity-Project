@@ -14,7 +14,13 @@ export interface User {
   dateOfBirth: string;
   gender: number;
   isLocked: boolean;
+}
 
+export interface Message {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
 }
 
 @Injectable({
@@ -22,19 +28,23 @@ export interface User {
 })
 export class UserService {
   private apiUrl = 'https://givinghandcharity.runasp.net/api/v1/User/GetAllUsers';
+  private notificationApiUrl = 'https://givinghandcharity.runasp.net/api/v1/Notification';
 
   constructor(private http: HttpClient) { }
 
   getAllUsers(): Observable<User[]> {
     return this.http.get<{ data: User[] }>(this.apiUrl)
-      .pipe(
-        map(response => response.data)
-      );
+      .pipe(map(response => response.data));
   }
 
   deleteUser(id: string): Observable<any> {
-    const url = `https://givinghandcharity.runasp.net/api/v1/User/DeleteUser?id=${id}`;
+    const url = `${this.apiUrl}/DeleteUser?id=${id}`;
     return this.http.delete(url);
+  }
+
+  updateMessage(message: Message): Observable<any> {
+    const url = `${this.notificationApiUrl}/UpdateMessage`;
+    return this.http.put(url, message);
   }
 
   lockAccount(email: string): Observable<any> {
@@ -54,9 +64,6 @@ export class UserService {
   getUserById(id: string): Observable<User> {
     const url = `https://givinghandcharity.runasp.net/api/v1/User/GetUserById?id=${id}`;
     return this.http.get<{ data: User }>(url)
-      .pipe(
-        map(response => response.data)
-      );
+      .pipe(map(response => response.data));
   }
-
 }
