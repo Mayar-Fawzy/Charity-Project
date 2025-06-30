@@ -1,4 +1,3 @@
-// users.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -37,7 +36,6 @@ export class UsersComponent implements OnInit {
   filters: { [key: string]: any } = {};
   imageDialogVisible = false;
   selectedImageUrl: string = '';
-
 
   genderFilterOptions = [
     { label: 'ذكر', value: 0 },
@@ -87,7 +85,6 @@ export class UsersComponent implements OnInit {
     return '/Images/undraw_male-avatar_zkzx.svg';
   }
 
-
   selectRow(userId: string): void {
     this.selectedUserId = userId;
   }
@@ -133,7 +130,7 @@ export class UsersComponent implements OnInit {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-danger me-2',
-        cancelButton:  'btn btn-success',
+        cancelButton: 'btn btn-success',
       },
       buttonsStyling: false,
     });
@@ -250,16 +247,22 @@ export class UsersComponent implements OnInit {
 
         const html = userMessages
           .map(
-            (msg: any) => `
-          <div id="msg-${msg.id}" style="position: relative; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-            <button class="btn btn-sm btn-danger" style="position: absolute; top: 5px; left: 5px;" onclick="deleteMessage('${msg.id}')">
-              <i class="bi bi-trash"></i>
-            </button>
-            <p style="margin: 0 0 5px 0; text-align: right;">
-              <strong>الرسالة:</strong> ${msg.message}
-            </p>
-          </div>`
-          )
+  (msg: any) => `
+    <div id="msg-${msg.id}" style="position: relative; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      <button class="btn btn-sm btn-danger" style="position: absolute; top: 15px; left: 10px;"  onclick="deleteMessage('${msg.id}')">
+        <i class="bi bi-trash"></i>
+      </button>
+      <button  class="btn btn-sm btn-warning" style="position: absolute; top: 15px; left: 50px;" onclick="editMessage('${msg.id}')">
+        <i class="bi bi-pencil"></i>
+      </button>
+      <p style="margin: 0 0 5px 0; text-align: right;">
+        <strong>الرسالة:</strong> <span id="msg-content-${msg.id}">${msg.message}</span>
+      </p>
+      <p style="margin: 0; text-align: right; font-size: 0.8em; color: #666;">
+        ${msg.createdDate ? new Date(msg.createdDate).toLocaleDateString('ar-EG') : 'غير محدد'}
+      </p>
+    </div>`
+)
           .join('');
 
         Swal.fire({
@@ -278,7 +281,7 @@ export class UsersComponent implements OnInit {
                 confirmButtonText: 'نعم، احذفها',
                 cancelButtonText: 'إلغاء',
                 confirmButtonColor: '#e74c3c',
-                cancelButtonColor: '#6c757d'
+                cancelButtonColor: '#6c757d',
               }).then((result) => {
                 if (result.isConfirmed) {
                   const deleteUrl = `https://givinghandcharity.runasp.net/api/v1/Notification/DeleteMessage?messageId=${messageId}`;
@@ -295,6 +298,59 @@ export class UsersComponent implements OnInit {
                 }
               });
             };
+
+            (window as any).editMessage = (messageId: string) => {
+              // Find the message object based on messageId from userMessages
+              const msg = userMessages.find((m: any) => m.id === messageId);
+              if (!msg) {
+                Swal.fire('خطأ', 'لم يتم العثور على الرسالة.', 'error');
+                return;
+              }
+
+              Swal.fire({
+                title: 'تعديل الرسالة',
+                input: 'textarea',
+                inputLabel: 'محتوى الرسالة',
+                inputValue: msg.message,
+                inputAttributes: {
+                  dir: 'rtl',
+                  rows: '4',
+                },
+                showCancelButton: true,
+                confirmButtonText: 'حفظ',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+                preConfirm: async (newMessage) => {
+                  if (!newMessage) {
+                    Swal.showValidationMessage('الرسالة لا يمكن أن تكون فارغة');
+                    return false;
+                  }
+
+                  try {
+                    const updatedMessage = {
+                      id: msg.id,
+                      senderId: adminId, // Use the adminId as senderId
+                      receiverId: user.id, // Use the user ID as receiverId
+                      message: newMessage
+                    };
+                    await this.userService.updateMessage(updatedMessage).toPromise();
+                    return newMessage;
+                  } catch (error) {
+                    Swal.showValidationMessage('فشل في تعديل الرسالة. حاول مرة أخرى.');
+                    return false;
+                  }
+                },
+              }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                  const messageElement = document.getElementById(`msg-content-${msg.id}`);
+                  if (messageElement) {
+                    messageElement.textContent = result.value;
+                  }
+                  Swal.fire('تم التعديل!', 'تم تعديل الرسالة بنجاح.', 'success');
+                }
+              });
+            };
           },
         });
       },
@@ -304,7 +360,6 @@ export class UsersComponent implements OnInit {
       },
     });
   }
-
 
   contactUser(user: User): void {
     const receiverId = user.id;
