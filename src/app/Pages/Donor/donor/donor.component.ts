@@ -152,21 +152,9 @@ private readonly _Router = inject(Router);
     );
   }
 
-  goToPayment(projectId: string) {
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      Swal.fire({
-        icon: 'warning',
-        title: "خطأ",
-        text: "يجب عليك التسجيل أولًا قبل التبرع",
-        confirmButtonColor: "#f6a026",
-        confirmButtonText: "حسنا",
-      });
-    } else {
-      this._Router.navigate(['/ewallet-payment', projectId]);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
+ goToPayment(projectId: string) {
+  this._Router.navigate(['/ewallet-payment', projectId]);
+}
 
   goToProjects() {
     this._Router.navigate(['/projects']);

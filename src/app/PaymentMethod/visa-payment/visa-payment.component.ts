@@ -114,7 +114,7 @@ export class VisaPaymentComponent implements AfterViewInit {
                   confirmButtonColor: "#f6a026",
                   confirmButtonText: "حسنا",
                 }).then(() => {
-           this._router.navigate(['home']);
+           this._router.navigate(['projects']);
         
         });
   }

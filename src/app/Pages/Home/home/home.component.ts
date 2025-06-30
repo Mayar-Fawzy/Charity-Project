@@ -254,23 +254,9 @@ export class HomeComponent implements AfterViewInit {
   getProgress(cause: CharityCause): number {
     return (cause.amountRaised / cause.fundingGoal) * 100;
   }
-
-  goToPayment(projectId: string) {
-    const token = localStorage.getItem('userToken');
-
-    if (!token) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'خطأ',
-        text: 'يجب عليك التسجيل أولًا قبل التبرع',
-        confirmButtonColor: '#f6a026',
-        confirmButtonText: 'حسنا',
-      });
-    } else {
-      this._Router.navigate(['/ewallet-payment', projectId]);
-    }
-  }
-
+goToPayment(projectId: string) {
+  this._Router.navigate(['/ewallet-payment', projectId]);
+}
   initVolunteerImages(): void {
     const largeImage = document.querySelector<HTMLImageElement>('.img-large');
     const smallImages = document.querySelectorAll<HTMLImageElement>('.small-images img');
