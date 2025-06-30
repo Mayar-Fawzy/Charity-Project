@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { LoginService } from '../../../../Auth/core/Services/login.service';
 import { InkindData } from '../../../../Beneficary/core/Interface/inkind-pages';
 import { InkindDonationAdminService } from '../Core/Services/inkind-donation-admin.service';
+import { ReloadInkindService } from '../../../core/Shared/reload-inkind.service';
+
 
 @Component({
   selector: 'app-pending-items',
@@ -19,7 +21,9 @@ export class PendingItemsComponent {
   private readonly _inkind = inject(InkindDonationAdminService);
   private readonly _loginService = inject(LoginService);
   private readonly _modalService = inject(NgbModal);
-  private readonly _cdr = inject(ChangeDetectorRef); // Inject ChangeDetectorRef
+  private readonly _cdr = inject(ChangeDetectorRef); 
+  private readonly _reloadService = inject(ReloadInkindService);
+
 
   private imageIndices = new Map<string, number>();
   products: InkindData[] = [];
@@ -47,6 +51,9 @@ export class PendingItemsComponent {
 
   ngOnInit(): void {
     this.loadPage();
+    this._reloadService.reloadInkind$.subscribe(() => {
+      this.loadPage();
+    });
   }
 
   onSearch(): void {
@@ -108,8 +115,8 @@ export class PendingItemsComponent {
         let imageSrc = donor.imageUrl;
         if (!imageSrc || imageSrc.trim() === '') {
           imageSrc = donor.gender === 0
-              ? '/Images/undraw_male-avatar_zkzx.svg'
-              : '/Images/undraw_female-avatar_7t6k.svg';
+            ? '/Images/undraw_male-avatar_zkzx.svg'
+            : '/Images/undraw_female-avatar_7t6k.svg';
         }
 
         Swal.fire({
@@ -122,7 +129,7 @@ export class PendingItemsComponent {
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <input type="text" value="${donor.email || 'غير متوفر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="البريد">
             <input type="text" value="${donor.phoneNumber || 'غير متوفر'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="رقم الهاتف">
-            <input type="text" value="${donor.gender === 0 ?  'ذكر':'أنثى'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="الجنس">
+            <input type="text" value="${donor.gender === 0 ? 'ذكر' : 'أنثى'}" readonly style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="الجنس">
           </div>
         `,
           showCloseButton: true,

@@ -1,15 +1,9 @@
-/* Container and General Styles */
+/* General Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   direction: rtl;
   padding: 20px;
-}
-
-.text-muted {
-  font-size: 16px;
-  color: #777;
-  text-align: center;
 }
 
 /* Spinner */
@@ -19,10 +13,18 @@
   height: 3rem;
 }
 
-/* Tabs and Pagination Container */
-.d-flex.flex-wrap.justify-content-between {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
+/* Tabs + Pagination Box */
+.tabs-pagination-box {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 15px 20px;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 24px;
 }
 
 /* Tabs Styling */
@@ -62,7 +64,7 @@
   box-shadow: 0 2px 5px rgba(246, 160, 38, 0.3);
 }
 
-/* Pagination Styling */
+/* Pagination */
 .pagination-container {
   margin: 0;
 }
@@ -103,21 +105,13 @@
   color: #f6a026;
 }
 
-.page-item.active .page-link:hover {
-  background-color: #f6a026;
-  color: white;
-}
-
 .dots .page-link {
   cursor: default;
-}
-
-.dots .page-link:hover {
   background-color: transparent !important;
-  transform: none !important;
 }
 
-/* Card Styling */
+
+/* Cards */
 .request-card {
   border-radius: 12px;
   border: none;
@@ -125,7 +119,6 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   overflow: hidden;
-  height: 100%;
 }
 
 .request-card:hover {
@@ -133,7 +126,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Card Header (Email Display) */
 .user-email-header {
   background-color: #f6a026;
   color: #fff;
@@ -280,23 +272,54 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Responsive Adjustments */
+.donation-carousel {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+
+  ::ng-deep .carousel-control-prev-icon,
+  ::ng-deep .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 10px;
+  }
+
+  ::ng-deep .carousel-indicators [data-bs-target] {
+    background-color: #f6a026;
+  }
+
+  ::ng-deep .carousel-control-prev,
+  ::ng-deep .carousel-control-next {
+    width: 5%;
+  }
+}
+
+.donation-img {
+height: 250px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+
+/* Responsive */
 @media (max-width: 768px) {
-  .d-flex.flex-wrap.justify-content-between {
+  .tabs-pagination-box {
     flex-direction: column;
-    gap: 15px;
+    align-items: stretch;
   }
 
   .custom-tabs,
   .pagination {
-    width: 100%;
     justify-content: center;
+    width: 100%;
   }
 
   .request-card {

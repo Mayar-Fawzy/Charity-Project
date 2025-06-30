@@ -1,158 +1,351 @@
 <section class="container pt-5 my-3">
-  <div *ngIf="isLoading" class="text-center">
-    <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">جاري التحميل...</span>
-    </div>
-  </div>
-
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <ul class="nav nav-tabs custom-tabs" id="requestTabs">
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'pending'"
-          (click)="changeTab('pending')"
-        >
-          قيد المراجعة
-        </button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'approved'"
-          (click)="changeTab('approved')"
-        >
-          مقبولة
-        </button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'rejected'"
-          (click)="changeTab('rejected')"
-        >
-          مرفوضة
-        </button>
-      </li>
-    </ul>
-
-    <nav *ngIf="totalPages > 1" class="pagination-container">
-      <ul class="pagination">
-        <li class="page-item" [class.disabled]="currentPage === 1">
+  <div class="d-flex flex-column g-2 shadow-sm rounded p-3 mb-4">
+    <div
+      class="tabs-pagination-box main-tabs d-flex justify-content-start flex-wrap gap-3 mb-3"
+    >
+      <ul class="nav nav-tabs custom-tabs mb-0">
+        <li class="nav-item">
           <button
-            class="page-link"
-            (click)="goToPrevious()"
-            [disabled]="currentPage === 1"
+            class="nav-link"
+            [class.active]="mainTab === 'written'"
+            (click)="changeMainTab('written')"
           >
-            <i class="bi bi-chevron-right"></i>
+            الطلبات المكتوبة
           </button>
         </li>
-
-        <li class="page-item dots" *ngIf="showLeftDots">
-          <span class="page-link">...</span>
-        </li>
-
-        <li
-          *ngFor="let page of displayedPages"
-          class="page-item"
-          [class.active]="currentPage === page"
-        >
-          <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-        </li>
-
-        <li class="page-item dots" *ngIf="showRightDots">
-          <span class="page-link">...</span>
-        </li>
-
-        <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <li class="nav-item">
           <button
-            class="page-link"
-            (click)="goToNext()"
-            [disabled]="currentPage === totalPages"
+            class="nav-link"
+            [class.active]="mainTab === 'items'"
+            (click)="changeMainTab('items')"
           >
-            <i class="bi bi-chevron-left"></i>
+            طلبات التبرعات العينية
           </button>
         </li>
       </ul>
-    </nav>
-  </div>
+    </div>
 
-  <div
-    *ngIf="!isLoading && totalCount === 0 && filteredProjects.length === 0"
-    class="text-center alert alert-danger animate__animated animate__fadeIn"
-    role="alert"
-  >
-    <p class="text-muted">لا توجد طلبات مساعدة متاحة حاليًا</p>
-  </div>
-
-  <div *ngIf="filteredProjects.length > 0" class="row g-4 mb-5 fade-container">
-    <div class="col-md-4 fade-in" *ngFor="let request of filteredProjects">
-      <div class="card request-card shadow-sm h-100">
-        <div class="user-email-header">
-          <span
-            class="user-email d-flex align-items-center justify-content-between"
+    <div
+      class="tabs-pagination-box status-pagination-row d-flex justify-content-between align-items-center flex-wrap gap-3"
+    >
+      <ul class="nav nav-tabs custom-tabs mb-0">
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="getCurrentTab() === 'pending'"
+            (click)="changeTabByMain('pending')"
           >
-            {{ userEmails[request.beneficiaryId] || "جاري التحميل..." }}
-            <i
-              class="bi bi-info-circle ms-2 text-primary cursor-pointer fa-1x text-dark"
-              (click)="showUserInfo(request.beneficiaryId)"
+            قيد المراجعة
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="getCurrentTab() === 'approved'"
+            (click)="changeTabByMain('approved')"
+          >
+            مقبولة
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="getCurrentTab() === 'rejected'"
+            (click)="changeTabByMain('rejected')"
+          >
+            مرفوضة
+          </button>
+        </li>
+      </ul>
+
+      <!-- Pagination -->
+      <nav *ngIf="totalPages > 1" class="pagination-container mb-0">
+        <ul class="pagination mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button
+              class="page-link"
+              (click)="goToPrevious()"
+              [disabled]="currentPage === 1"
             >
-            </i>
-          </span>
-        </div>
-        <div class="card-body d-flex flex-column">
-          <div class="card-content">
-            <p class="card-text mb-3 fw-bold text-end">
-              {{ request.requestDetails || "لا توجد تفاصيل" }}
-            </p>
-            <div
-              class="badge-status mb-4"
-              [ngClass]="{
-                'status-approved': request.requestStatus === 1,
-                'status-rejected': request.requestStatus === 2,
-                'status-pending': request.requestStatus === 3
-              }"
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+
+          <li class="page-item dots" *ngIf="showLeftDots">
+            <span class="page-link">...</span>
+          </li>
+
+          <li
+            *ngFor="let page of displayedPages"
+            class="page-item"
+            [class.active]="currentPage === page"
+          >
+            <button class="page-link" (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          </li>
+
+          <li class="page-item dots" *ngIf="showRightDots">
+            <span class="page-link">...</span>
+          </li>
+
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button
+              class="page-link"
+              (click)="goToNext()"
+              [disabled]="currentPage === totalPages"
             >
-              {{ getStatusText(request.requestStatus) }}
-            </div>
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ========== الطلبات المكتوبة ========== -->
+  <div *ngIf="mainTab === 'written'">
+    <div *ngIf="isLoading" class="text-center">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+    </div>
+
+    <div
+      *ngIf="filteredProjects.length > 0"
+      class="row g-4 mb-5 fade-container"
+    >
+      <div class="col-md-4 fade-in" *ngFor="let request of filteredProjects">
+        <div class="card request-card shadow-sm">
+          <div class="user-email-header">
+            <span
+              class="user-email d-flex align-items-center justify-content-between"
+            >
+              {{ userEmails[request.beneficiaryId] || "جاري التحميل..." }}
+              <i
+                class="bi bi-info-circle ms-2 text-primary cursor-pointer fa-1x text-dark"
+                (click)="showUserInfo(request.beneficiaryId)"
+              ></i>
+            </span>
           </div>
-          <div class="mt-auto d-flex gap-2 justify-content-around flex-wrap">
-            <button
-              *ngIf="request.requestStatus === 3"
-              class="btn btn-success btn-sm"
-              (click)="approve(request)"
-            >
-              قبول
-            </button>
-            <button
-              *ngIf="request.requestStatus === 3"
-              class="btn btn-danger btn-sm"
-              (click)="reject(request)"
-            >
-              رفض
-            </button>
-            <button
-              *ngIf="
-                request.requestStatus === 1 ||
-                request.requestStatus === 2 ||
-                request.requestStatus === 3
-              "
-              class="btn btn-outline-primary btn-sm"
-              (click)="contact(request, request.beneficiaryId)"
-            >
-              تواصل
-            </button>
-            <button
-              *ngIf="request.requestStatus === 1 || request.requestStatus === 2"
-              class="btn btn-outline-danger btn-sm"
-              (click)="deleteRequest(request)"
-              title="حذف الطلب"
-            >
-              حذف
-            </button>
+          <div class="card-body d-flex flex-column">
+            <div class="card-content">
+              <p class="card-text mb-3 fw-bold text-end">
+                {{ request.requestDetails || "لا توجد تفاصيل" }}
+              </p>
+              <div
+                class="badge-status mb-4"
+                [ngClass]="{
+                  'status-approved': request.requestStatus === 1,
+                  'status-rejected': request.requestStatus === 2,
+                  'status-pending': request.requestStatus === 3
+                }"
+              >
+                {{ getStatusText(request.requestStatus) }}
+              </div>
+            </div>
+            <div class="mt-auto d-flex gap-2 justify-content-around flex-wrap">
+              <button
+                *ngIf="request.requestStatus === 3"
+                class="btn btn-success btn-sm"
+                (click)="approveWrittenRequest(request)"
+              >
+                قبول
+              </button>
+              <button
+                *ngIf="request.requestStatus === 3"
+                class="btn btn-danger btn-sm"
+                (click)="rejectWrittenRequest(request)"
+              >
+                رفض
+              </button>
+              <button
+                *ngIf="[1, 2, 3].includes(request.requestStatus)"
+                class="btn btn-outline-primary btn-sm"
+                (click)="contact(request, request.beneficiaryId)"
+              >
+                تواصل
+              </button>
+              <button
+                *ngIf="[1, 2].includes(request.requestStatus)"
+                class="btn btn-outline-danger btn-sm"
+                (click)="deleteWrittenRequest(request)"
+                title="حذف الطلب"
+              >
+                حذف
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ========== التبرعات العينية ========== -->
+  <div *ngIf="mainTab === 'items'">
+    <div *ngIf="isLoading" class="text-center my-5">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-5 fade-container" *ngIf="!isLoading">
+      <div class="col-md-4 fade-in" *ngFor="let donation of itemDonations">
+        <div class="card request-card shadow-sm">
+          <div
+            *ngIf="donation.imageUrls?.length"
+            class="carousel slide donation-carousel"
+            [id]="'carousel-' + donation.id"
+            data-bs-ride="carousel"
+          >
+            <div class="carousel-inner">
+              <div
+                *ngFor="let img of donation.imageUrls; let i = index"
+                class="carousel-item"
+                [class.active]="i === 0"
+              >
+                <img
+                  [src]="img"
+                  class="d-block w-100 donation-img"
+                  alt="صورة تبرع"
+                />
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              [attr.data-bs-target]="'#carousel-' + donation.id"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-prev-icon ms-4"></span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              [attr.data-bs-target]="'#carousel-' + donation.id"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-next-icon me-4"></span>
+            </button>
+          </div>
+
+          <div class="card-body d-flex flex-column text-end">
+            <h5 class="card-title">{{ donation.name }}</h5>
+
+            <div class="d-flex justify-content-between mb-2 flex-wrap">
+              <span class="badge bg-primary text-white">
+                {{
+                  donation.requestDetails?.itemType === 1
+                    ? "ملابس"
+                    : donation.requestDetails?.itemType === 2
+                    ? "طعام"
+                    : donation.requestDetails?.itemType === 3
+                    ? "مستلزمات طبية"
+                    : "أخرى"
+                }}
+              </span>
+
+              <span class="badge bg-warning text-dark">
+                {{
+                  donation.requestDetails?.donationStatus === 1
+                    ? "جديد"
+                    : donation.requestDetails?.donationStatus === 2
+                    ? "مستعمل - حالة ممتازة"
+                    : "مستعمل - حالة جيدة"
+                }}
+              </span>
+
+              <span>الكمية: {{ donation.quantity }}</span>
+            </div>
+
+            <p class="card-text">{{ donation.description }}</p>
+
+            <div class="mt-auto d-flex gap-2 justify-content-around flex-wrap">
+              <!-- قيد المراجعة -->
+              <ng-container *ngIf="donation.requestStatus === 3">
+                <button
+                  class="btn btn-success btn-sm"
+                  (click)="approveInKindDonation(donation)"
+                >
+                  قبول
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="rejectInKindDonation(donation)"
+                >
+                  رفض
+                </button>
+                <button
+                  class="btn btn-outline-primary btn-sm"
+                  (click)="contact(donation, donation.beneficiaryId)"
+                >
+                  تواصل
+                </button>
+                <button
+                  class="btn btn-outline-info btn-sm"
+                  (click)="showUserInfoInKindDonation(donation.beneficiaryId)"
+                  title="عرض معلومات المستفيد"
+                >
+                  <i class="fas fa-info-circle me-1"></i> المستفيد
+                </button>
+              </ng-container>
+
+              <!-- مقبولة -->
+              <ng-container *ngIf="donation.requestStatus === 1">
+                <button
+                  class="btn btn-warning btn-sm"
+                  (click)="confirmDistribution(donation)"
+                >
+                  توزيع مساعدة
+                </button>
+                <button
+                  class="btn btn-outline-primary btn-sm"
+                  (click)="contact(donation, donation.beneficiaryId)"
+                >
+                  تواصل
+                </button>
+                <button
+                  class="btn btn-outline-info btn-sm"
+                  (click)="showUserInfoInKindDonation(donation.beneficiaryId)"
+                  title="عرض معلومات المستفيد"
+                >
+                  <i class="fas fa-info-circle me-1"></i> المستفيد
+                </button>
+              </ng-container>
+
+              <!-- مرفوضة -->
+              <ng-container *ngIf="donation.requestStatus === 2">
+                <button
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="deleteInfoInKindDonation(donation)"
+                >
+                  حذف
+                </button>
+                <button
+                  class="btn btn-outline-primary btn-sm"
+                  (click)="contact(donation, donation.beneficiaryId)"
+                >
+                  تواصل
+                </button>
+                <button
+                  class="btn btn-outline-info btn-sm"
+                  (click)="showUserInfoInKindDonation(donation.beneficiaryId)"
+                  title="عرض معلومات المستفيد"
+                >
+                  <i class="fas fa-info-circle me-1"></i> المستفيد
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="!isLoading && totalCount === 0 && filteredProjects.length === 0"
+    class="text-center alert alert-info animate__animated animate__fadeIn"
+    role="alert"
+  >
+    <p class="text-muted">لا توجد طلبات مساعدة متاحة حاليًا</p>
   </div>
 </section>

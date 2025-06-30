@@ -1,14 +1,19 @@
 .admin-layout {
     direction: rtl;
     font-family: 'Cairo', sans-serif;
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
 
     .sidebar {
         width: 250px;
         background: linear-gradient(to bottom, #f6a026, #f39c12);
         color: white;
-        min-height: 100vh;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        overflow-y: auto;
         transition: width 0.3s ease-in-out;
-        overflow: hidden;
 
         .toggle-btn {
             text-align: end;
@@ -76,11 +81,15 @@
     }
 
     .main-content {
-        background-color: #f9f9f9;
-        transition: margin 0.3s ease;
+        background-color: #F3F5F7;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
 
         .navbar {
-            flex-direction: row;
+            flex-shrink: 0;
 
             .navbar__logo {
                 height: 45px;
@@ -90,6 +99,11 @@
             .logo-text {
                 color: #f39c12;
             }
+        }
+
+        .p-3 {
+            overflow-y: auto;
+            padding: 1rem !important;
         }
     }
 }

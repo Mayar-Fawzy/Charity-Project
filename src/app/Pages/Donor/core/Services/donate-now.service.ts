@@ -14,5 +14,10 @@ export class DonateNowService {
   CreateInKindDonation(userData: FormData): Observable<any> {
     return this._HttpClient.post(`${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/CreateInKindDonation`, userData);
   }
-  
+
+  GetInKindDonationById(id: string): Observable<any> {
+    return this._HttpClient.get<any>(
+      `${Environment.baseUrl}${Environment.VersionUrl}InKindDonation/GetInKindDonationById?id=${id}`
+    );
+  }
 }

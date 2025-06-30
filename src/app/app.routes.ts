@@ -39,7 +39,7 @@ export const routes: Routes = [
   { path: 'register', title: 'Register', component: RegisterComponent },
   { path: 'forget-password', title: 'Forget Password', component: ForgetpasswordComponent },
   { path: 'verify-email', title: 'Verify Email', component: VerifyEmailComponent },
-  
+
   // ✅ باقي الصفحات داخل Layout يحتوي على Navbar & Footer
   {
     path: '',
@@ -55,23 +55,68 @@ export const routes: Routes = [
       { path: 'volunteer-activity', title: 'volunteer-activity', component: VolunteerActivityComponent },
       { path: 'about', title: 'About', component: AboutUsComponent },
       { path: 'GenralVisa/:id', title: 'GenralVisa', component: GeneralVisaComponent },
-      { path: 'ewallet-payment/:id', title: 'E-Wallet Payment', component: EwalletPaymentComponent, canActivate: [AuthGuard]},
-      { path: 'visa-payment/:id', title: 'Visa Payment', component: VisaPaymentComponent},
+      { path: 'ewallet-payment/:id', title: 'E-Wallet Payment', component: EwalletPaymentComponent, canActivate: [AuthGuard] },
+      { path: 'visa-payment/:id', title: 'Visa Payment', component: VisaPaymentComponent },
     ]
 
   },
-  { path: 'admin', component: AdminComponent,canActivate: [AuthGuard], children: [
-      {path:'',redirectTo:'overview',pathMatch: 'full'},
-      { path: 'overview', loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component').then(m => m.OverviewComponent) },
-      { path: 'users', loadComponent: () => import('./Pages/Admin/Pages/users/users.component').then(m => m.UsersComponent) },
-      { path: 'projects', loadComponent: () => import('./Pages/Admin/Pages/projects/projects.component').then(m => m.ProjectsComponent) },
-      { path: 'volunteers', loadComponent: () => import('./Pages/Admin/Pages/volunteers/volunteers.component').then(m => m.VolunteersComponent) },
-      { path: 'volunteer-activities', loadComponent: () => import('./Pages/Admin/Pages/volunteer-activities/volunteer-activities.component').then(m => m.VolunteerActivitiesComponent) },
-      { path: 'help-requests', loadComponent: () => import('./Pages/Admin/Pages/help-requests/help-requests.component').then(m => m.HelpRequestsComponent) },
-      { path: 'item-donations', loadComponent: () => import('./Pages/Admin/Pages/item-donations/pending-items/pending-items.component').then(m => m.PendingItemsComponent)},
-      { path: 'aid-distribution', loadComponent: () => import('./Pages/Admin/Pages/aid-distribution/aid-distribution.component').then(m => m.AidDistributionComponent)},
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+
+      {
+        path: 'overview',
+        loadComponent: () => import('./Pages/Admin/Pages/overview/overview.component')
+          .then(m => m.OverviewComponent)
+      },
+
+      {
+        path: 'users',
+        loadComponent: () => import('./Pages/Admin/Pages/users/users.component')
+          .then(m => m.UsersComponent)
+      },
+
+      {
+        path: 'projects',
+        loadComponent: () => import('./Pages/Admin/Pages/projects/projects.component')
+          .then(m => m.ProjectsComponent)
+      },
+
+      {
+        path: 'volunteers',
+        loadComponent: () => import('./Pages/Admin/Pages/volunteers/volunteers.component')
+          .then(m => m.VolunteersComponent)
+      },
+
+      {
+        path: 'volunteer-activities',
+        loadComponent: () => import('./Pages/Admin/Pages/volunteer-activities/volunteer-activities.component')
+          .then(m => m.VolunteerActivitiesComponent)
+      },
+
+      {
+        path: 'help-requests',
+        loadComponent: () => import('./Pages/Admin/Pages/help-requests/help-requests.component')
+          .then(m => m.HelpRequestsComponent)
+      },
+
+      {
+        path: 'item-donations',
+        loadComponent: () => import('./Pages/Admin/Pages/item-donations/pending-items/pending-items.component')
+          .then(m => m.PendingItemsComponent)
+      },
+
+      {
+        path: 'aid-distribution',
+        loadComponent: () => import('./Pages/Admin/Pages/aid-distribution/aid-distribution.component')
+          .then(m => m.AidDistributionListComponent)
+      },
     ]
   },
+
   {
     path: 'settings', component: SettingsLayoutComponent, children: [
       { path: 'profile/:id', component: ProfileComponent },
